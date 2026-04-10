@@ -80,14 +80,14 @@ publishing {
             pom {
                 name.set("AEDevLens")
                 description.set("Extensible on-device dev tools SDK for Kotlin Multiplatform — a mini Flipper for KMP")
-                url.set("https://github.com/AE-DevLens/aedevlens")
+                url.set("https://github.com/abdo-essam/AEDevLens")
             }
         }
     }
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/AE-DevLens/aedevlens")
+            url = uri("https://maven.pkg.github.com/abdo-essam/AEDevLens")
             credentials {
                 username = System.getenv("GITHUB_ACTOR") ?: ""
                 password = System.getenv("GITHUB_TOKEN") ?: ""
