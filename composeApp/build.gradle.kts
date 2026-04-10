@@ -39,7 +39,7 @@ kotlin {
 android {
     namespace = "com.ae.devlens.sample"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-    
+
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
     defaultConfig {
