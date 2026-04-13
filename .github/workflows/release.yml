@@ -39,29 +39,6 @@ jobs:
       - name: Run Full Test Suite
         run: ./gradlew allTests
 
-      - name: Debug signing config
-        run: |
-          if [ -z "$SIGNING_KEY" ]; then
-            echo "❌ SIGNING_KEY is empty"
-          else
-            echo "✅ SIGNING_KEY is set (${#SIGNING_KEY} chars)"
-          fi
-          if [ -z "$SIGNING_KEY_ID" ]; then
-            echo "❌ SIGNING_KEY_ID is empty"
-          else
-            echo "✅ SIGNING_KEY_ID is set: $SIGNING_KEY_ID"
-          fi
-          if [ -z "$SIGNING_PASSWORD" ]; then
-            echo "❌ SIGNING_PASSWORD is empty"
-          else
-            echo "✅ SIGNING_PASSWORD is set"
-          fi
-        env:
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-
-
       - name: Publish to Maven Central
         run: ./gradlew :devlens:publishAllPublicationsToSonatypeRepository
         env:
