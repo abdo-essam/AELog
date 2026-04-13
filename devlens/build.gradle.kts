@@ -183,7 +183,6 @@ tasks.withType<Sign>().configureEach {
     onlyIf { !version.toString().endsWith("SNAPSHOT") }
 }
 
-
 tasks.withType<JavaCompile>().configureEach {
     classpath = files()
 }
