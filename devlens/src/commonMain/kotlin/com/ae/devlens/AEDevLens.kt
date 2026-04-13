@@ -35,20 +35,20 @@ import kotlinx.coroutines.flow.update
  * inspector.install(MyCustomPlugin())
  * ```
  */
-class AEDevLens private constructor(
-    val config: AEDevLensConfig,
+public class AEDevLens private constructor(
+    public val config: AEDevLensConfig,
 ) {
     private val _plugins = MutableStateFlow<List<DevLensPlugin>>(emptyList())
 
     /** All registered plugins */
-    val plugins: StateFlow<List<DevLensPlugin>> = _plugins.asStateFlow()
+    public val plugins: StateFlow<List<DevLensPlugin>> = _plugins.asStateFlow()
 
     /** All UI plugins (plugins that have a visible tab) */
-    val uiPlugins: List<UIPlugin>
+    public val uiPlugins: List<UIPlugin>
         get() = _plugins.value.filterIsInstance<UIPlugin>()
 
     /** The built-in log store — shortcut for quick logging */
-    val logStore: LogStore
+    public val logStore: LogStore
         get() =
             getPlugin<LogsPlugin>()?.logStore
                 ?: error("LogsPlugin is not installed. Install it with inspector.install(LogsPlugin())")
@@ -64,7 +64,7 @@ class AEDevLens private constructor(
      *
      * Duplicate plugin IDs are rejected.
      */
-    fun install(plugin: DevLensPlugin) {
+    public fun install(plugin: DevLensPlugin) {
         installInternal(plugin)
     }
 
@@ -86,7 +86,7 @@ class AEDevLens private constructor(
     /**
      * Unregister a plugin by its ID.
      */
-    fun uninstall(pluginId: String) {
+    public fun uninstall(pluginId: String) {
         var detachedPlugin: DevLensPlugin? = null
         _plugins.update { current ->
             val plugin = current.find { it.id == pluginId }
@@ -109,17 +109,17 @@ class AEDevLens private constructor(
      * val logsPlugin = inspector.getPlugin<LogsPlugin>()
      * ```
      */
-    inline fun <reified T : DevLensPlugin> getPlugin(): T? = plugins.value.filterIsInstance<T>().firstOrNull()
+    public inline fun <reified T : DevLensPlugin> getPlugin(): T? = plugins.value.filterIsInstance<T>().firstOrNull()
 
     /**
      * Get a plugin by its ID.
      */
-    fun getPluginById(id: String): DevLensPlugin? = _plugins.value.find { it.id == id }
+    public fun getPluginById(id: String): DevLensPlugin? = _plugins.value.find { it.id == id }
 
     /**
      * Shortcut: Log a message to the built-in LogStore.
      */
-    fun log(
+    public fun log(
         level: LogLevel,
         tag: String,
         message: String,
@@ -149,22 +149,22 @@ class AEDevLens private constructor(
     /**
      * Clear all plugin data.
      */
-    fun clearAll() {
+    public fun clearAll() {
         _plugins.value.forEach { plugin ->
             safeCall(plugin.id) { plugin.onClear() }
         }
     }
 
-    companion object {
+    public companion object {
         /** Convenient default instance for apps that only need one inspector */
-        val default: AEDevLens by lazy { create() }
+        public val default: AEDevLens by lazy { create() }
 
         /**
          * Create a new AEDevLens instance with custom configuration.
          *
          * Use this for testing or when you need multiple isolated instances.
          */
-        fun create(config: AEDevLensConfig = AEDevLensConfig()): AEDevLens = AEDevLens(config)
+        public fun create(config: AEDevLensConfig = AEDevLensConfig()): AEDevLens = AEDevLens(config)
 
         /**
          * Safely call a plugin method, catching and logging any exceptions.
