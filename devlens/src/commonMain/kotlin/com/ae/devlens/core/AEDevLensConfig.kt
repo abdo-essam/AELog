@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
  * ))
  * ```
  */
-data class AEDevLensConfig(
+public data class AEDevLensConfig(
     /** Maximum number of log entries to keep in memory (default: 500) */
     val maxLogEntries: Int = 500,
     /** Show the floating debug button overlay (default: true) */
