@@ -46,7 +46,7 @@ jobs:
       - name: Build MkDocs site
         run: mkdocs build
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: site
 
