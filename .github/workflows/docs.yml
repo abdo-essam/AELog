@@ -35,7 +35,7 @@ jobs:
       - name: Install MkDocs
         run: pip install mkdocs-material mkdocs-minify-plugin
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Generate API Docs (Dokka)
         run: ./gradlew :devlens:dokkaGeneratePublicationHtml
