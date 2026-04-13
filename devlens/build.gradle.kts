@@ -176,11 +176,12 @@ signing {
     val signingPassword = System.getenv("SIGNING_PASSWORD")
 
     if (!rawKey.isNullOrBlank()) {
-        val signingKey = try {
-            String(Base64.getDecoder().decode(rawKey.trim()))
-        } catch (_: IllegalArgumentException) {
-            rawKey
-        }
+        val signingKey =
+            try {
+                String(Base64.getDecoder().decode(rawKey.trim()))
+            } catch (_: IllegalArgumentException) {
+                rawKey
+            }
         useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
         sign(publishing.publications)
     }
