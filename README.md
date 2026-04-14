@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/logo.png" width="400" alt="AEDevLens Logo" />
+  <img src="docs/assets/logo.png" width="600" alt="AEDevLens Banner" />
 </p>
 
 <h1 align="center">AEDevLens</h1>
