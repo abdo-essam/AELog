@@ -13,20 +13,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ae.devlens.AEDevLens
 import com.ae.devlens.AEDevLensProvider
-import com.ae.devlens.DevLensConfig
+import com.ae.devlens.DevLens
+import com.ae.devlens.DevLensSetup
 import com.ae.devlens.DevLensUiConfig
-import com.ae.devlens.createDefault
-import com.ae.devlens.plugins.logs.log
-import com.ae.devlens.plugins.logs.model.LogSeverity
 
 @Composable
 fun App() {
-    // createDefault() installs LogsPlugin automatically (via :devlens aggregator extension)
-    val inspector = remember {
-        AEDevLens.createDefault(DevLensConfig(maxLogEntries = 500))
-    }
+    // DevLensSetup.init() is idempotent — safe to call on every recomposition
+    // It wires AEDevLens.default + DevLens.inspector in one call.
+    val inspector = remember { DevLensSetup.init() }
 
     MaterialTheme {
         AEDevLensProvider(
@@ -43,26 +39,24 @@ fun App() {
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text("AEDevLens Sample App")
-                Text("The Developer Tool SDK is active!")
+                Text("Open DevLens: tap the 🐛 button or long-press anywhere")
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                Button(onClick = {
-                    inspector.log(LogSeverity.INFO, "SampleApp", "Hello from the sample app!")
-                }) {
+                Button(onClick = { DevLens.i("SampleApp", "Hello from the sample app!") }) {
                     Text("Trigger Info Log")
                 }
 
-                Button(onClick = {
-                    inspector.log(LogSeverity.ERROR, "SampleApp", "Uh oh! Something went wrong!")
-                }) {
+                Button(onClick = { DevLens.e("SampleApp", "Uh oh! Something went wrong!") }) {
                     Text("Trigger Error Log")
                 }
 
-                Button(onClick = {
-                    inspector.log(LogSeverity.DEBUG, "SampleApp", "Debug message with details")
-                }) {
+                Button(onClick = { DevLens.d("SampleApp", "Debug message with details") }) {
                     Text("Trigger Debug Log")
+                }
+
+                Button(onClick = { DevLens.w("SampleApp", "Watch out for this!") }) {
+                    Text("Trigger Warn Log")
                 }
             }
         }

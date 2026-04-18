@@ -1,13 +1,14 @@
 package com.ae.devlens.core.store
 
 /**
- * Thread-safe fixed-capacity circular buffer.
+ * Fixed-capacity circular buffer (ring buffer).
  *
  * When full, the oldest item is evicted to make room for the new one.
  * All operations are O(1) amortized.
  *
- * This is a pure data structure with no coroutine or Flow dependency —
- * use [PluginStore] when you need reactive observation.
+ * **Not thread-safe on its own.** Wrap calls inside [PluginStore]
+ * which uses [kotlinx.coroutines.flow.MutableStateFlow.update] (CAS-based)
+ * to guarantee thread safety across all KMP targets.
  *
  * @param capacity Maximum number of items to hold. Must be > 0.
  */
@@ -19,12 +20,11 @@ public class RingBuffer<T>(public val capacity: Int) {
 
     @Suppress("UNCHECKED_CAST")
     private val buffer: Array<Any?> = arrayOfNulls(capacity)
-    private var head = 0   // index of next write
+    private var head = 0  // index of next write slot
     private var size = 0
 
     /**
-     * Add an item to the buffer.
-     * If the buffer is at capacity, the oldest item is silently evicted.
+     * Add an item. If at capacity, the oldest entry is overwritten.
      */
     public fun add(item: T) {
         buffer[head] = item
@@ -32,28 +32,34 @@ public class RingBuffer<T>(public val capacity: Int) {
         if (size < capacity) size++
     }
 
-    /** Returns all items in insertion order (oldest first). */
+    /**
+     * Returns all items in insertion order (oldest first).
+     *
+     * **Important:** uses `until` (exclusive) — NOT `..` (inclusive) —
+     * to avoid reading the one uninitialized null slot past the last entry.
+     * The previous `0..size` caused a NPE crash in `LazyColumn`.
+     */
     @Suppress("UNCHECKED_CAST")
     public fun toList(): List<T> {
         if (size == 0) return emptyList()
         val result = ArrayList<T>(size)
         val start = if (size < capacity) 0 else head
-        for (i in 0 until size) {
+        for (i in 0 until size) {           // ← was `0..size` (off-by-one bug!)
             result.add(buffer[(start + i) % capacity] as T)
         }
         return result
     }
 
-    /** Remove all items from the buffer. */
+    /** Remove all items. */
     public fun clear() {
-        for (i in buffer.indices) buffer[i] = null
+        buffer.fill(null)
         head = 0
         size = 0
     }
 
-    /** Current number of items in the buffer. */
+    /** Current number of stored items. */
     public val count: Int get() = size
 
-    /** True when the buffer holds no items. */
+    /** `true` when no items are stored. */
     public val isEmpty: Boolean get() = size == 0
 }

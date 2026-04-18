@@ -75,7 +75,7 @@ public interface DevLensPlugin {
     /** Called when the user requests a full data wipe. */
     public fun onClear() {}
 
-    companion object {
+    public companion object {
         /**
          * Shared no-op badge flow returned by the default [badgeCount] getter.
          * Safe to share — it is never mutated.

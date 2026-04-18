@@ -15,9 +15,9 @@ public class DevLensController {
     private val _isVisible = MutableStateFlow(false)
     public val isVisible: StateFlow<Boolean> = _isVisible.asStateFlow()
 
-    public fun show(): Unit { _isVisible.value = true }
-    public fun hide(): Unit { _isVisible.value = false }
-    public fun toggle(): Unit { _isVisible.value = !_isVisible.value }
+    public fun show() { _isVisible.value = true }
+    public fun hide() { _isVisible.value = false }
+    public fun toggle() { _isVisible.value = !_isVisible.value }
 }
 
 /**
