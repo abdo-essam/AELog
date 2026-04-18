@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Controls the visibility of the AEDevLens UI overlay.
+ * Controls the visibility of the DevLens UI overlay.
  *
- * Access via [LocalAEDevLensController] inside a [com.ae.devlens.AEDevLensProvider].
+ * Access via [LocalDevLensController] inside a [com.ae.devlens.AEDevLensProvider].
  */
-class AEDevLensController {
+class DevLensController {
     private val _isVisible = MutableStateFlow(false)
     val isVisible: StateFlow<Boolean> = _isVisible.asStateFlow()
 
@@ -28,11 +28,11 @@ class AEDevLensController {
 }
 
 /**
- * CompositionLocal providing the [AEDevLensController].
+ * CompositionLocal providing the [DevLensController].
  *
  * Available inside [com.ae.devlens.AEDevLensProvider].
  */
-val LocalAEDevLensController =
-    compositionLocalOf<AEDevLensController> {
-        error("AEDevLensController not provided. Wrap your content with AEDevLensProvider.")
+val LocalDevLensController =
+    compositionLocalOf<DevLensController> {
+        error("DevLensController not provided. Wrap your content with AEDevLensProvider.")
     }

@@ -12,4 +12,4 @@ package com.ae.devlens.core
  * crashPlugin?.recentCrashes
  * ```
  */
-interface DataPlugin : DevLensPlugin
+public interface DataPlugin : DevLensPlugin

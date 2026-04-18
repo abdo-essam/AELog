@@ -1,15 +1,21 @@
 package com.ae.devlens
 
-import com.ae.devlens.core.AEDevLensConfig
+import com.ae.devlens.core.DevLensConfig
 import com.ae.devlens.core.DevLensPlugin
+import com.ae.devlens.core.PluginContext
 import com.ae.devlens.core.UIPlugin
 import com.ae.devlens.plugins.logs.LogsPlugin
 import com.ae.devlens.plugins.logs.model.LogSeverity
 import com.ae.devlens.plugins.logs.store.LogStore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.reflect.KClass
 
 /**
  * AEDevLens — Extensible on-device dev tools for Kotlin Multiplatform.
@@ -22,7 +28,7 @@ import kotlinx.coroutines.flow.update
  * val inspector = AEDevLens.default
  *
  * // Or create a custom instance
- * val inspector = AEDevLens.create(AEDevLensConfig(maxLogEntries = 1000))
+ * val inspector = AEDevLens.create(DevLensConfig(maxLogEntries = 1000))
  * ```
  *
  * ## Logging
@@ -36,14 +42,14 @@ import kotlinx.coroutines.flow.update
  * ```
  */
 public class AEDevLens private constructor(
-    public val config: AEDevLensConfig,
+    public val config: DevLensConfig,
 ) {
     private val _plugins = MutableStateFlow<List<DevLensPlugin>>(emptyList())
 
-    /** All registered plugins */
+    /** All registered plugins as a reactive stream */
     public val plugins: StateFlow<List<DevLensPlugin>> = _plugins.asStateFlow()
 
-    /** All UI plugins (plugins that have a visible tab) */
+    /** All UI plugins (plugins that provide a visible tab) */
     public val uiPlugins: List<UIPlugin>
         get() = _plugins.value.filterIsInstance<UIPlugin>()
 
@@ -53,16 +59,26 @@ public class AEDevLens private constructor(
             getPlugin<LogsPlugin>()?.logStore
                 ?: error("LogsPlugin is not installed. Install it with inspector.install(LogsPlugin())")
 
+    /**
+     * Tracks the CoroutineScope for each registered plugin (keyed by plugin id).
+     *
+     * Each scope uses [SupervisorJob] so one failing child coroutine doesn't cancel
+     * sibling coroutines in the same plugin. Scopes are cancelled on [uninstall].
+     */
+    private val pluginScopes = mutableMapOf<String, CoroutineScope>()
+
     init {
         // Install the built-in LogsPlugin by default
         val logsPlugin = LogsPlugin(LogStore(maxEntries = config.maxLogEntries))
         installInternal(logsPlugin)
     }
 
+    // ── Plugin registration ───────────────────────────────────────────────────
+
     /**
      * Register a plugin with this inspector instance.
      *
-     * Duplicate plugin IDs are rejected.
+     * Duplicate plugin IDs are silently ignored.
      */
     public fun install(plugin: DevLensPlugin) {
         installInternal(plugin)
@@ -79,12 +95,16 @@ public class AEDevLens private constructor(
             }
         }
         if (attached) {
-            safeCall(plugin.id) { plugin.onAttach(this) }
+            val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+            pluginScopes[plugin.id] = scope
+            safeCall(plugin.id) { plugin.onAttach(buildContext(scope)) }
         }
     }
 
     /**
      * Unregister a plugin by its ID.
+     *
+     * Cancels the plugin's [CoroutineScope] before calling [DevLensPlugin.onDetach].
      */
     public fun uninstall(pluginId: String) {
         var detachedPlugin: DevLensPlugin? = null
@@ -98,9 +118,13 @@ public class AEDevLens private constructor(
             }
         }
         detachedPlugin?.let { plugin ->
+            // Cancel coroutines BEFORE onDetach so the plugin sees a clean state
+            pluginScopes.remove(plugin.id)?.cancel()
             safeCall(pluginId) { plugin.onDetach() }
         }
     }
+
+    // ── Plugin lookup ─────────────────────────────────────────────────────────
 
     /**
      * Get a plugin by its type.
@@ -109,51 +133,77 @@ public class AEDevLens private constructor(
      * val logsPlugin = inspector.getPlugin<LogsPlugin>()
      * ```
      */
-    public inline fun <reified T : DevLensPlugin> getPlugin(): T? = plugins.value.filterIsInstance<T>().firstOrNull()
+    public inline fun <reified T : DevLensPlugin> getPlugin(): T? =
+        plugins.value.filterIsInstance<T>().firstOrNull()
 
-    /**
-     * Get a plugin by its ID.
-     */
+    /** Get a plugin by its ID. */
     public fun getPluginById(id: String): DevLensPlugin? = _plugins.value.find { it.id == id }
 
-    /**
-     * Shortcut: Log a message to the built-in LogStore.
-     */
+    // ── Logging shortcut ──────────────────────────────────────────────────────
+
+    /** Shortcut: log a message to the built-in [LogStore]. */
     public fun log(
         severity: LogSeverity,
         tag: String,
         message: String,
     ) {
-        val logsPlugin = _plugins.value.filterIsInstance<LogsPlugin>().firstOrNull()
-        logsPlugin?.logStore?.log(severity, tag, message)
+        _plugins.value.filterIsInstance<LogsPlugin>().firstOrNull()
+            ?.logStore?.log(severity, tag, message)
     }
 
-    /**
-     * Notify all plugins that the DevLens UI has been opened.
-     */
+    // ── Lifecycle notifications ───────────────────────────────────────────────
+
+    /** Notify all plugins the host app has moved to the foreground. */
+    internal fun notifyStart() {
+        _plugins.value.forEach { plugin ->
+            safeCall(plugin.id) { plugin.onStart() }
+        }
+    }
+
+    /** Notify all plugins the host app has moved to the background. */
+    internal fun notifyStop() {
+        _plugins.value.forEach { plugin ->
+            safeCall(plugin.id) { plugin.onStop() }
+        }
+    }
+
+    /** Notify all plugins the DevLens UI panel has been opened. */
     internal fun notifyOpen() {
         _plugins.value.forEach { plugin ->
             safeCall(plugin.id) { plugin.onOpen() }
         }
     }
 
-    /**
-     * Notify all plugins that the DevLens UI has been closed.
-     */
+    /** Notify all plugins the DevLens UI panel has been closed. */
     internal fun notifyClose() {
         _plugins.value.forEach { plugin ->
             safeCall(plugin.id) { plugin.onClose() }
         }
     }
 
-    /**
-     * Clear all plugin data.
-     */
+    /** Clear all plugin data. */
     public fun clearAll() {
         _plugins.value.forEach { plugin ->
             safeCall(plugin.id) { plugin.onClear() }
         }
     }
+
+    // ── Internal helpers ──────────────────────────────────────────────────────
+
+    /**
+     * Builds a [PluginContext] for the given plugin scope.
+     *
+     * The context exposes only the safe subset of AEDevLens functionality
+     * that plugins are allowed to use.
+     */
+    private fun buildContext(scope: CoroutineScope): PluginContext =
+        object : PluginContext {
+            override val scope: CoroutineScope = scope
+            override val config: DevLensConfig = this@AEDevLens.config
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : DevLensPlugin> getPlugin(type: KClass<T>): T? =
+                _plugins.value.firstOrNull { type.isInstance(it) } as? T
+        }
 
     public companion object {
         /** Convenient default instance for apps that only need one inspector */
@@ -164,19 +214,15 @@ public class AEDevLens private constructor(
          *
          * Use this for testing or when you need multiple isolated instances.
          */
-        public fun create(config: AEDevLensConfig = AEDevLensConfig()): AEDevLens = AEDevLens(config)
+        public fun create(config: DevLensConfig = DevLensConfig()): AEDevLens = AEDevLens(config)
 
-        /**
-         * Safely call a plugin method, catching and logging any exceptions.
-         */
+        /** Safely call a plugin method, swallowing any exception to protect the host app. */
         internal fun safeCall(
             pluginId: String,
             block: () -> Unit,
         ) {
             runCatching { block() }
-                .onFailure { e ->
-                    // Optionally log via an error handler or ignore if none exists.
-                }
+                .onFailure { /* TODO: route to error reporter */ }
         }
     }
 }

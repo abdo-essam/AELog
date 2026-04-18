@@ -18,21 +18,21 @@ import kotlinx.coroutines.flow.update
  * Each log emits immediately to the StateFlow — no batching, no delay.
  * Safe to call from any thread or coroutine context.
  */
-class LogStore(
+public class LogStore(
     private val maxEntries: Int = 500,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private val _logsFlow = MutableStateFlow<List<LogEntry>>(emptyList())
-    val logsFlow: StateFlow<List<LogEntry>> = _logsFlow.asStateFlow()
+    public val logsFlow: StateFlow<List<LogEntry>> = _logsFlow.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    public val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     private val _selectedFilter = MutableStateFlow(LogFilter.ALL)
-    val selectedFilter: StateFlow<LogFilter> = _selectedFilter.asStateFlow()
+    public val selectedFilter: StateFlow<LogFilter> = _selectedFilter.asStateFlow()
 
-    fun log(
+    public fun log(
         severity: LogSeverity,
         tag: String,
         message: String,
@@ -48,19 +48,19 @@ class LogStore(
         }
     }
 
-    fun updateSearchQuery(query: String) {
+    public fun updateSearchQuery(query: String) {
         _searchQuery.value = query
     }
 
-    fun updateSelectedFilter(filter: LogFilter) {
+    public fun updateSelectedFilter(filter: LogFilter) {
         _selectedFilter.value = filter
     }
 
-    fun clear() {
+    public fun clear() {
         _logsFlow.value = emptyList()
     }
 
-    fun destroy() {
+    public fun destroy() {
         scope.cancel()
     }
 }

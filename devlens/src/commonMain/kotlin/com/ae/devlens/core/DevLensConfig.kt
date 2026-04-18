@@ -4,17 +4,16 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.Alignment
 
 /**
- * Configuration for an [AEDevLens][com.ae.devlens.AEDevLens] instance.
+ * Configuration for a [com.ae.devlens.AEDevLens] instance.
  *
  * ```kotlin
- * AEDevLens.create(AEDevLensConfig(
+ * AEDevLens.create(DevLensConfig(
  *     maxLogEntries = 1000,
  *     showFloatingButton = true,
- *     longPressToOpenMs = 3000L
  * ))
  * ```
  */
-public data class AEDevLensConfig(
+public data class DevLensConfig(
     /** Maximum number of log entries to keep in memory (default: 500) */
     val maxLogEntries: Int = 500,
     /** Show the floating debug button overlay (default: true) */

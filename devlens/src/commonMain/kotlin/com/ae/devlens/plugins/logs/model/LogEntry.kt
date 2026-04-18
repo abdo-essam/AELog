@@ -10,7 +10,7 @@ import kotlin.time.Clock
  * Provides computed properties for HTTP parsing, JSON formatting,
  * and log type classification.
  */
-data class LogEntry(
+public data class LogEntry(
     val id: String = "log_${Clock.System.now().toEpochMilliseconds()}_${kotlin.random.Random.nextInt(10000)}",
     val severity: LogSeverity,
     val tag: String,

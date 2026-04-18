@@ -11,25 +11,25 @@ import androidx.compose.ui.graphics.vector.ImageVector
  *
  * For headless plugins that only collect data without UI, use [DataPlugin] instead.
  */
-interface UIPlugin : DevLensPlugin {
+public interface UIPlugin : DevLensPlugin {
     /** Icon displayed in the tab */
-    val icon: ImageVector
+    public val icon: ImageVector
 
     /** The plugin's main UI content, rendered inside DevLens panel */
     @Composable
-    fun Content(modifier: Modifier)
+    public fun Content(modifier: Modifier)
 
     /**
      * Optional flexible slot rendered above the main content.
      * Use for custom controls, toggles, or info banners.
      */
     @Composable
-    fun HeaderContent() {}
+    public fun HeaderContent() {}
 
     /**
      * Optional toolbar action buttons (e.g., Clear, Copy, Export).
      * Rendered in the header row when this plugin's tab is active.
      */
     @Composable
-    fun HeaderActions() {}
+    public fun HeaderActions() {}
 }

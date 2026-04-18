@@ -8,8 +8,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.ae.devlens.core.AEDevLensController
-import com.ae.devlens.core.LocalAEDevLensController
+import com.ae.devlens.core.DevLensController
+import com.ae.devlens.core.LocalDevLensController
 import com.ae.devlens.core.UIPlugin
 import com.ae.devlens.plugins.logs.LogsPlugin
 import com.ae.devlens.ui.AEDevLensContainer
@@ -18,17 +18,15 @@ import com.ae.devlens.ui.theme.AEDevLensTheme
 import com.ae.devlens.ui.theme.DevLensSpacing
 
 /**
- * Top-level composable wrapper that provides AEDevLens functionality.
+ * Top-level composable wrapper that provides DevLens functionality.
  *
- * Wrap your entire app content with this to enable DevLens overlay.
+ * Wrap your entire app content with this to enable the DevLens overlay.
  *
  * ## Usage
  * ```kotlin
  * @Composable
  * fun App() {
- *     AEDevLensProvider(
- *         enabled = BuildConfig.DEBUG
- *     ) {
+ *     AEDevLensProvider(enabled = BuildConfig.DEBUG) {
  *         MaterialTheme {
  *             MainNavigation()
  *         }
@@ -37,11 +35,11 @@ import com.ae.devlens.ui.theme.DevLensSpacing
  * ```
  *
  * @param inspector The inspector instance to use. Defaults to [AEDevLens.default].
- * @param enabled Whether DevLens is enabled. Set to `false` in release builds for zero overhead.
- * @param content Your app content.
+ * @param enabled   Whether DevLens is enabled. Set to `false` in release builds for zero overhead.
+ * @param content   Your app content.
  */
 @Composable
-fun AEDevLensProvider(
+public fun AEDevLensProvider(
     inspector: AEDevLens = AEDevLens.default,
     enabled: Boolean = true,
     content: @Composable () -> Unit,
@@ -51,7 +49,7 @@ fun AEDevLensProvider(
         return
     }
 
-    val controller = remember { AEDevLensController() }
+    val controller = remember { DevLensController() }
     val isVisible by controller.isVisible.collectAsState()
     val config = inspector.config
     val plugins by inspector.plugins.collectAsState()
@@ -73,7 +71,7 @@ fun AEDevLensProvider(
         }
     }
 
-    CompositionLocalProvider(LocalAEDevLensController provides controller) {
+    CompositionLocalProvider(LocalDevLensController provides controller) {
         AEDevLensTheme(colorScheme = config.colorScheme) {
             BoxWithConstraints(
                 modifier =
