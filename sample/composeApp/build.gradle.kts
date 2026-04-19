@@ -14,7 +14,7 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(23)
+    jvmToolchain(21)
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
