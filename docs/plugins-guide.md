@@ -6,7 +6,9 @@ AEDevLens uses a plugin architecture. Each plugin adds a tab to the DevLens over
 
 | Plugin | Type | Description |
 |--------|------|-------------|
-| `LogsPlugin` | `UIPlugin` | Real-time log viewer with level/tag filtering |
+| `LogsPlugin` | `UIPlugin` | Real-time log viewer with level filtering |
+| `NetworkPlugin` | `UIPlugin` | HTTP traffic inspector with detailed request/response views |
+| `AnalyticsPlugin` | `UIPlugin` | Tracks events and screen views with custom payload properties |
 
 ## Plugin Types
 
@@ -19,10 +21,14 @@ Background data collector with no UI. Feeds data to a `UIPlugin`.
 ## Installing Plugins
 
 ```kotlin
-val devLens = rememberAEDevLens {
-    install(LogsPlugin())
-    install(MyCustomPlugin())
-}
+DevLensSetup.init(
+    plugins = listOf(
+        LogsPlugin(),
+        NetworkPlugin(),
+        AnalyticsPlugin(),
+        MyCustomPlugin()
+    )
+)
 ```
 
 ## Creating Custom Plugins

@@ -91,8 +91,7 @@ class FeatureFlagsPlugin : UIPlugin {
 ### Step 2: Install the Plugin
 
 ```kotlin
-val inspector = AEDevLens.default
-inspector.install(FeatureFlagsPlugin())
+DevLensSetup.init(plugins = listOf(LogsPlugin(), FeatureFlagsPlugin()))
 ```
 
 ### Step 3: Done!

@@ -56,12 +56,14 @@
 | 🌐 **Network Viewer** | HTTP request/response inspection with method badges |
 | 📊 **Analytics Tracker** | Monitor analytics events in real-time |
 | 🎨 **Beautiful UI** | Material3 design with light/dark mode support |
-| 🧩 **Plugin System** | Extend with custom debug panels |
+| 🧩 **Plugin System** | Extend with custom debug panels through modular dependencies |
 | 📱 **Adaptive Layout** | Bottom sheet on phones, dialog on tablets |
 | 🔌 **Zero Release Overhead**| Disable with a single flag — no runtime cost |
-| 🍎 **Multiplatform** | Android, iOS, Desktop (JVM) |
+| 🍎 **Multiplatform** | Android, iOS, Desktop (JVM), Web (WASM) |
 
 ## 📦 Installation
+
+AEDevLens is fully modularized. Include only the plugins you need to keep your app light!
 
 ### Kotlin Multiplatform
 
@@ -70,18 +72,14 @@
 kotlin {
     sourceSets {
         commonMain.dependencies {
+            // Core UI + Logging plugin (Required)
             implementation("io.github.abdo-essam:devlens:1.0.0")
+            
+            // Optional Plugins
+            implementation("io.github.abdo-essam:devlens-network:1.0.0")
+            implementation("io.github.abdo-essam:devlens-analytics:1.0.0")
         }
     }
-}
-```
-
-### Android Only
-
-```kotlin
-// build.gradle.kts (app module)
-dependencies {
-    debugImplementation("io.github.abdo-essam:devlens-android:1.0.0")
 }
 ```
 
@@ -92,18 +90,39 @@ dependencies {
 devlens = "1.0.0"
 
 [libraries]
-devlens = { module = "io.github.abdo-essam:devlens", version.ref = "devlens" }
+devlens-core      = { module = "io.github.abdo-essam:devlens", version.ref = "devlens" }
+devlens-network   = { module = "io.github.abdo-essam:devlens-network", version.ref = "devlens" }
+devlens-analytics = { module = "io.github.abdo-essam:devlens-analytics", version.ref = "devlens" }
 ```
 
 ## 🚀 Quick Start
 
-### 1. Wrap Your App
+### 1. Initialize & Install Plugins
+
+Best called early in your platform-specific entry points (e.g. `Application.onCreate` for Android, or main `ViewController` for iOS):
+
+```kotlin
+DevLensSetup.init(
+    plugins = listOf(
+        LogsPlugin(),      // Default built-in logs
+        NetworkPlugin(),   // Network inspector
+        AnalyticsPlugin()  // Analytics tracker
+    )
+)
+```
+
+### 2. Wrap Your App with UI Provider
 
 ```kotlin
 @Composable
-fun App() {
+fun App(debugMode: Boolean) {
     AEDevLensProvider(
-        enabled = BuildConfig.DEBUG  // ← zero overhead in release
+        inspector = AEDevLens.default,
+        enabled = debugMode, // ← disables UI overhead in release builds
+        uiConfig = DevLensUiConfig(
+            showFloatingButton = true, // Enables the 'bug' overlay button
+            enableLongPress = true,    // Show panel on 3-finger long press
+        )
     ) {
         MaterialTheme {
             YourAppContent()
@@ -112,65 +131,41 @@ fun App() {
 }
 ```
 
-### 2. Log Messages
+### 3. Log Data to Plugins
+
+Use the global static APIs corresponding to your installed plugins:
 
 ```kotlin
-val inspector = AEDevLens.default
+// 1. Logs API
+DevLens.i("HomeScreen", "App launched!")
+DevLens.e("Database", "Failed to clear cache", exception)
 
-// Simple logging
-inspector.log(LogSeverity.INFO, "HomeScreen", "User opened home screen")
-inspector.log(LogSeverity.ERROR, "API", "Failed to fetch user: 401 Unauthorized")
+// 2. Network API
+NetworkApi.logRequest(method = "GET", url = "https://api.example.com/users", headers = mapOf("Auth" to "Bearer 123"))
+NetworkApi.logResponse(url = "https://api.example.com/users", statusCode = 200, responseBody = "{ \"count\": 2 }")
 
-// Network logging (auto-detected)
-inspector.log(LogSeverity.DEBUG, "HTTP", "--> GET https://api.example.com/users")
-inspector.log(LogSeverity.DEBUG, "HTTP", "<-- 200 OK https://api.example.com/users")
-
-// Analytics events
-inspector.log(LogSeverity.INFO, "Analytics", "screen_view: HomeScreen")
+// 3. Analytics API
+AnalyticsApi.logEvent("item_added_to_cart", properties = mapOf("id" to "123", "price" to "29.99"))
 ```
 
-### 3. Open DevLens
+### 4. Open DevLens
 
 Three ways to open the inspector:
-1. Tap the floating bug button (bottom-right corner)
-2. Long-press anywhere on screen
+1. Tap the floating **bug button** (bottom-right corner)
+2. Long-press with multiple fingers anywhere on screen (if enabled)
 3. Programmatically: `LocalAEDevLensController.current.show()`
 
-## 🔧 Configuration
+## 🧩 Modularity & Available Plugins
 
-```kotlin
-val inspector = AEDevLens.create(
-    AEDevLensConfig(
-        maxLogEntries = 1000,            // Default: 500
-        showFloatingButton = true,        // Default: true
-        floatingButtonAlignment = Alignment.BottomEnd,
-        enableLongPress = true,           // Default: true
-        colorScheme = yourCustomScheme,   // Default: built-in theme
-    )
-)
-
-AEDevLensProvider(inspector = inspector) {
-    YourApp()
-}
-```
-
-## 🧩 Plugins
-
-### Built-in Plugins
-| Plugin | Type | Description |
+| Module / Plugin | Class | Description |
 |--------|------|-------------|
-| LogsPlugin | UI | Log viewer with search, filter, copy |
-
-### Coming Soon
-| Plugin | Type | Description |
-|--------|------|-------------|
-| NetworkPlugin | UI | Ktor/OkHttp request inspector |
-| PreferencesPlugin | UI | SharedPreferences / DataStore viewer |
-| CrashPlugin | Data | Crash reporting and history |
+| `:devlens` | `LogsPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
+| `:devlens-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
+| `:devlens-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
 
 ## 🔨 Custom Plugins
 
-Create your own debug panel in 3 steps:
+Create your own debug panel (e.g., a Database Inspector or Feature Flags toggler) in 3 steps:
 
 ```kotlin
 class FeatureFlagsPlugin : UIPlugin {
@@ -197,22 +192,19 @@ class FeatureFlagsPlugin : UIPlugin {
 }
 
 // Install it
-val inspector = AEDevLens.default
-inspector.install(FeatureFlagsPlugin())
+DevLensSetup.init(plugins = listOf(LogsPlugin(), FeatureFlagsPlugin()))
 ```
 
 📖 See the [Custom Plugins Guide](https://abdo-essam.github.io/AEDevLens/custom-plugins) for the full API reference.
 
 ## 🔗 Logging Integrations
 
-AEDevLens works with any logging library (Kermit, Napier, Timber, etc.). Just forward your logs to the inspector.
+AEDevLens works seamlessly with your existing logging infrastructures (like Kermit or Napier). Just forward your logs to the APIs.
 
 ```kotlin
-class DevLensKermitWriter(
-    private val inspector: AEDevLens = AEDevLens.default
-) : LogWriter() {
+class DevLensKermitWriter : LogWriter() {
     override fun log(severity: Severity, message: String, tag: String, throwable: Throwable?) {
-        inspector.log(
+        DevLens.log(
             severity = severity.toDevLensLogSeverity(),
             tag = tag,
             message = buildString {
@@ -228,18 +220,20 @@ class DevLensKermitWriter(
 
 ## 🏗️ Architecture
 
+The SDK follows an encapsulated `Model-Store-API-UI` pattern, making plugins 100% reactive, modular, and thread-safe.
+
 ```text
 ┌─────────────────────────────────────────────────┐
 │              AEDevLensProvider                   │  Compose wrapper
 │  ┌───────────────────────────────────────────┐  │
 │  │            AEDevLens (Core)               │  │  Plugin engine
 │  │  ┌─────────┐ ┌─────────┐ ┌────────────┐  │  │
-│  │  │  Logs   │ │ Network │ │  Custom    │  │  │  Plugins
+│  │  │  Logs   │ │ Network │ │ Analytics  │  │  │  Plugins
 │  │  │ Plugin  │ │ Plugin  │ │  Plugin    │  │  │
 │  │  └────┬────┘ └────┬────┘ └─────┬──────┘  │  │
 │  │       │           │            │          │  │
 │  │  ┌────┴────┐ ┌────┴────┐ ┌────┴──────┐  │  │
-│  │  │LogStore │ │NetStore │ │ YourStore │  │  │  Data layer
+│  │  │LogStore │ │NetStore │ │AnalyticsStore│  │ Data layer
 │  │  └─────────┘ └─────────┘ └───────────┘  │  │
 │  └───────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────┘
@@ -251,8 +245,8 @@ class DevLensKermitWriter(
 |----------|----------------|
 | Android | API 24 (Android 7.0) |
 | iOS | 15.0 |
-| Kotlin | 2.3.0 |
-| Compose Multiplatform | 1.9.3 |
+| Kotlin | 2.1.10+ |
+| Compose Multiplatform | 1.7.3+ |
 
 ## 🤝 Contributing
 
@@ -268,7 +262,7 @@ cd AEDevLens
 ## 📄 License
 
 ```text
-Copyright 2025 Abdo Essam
+Copyright 2026 Abdo Essam
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

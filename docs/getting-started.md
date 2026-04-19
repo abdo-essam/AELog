@@ -18,14 +18,18 @@
     devlens = "1.0.0"
 
     [libraries]
-    devlens = { module = "io.github.abdo-essam:devlens", version.ref = "devlens" }
+    devlens-core      = { module = "io.github.abdo-essam:devlens", version.ref = "devlens" }
+    devlens-network   = { module = "io.github.abdo-essam:devlens-network", version.ref = "devlens" }
+    devlens-analytics = { module = "io.github.abdo-essam:devlens-analytics", version.ref = "devlens" }
     ```
 
     ```kotlin title="shared/build.gradle.kts"
     kotlin {
         sourceSets {
             commonMain.dependencies {
-                implementation(libs.devlens)
+                implementation(libs.devlens.core)
+                implementation(libs.devlens.network)
+                implementation(libs.devlens.analytics)
             }
         }
     }
@@ -38,6 +42,8 @@
         sourceSets {
             commonMain.dependencies {
                 implementation("io.github.abdo-essam:devlens:1.0.0")
+                implementation("io.github.abdo-essam:devlens-network:1.0.0")
+                implementation("io.github.abdo-essam:devlens-analytics:1.0.0")
             }
         }
     }

@@ -1,32 +1,32 @@
 # Configuration
 
-Configure AEDevLens behaviour via `AEDevLensConfig`.
+Configure AEDevLens structure via `DevLensSetup.init()` and behaviour via `DevLensUiConfig`.
 
 ## Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `enabled` | `Boolean` | `true` | Enable or disable the overlay entirely |
-| `maxLogEntries` | `Int` | `500` | Max number of log entries to keep in memory |
-| `shakeToOpen` | `Boolean` | `true` | Android: shake gesture opens the overlay |
-| `triggerThreshold` | `Float` | `2.5f` | Shake sensitivity (higher = less sensitive) |
+| `enabled` | `Boolean` | `false` | Enable or disable the overlay entirely (passed into `AEDevLensProvider`) |
+| `showFloatingButton` | `Boolean` | `true` | Show floating bug button overlay |
+| `enableLongPress` | `Boolean` | `true` | Show panel on 3-finger long press |
 
 ## Example
 
 ```kotlin
-AEDevLens.configure {
-    enabled = BuildConfig.DEBUG
-    maxLogEntries = 1000
-    shakeToOpen = true
-}
-```
+// Data config
+DevLensSetup.init(
+    config = DevLensConfig(maxLogEntries = 1000)
+)
 
-## Disabling in Release
-
-Always guard AEDevLens with a debug flag:
-
-```kotlin
-if (BuildConfig.DEBUG) {
-    AEDevLens.configure { enabled = true }
+// UI config
+AEDevLensProvider(
+    inspector = AEDevLens.default,
+    enabled = BuildConfig.DEBUG,
+    uiConfig = DevLensUiConfig(
+        showFloatingButton = true,
+        enableLongPress = true
+    )
+) {
+    MyApp()
 }
 ```

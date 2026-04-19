@@ -6,10 +6,12 @@ AEDevLens is a lightweight, plugin-based developer tools library for KMP apps. I
 
 ## Features
 
-- 📋 **Log Viewer** — Real-time log inspection with filtering by level and tag
-- 🔌 **Plugin System** — Easily extend with custom `UIPlugin` or `DataPlugin`
+- 📋 **Log Viewer** — Real-time log inspection with severity filtering
+- 🌐 **Network Inspector** — Detailed view of HTTP traffic and JSON payloads
+- 📈 **Analytics Tracker** — Monitor properties across app flow
+- 🔌 **Plugin System** — Easily extend with custom decoupled `UIPlugin` or `DataPlugin`
 - 🎨 **Compose UI** — Material 3 themed overlay with dark/light mode support
-- 📱 **KMP** — Works on Android, iOS, and Desktop
+- 📱 **Multiplatform** — Works seamlessly across Android, iOS, and Desktop
 
 ## Quick Links
 
