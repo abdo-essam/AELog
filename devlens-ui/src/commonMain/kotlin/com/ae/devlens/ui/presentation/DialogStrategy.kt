@@ -15,7 +15,6 @@ import androidx.compose.ui.window.DialogProperties
  * Suited for large screens (tablets, desktop).
  */
 public object DialogStrategy : PresentationStrategy {
-
     @Composable
     override fun Present(
         onDismiss: () -> Unit,
@@ -26,9 +25,10 @@ public object DialogStrategy : PresentationStrategy {
             properties = DialogProperties(usePlatformDefaultWidth = false),
         ) {
             Surface(
-                modifier = androidx.compose.ui.Modifier
-                    .fillMaxWidth(0.85f)
-                    .fillMaxHeight(0.8f),
+                modifier =
+                    androidx.compose.ui.Modifier
+                        .fillMaxWidth(0.85f)
+                        .fillMaxHeight(0.8f),
                 shape = RoundedCornerShape(24.dp),
                 color = MaterialTheme.colorScheme.surface,
                 tonalElevation = 6.dp,

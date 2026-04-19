@@ -31,6 +31,7 @@ internal fun LogsContent(
     val selectedFilter by viewModel.selectedFilter.collectAsState()
 
     var expandedLogId by remember { mutableStateOf<String?>(null) }
+
     @Suppress("DEPRECATION")
     val clipboardManager = LocalClipboardManager.current
     val listState = rememberLazyListState()
@@ -94,9 +95,10 @@ private fun LogsList(
     onCopyLog: (LogEntry) -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = DevLensSpacing.x5),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = DevLensSpacing.x5),
         shape = RoundedCornerShape(DevLensSpacing.x3),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {

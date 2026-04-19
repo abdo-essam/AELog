@@ -51,8 +51,10 @@ public data class DevLensUiConfig(
 public enum class PresentationMode {
     /** Bottom sheet on compact screens, centered dialog on large screens (default). */
     Adaptive,
+
     /** Always use a bottom sheet, regardless of screen size. */
     BottomSheet,
+
     /** Always use a centered dialog, regardless of screen size. */
     Dialog,
 }

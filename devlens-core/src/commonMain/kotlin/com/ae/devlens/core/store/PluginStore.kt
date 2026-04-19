@@ -28,8 +28,9 @@ import kotlinx.coroutines.flow.update
  * @param T Type of data stored.
  * @param capacity Maximum number of items; older items are evicted when full.
  */
-public class PluginStore<T>(capacity: Int) {
-
+public class PluginStore<T>(
+    capacity: Int,
+) {
     private val ring = RingBuffer<T>(capacity)
 
     // MutableStateFlow<List<T>> is the reactive wrapper.
@@ -64,7 +65,10 @@ public class PluginStore<T>(capacity: Int) {
      * Replace the item at [index] with [item] and emit the updated list.
      * No-op if [index] is out of bounds.
      */
-    public fun replace(index: Int, item: T) {
+    public fun replace(
+        index: Int,
+        item: T,
+    ) {
         _dataFlow.update { current ->
             if (index !in current.indices) return@update current
             ring.clear()

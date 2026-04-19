@@ -65,16 +65,15 @@ internal fun AnalyticsContent(
     viewModel: AnalyticsViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val events    by viewModel.filteredEvents.collectAsState()
-    val query     by viewModel.searchQuery.collectAsState()
-    val filter    by viewModel.filter.collectAsState()
+    val events by viewModel.filteredEvents.collectAsState()
+    val query by viewModel.searchQuery.collectAsState()
+    val filter by viewModel.filter.collectAsState()
 
     var expandedId by remember { mutableStateOf<String?>(null) }
-    val clipboard  = LocalClipboardManager.current
-    val listState  = rememberLazyListState()
+    val clipboard = LocalClipboardManager.current
+    val listState = rememberLazyListState()
 
     Column(modifier = modifier.fillMaxWidth()) {
-
         // ── Header ─────────────────────────────────────────────────────────
         DevLensViewerHeader(
             itemCount = events.size,
@@ -109,13 +108,15 @@ internal fun AnalyticsContent(
             AnalyticsEmptyPlaceholder(query)
         } else {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = DevLensSpacing.x5),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = DevLensSpacing.x5),
                 shape = RoundedCornerShape(DevLensSpacing.x3),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             ) {
                 LazyColumn(
                     state = listState,
@@ -157,13 +158,14 @@ private fun AnalyticsEventItem(
     onCopy: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-            ) { onToggleExpand() }
-            .padding(horizontal = DevLensSpacing.x4, vertical = DevLensSpacing.x3),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ) { onToggleExpand() }
+                .padding(horizontal = DevLensSpacing.x4, vertical = DevLensSpacing.x3),
     ) {
         // ── Summary row ───────────────────────────────────────────────────
         Row(
@@ -203,8 +205,12 @@ private fun AnalyticsEventItem(
             }
             Spacer(Modifier.width(DevLensSpacing.x2))
             Icon(
-                imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp
-                              else Icons.Default.KeyboardArrowDown,
+                imageVector =
+                    if (isExpanded) {
+                        Icons.Default.KeyboardArrowUp
+                    } else {
+                        Icons.Default.KeyboardArrowDown
+                    },
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -224,60 +230,88 @@ private fun AnalyticsEventItem(
 
 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
-private fun AnalyticsEventDetails(event: AnalyticsEvent, onCopy: () -> Unit) {
+private fun AnalyticsEventDetails(
+    event: AnalyticsEvent,
+    onCopy: () -> Unit,
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = DevLensSpacing.x3),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(top = DevLensSpacing.x3),
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(DevLensSpacing.x2),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            ),
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                ),
         ) {
             Column(modifier = Modifier.padding(DevLensSpacing.x3)) {
                 // Event name
-                Text("Event", style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary)
-                Text(event.name, style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface)
+                Text(
+                    "Event",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    event.name,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
 
                 // Source
                 event.source?.let {
                     Spacer(Modifier.height(DevLensSpacing.x2))
-                    Text("Source", style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary)
-                    Text(it, style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface)
+                    Text(
+                        "Source",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
                 }
 
                 // Timestamp
                 Spacer(Modifier.height(DevLensSpacing.x2))
-                Text("Time", style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary)
-                Text(event.timestamp.toFullTimeLabel(),
+                Text(
+                    "Time",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Text(
+                    event.timestamp.toFullTimeLabel(),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface)
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
 
                 // Properties
                 if (event.properties.isNotEmpty()) {
                     Spacer(Modifier.height(DevLensSpacing.x2))
-                    Text("Properties", style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary)
+                    Text(
+                        "Properties",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
                     Spacer(Modifier.height(4.dp))
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         event.properties.entries.forEach { (k, v) ->
                             SuggestionChip(
                                 onClick = {},
                                 label = {
-                                    Text("$k = $v",
-                                        style = MaterialTheme.typography.labelSmall)
+                                    Text(
+                                        "$k = $v",
+                                        style = MaterialTheme.typography.labelSmall,
+                                    )
                                 },
-                                colors = SuggestionChipDefaults.suggestionChipColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                ),
+                                colors =
+                                    SuggestionChipDefaults.suggestionChipColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    ),
                             )
                         }
                     }
@@ -290,11 +324,18 @@ private fun AnalyticsEventDetails(event: AnalyticsEvent, onCopy: () -> Unit) {
             horizontalArrangement = Arrangement.End,
         ) {
             TextButton(onClick = onCopy) {
-                Icon(Icons.Default.ContentCopy, null,
-                    tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                Icon(
+                    Icons.Default.ContentCopy,
+                    null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(16.dp),
+                )
                 Spacer(Modifier.width(4.dp))
-                Text("Copy", style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary)
+                Text(
+                    "Copy",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
             }
         }
     }
@@ -316,27 +357,34 @@ private fun AnalyticsEmptyPlaceholder(query: String) {
 // ── Time helpers ──────────────────────────────────────────────────────────────
 
 private fun Long.toTimeLabel(): String {
-    val t = Instant.fromEpochMilliseconds(this)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
+    val t =
+        Instant
+            .fromEpochMilliseconds(this)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+
     fun Int.pad() = toString().padStart(2, '0')
     return "${t.hour.pad()}:${t.minute.pad()}:${t.second.pad()}"
 }
 
 private fun Long.toFullTimeLabel(): String {
-    val t = kotlin.time.Instant.fromEpochMilliseconds(this)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
+    val t =
+        kotlin.time.Instant
+            .fromEpochMilliseconds(this)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+
     fun Int.pad() = toString().padStart(2, '0')
     return "${t.date} ${t.hour.pad()}:${t.minute.pad()}:${t.second.pad()}"
 }
 
 // ── Clipboard helper ──────────────────────────────────────────────────────────
 
-private fun AnalyticsEvent.toClipboardText(): String = buildString {
-    appendLine("Event: $name")
-    source?.let { appendLine("Source: $it") }
-    appendLine("Time: ${timestamp.toFullTimeLabel()}")
-    if (properties.isNotEmpty()) {
-        appendLine("Properties:")
-        properties.entries.forEach { (k, v) -> appendLine("  $k = $v") }
+private fun AnalyticsEvent.toClipboardText(): String =
+    buildString {
+        appendLine("Event: $name")
+        source?.let { appendLine("Source: $it") }
+        appendLine("Time: ${timestamp.toFullTimeLabel()}")
+        if (properties.isNotEmpty()) {
+            appendLine("Properties:")
+            properties.entries.forEach { (k, v) -> appendLine("  $k = $v") }
+        }
     }
-}

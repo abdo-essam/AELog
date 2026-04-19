@@ -22,33 +22,34 @@ public class LogsViewModel(
     private val _selectedFilter = MutableStateFlow(LogFilter.ALL)
     public val selectedFilter: StateFlow<LogFilter> = _selectedFilter.asStateFlow()
 
-    public val filteredLogs: StateFlow<List<LogEntry>> = combine(
-        logStore.logsFlow,
-        _searchQuery,
-        _selectedFilter,
-    ) { logs, query, filter ->
-        logs
-            .filter { entry ->
-                when (filter) {
-                    LogFilter.ALL     -> true
-                    LogFilter.VERBOSE -> entry.severity == LogSeverity.VERBOSE
-                    LogFilter.DEBUG   -> entry.severity == LogSeverity.DEBUG
-                    LogFilter.INFO    -> entry.severity == LogSeverity.INFO
-                    LogFilter.WARN    -> entry.severity == LogSeverity.WARN
-                    LogFilter.ERROR   -> entry.severity == LogSeverity.ERROR ||
-                                        entry.severity == LogSeverity.ASSERT
+    public val filteredLogs: StateFlow<List<LogEntry>> =
+        combine(
+            logStore.logsFlow,
+            _searchQuery,
+            _selectedFilter,
+        ) { logs, query, filter ->
+            logs
+                .filter { entry ->
+                    when (filter) {
+                        LogFilter.ALL -> true
+                        LogFilter.VERBOSE -> entry.severity == LogSeverity.VERBOSE
+                        LogFilter.DEBUG -> entry.severity == LogSeverity.DEBUG
+                        LogFilter.INFO -> entry.severity == LogSeverity.INFO
+                        LogFilter.WARN -> entry.severity == LogSeverity.WARN
+                        LogFilter.ERROR ->
+                            entry.severity == LogSeverity.ERROR ||
+                                entry.severity == LogSeverity.ASSERT
+                    }
+                }.filter { entry ->
+                    query.isBlank() ||
+                        entry.message.contains(query, ignoreCase = true) ||
+                        entry.tag.contains(query, ignoreCase = true)
                 }
-            }
-            .filter { entry ->
-                query.isBlank() ||
-                    entry.message.contains(query, ignoreCase = true) ||
-                    entry.tag.contains(query, ignoreCase = true)
-            }
-    }.stateIn(
-        scope = scope,
-        started = SharingStarted.Eagerly,
-        initialValue = emptyList(),
-    )
+        }.stateIn(
+            scope = scope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList(),
+        )
 
     public fun updateSearchQuery(query: String) {
         _searchQuery.value = query

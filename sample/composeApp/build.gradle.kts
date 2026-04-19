@@ -24,8 +24,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":devlens"))           // core + ui + logs aggregator
-            implementation(project(":devlens-network"))   // NetworkPlugin
+            implementation(project(":devlens")) // core + ui + logs aggregator
+            implementation(project(":devlens-network")) // NetworkPlugin
             implementation(project(":devlens-analytics")) // AnalyticsPlugin
             implementation(libs.runtime)
             implementation(libs.foundation)
@@ -67,7 +67,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
-        buildConfig = true   // Required in AGP 8+ — disabled by default
+        buildConfig = true // Required in AGP 8+ — disabled by default
     }
     packaging {
         resources {

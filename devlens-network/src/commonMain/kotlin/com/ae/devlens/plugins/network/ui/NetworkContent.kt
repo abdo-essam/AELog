@@ -63,15 +63,14 @@ internal fun NetworkContent(
     modifier: Modifier = Modifier,
 ) {
     val entries by viewModel.filteredEntries.collectAsState()
-    val query   by viewModel.searchQuery.collectAsState()
-    val filter  by viewModel.filter.collectAsState()
+    val query by viewModel.searchQuery.collectAsState()
+    val filter by viewModel.filter.collectAsState()
 
     var expandedId by remember { mutableStateOf<String?>(null) }
     val clipboard = LocalClipboardManager.current
     val listState = rememberLazyListState()
 
     Column(modifier = modifier.fillMaxWidth()) {
-
         // ── Header ─────────────────────────────────────────────────────────
         DevLensViewerHeader(
             itemCount = entries.size,
@@ -106,13 +105,15 @@ internal fun NetworkContent(
             NetworkEmptyPlaceholder(query)
         } else {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = DevLensSpacing.x5),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = DevLensSpacing.x5),
                 shape = RoundedCornerShape(DevLensSpacing.x3),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                    ),
             ) {
                 LazyColumn(
                     state = listState,
@@ -154,13 +155,14 @@ private fun NetworkEntryItem(
     onCopy: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-            ) { onToggleExpand() }
-            .padding(horizontal = DevLensSpacing.x4, vertical = DevLensSpacing.x3),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ) { onToggleExpand() }
+                .padding(horizontal = DevLensSpacing.x4, vertical = DevLensSpacing.x3),
     ) {
         // ── Summary row ───────────────────────────────────────────────────
         Row(
@@ -197,8 +199,12 @@ private fun NetworkEntryItem(
 
             Spacer(Modifier.width(DevLensSpacing.x2))
             Icon(
-                imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp
-                              else Icons.Default.KeyboardArrowDown,
+                imageVector =
+                    if (isExpanded) {
+                        Icons.Default.KeyboardArrowUp
+                    } else {
+                        Icons.Default.KeyboardArrowDown
+                    },
                 contentDescription = if (isExpanded) "Collapse" else "Expand",
                 modifier = Modifier.size(20.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -217,17 +223,22 @@ private fun NetworkEntryItem(
 }
 
 @Composable
-private fun NetworkEntryDetails(entry: NetworkEntry, onCopy: () -> Unit) {
-    val bgColor = when {
-        entry.isError   -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-        entry.isSuccess -> Color(0xFF4CAF50).copy(alpha = 0.07f)
-        else            -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    }
+private fun NetworkEntryDetails(
+    entry: NetworkEntry,
+    onCopy: () -> Unit,
+) {
+    val bgColor =
+        when {
+            entry.isError -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+            entry.isSuccess -> Color(0xFF4CAF50).copy(alpha = 0.07f)
+            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = DevLensSpacing.x3),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(top = DevLensSpacing.x3),
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -265,25 +276,35 @@ private fun NetworkEntryDetails(entry: NetworkEntry, onCopy: () -> Unit) {
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = DevLensSpacing.x2),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = DevLensSpacing.x2),
             horizontalArrangement = Arrangement.End,
         ) {
             TextButton(onClick = onCopy) {
-                Icon(Icons.Default.ContentCopy, null,
+                Icon(
+                    Icons.Default.ContentCopy,
+                    null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(16.dp))
+                    modifier = Modifier.size(16.dp),
+                )
                 Spacer(Modifier.width(4.dp))
-                Text("Copy", style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary)
+                Text(
+                    "Copy",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun DetailSection(label: String, value: String) {
+private fun DetailSection(
+    label: String,
+    value: String,
+) {
     Column(modifier = Modifier.padding(bottom = DevLensSpacing.x2)) {
         Text(
             text = label,
@@ -302,18 +323,20 @@ private fun DetailSection(label: String, value: String) {
 
 @Composable
 private fun MethodBadge(label: String) {
-    val color = when (label) {
-        "GET"    -> Color(0xFF2196F3)
-        "POST"   -> Color(0xFF4CAF50)
-        "PUT"    -> Color(0xFFFF9800)
-        "PATCH"  -> Color(0xFF9C27B0)
-        "DELETE" -> Color(0xFFF44336)
-        else     -> Color(0xFF607D8B)
-    }
+    val color =
+        when (label) {
+            "GET" -> Color(0xFF2196F3)
+            "POST" -> Color(0xFF4CAF50)
+            "PUT" -> Color(0xFFFF9800)
+            "PATCH" -> Color(0xFF9C27B0)
+            "DELETE" -> Color(0xFFF44336)
+            else -> Color(0xFF607D8B)
+        }
     Box(
-        modifier = Modifier
-            .background(color.copy(alpha = 0.15f), RoundedCornerShape(4.dp))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
+        modifier =
+            Modifier
+                .background(color.copy(alpha = 0.15f), RoundedCornerShape(4.dp))
+                .padding(horizontal = 6.dp, vertical = 2.dp),
     ) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = color)
     }
@@ -322,12 +345,13 @@ private fun MethodBadge(label: String) {
 @Composable
 private fun StatusBadge(entry: NetworkEntry) {
     val text = entry.statusLabel
-    val color = when {
-        entry.isPending -> MaterialTheme.colorScheme.onSurfaceVariant
-        entry.isSuccess -> Color(0xFF4CAF50)
-        entry.isError   -> MaterialTheme.colorScheme.error
-        else            -> Color(0xFFFFC107)
-    }
+    val color =
+        when {
+            entry.isPending -> MaterialTheme.colorScheme.onSurfaceVariant
+            entry.isSuccess -> Color(0xFF4CAF50)
+            entry.isError -> MaterialTheme.colorScheme.error
+            else -> Color(0xFFFFC107)
+        }
     Text(text = text, style = MaterialTheme.typography.labelSmall, color = color)
 }
 
@@ -346,11 +370,12 @@ private fun NetworkEmptyPlaceholder(query: String) {
 
 // ── Clipboard helper ──────────────────────────────────────────────────────────
 
-private fun NetworkEntry.toClipboardText(): String = buildString {
-    appendLine("${method.label} $url")
-    statusCode?.let { appendLine("Status: $it") }
-    durationMs?.let { appendLine("Duration: ${it}ms") }
-    requestBody?.let { appendLine("\n--- Request Body ---\n$it") }
-    responseBody?.let { appendLine("\n--- Response Body ---\n$it") }
-    error?.let { appendLine("\n--- Error ---\n$it") }
-}
+private fun NetworkEntry.toClipboardText(): String =
+    buildString {
+        appendLine("${method.label} $url")
+        statusCode?.let { appendLine("Status: $it") }
+        durationMs?.let { appendLine("Duration: ${it}ms") }
+        requestBody?.let { appendLine("\n--- Request Body ---\n$it") }
+        responseBody?.let { appendLine("\n--- Response Body ---\n$it") }
+        error?.let { appendLine("\n--- Error ---\n$it") }
+    }

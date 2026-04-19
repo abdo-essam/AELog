@@ -7,8 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 /**
  * Thread-safe storage for [AnalyticsEvent] items backed by [PluginStore].
  */
-internal class AnalyticsStore(capacity: Int = 500) {
-
+internal class AnalyticsStore(
+    capacity: Int = 500,
+) {
     private val store = PluginStore<AnalyticsEvent>(capacity)
 
     /** Hot stream of all recorded events, oldest first. */

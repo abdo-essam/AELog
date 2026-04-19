@@ -31,9 +31,10 @@ fun AnalyticsScreen() {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("Analytics") },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
         )
 
         LazyColumn(
@@ -57,7 +58,13 @@ fun AnalyticsScreen() {
                             api?.screen("HomeScreen", mapOf("source" to "bottom_nav"))
                         }
                         EventButton("screen_view: Product Detail") {
-                            api?.screen("ProductDetailScreen", mapOf("product_id" to "prod_42", "category" to "electronics"))
+                            api?.screen(
+                                "ProductDetailScreen",
+                                mapOf(
+                                    "product_id" to "prod_42",
+                                    "category" to "electronics",
+                                ),
+                            )
                         }
                         EventButton("screen_view: Checkout") {
                             api?.screen("CheckoutScreen", mapOf("items_count" to "3"))
@@ -72,7 +79,14 @@ fun AnalyticsScreen() {
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         EventButton("button_tap: Add to Cart") {
-                            api?.track("button_tap", mapOf("id" to "add_to_cart", "screen" to "product_detail", "product_id" to "prod_42"))
+                            api?.track(
+                                "button_tap",
+                                mapOf(
+                                    "id" to "add_to_cart",
+                                    "screen" to "product_detail",
+                                    "product_id" to "prod_42",
+                                ),
+                            )
                         }
                         EventButton("button_tap: Buy Now") {
                             api?.track("button_tap", mapOf("id" to "buy_now", "screen" to "product_detail"))
@@ -93,22 +107,37 @@ fun AnalyticsScreen() {
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         EventButton("add_to_cart") {
-                            api?.track("add_to_cart", mapOf(
-                                "product_id" to "prod_42", "name" to "Keyboard",
-                                "price" to "49.99", "currency" to "USD",
-                            ))
+                            api?.track(
+                                "add_to_cart",
+                                mapOf(
+                                    "product_id" to "prod_42",
+                                    "name" to "Keyboard",
+                                    "price" to "49.99",
+                                    "currency" to "USD",
+                                ),
+                            )
                         }
                         EventButton("purchase (Firebase source)") {
-                            api?.track("purchase", mapOf(
-                                "transaction_id" to "txn_${System.currentTimeMillis()}",
-                                "value" to "149.99", "currency" to "USD",
-                                "items_count" to "3",
-                            ), source = "Firebase")
+                            api?.track(
+                                "purchase",
+                                mapOf(
+                                    "transaction_id" to "txn_${System.currentTimeMillis()}",
+                                    "value" to "149.99",
+                                    "currency" to "USD",
+                                    "items_count" to "3",
+                                ),
+                                source = "Firebase",
+                            )
                         }
                         EventButton("refund") {
-                            api?.track("refund", mapOf(
-                                "order_id" to "ord_123", "amount" to "49.99", "reason" to "not_as_described",
-                            ))
+                            api?.track(
+                                "refund",
+                                mapOf(
+                                    "order_id" to "ord_123",
+                                    "amount" to "49.99",
+                                    "reason" to "not_as_described",
+                                ),
+                            )
                         }
                     }
                 }
@@ -123,7 +152,14 @@ fun AnalyticsScreen() {
                             api?.track("search", mapOf("query" to "kotlin multiplatform", "results" to "127"))
                         }
                         EventButton("share") {
-                            api?.track("share", mapOf("content_type" to "product", "method" to "whatsapp", "product_id" to "prod_42"))
+                            api?.track(
+                                "share",
+                                mapOf(
+                                    "content_type" to "product",
+                                    "method" to "whatsapp",
+                                    "product_id" to "prod_42",
+                                ),
+                            )
                         }
                         EventButton("notification_opened") {
                             api?.track("notification_opened", mapOf("campaign" to "summer_sale", "variant" to "A"))
@@ -163,7 +199,10 @@ fun AnalyticsScreen() {
 }
 
 @Composable
-private fun EventButton(label: String, onClick: () -> Unit) {
+private fun EventButton(
+    label: String,
+    onClick: () -> Unit,
+) {
     Button(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),

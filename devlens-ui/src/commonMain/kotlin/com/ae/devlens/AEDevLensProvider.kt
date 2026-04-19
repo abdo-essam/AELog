@@ -66,24 +66,28 @@ public fun AEDevLensProvider(
     CompositionLocalProvider(LocalDevLensController provides controller) {
         AEDevLensTheme(colorScheme = uiConfig.colorScheme) {
             BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(
-                        if (uiConfig.enableLongPress) {
-                            Modifier.pointerInput(Unit) {
-                                detectTapGestures(onLongPress = { controller.show() })
-                            }
-                        } else Modifier,
-                    ),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .then(
+                            if (uiConfig.enableLongPress) {
+                                Modifier.pointerInput(Unit) {
+                                    detectTapGestures(onLongPress = { controller.show() })
+                                }
+                            } else {
+                                Modifier
+                            },
+                        ),
             ) {
                 content()
 
                 if (uiConfig.showFloatingButton) {
                     AEDevLensFloatingButton(
                         onClick = { controller.show() },
-                        modifier = Modifier
-                            .align(uiConfig.floatingButtonAlignment)
-                            .padding(end = DevLensSpacing.x5, bottom = uiConfig.floatingButtonOffset),
+                        modifier =
+                            Modifier
+                                .align(uiConfig.floatingButtonAlignment)
+                                .padding(end = DevLensSpacing.x5, bottom = uiConfig.floatingButtonOffset),
                     )
                 }
 

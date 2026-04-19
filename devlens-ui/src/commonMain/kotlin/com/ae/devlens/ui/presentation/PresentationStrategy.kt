@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
  * ```
  */
 public interface PresentationStrategy {
-
     /**
      * Present the [content] composable using this strategy's container.
      *

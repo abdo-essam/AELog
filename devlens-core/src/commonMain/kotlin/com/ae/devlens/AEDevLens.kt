@@ -43,7 +43,6 @@ import kotlinx.coroutines.flow.StateFlow
 public class AEDevLens private constructor(
     config: DevLensConfig,
 ) {
-
     // ── Sub-systems ───────────────────────────────────────────────────────────
 
     /**
@@ -98,12 +97,10 @@ public class AEDevLens private constructor(
      * val logs: LogsPlugin? = inspector.getPlugin<LogsPlugin>()
      * ```
      */
-    public inline fun <reified T : DevLensPlugin> getPlugin(): T? =
-        plugins.value.filterIsInstance<T>().firstOrNull()
+    public inline fun <reified T : DevLensPlugin> getPlugin(): T? = plugins.value.filterIsInstance<T>().firstOrNull()
 
     /** Get a registered plugin by its stable string ID. */
-    public fun getPluginById(id: String): DevLensPlugin? =
-        pluginManager.getPluginById(id)
+    public fun getPluginById(id: String): DevLensPlugin? = pluginManager.getPluginById(id)
 
     // ── Lifecycle notifications ───────────────────────────────────────────────
 
@@ -152,7 +149,6 @@ public class AEDevLens private constructor(
     // ── Companion (factory) ───────────────────────────────────────────────────
 
     public companion object {
-
         /**
          * Shared default instance for apps that only need one inspector.
          *
@@ -171,7 +167,6 @@ public class AEDevLens private constructor(
          *     .install(LogsPlugin())
          * ```
          */
-        public fun create(config: DevLensConfig = DevLensConfig()): AEDevLens =
-            AEDevLens(config)
+        public fun create(config: DevLensConfig = DevLensConfig()): AEDevLens = AEDevLens(config)
     }
 }

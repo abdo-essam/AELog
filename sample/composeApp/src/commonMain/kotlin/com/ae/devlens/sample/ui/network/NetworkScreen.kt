@@ -37,9 +37,10 @@ fun NetworkScreen() {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("Network") },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
         )
 
         LazyColumn(
@@ -62,18 +63,31 @@ fun NetworkScreen() {
                         NetworkButton("GET  /posts/1", NetworkMethod.GET, 200) {
                             val id = api?.newId() ?: return@NetworkButton
                             api.request(id, "https://jsonplaceholder.typicode.com/posts/1", NetworkMethod.GET)
-                            api.response(id, 200, """{"id":1,"userId":1,"title":"Post Title","body":"..."}""", durationMs = 142)
+                            api.response(
+                                id,
+                                200,
+                                """{"id":1,"userId":1,"title":"Post Title","body":"..."}""",
+                                durationMs = 142,
+                            )
                         }
                         NetworkButton("POST  /users", NetworkMethod.POST, 201) {
                             val id = api?.newId() ?: return@NetworkButton
-                            api.request(id, "https://api.example.com/users", NetworkMethod.POST,
-                                body = """{"name":"Ahmed","role":"developer"}""")
+                            api.request(
+                                id,
+                                "https://api.example.com/users",
+                                NetworkMethod.POST,
+                                body = """{"name":"Ahmed","role":"developer"}""",
+                            )
                             api.response(id, 201, """{"id":99,"name":"Ahmed"}""", durationMs = 289)
                         }
                         NetworkButton("PUT  /users/99", NetworkMethod.PUT, 200) {
                             val id = api?.newId() ?: return@NetworkButton
-                            api.request(id, "https://api.example.com/users/99", NetworkMethod.PUT,
-                                body = """{"name":"Ahmed Essam"}""")
+                            api.request(
+                                id,
+                                "https://api.example.com/users/99",
+                                NetworkMethod.PUT,
+                                body = """{"name":"Ahmed Essam"}""",
+                            )
                             api.response(id, 200, durationMs = 198)
                         }
                         NetworkButton("DELETE  /items/42", NetworkMethod.DELETE, 204) {
@@ -172,19 +186,21 @@ private fun NetworkButton(
     statusCode: Int,
     onClick: () -> Unit,
 ) {
-    val statusColor = when {
-        statusCode in 200..299 -> Color(0xFF4CAF50)
-        statusCode in 400..499 -> Color(0xFFFFC107)
-        else                   -> Color(0xFFF44336)
-    }
-    val methodColor = when (method) {
-        NetworkMethod.GET    -> Color(0xFF2196F3)
-        NetworkMethod.POST   -> Color(0xFF4CAF50)
-        NetworkMethod.PUT    -> Color(0xFFFF9800)
-        NetworkMethod.PATCH  -> Color(0xFF9C27B0)
-        NetworkMethod.DELETE -> Color(0xFFF44336)
-        else                 -> Color(0xFF607D8B)
-    }
+    val statusColor =
+        when {
+            statusCode in 200..299 -> Color(0xFF4CAF50)
+            statusCode in 400..499 -> Color(0xFFFFC107)
+            else -> Color(0xFFF44336)
+        }
+    val methodColor =
+        when (method) {
+            NetworkMethod.GET -> Color(0xFF2196F3)
+            NetworkMethod.POST -> Color(0xFF4CAF50)
+            NetworkMethod.PUT -> Color(0xFFFF9800)
+            NetworkMethod.PATCH -> Color(0xFF9C27B0)
+            NetworkMethod.DELETE -> Color(0xFFF44336)
+            else -> Color(0xFF607D8B)
+        }
     androidx.compose.material3.OutlinedButton(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
@@ -196,9 +212,10 @@ private fun NetworkButton(
         ) {
             // Method badge
             Box(
-                modifier = Modifier
-                    .background(methodColor, RoundedCornerShape(4.dp))
-                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                modifier =
+                    Modifier
+                        .background(methodColor, RoundedCornerShape(4.dp))
+                        .padding(horizontal = 6.dp, vertical = 2.dp),
             ) {
                 Text(method.label, style = MaterialTheme.typography.labelSmall, color = Color.White)
             }
@@ -211,9 +228,10 @@ private fun NetworkButton(
             )
             // Status badge
             Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .background(statusColor.copy(alpha = 0.15f), RoundedCornerShape(4.dp)),
+                modifier =
+                    Modifier
+                        .size(32.dp)
+                        .background(statusColor.copy(alpha = 0.15f), RoundedCornerShape(4.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(

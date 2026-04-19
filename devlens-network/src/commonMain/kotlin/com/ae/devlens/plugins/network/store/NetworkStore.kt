@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
  * Uses [PluginStore]'s [StateFlow] so the UI stays reactive
  * without needing direct Flow subscriptions in the plugin.
  */
-internal class NetworkStore(capacity: Int = 200) {
-
+internal class NetworkStore(
+    capacity: Int = 200,
+) {
     private val store = PluginStore<NetworkEntry>(capacity)
 
     /** Hot stream of all recorded entries, newest first. */

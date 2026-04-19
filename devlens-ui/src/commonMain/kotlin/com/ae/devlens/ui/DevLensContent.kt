@@ -42,9 +42,10 @@ internal fun DevLensContent(
     Column(modifier = modifier.fillMaxSize()) {
         // Header — title + active plugin's action buttons
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = DevLensSpacing.x5, vertical = DevLensSpacing.x3),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = DevLensSpacing.x5, vertical = DevLensSpacing.x3),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

@@ -11,19 +11,20 @@ class SampleApp : Application() {
         super.onCreate()
 
         // Create plugins first so we can extract their APIs before installing
-        val networkPlugin   = NetworkPlugin()
+        val networkPlugin = NetworkPlugin()
         val analyticsPlugin = AnalyticsPlugin()
 
         DevLensSetup.init(
-            plugins = listOf(
-                LogsPlugin(),
-                networkPlugin,
-                analyticsPlugin,
-            )
+            plugins =
+                listOf(
+                    LogsPlugin(),
+                    networkPlugin,
+                    analyticsPlugin,
+                ),
         )
 
         // Expose APIs to commonMain via SampleState — avoids reified inline calls in App.kt
-        SampleState.networkApi   = networkPlugin.api
+        SampleState.networkApi = networkPlugin.api
         SampleState.analyticsApi = analyticsPlugin.api
     }
 }

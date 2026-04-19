@@ -23,7 +23,6 @@ import kotlin.reflect.KClass
  * - Access internal lifecycle machinery
  */
 public interface PluginContext {
-
     /**
      * CoroutineScope tied to this plugin's lifetime.
      *
@@ -64,5 +63,4 @@ public interface PluginContext {
  * val logs = context.getPlugin<LogsPlugin>()
  * ```
  */
-public inline fun <reified T : DevLensPlugin> PluginContext.getPlugin(): T? =
-    getPlugin(T::class)
+public inline fun <reified T : DevLensPlugin> PluginContext.getPlugin(): T? = getPlugin(T::class)

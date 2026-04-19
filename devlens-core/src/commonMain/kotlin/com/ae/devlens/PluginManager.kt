@@ -33,7 +33,6 @@ internal class PluginManager(
     private val config: DevLensConfig,
     private val eventBus: EventBus,
 ) {
-
     private val _plugins = MutableStateFlow<List<DevLensPlugin>>(emptyList())
 
     /** Hot stream of all currently registered plugins. */
@@ -47,8 +46,12 @@ internal class PluginManager(
     fun install(plugin: DevLensPlugin) {
         var attached = false
         _plugins.update { current ->
-            if (current.any { it.id == plugin.id }) current
-            else { attached = true; current + plugin }
+            if (current.any { it.id == plugin.id }) {
+                current
+            } else {
+                attached = true
+                current + plugin
+            }
         }
         if (attached) {
             val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -73,17 +76,14 @@ internal class PluginManager(
     // ── Lookup ────────────────────────────────────────────────────────────────
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : DevLensPlugin> getPlugin(type: KClass<T>): T? =
-        _plugins.value.firstOrNull { type.isInstance(it) } as? T
+    fun <T : DevLensPlugin> getPlugin(type: KClass<T>): T? = _plugins.value.firstOrNull { type.isInstance(it) } as? T
 
-    fun getPluginById(id: String): DevLensPlugin? =
-        _plugins.value.find { it.id == id }
+    fun getPluginById(id: String): DevLensPlugin? = _plugins.value.find { it.id == id }
 
     // ── Batch iteration ───────────────────────────────────────────────────────
 
     /** Iterate all plugins safely — one failure doesn't stop the rest. */
-    fun forEach(action: (DevLensPlugin) -> Unit) =
-        _plugins.value.forEach { safeCall(it.id) { action(it) } }
+    fun forEach(action: (DevLensPlugin) -> Unit) = _plugins.value.forEach { safeCall(it.id) { action(it) } }
 
     // ── Internal ──────────────────────────────────────────────────────────────
 
@@ -94,13 +94,15 @@ internal class PluginManager(
             override val eventBus: EventBus = this@PluginManager.eventBus
 
             @Suppress("UNCHECKED_CAST")
-            override fun <T : DevLensPlugin> getPlugin(type: KClass<T>): T? =
-                this@PluginManager.getPlugin(type)
+            override fun <T : DevLensPlugin> getPlugin(type: KClass<T>): T? = this@PluginManager.getPlugin(type)
         }
 
     companion object {
         /** Runs [block] and swallows exceptions so one bad plugin can't crash others. */
-        fun safeCall(pluginId: String, block: () -> Unit) {
+        fun safeCall(
+            pluginId: String,
+            block: () -> Unit,
+        ) {
             runCatching { block() }
                 .onFailure { /* TODO: route to configurable error handler */ }
         }

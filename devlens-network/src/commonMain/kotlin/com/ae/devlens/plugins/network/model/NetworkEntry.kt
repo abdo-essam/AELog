@@ -1,6 +1,5 @@
 package com.ae.devlens.plugins.network.model
 
-
 /** A single intercepted HTTP request/response pair. */
 public data class NetworkEntry(
     /** Unique ID — use the same ID for request → response updates. */
@@ -31,9 +30,10 @@ public data class NetworkEntry(
 
     /** Short human-readable status label. */
     public val statusLabel: String
-        get() = when {
-            isPending -> "…"
-            error != null -> "ERR"
-            else -> statusCode.toString()
-        }
+        get() =
+            when {
+                isPending -> "…"
+                error != null -> "ERR"
+                else -> statusCode.toString()
+            }
 }

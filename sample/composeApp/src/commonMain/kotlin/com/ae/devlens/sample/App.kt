@@ -37,11 +37,12 @@ private data class NavTab(
     val unselectedIcon: ImageVector,
 )
 
-private val TABS = listOf(
-    NavTab("Logs",      Icons.Filled.List,      Icons.Outlined.List),
-    NavTab("Network",   Icons.Filled.Wifi,      Icons.Outlined.WifiFind),
-    NavTab("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
-)
+private val TABS =
+    listOf(
+        NavTab("Logs", Icons.Filled.List, Icons.Outlined.List),
+        NavTab("Network", Icons.Filled.Wifi, Icons.Outlined.WifiFind),
+        NavTab("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
+    )
 
 // ── Root composable ───────────────────────────────────────────────────────────
 
@@ -50,10 +51,11 @@ fun App(debugMode: Boolean = false) {
     SampleTheme {
         AEDevLensProvider(
             inspector = AEDevLens.default,
-            uiConfig = DevLensUiConfig(
-                showFloatingButton = true,
-                enableLongPress = true,
-            ),
+            uiConfig =
+                DevLensUiConfig(
+                    showFloatingButton = true,
+                    enableLongPress = true,
+                ),
             enabled = debugMode,
         ) {
             var selectedTab by rememberSaveable { mutableIntStateOf(0) }
@@ -74,7 +76,7 @@ fun App(debugMode: Boolean = false) {
                 }
                 // Apply inner padding so content isn't hidden behind nav bar
                 androidx.compose.foundation.layout.Box(
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
                 )
             }
         }

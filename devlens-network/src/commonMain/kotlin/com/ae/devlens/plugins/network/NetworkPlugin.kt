@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
  * ```
  */
 public class NetworkPlugin : UIPlugin {
-
     override val id: String = ID
     override val name: String = "Network"
     override val icon: ImageVector = Icons.Default.Wifi

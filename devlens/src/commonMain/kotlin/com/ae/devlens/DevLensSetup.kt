@@ -31,7 +31,6 @@ import com.ae.devlens.plugins.logs.LogsPlugin
  * ```
  */
 public object DevLensSetup {
-
     // No @Volatile — not available in KMP commonMain.
     // Safe without it: install() is idempotent by ID, so a concurrent
     // double-init just installs the same plugins twice (second is a no-op).
@@ -54,9 +53,8 @@ public object DevLensSetup {
         if (initialized) return AEDevLens.default
 
         val inspector = AEDevLens.default
-        plugins.forEach { inspector.install(it) }   // install() deduplicates by plugin ID
+        plugins.forEach { inspector.install(it) } // install() deduplicates by plugin ID
         initialized = true
         return inspector
     }
-
 }

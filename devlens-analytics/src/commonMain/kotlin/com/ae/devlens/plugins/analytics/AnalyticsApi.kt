@@ -2,7 +2,6 @@ package com.ae.devlens.plugins.analytics
 
 import com.ae.devlens.plugins.analytics.model.AnalyticsEvent
 import com.ae.devlens.plugins.analytics.store.AnalyticsStore
-import kotlin.math.abs
 import kotlin.time.Clock
 
 /**
@@ -14,8 +13,9 @@ import kotlin.time.Clock
  * analytics?.screen("ProductDetail", mapOf("productId" to "123"))
  * ```
  */
-public class AnalyticsApi internal constructor(private val store: AnalyticsStore) {
-
+public class AnalyticsApi internal constructor(
+    private val store: AnalyticsStore,
+) {
     /**
      * Track a custom event.
      * @param name       Event name, e.g. `"button_tap"`.
@@ -26,15 +26,16 @@ public class AnalyticsApi internal constructor(private val store: AnalyticsStore
         name: String,
         properties: Map<String, String> = emptyMap(),
         source: String? = null,
-    ): Unit = store.record(
-        AnalyticsEvent(
-            id = generateId(),
-            name = name,
-            properties = properties,
-            timestamp = Clock.System.now().toEpochMilliseconds(),
-            source = source,
-        ),
-    )
+    ): Unit =
+        store.record(
+            AnalyticsEvent(
+                id = generateId(),
+                name = name,
+                properties = properties,
+                timestamp = Clock.System.now().toEpochMilliseconds(),
+                source = source,
+            ),
+        )
 
     /** Convenience shorthand for screen-view events. */
     public fun screen(

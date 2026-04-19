@@ -17,8 +17,9 @@ import kotlin.time.Clock
  * api?.response(id, statusCode = 200, body = responseBody, durationMs = elapsed)
  * ```
  */
-public class NetworkApi internal constructor(private val store: NetworkStore) {
-
+public class NetworkApi internal constructor(
+    private val store: NetworkStore,
+) {
     /**
      * Record the start of an outgoing request.
      * @param id Stable unique ID — use the same ID when calling [response] or [error].
@@ -29,16 +30,17 @@ public class NetworkApi internal constructor(private val store: NetworkStore) {
         method: NetworkMethod,
         headers: Map<String, String> = emptyMap(),
         body: String? = null,
-    ): Unit = store.record(
-        NetworkEntry(
-            id = id,
-            url = url,
-            method = method,
-            requestHeaders = headers,
-            requestBody = body,
-            timestamp = Clock.System.now().toEpochMilliseconds(),
-        ),
-    )
+    ): Unit =
+        store.record(
+            NetworkEntry(
+                id = id,
+                url = url,
+                method = method,
+                requestHeaders = headers,
+                requestBody = body,
+                timestamp = Clock.System.now().toEpochMilliseconds(),
+            ),
+        )
 
     /**
      * Update an existing request with its response data.
@@ -63,7 +65,10 @@ public class NetworkApi internal constructor(private val store: NetworkStore) {
     }
 
     /** Record a failed request (connection error, timeout, etc.). */
-    public fun error(id: String, message: String) {
+    public fun error(
+        id: String,
+        message: String,
+    ) {
         val existing = store.entries.value.find { it.id == id } ?: return
         store.record(existing.copy(error = message))
     }

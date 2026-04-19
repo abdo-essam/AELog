@@ -31,10 +31,10 @@ import kotlinx.coroutines.flow.asSharedFlow
  * ```
  */
 public class EventBus {
-
-    private val _events = MutableSharedFlow<DevLensEvent>(
-        extraBufferCapacity = 64,
-    )
+    private val _events =
+        MutableSharedFlow<DevLensEvent>(
+            extraBufferCapacity = 64,
+        )
 
     /**
      * Hot stream of all events published to this bus.

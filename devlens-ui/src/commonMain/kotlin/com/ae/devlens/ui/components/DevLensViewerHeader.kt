@@ -33,9 +33,10 @@ public fun DevLensViewerHeader(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = DevLensSpacing.x5),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = DevLensSpacing.x5),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -47,10 +48,11 @@ public fun DevLensViewerHeader(
 
         Button(
             onClick = onClearAll,
-            contentPadding = PaddingValues(
-                horizontal = DevLensSpacing.x3,
-                vertical = DevLensSpacing.x1,
-            ),
+            contentPadding =
+                PaddingValues(
+                    horizontal = DevLensSpacing.x3,
+                    vertical = DevLensSpacing.x1,
+                ),
         ) {
             Icon(
                 imageVector = Icons.Default.DeleteOutline,

@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
  */
 @OptIn(ExperimentalMaterial3Api::class)
 public object BottomSheetStrategy : PresentationStrategy {
-
     @Composable
     override fun Present(
         onDismiss: () -> Unit,
@@ -30,9 +29,10 @@ public object BottomSheetStrategy : PresentationStrategy {
             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         ) {
             androidx.compose.foundation.layout.Box(
-                modifier = androidx.compose.ui.Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.9f),
+                modifier =
+                    androidx.compose.ui.Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.9f),
             ) {
                 content()
             }

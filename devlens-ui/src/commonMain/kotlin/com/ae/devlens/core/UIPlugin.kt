@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * For headless plugins that only collect data without UI, use [DataPlugin] instead.
  */
 public interface UIPlugin : DevLensPlugin {
-
     /** Icon displayed on the plugin's tab in the DevLens panel. */
     public val icon: ImageVector
 

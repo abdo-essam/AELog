@@ -14,8 +14,9 @@ import com.ae.devlens.plugins.logs.store.LogStore
  * api?.log(LogSeverity.INFO, "MyTag", "Something happened")
  * ```
  */
-public class LogsApi internal constructor(private val store: LogStore) {
-
+public class LogsApi internal constructor(
+    private val store: LogStore,
+) {
     /**
      * Record a log entry.
      *
@@ -30,17 +31,32 @@ public class LogsApi internal constructor(private val store: LogStore) {
     }
 
     /** Convenience shortcut for [LogSeverity.VERBOSE] logs. */
-    public fun v(tag: String, message: String): Unit = log(LogSeverity.VERBOSE, tag, message)
+    public fun v(
+        tag: String,
+        message: String,
+    ): Unit = log(LogSeverity.VERBOSE, tag, message)
 
     /** Convenience shortcut for [LogSeverity.DEBUG] logs. */
-    public fun d(tag: String, message: String): Unit = log(LogSeverity.DEBUG, tag, message)
+    public fun d(
+        tag: String,
+        message: String,
+    ): Unit = log(LogSeverity.DEBUG, tag, message)
 
     /** Convenience shortcut for [LogSeverity.INFO] logs. */
-    public fun i(tag: String, message: String): Unit = log(LogSeverity.INFO, tag, message)
+    public fun i(
+        tag: String,
+        message: String,
+    ): Unit = log(LogSeverity.INFO, tag, message)
 
     /** Convenience shortcut for [LogSeverity.WARN] logs. */
-    public fun w(tag: String, message: String): Unit = log(LogSeverity.WARN, tag, message)
+    public fun w(
+        tag: String,
+        message: String,
+    ): Unit = log(LogSeverity.WARN, tag, message)
 
     /** Convenience shortcut for [LogSeverity.ERROR] logs. */
-    public fun e(tag: String, message: String): Unit = log(LogSeverity.ERROR, tag, message)
+    public fun e(
+        tag: String,
+        message: String,
+    ): Unit = log(LogSeverity.ERROR, tag, message)
 }

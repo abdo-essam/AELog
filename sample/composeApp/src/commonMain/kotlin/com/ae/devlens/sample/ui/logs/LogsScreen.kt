@@ -36,9 +36,10 @@ fun LogsScreen() {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
             title = { Text("Logs") },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-            ),
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ),
         )
 
         LazyColumn(
@@ -61,12 +62,29 @@ fun LogsScreen() {
                         modifier = Modifier.padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        LogLevelButton("VERBOSE", Color(0xFF9E9E9E))  { DevLens.v("Sample", "Verbose — lowest priority, for granular tracing") }
-                        LogLevelButton("DEBUG",   Color(0xFF4CAF50))  { DevLens.d("Sample", "Debug — useful during development") }
-                        LogLevelButton("INFO",    Color(0xFF2196F3))  { DevLens.i("Sample", "Info — general informational message") }
-                        LogLevelButton("WARN",    Color(0xFFFFC107))  { DevLens.w("Sample", "Warn — something unexpected but recoverable") }
-                        LogLevelButton("ERROR",   Color(0xFFF44336))  { DevLens.e("Sample", "Error — something failed!", RuntimeException("Sample error")) }
-                        LogLevelButton("ASSERT",  Color(0xFF9C27B0))  { DevLens.wtf("Sample", "WTF — this should never happen!") }
+                        LogLevelButton(
+                            "VERBOSE",
+                            Color(0xFF9E9E9E),
+                        ) { DevLens.v("Sample", "Verbose — lowest priority, for granular tracing") }
+                        LogLevelButton(
+                            "DEBUG",
+                            Color(0xFF4CAF50),
+                        ) { DevLens.d("Sample", "Debug — useful during development") }
+                        LogLevelButton(
+                            "INFO",
+                            Color(0xFF2196F3),
+                        ) { DevLens.i("Sample", "Info — general informational message") }
+                        LogLevelButton(
+                            "WARN",
+                            Color(0xFFFFC107),
+                        ) { DevLens.w("Sample", "Warn — something unexpected but recoverable") }
+                        LogLevelButton("ERROR", Color(0xFFF44336)) {
+                            DevLens.e("Sample", "Error — something failed!", RuntimeException("Sample error"))
+                        }
+                        LogLevelButton(
+                            "ASSERT",
+                            Color(0xFF9C27B0),
+                        ) { DevLens.wtf("Sample", "WTF — this should never happen!") }
                     }
                 }
             }
@@ -80,12 +98,20 @@ fun LogsScreen() {
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         OutlinedButton(
-                            onClick = { repeat(20) { i -> DevLens.d("Batch", "Entry #${i + 1} — stress test 20 logs") } },
+                            onClick = {
+                                repeat(
+                                    20,
+                                ) { i -> DevLens.d("Batch", "Entry #${i + 1} — stress test 20 logs") }
+                            },
                             modifier = Modifier.fillMaxWidth(),
                         ) { Text("Send 20 logs") }
 
                         OutlinedButton(
-                            onClick = { repeat(100) { i -> DevLens.d("BigBatch", "Entry #${i + 1} — stress test 100 logs") } },
+                            onClick = {
+                                repeat(
+                                    100,
+                                ) { i -> DevLens.d("BigBatch", "Entry #${i + 1} — stress test 100 logs") }
+                            },
                             modifier = Modifier.fillMaxWidth(),
                         ) { Text("Send 100 logs (ring buffer test)") }
 
@@ -151,10 +177,11 @@ private fun QuickIconButton(
         onClick = onClick,
         modifier = modifier,
         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        ),
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ),
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             icon()

@@ -25,15 +25,16 @@ internal fun AEDevLensFloatingButton(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .size(48.dp)
-            .shadow(8.dp, CircleShape)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primary)
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-            ) { onClick() },
+        modifier =
+            modifier
+                .size(48.dp)
+                .shadow(8.dp, CircleShape)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ) { onClick() },
         contentAlignment = Alignment.Center,
     ) {
         Icon(

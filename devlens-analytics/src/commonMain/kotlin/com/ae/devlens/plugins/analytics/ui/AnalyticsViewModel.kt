@@ -23,30 +23,40 @@ internal class AnalyticsViewModel(
     val filter: StateFlow<AnalyticsFilter> = _filter.asStateFlow()
 
     /** Filtered + reversed (newest first) event list. */
-    val filteredEvents: StateFlow<List<AnalyticsEvent>> = combine(
-        store.events,
-        _searchQuery,
-        _filter,
-    ) { all, query, filter ->
-        all.reversed()
-            .filter { event ->
-                val matchesQuery = query.isBlank() ||
-                    event.name.contains(query, ignoreCase = true) ||
-                    event.source?.contains(query, ignoreCase = true) == true ||
-                    event.properties.any { (k, v) ->
-                        k.contains(query, ignoreCase = true) || v.contains(query, ignoreCase = true)
-                    }
-                val matchesFilter = when (filter) {
-                    AnalyticsFilter.ALL     -> true
-                    AnalyticsFilter.SCREENS -> event.name == "screen_view"
-                    AnalyticsFilter.EVENTS  -> event.name != "screen_view"
+    val filteredEvents: StateFlow<List<AnalyticsEvent>> =
+        combine(
+            store.events,
+            _searchQuery,
+            _filter,
+        ) { all, query, filter ->
+            all
+                .reversed()
+                .filter { event ->
+                    val matchesQuery =
+                        query.isBlank() ||
+                            event.name.contains(query, ignoreCase = true) ||
+                            event.source?.contains(query, ignoreCase = true) == true ||
+                            event.properties.any { (k, v) ->
+                                k.contains(query, ignoreCase = true) || v.contains(query, ignoreCase = true)
+                            }
+                    val matchesFilter =
+                        when (filter) {
+                            AnalyticsFilter.ALL -> true
+                            AnalyticsFilter.SCREENS -> event.name == "screen_view"
+                            AnalyticsFilter.EVENTS -> event.name != "screen_view"
+                        }
+                    matchesQuery && matchesFilter
                 }
-                matchesQuery && matchesFilter
-            }
-    }.stateIn(scope, SharingStarted.Eagerly, emptyList())
+        }.stateIn(scope, SharingStarted.Eagerly, emptyList())
 
-    fun search(query: String) { _searchQuery.value = query }
-    fun setFilter(f: AnalyticsFilter) { _filter.value = f }
+    fun search(query: String) {
+        _searchQuery.value = query
+    }
+
+    fun setFilter(f: AnalyticsFilter) {
+        _filter.value = f
+    }
+
     fun clear() {
         store.clear()
         _searchQuery.value = ""

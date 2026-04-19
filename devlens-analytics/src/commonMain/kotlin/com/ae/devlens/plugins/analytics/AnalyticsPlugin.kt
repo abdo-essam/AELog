@@ -31,7 +31,6 @@ import kotlinx.coroutines.launch
  * ```
  */
 public class AnalyticsPlugin : UIPlugin {
-
     override val id: String = ID
     override val name: String = "Analytics"
     override val icon: ImageVector = Icons.Default.Analytics

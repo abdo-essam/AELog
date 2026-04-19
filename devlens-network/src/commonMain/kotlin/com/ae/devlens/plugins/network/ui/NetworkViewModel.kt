@@ -23,31 +23,41 @@ internal class NetworkViewModel(
     val filter: StateFlow<NetworkFilter> = _filter.asStateFlow()
 
     /** Filtered + reversed (newest first) entry list. */
-    val filteredEntries: StateFlow<List<NetworkEntry>> = combine(
-        store.entries,
-        _searchQuery,
-        _filter,
-    ) { all, query, filter ->
-        all.reversed()
-            .filter { entry ->
-                val matchesQuery = query.isBlank() ||
-                    entry.url.contains(query, ignoreCase = true) ||
-                    entry.method.label.contains(query, ignoreCase = true) ||
-                    entry.statusCode?.toString()?.contains(query) == true
-                val matchesFilter = when (filter) {
-                    NetworkFilter.ALL          -> true
-                    NetworkFilter.PENDING      -> entry.isPending
-                    NetworkFilter.SUCCESS      -> entry.isSuccess
-                    NetworkFilter.CLIENT_ERROR -> entry.statusCode != null && entry.statusCode in 400..499
-                    NetworkFilter.SERVER_ERROR -> entry.statusCode != null && entry.statusCode >= 500
-                    NetworkFilter.FAILED       -> entry.error != null
+    val filteredEntries: StateFlow<List<NetworkEntry>> =
+        combine(
+            store.entries,
+            _searchQuery,
+            _filter,
+        ) { all, query, filter ->
+            all
+                .reversed()
+                .filter { entry ->
+                    val matchesQuery =
+                        query.isBlank() ||
+                            entry.url.contains(query, ignoreCase = true) ||
+                            entry.method.label.contains(query, ignoreCase = true) ||
+                            entry.statusCode?.toString()?.contains(query) == true
+                    val matchesFilter =
+                        when (filter) {
+                            NetworkFilter.ALL -> true
+                            NetworkFilter.PENDING -> entry.isPending
+                            NetworkFilter.SUCCESS -> entry.isSuccess
+                            NetworkFilter.CLIENT_ERROR -> entry.statusCode != null && entry.statusCode in 400..499
+                            NetworkFilter.SERVER_ERROR -> entry.statusCode != null && entry.statusCode >= 500
+                            NetworkFilter.FAILED -> entry.error != null
+                        }
+                    matchesQuery && matchesFilter
                 }
-                matchesQuery && matchesFilter
-            }
-    }.stateIn(scope, SharingStarted.Eagerly, emptyList())
+        }.stateIn(scope, SharingStarted.Eagerly, emptyList())
 
-    fun search(query: String) { _searchQuery.value = query }
-    fun setFilter(f: NetworkFilter) { _filter.value = f }
+    fun search(query: String) {
+        _searchQuery.value = query
+    }
+
+    fun setFilter(f: NetworkFilter) {
+        _filter.value = f
+    }
+
     fun clear() {
         store.clear()
         _searchQuery.value = ""

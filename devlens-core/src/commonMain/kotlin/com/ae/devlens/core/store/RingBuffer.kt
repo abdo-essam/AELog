@@ -12,15 +12,16 @@ package com.ae.devlens.core.store
  *
  * @param capacity Maximum number of items to hold. Must be > 0.
  */
-public class RingBuffer<T>(public val capacity: Int) {
-
+public class RingBuffer<T>(
+    public val capacity: Int,
+) {
     init {
         require(capacity > 0) { "RingBuffer capacity must be > 0, was $capacity" }
     }
 
     @Suppress("UNCHECKED_CAST")
     private val buffer: Array<Any?> = arrayOfNulls(capacity)
-    private var head = 0  // index of next write slot
+    private var head = 0 // index of next write slot
     private var size = 0
 
     /**
@@ -44,7 +45,7 @@ public class RingBuffer<T>(public val capacity: Int) {
         if (size == 0) return emptyList()
         val result = ArrayList<T>(size)
         val start = if (size < capacity) 0 else head
-        for (i in 0 until size) {           // ← was `0..size` (off-by-one bug!)
+        for (i in 0 until size) { // ← was `0..size` (off-by-one bug!)
             result.add(buffer[(start + i) % capacity] as T)
         }
         return result

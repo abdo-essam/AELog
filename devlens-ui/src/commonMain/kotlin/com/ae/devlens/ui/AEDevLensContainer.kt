@@ -1,7 +1,6 @@
 package com.ae.devlens.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import com.ae.devlens.PresentationMode
 import com.ae.devlens.core.UIPlugin
 import com.ae.devlens.ui.presentation.BottomSheetStrategy
@@ -22,11 +21,12 @@ internal fun AEDevLensContainer(
     presentationMode: PresentationMode,
     onDismiss: () -> Unit,
 ) {
-    val strategy: PresentationStrategy = when (presentationMode) {
-        PresentationMode.BottomSheet -> BottomSheetStrategy
-        PresentationMode.Dialog -> DialogStrategy
-        PresentationMode.Adaptive -> if (isLargeScreen) DialogStrategy else BottomSheetStrategy
-    }
+    val strategy: PresentationStrategy =
+        when (presentationMode) {
+            PresentationMode.BottomSheet -> BottomSheetStrategy
+            PresentationMode.Dialog -> DialogStrategy
+            PresentationMode.Adaptive -> if (isLargeScreen) DialogStrategy else BottomSheetStrategy
+        }
 
     strategy.Present(onDismiss = onDismiss) {
         DevLensContent(

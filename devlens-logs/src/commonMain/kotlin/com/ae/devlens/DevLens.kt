@@ -28,30 +28,44 @@ import com.ae.devlens.plugins.logs.model.LogSeverity
  * ```
  */
 public object DevLens {
-
     /** Log a [LogSeverity.VERBOSE] message to [AEDevLens.default]. */
-    public fun v(tag: String, message: String): Unit =
-        AEDevLens.default.log(LogSeverity.VERBOSE, tag, message)
+    public fun v(
+        tag: String,
+        message: String,
+    ): Unit = AEDevLens.default.log(LogSeverity.VERBOSE, tag, message)
 
     /** Log a [LogSeverity.DEBUG] message to [AEDevLens.default]. */
-    public fun d(tag: String, message: String): Unit =
-        AEDevLens.default.log(LogSeverity.DEBUG, tag, message)
+    public fun d(
+        tag: String,
+        message: String,
+    ): Unit = AEDevLens.default.log(LogSeverity.DEBUG, tag, message)
 
     /** Log an [LogSeverity.INFO] message to [AEDevLens.default]. */
-    public fun i(tag: String, message: String): Unit =
-        AEDevLens.default.log(LogSeverity.INFO, tag, message)
+    public fun i(
+        tag: String,
+        message: String,
+    ): Unit = AEDevLens.default.log(LogSeverity.INFO, tag, message)
 
     /** Log a [LogSeverity.WARN] message to [AEDevLens.default]. */
-    public fun w(tag: String, message: String, throwable: Throwable? = null): Unit =
-        AEDevLens.default.log(LogSeverity.WARN, tag, message.withThrowable(throwable))
+    public fun w(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AEDevLens.default.log(LogSeverity.WARN, tag, message.withThrowable(throwable))
 
     /** Log an [LogSeverity.ERROR] message to [AEDevLens.default]. */
-    public fun e(tag: String, message: String, throwable: Throwable? = null): Unit =
-        AEDevLens.default.log(LogSeverity.ERROR, tag, message.withThrowable(throwable))
+    public fun e(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AEDevLens.default.log(LogSeverity.ERROR, tag, message.withThrowable(throwable))
 
     /** Log a [LogSeverity.ASSERT] (fatal) message to [AEDevLens.default]. */
-    public fun wtf(tag: String, message: String, throwable: Throwable? = null): Unit =
-        AEDevLens.default.log(LogSeverity.ASSERT, tag, message.withThrowable(throwable))
+    public fun wtf(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AEDevLens.default.log(LogSeverity.ASSERT, tag, message.withThrowable(throwable))
 
     private fun String.withThrowable(throwable: Throwable?): String =
         if (throwable != null) "$this\n${throwable.stackTraceToString()}" else this

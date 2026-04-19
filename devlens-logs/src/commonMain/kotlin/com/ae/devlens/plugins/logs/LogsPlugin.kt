@@ -38,7 +38,6 @@ import kotlinx.coroutines.launch
 public class LogsPlugin(
     maxEntries: Int = 500,
 ) : UIPlugin {
-
     override val id: String = ID
     override val name: String = "Logs"
     override val icon: ImageVector = Icons.Default.Description

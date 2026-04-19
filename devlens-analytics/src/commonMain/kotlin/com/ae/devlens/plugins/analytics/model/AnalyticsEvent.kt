@@ -1,6 +1,5 @@
 package com.ae.devlens.plugins.analytics.model
 
-
 /** A single analytics event with arbitrary string properties. */
 public data class AnalyticsEvent(
     /** Unique ID for stable list keys. */

@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.StateFlow
  * | onClear  | User requested a data wipe                      |
  */
 public interface DevLensPlugin {
-
     /** Unique identifier for this plugin (must be stable across restarts) */
     public val id: String
 

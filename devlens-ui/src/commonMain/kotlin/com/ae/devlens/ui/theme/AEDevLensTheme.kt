@@ -17,50 +17,52 @@ private val DevLensError = Color(0xFFE53935)
 private val DevLensOnPrimary = Color.White
 
 // ── Light Scheme ──────────────────────────────────────────────────────────────
-private val LightColorScheme = lightColorScheme(
-    primary = DevLensPrimary,
-    onPrimary = DevLensOnPrimary,
-    primaryContainer = Color(0xFFEDE7F6),
-    onPrimaryContainer = Color(0xFF1A0056),
-    secondary = Color(0xFF00B894),
-    onSecondary = Color.White,
-    surface = Color(0xFFFFFFFF),
-    onSurface = Color(0xFF1A1A2E),
-    surfaceVariant = Color(0xFFF5F5F5),
-    onSurfaceVariant = Color(0xFF49454F),
-    outline = Color(0xFFDDDDDD),
-    outlineVariant = Color(0xFFEEEEEE),
-    error = DevLensError,
-    onError = Color.White,
-    background = Color(0xFFF8F9FA),
-    onBackground = Color(0xFF1A1A2E),
-    inverseSurface = Color(0xFF2D2D3F),
-    inverseOnSurface = Color(0xFFF5F5F5),
-    scrim = Color(0x52000000),
-)
+private val LightColorScheme =
+    lightColorScheme(
+        primary = DevLensPrimary,
+        onPrimary = DevLensOnPrimary,
+        primaryContainer = Color(0xFFEDE7F6),
+        onPrimaryContainer = Color(0xFF1A0056),
+        secondary = Color(0xFF00B894),
+        onSecondary = Color.White,
+        surface = Color(0xFFFFFFFF),
+        onSurface = Color(0xFF1A1A2E),
+        surfaceVariant = Color(0xFFF5F5F5),
+        onSurfaceVariant = Color(0xFF49454F),
+        outline = Color(0xFFDDDDDD),
+        outlineVariant = Color(0xFFEEEEEE),
+        error = DevLensError,
+        onError = Color.White,
+        background = Color(0xFFF8F9FA),
+        onBackground = Color(0xFF1A1A2E),
+        inverseSurface = Color(0xFF2D2D3F),
+        inverseOnSurface = Color(0xFFF5F5F5),
+        scrim = Color(0x52000000),
+    )
 
 // ── Dark Scheme ───────────────────────────────────────────────────────────────
-private val DarkColorScheme = darkColorScheme(
-    primary = DevLensPrimaryDark,
-    onPrimary = Color(0xFF1A0056),
-    primaryContainer = Color(0xFF3700B3),
-    onPrimaryContainer = Color(0xFFEDE7F6),
-    secondary = Color(0xFF55EFC4),
-    onSecondary = Color(0xFF003D2E),
-    surface = Color(0xFF1E1E2E),
-    onSurface = Color(0xFFE8E8E8),
-    surfaceVariant = Color(0xFF2D2D3F),
-    onSurfaceVariant = Color(0xFFCAC4D0),
-    outline = Color(0xFF444455),
-    outlineVariant = Color(0xFF333344),
-    error = Color(0xFFFF6B6B),
-    onError = Color(0xFF1A0000),
-    background = Color(0xFF16161F),
-    onBackground = Color(0xFFE8E8E8),
-    inverseSurface = Color(0xFFE8E8E8),
-    inverseOnSurface = Color(0xFF1E1E2E),
-    scrim = Color(0x80000000),
-)
+private val DarkColorScheme =
+    darkColorScheme(
+        primary = DevLensPrimaryDark,
+        onPrimary = Color(0xFF1A0056),
+        primaryContainer = Color(0xFF3700B3),
+        onPrimaryContainer = Color(0xFFEDE7F6),
+        secondary = Color(0xFF55EFC4),
+        onSecondary = Color(0xFF003D2E),
+        surface = Color(0xFF1E1E2E),
+        onSurface = Color(0xFFE8E8E8),
+        surfaceVariant = Color(0xFF2D2D3F),
+        onSurfaceVariant = Color(0xFFCAC4D0),
+        outline = Color(0xFF444455),
+        outlineVariant = Color(0xFF333344),
+        error = Color(0xFFFF6B6B),
+        onError = Color(0xFF1A0000),
+        background = Color(0xFF16161F),
+        onBackground = Color(0xFFE8E8E8),
+        inverseSurface = Color(0xFFE8E8E8),
+        inverseOnSurface = Color(0xFF1E1E2E),
+        scrim = Color(0x80000000),
+    )
 
 /**
  * DevLens Material3 theme.
