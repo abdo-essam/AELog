@@ -3,7 +3,17 @@ package com.ae.devlens.plugins.logs.model
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
-public const val ANALYTICS_TAG: String = "Analytics"
+public object LogTagRegistry {
+    private val tags = mutableMapOf<String, String>()
+
+    public fun register(tag: String, label: String) {
+        tags[tag] = label
+    }
+
+    public fun isRegistered(tag: String): Boolean = tags.containsKey(tag)
+    
+    public fun getLabel(tag: String): String? = tags[tag]
+}
 
 private val PRETTY_JSON = Json {
     prettyPrint = true
@@ -31,13 +41,13 @@ public val LogEntry.isRequest: Boolean
     get() = !isResponse && (message.contains("-->") || message.contains("REQUEST", ignoreCase = true) || httpMethod != null)
 
 public val LogEntry.isNetworkLog: Boolean
-    get() = !isAnalytics && (tag.contains("HTTP", ignoreCase = true) || tag.contains("Network", ignoreCase = true) || tag.contains("API", ignoreCase = true) || tag.contains("ktor", ignoreCase = true) || isRequest || isResponse || url != null || httpMethod != null)
+    get() = !LogTagRegistry.isRegistered(tag) && (tag.contains("HTTP", ignoreCase = true) || tag.contains("Network", ignoreCase = true) || tag.contains("API", ignoreCase = true) || tag.contains("ktor", ignoreCase = true) || isRequest || isResponse || url != null || httpMethod != null)
 
 public val LogEntry.isError: Boolean
     get() = severity == LogSeverity.ERROR || severity == LogSeverity.ASSERT
 
 public val LogEntry.isAnalytics: Boolean
-    get() = tag == ANALYTICS_TAG
+    get() = LogTagRegistry.isRegistered(tag)
 
 // --- HTTP Parsing ---
 public val LogEntry.httpMethod: String?
@@ -58,7 +68,7 @@ public val LogEntry.endpoint: String?
 // --- Display Helpers ---
 public val LogEntry.displayTag: String
     get() = when {
-        isAnalytics -> "ANALYTICS"
+        isAnalytics -> LogTagRegistry.getLabel(tag)?.uppercase() ?: tag.uppercase()
         isError -> "ERROR"
         isResponse -> "RESPONSE"
         isRequest -> "REQUEST"

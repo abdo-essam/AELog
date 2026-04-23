@@ -48,7 +48,7 @@ internal class NetworkViewModel(
                         }
                     matchesQuery && matchesFilter
                 }
-        }.stateIn(scope, SharingStarted.Eagerly, emptyList())
+        }.stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun search(query: String) {
         _searchQuery.value = query

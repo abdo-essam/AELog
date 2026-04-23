@@ -46,6 +46,12 @@ public class AnalyticsPlugin : UIPlugin {
 
     override fun onAttach(context: PluginContext) {
         viewModel = AnalyticsViewModel(store, context.scope)
+        
+        // Register tag with logs plugin dynamically
+        context.scope.launch {
+            context.eventBus.publish(com.ae.devlens.core.bus.RegisterLogTagEvent("Analytics", "Analytics"))
+        }
+
         // Update badge count whenever events change
         CoroutineScope(context.scope.coroutineContext).launch {
             store.events.collect { events ->

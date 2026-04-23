@@ -80,9 +80,12 @@ internal fun LogsContent(
         Spacer(modifier = Modifier.height(DevLensSpacing.x3))
 
         DevLensFilterChips(
-            selectedFilter = selectedFilter,
-            onFilterSelected = { viewModel.updateSelectedFilter(it) },
-            options = listOf("All", "Network", "Errors", "Analytics"),
+            selectedFilter = selectedFilter.label,
+            onFilterSelected = { label ->
+                val filter = LogFilter.entries.firstOrNull { it.label == label } ?: LogFilter.ALL
+                viewModel.updateSelectedFilter(filter)
+            },
+            options = LogFilter.entries.map { it.label },
             modifier = Modifier.padding(horizontal = DevLensSpacing.x5),
         )
 

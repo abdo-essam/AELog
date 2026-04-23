@@ -65,6 +65,14 @@ public class LogsPlugin(
                 _badgeCount.value = if (logs.isEmpty()) null else logs.size
             }
         }
+
+        context.scope.launch {
+            context.eventBus.events
+                .filterIsInstance<com.ae.devlens.core.bus.RegisterLogTagEvent>()
+                .collect { event ->
+                    com.ae.devlens.plugins.logs.model.LogTagRegistry.register(event.tag, event.badgeLabel)
+                }
+        }
     }
 
     override fun onClear() {

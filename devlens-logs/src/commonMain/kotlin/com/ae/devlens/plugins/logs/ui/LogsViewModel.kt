@@ -47,7 +47,7 @@ public class LogsViewModel(
                 }
         }.stateIn(
             scope = scope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList(),
         )
 

@@ -26,3 +26,9 @@ public object AppStoppedEvent : DevLensEvent
 
 /** Fired after [com.ae.devlens.AEDevLens.clearAll] — signals all plugins to reset their state. */
 public object AllDataClearedEvent : DevLensEvent
+
+/** Fired by plugins to register their custom tags with the logs viewer dynamically. */
+public data class RegisterLogTagEvent(
+    val tag: String,
+    val badgeLabel: String,
+) : DevLensEvent
