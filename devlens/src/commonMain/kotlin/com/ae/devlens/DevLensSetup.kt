@@ -2,6 +2,7 @@ package com.ae.devlens
 
 import com.ae.devlens.core.DevLensPlugin
 import com.ae.devlens.plugins.logs.LogsPlugin
+import kotlinx.atomicfu.atomic
 
 /**
  * One-stop setup helper for apps using the `:devlens` all-in-one dependency.
@@ -31,10 +32,7 @@ import com.ae.devlens.plugins.logs.LogsPlugin
  * ```
  */
 public object DevLensSetup {
-    // No @Volatile — not available in KMP commonMain.
-    // Safe without it: install() is idempotent by ID, so a concurrent
-    // double-init just installs the same plugins twice (second is a no-op).
-    private var initialized = false
+    private val initialized = atomic(false)
 
     /**
      * Initialize DevLens. **Idempotent** — safe to call multiple times.
@@ -50,11 +48,12 @@ public object DevLensSetup {
         config: DevLensConfig = DevLensConfig(),
         plugins: List<DevLensPlugin> = listOf(LogsPlugin(maxEntries = config.maxLogEntries)),
     ): AEDevLens {
-        if (initialized) return AEDevLens.default
+        if (!initialized.compareAndSet(expect = false, update = true)) {
+            return AEDevLens.default
+        }
 
         val inspector = AEDevLens.default
         plugins.forEach { inspector.install(it) } // install() deduplicates by plugin ID
-        initialized = true
         return inspector
     }
 }

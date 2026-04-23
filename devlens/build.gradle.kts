@@ -54,6 +54,7 @@ kotlin {
             api(projects.devlensCore)
             api(projects.devlensUi)
             api(projects.devlensLogs)
+            implementation(libs.kotlinx.atomicfu)
         }
     }
 }
