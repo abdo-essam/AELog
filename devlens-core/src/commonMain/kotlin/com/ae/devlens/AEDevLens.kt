@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.StateFlow
  *
  * ## Setup (fluent builder style)
  * ```kotlin
- * val inspector = AEDevLens.create(DevLensConfig(maxLogEntries = 1000))
- *     .install(LogsPlugin())
+ * val inspector = AEDevLens.create(DevLensConfig())
+ *     .install(LogsPlugin(maxEntries = 1000))
  *     .install(NetworkPlugin())
  *     .install(CrashPlugin())
  * ```
@@ -163,8 +163,8 @@ public class AEDevLens private constructor(
          *
          * Prefer the fluent style:
          * ```kotlin
-         * val inspector = AEDevLens.create(DevLensConfig(maxLogEntries = 1000))
-         *     .install(LogsPlugin())
+         * val inspector = AEDevLens.create(DevLensConfig())
+         *     .install(LogsPlugin(maxEntries = 1000))
          * ```
          */
         public fun create(config: DevLensConfig = DevLensConfig()): AEDevLens = AEDevLens(config)

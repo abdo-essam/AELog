@@ -7,10 +7,9 @@ package com.ae.devlens
  * `DevLensUiConfig` in the `devlens-ui` module.
  *
  * ```kotlin
- * AEDevLens.create(DevLensConfig(maxLogEntries = 1000))
+ * AEDevLens.create(DevLensConfig())
  * ```
  */
-public data class DevLensConfig(
-    /** Maximum number of log entries to keep in memory (default: 500) */
-    val maxLogEntries: Int = 500,
-)
+public class DevLensConfig {
+    // Reserved for future core configuration
+}

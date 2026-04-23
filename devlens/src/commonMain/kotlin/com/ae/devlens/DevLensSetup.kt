@@ -20,8 +20,8 @@ import kotlinx.atomicfu.atomic
  * ## Custom plugins
  * ```kotlin
  * DevLensSetup.init(
- *     config  = DevLensConfig(maxLogEntries = 2000),
- *     plugins = listOf(LogsPlugin(), NetworkPlugin(), AnalyticsPlugin()),
+ *     config  = DevLensConfig(),
+ *     plugins = listOf(LogsPlugin(maxEntries = 2000), NetworkPlugin(), AnalyticsPlugin()),
  * )
  * ```
  *
@@ -46,7 +46,7 @@ public object DevLensSetup {
      */
     public fun init(
         config: DevLensConfig = DevLensConfig(),
-        plugins: List<DevLensPlugin> = listOf(LogsPlugin(maxEntries = config.maxLogEntries)),
+        plugins: List<DevLensPlugin> = listOf(LogsPlugin()),
     ): AEDevLens {
         if (!initialized.compareAndSet(expect = false, update = true)) {
             return AEDevLens.default

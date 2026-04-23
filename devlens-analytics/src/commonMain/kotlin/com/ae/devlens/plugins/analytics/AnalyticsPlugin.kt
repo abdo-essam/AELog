@@ -30,7 +30,9 @@ import kotlinx.coroutines.launch
  * analytics?.screen("ProductDetail", mapOf("productId" to "123"))
  * ```
  */
-public class AnalyticsPlugin : UIPlugin {
+public class AnalyticsPlugin(
+    maxEntries: Int = 500,
+) : UIPlugin {
     override val id: String = ID
     override val name: String = "Analytics"
     override val icon: ImageVector = Icons.Default.Analytics
@@ -38,7 +40,7 @@ public class AnalyticsPlugin : UIPlugin {
     private val _badgeCount = MutableStateFlow<Int?>(null)
     override val badgeCount: StateFlow<Int?> = _badgeCount
 
-    private val store = AnalyticsStore()
+    private val store = AnalyticsStore(capacity = maxEntries)
     private var viewModel: AnalyticsViewModel? = null
 
     /** Public API for recording events from your analytics adapters. */

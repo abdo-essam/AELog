@@ -31,7 +31,9 @@ import kotlinx.coroutines.launch
  * api.response(id, statusCode = response.code, durationMs = elapsed)
  * ```
  */
-public class NetworkPlugin : UIPlugin {
+public class NetworkPlugin(
+    maxEntries: Int = 200,
+) : UIPlugin {
     override val id: String = ID
     override val name: String = "Network"
     override val icon: ImageVector = Icons.Default.Wifi
@@ -39,7 +41,7 @@ public class NetworkPlugin : UIPlugin {
     private val _badgeCount = MutableStateFlow<Int?>(null)
     override val badgeCount: StateFlow<Int?> = _badgeCount
 
-    private val store = NetworkStore()
+    private val store = NetworkStore(capacity = maxEntries)
     private var viewModel: NetworkViewModel? = null
 
     /** Public API for recording requests/responses from interceptors. */
