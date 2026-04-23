@@ -11,7 +11,7 @@ import com.ae.devlens.core.UIPlugin
  * Plugin authors must handle their own errors internally to prevent crashes.
  */
 @Composable
-internal fun SafePluginContent(
+internal fun PluginContent(
     plugin: UIPlugin,
     modifier: Modifier = Modifier,
 ) {

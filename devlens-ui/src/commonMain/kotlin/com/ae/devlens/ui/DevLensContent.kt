@@ -97,7 +97,7 @@ internal fun DevLensContent(
         // Active plugin slots
         selectedPlugin.HeaderContent()
 
-        SafePluginContent(
+        PluginContent(
             plugin = selectedPlugin,
             modifier = Modifier.weight(1f),
         )
