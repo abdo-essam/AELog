@@ -1,15 +1,16 @@
 package com.ae.devlens.core.store
 
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 /**
  * Reactive, fixed-capacity data store for plugin data.
  *
  * Wraps a [RingBuffer] with a [StateFlow] so UI can observe changes.
- * Thread-safe for concurrent writes via [kotlinx.coroutines.flow.MutableStateFlow.update].
+ * Thread-safe for concurrent writes using a lock.
  *
  * ```kotlin
  * class MyPlugin : DataPlugin {
@@ -30,7 +31,7 @@ import kotlinx.coroutines.flow.update
  */
 public class PluginStore<T>(
     capacity: Int,
-) {
+) : SynchronizedObject() {
     private val ring = RingBuffer<T>(capacity)
 
     // MutableStateFlow<List<T>> is the reactive wrapper.
@@ -47,17 +48,17 @@ public class PluginStore<T>(
      * If the store is at capacity the oldest item is silently evicted.
      */
     public fun add(item: T) {
-        _dataFlow.update {
+        synchronized(this) {
             ring.add(item)
-            ring.toList()
+            _dataFlow.value = ring.toList()
         }
     }
 
     /** Remove all items and emit an empty list. */
     public fun clear() {
-        _dataFlow.update {
+        synchronized(this) {
             ring.clear()
-            emptyList()
+            _dataFlow.value = emptyList()
         }
     }
 
@@ -69,18 +70,20 @@ public class PluginStore<T>(
         index: Int,
         item: T,
     ) {
-        _dataFlow.update { current ->
-            if (index !in current.indices) return@update current
+        synchronized(this) {
+            val current = _dataFlow.value
+            if (index !in current.indices) return
+            
             ring.clear()
             val updated = current.toMutableList().also { it[index] = item }
             updated.forEach { ring.add(it) }
-            ring.toList()
+            _dataFlow.value = ring.toList()
         }
     }
 
     /** Current number of items. */
-    public val count: Int get() = ring.count
+    public val count: Int get() = synchronized(this) { ring.count }
 
     /** True when the store holds no items. */
-    public val isEmpty: Boolean get() = ring.isEmpty
+    public val isEmpty: Boolean get() = synchronized(this) { ring.isEmpty }
 }
