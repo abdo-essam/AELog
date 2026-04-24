@@ -79,7 +79,11 @@ public val LogEntry.displayTag: String
 public val LogEntry.cleanMessage: String
     get() = message.lineSequence()
         .filterNot { line -> EXCLUDED_LINES.any { excluded -> line.trim().startsWith(excluded, ignoreCase = true) } }
-        .filterNot { line -> line.contains(":") && HEADER_PATTERNS.any { it.matches(line.trim()) } && !IMPORTANT_HEADERS.any { line.trim().startsWith(it, ignoreCase = true) } }
+        .filterNot { line -> 
+            line.contains(":") && 
+            HEADER_PATTERNS.any { it.matches(line.trim()) } && 
+            !IMPORTANT_HEADERS.any { line.trim().startsWith(it, ignoreCase = true) } 
+        }
         .joinToString("\n").trim().ifEmpty { message }
 
 public val LogEntry.jsonBody: String?
