@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.ae.devlens.plugins.logs.model.LogEntry
+import com.ae.devlens.plugins.logs.model.*
 import com.ae.devlens.ui.components.DevLensFilterChips
 import com.ae.devlens.ui.components.DevLensSearchBar
 import com.ae.devlens.ui.components.DevLensViewerHeader
@@ -75,12 +76,12 @@ internal fun LogsContent(
         Spacer(modifier = Modifier.height(DevLensSpacing.x3))
 
         DevLensFilterChips(
-            selectedFilter = selectedFilter.label,
-            onFilterSelected = { label ->
-                val filter = LogFilter.entries.firstOrNull { it.label == label } ?: LogFilter.ALL
+            labels = LogFilter.entries.map { it.label },
+            selectedIndex = LogFilter.entries.indexOf(selectedFilter).takeIf { it >= 0 } ?: 0,
+            onSelect = { index ->
+                val filter = LogFilter.entries.getOrNull(index) ?: LogFilter.ALL
                 viewModel.updateSelectedFilter(filter)
             },
-            options = LogFilter.entries.map { it.label },
             modifier = Modifier.padding(horizontal = DevLensSpacing.x5),
         )
 

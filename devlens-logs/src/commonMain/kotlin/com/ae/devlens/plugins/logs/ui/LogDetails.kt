@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ae.devlens.plugins.logs.model.LogEntry
+import com.ae.devlens.plugins.logs.model.*
 import com.ae.devlens.ui.theme.DevLensSpacing
 
 @Composable

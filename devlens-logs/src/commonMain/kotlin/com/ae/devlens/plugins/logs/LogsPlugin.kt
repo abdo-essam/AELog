@@ -12,6 +12,7 @@ import com.ae.devlens.plugins.logs.ui.LogsContent
 import com.ae.devlens.plugins.logs.ui.LogsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
 /**
