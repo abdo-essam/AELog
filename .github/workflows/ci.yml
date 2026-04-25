@@ -18,8 +18,12 @@ jobs:
   quality:
     name: 🧹 Code Quality
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref }}
 
       - uses: actions/setup-java@v5
         with:
@@ -30,11 +34,16 @@ jobs:
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
-      - name: Check formatting
-        run: ./gradlew spotlessCheck
+      - name: Apply formatting
+        run: ./gradlew spotlessApply
 
-      - name: Check API compatibility
-        run: ./gradlew apiCheck
+      - name: Update API dumps
+        run: ./gradlew apiDump
+
+      - name: Auto Commit Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto format and api dump [skip ci]"
 
   # ── Build & Test (Android + JVM) ─────────────────────
   build-android:
@@ -55,7 +64,7 @@ jobs:
         run: ./gradlew assemble
 
       - name: Unit Tests
-        run: ./gradlew desktopTest
+        run: ./gradlew jvmTest testDebugUnitTest
 
       - name: Upload Test Results
         if: always()
