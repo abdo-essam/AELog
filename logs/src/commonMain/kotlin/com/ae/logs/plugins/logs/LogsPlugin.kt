@@ -115,32 +115,56 @@ public fun com.ae.logs.AELogs.log(
     getPlugin<LogsPlugin>()?.api?.log(severity, tag, message)
 }
 
-public fun com.ae.logs.AELogs.Companion.v(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.v(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
     default.log(com.ae.logs.plugins.logs.model.LogSeverity.VERBOSE, tag, fullMessage)
 }
 
-public fun com.ae.logs.AELogs.Companion.d(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.d(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
     default.log(com.ae.logs.plugins.logs.model.LogSeverity.DEBUG, tag, fullMessage)
 }
 
-public fun com.ae.logs.AELogs.Companion.i(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.i(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
     default.log(com.ae.logs.plugins.logs.model.LogSeverity.INFO, tag, fullMessage)
 }
 
-public fun com.ae.logs.AELogs.Companion.w(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.w(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
     default.log(com.ae.logs.plugins.logs.model.LogSeverity.WARN, tag, fullMessage)
 }
 
-public fun com.ae.logs.AELogs.Companion.e(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.e(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
     default.log(com.ae.logs.plugins.logs.model.LogSeverity.ERROR, tag, fullMessage)
 }
 
-public fun com.ae.logs.AELogs.Companion.wtf(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.wtf(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
     default.log(com.ae.logs.plugins.logs.model.LogSeverity.ASSERT, tag, fullMessage)
 }

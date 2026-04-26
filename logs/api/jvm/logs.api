@@ -269,7 +269,19 @@ public final class com/ae/logs/plugins/logs/LogsPlugin$Companion {
 }
 
 public final class com/ae/logs/plugins/logs/LogsPluginKt {
+	public static final fun d (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun d$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun e (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun e$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun i (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun i$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public static final fun log (Lcom/ae/logs/AELogs;Lcom/ae/logs/plugins/logs/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;)V
+	public static final fun v (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun v$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun w (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun w$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun wtf (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun wtf$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
 public final class com/ae/logs/plugins/logs/model/LogClassifierKt {
