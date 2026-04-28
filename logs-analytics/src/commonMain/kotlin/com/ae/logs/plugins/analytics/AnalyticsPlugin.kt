@@ -79,3 +79,7 @@ public class AnalyticsPlugin(
         public const val ID: String = "ae_logs_analytics"
     }
 }
+
+/** Type-safe accessor for the [AnalyticsApi] on the default [com.ae.logs.AELogs] instance. */
+public val com.ae.logs.AELogs.Companion.analytics: AnalyticsApi?
+    get() = plugin<AnalyticsPlugin>()?.api

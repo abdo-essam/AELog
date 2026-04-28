@@ -55,7 +55,7 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
 
             val id = api.newId()
             val startMs =
-                kotlin.time.Clock.System
+                Clock.System
                     .now()
                     .toEpochMilliseconds()
 
@@ -72,7 +72,7 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
             try {
                 val response = proceed(request)
                 val durationMs =
-                    kotlin.time.Clock.System
+                    Clock.System
                         .now()
                         .toEpochMilliseconds() - startMs
 

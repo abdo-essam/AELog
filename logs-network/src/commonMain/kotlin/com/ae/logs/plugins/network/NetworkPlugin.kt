@@ -91,3 +91,7 @@ public class NetworkPlugin(
         public const val ID: String = "ae_logs_network"
     }
 }
+
+/** Type-safe accessor for the [NetworkApi] on the default [com.ae.logs.AELogs] instance. */
+public val com.ae.logs.AELogs.Companion.network: NetworkApi?
+    get() = plugin<NetworkPlugin>()?.api
