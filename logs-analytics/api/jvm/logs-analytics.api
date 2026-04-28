@@ -34,6 +34,10 @@ public final class com/ae/logs/plugins/analytics/AnalyticsPlugin : com/ae/logs/c
 public final class com/ae/logs/plugins/analytics/AnalyticsPlugin$Companion {
 }
 
+public final class com/ae/logs/plugins/analytics/AnalyticsPluginKt {
+	public static final fun getAnalytics (Lcom/ae/logs/AELogs$Companion;)Lcom/ae/logs/plugins/analytics/AnalyticsApi;
+}
+
 public final class com/ae/logs/plugins/analytics/model/AnalyticsEvent {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;JLjava/lang/String;)V

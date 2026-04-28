@@ -37,6 +37,10 @@ public final class com/ae/logs/plugins/network/NetworkPlugin : com/ae/logs/core/
 public final class com/ae/logs/plugins/network/NetworkPlugin$Companion {
 }
 
+public final class com/ae/logs/plugins/network/NetworkPluginKt {
+	public static final fun getNetwork (Lcom/ae/logs/AELogs$Companion;)Lcom/ae/logs/plugins/network/NetworkApi;
+}
+
 public final class com/ae/logs/plugins/network/model/NetworkEntry {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/ae/logs/plugins/network/model/NetworkMethod;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/lang/Long;JLjava/lang/String;)V
