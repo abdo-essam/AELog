@@ -51,7 +51,6 @@ import java.io.IOException
  * [intercept] delegates straight to `chain.proceed()` with zero overhead.
  */
 public class AELogsOkHttpInterceptor : Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val api = AELogs.plugin<NetworkPlugin>()?.api
         val request = chain.request()
@@ -63,13 +62,14 @@ public class AELogsOkHttpInterceptor : Interceptor {
         val startMs = System.currentTimeMillis()
 
         // Read request body without consuming it (OkHttp bodies are single-read streams)
-        val requestBody = runCatching {
-            request.body?.let { body ->
-                val buffer = Buffer()
-                body.writeTo(buffer)
-                buffer.readUtf8()
-            }
-        }.getOrNull()
+        val requestBody =
+            runCatching {
+                request.body?.let { body ->
+                    val buffer = Buffer()
+                    body.writeTo(buffer)
+                    buffer.readUtf8()
+                }
+            }.getOrNull()
 
         api.request(
             id = id,
@@ -84,9 +84,10 @@ public class AELogsOkHttpInterceptor : Interceptor {
             val durationMs = System.currentTimeMillis() - startMs
 
             // peekBody() clones the internal source — the live response stream is NOT consumed
-            val responseBody = runCatching {
-                response.peekBody(MAX_BODY_BYTES).string()
-            }.getOrNull()
+            val responseBody =
+                runCatching {
+                    response.peekBody(MAX_BODY_BYTES).string()
+                }.getOrNull()
 
             api.response(
                 id = id,

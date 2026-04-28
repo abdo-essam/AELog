@@ -5,7 +5,6 @@ import com.ae.logs.plugins.network.NetworkPlugin
 import com.ae.logs.plugins.network.model.NetworkMethod
 import io.ktor.client.plugins.api.ClientPlugin
 import io.ktor.client.plugins.api.createClientPlugin
-import io.ktor.util.AttributeKey
 import kotlin.time.Clock
 
 /**
@@ -48,42 +47,48 @@ import kotlin.time.Clock
  * If [NetworkPlugin] is not installed or [AELogs.init] has not been called,
  * every hook returns immediately — the real HTTP client is never affected.
  */
-/** Carries the generated request ID from [onRequest] through to [onResponse]. */
-private val requestIdAttr = AttributeKey<String>("AELogsRequestId")
 
-/** Wall-clock start time for duration calculation. */
-private val startTimeAttr = AttributeKey<Long>("AELogsRequestStart")
+public val AELogsKtorPlugin: ClientPlugin<Unit> =
+    createClientPlugin("AELogsKtor") {
+        on(io.ktor.client.plugins.api.Send) { request ->
+            val api = AELogs.plugin<NetworkPlugin>()?.api ?: return@on proceed(request)
 
-public val AELogsKtorPlugin: ClientPlugin<Unit> = createClientPlugin("AELogsKtor") {
-    on(io.ktor.client.plugins.api.Send) { request ->
-        val api = AELogs.plugin<NetworkPlugin>()?.api ?: return@on proceed(request)
+            val id = api.newId()
+            val startMs =
+                kotlin.time.Clock.System
+                    .now()
+                    .toEpochMilliseconds()
 
-        val id = api.newId()
-        val startMs = kotlin.time.Clock.System.now().toEpochMilliseconds()
-
-        api.request(
-            id = id,
-            url = request.url.buildString(),
-            method = NetworkMethod.fromString(request.method.value),
-            headers = request.headers.entries()
-                .associate { (key, values) -> key to values.joinToString(", ") },
-        )
-
-        try {
-            val response = proceed(request)
-            val durationMs = kotlin.time.Clock.System.now().toEpochMilliseconds() - startMs
-
-            api.response(
+            api.request(
                 id = id,
-                statusCode = response.response.status.value,
-                headers = response.response.headers.entries()
-                    .associate { (key, values) -> key to values.joinToString(", ") },
-                durationMs = durationMs,
+                url = request.url.buildString(),
+                method = NetworkMethod.fromString(request.method.value),
+                headers =
+                    request.headers
+                        .entries()
+                        .associate { (key, values) -> key to values.joinToString(", ") },
             )
-            return@on response
-        } catch (e: Exception) {
-            api.error(id = id, message = e.message ?: e.toString())
-            throw e
+
+            try {
+                val response = proceed(request)
+                val durationMs =
+                    kotlin.time.Clock.System
+                        .now()
+                        .toEpochMilliseconds() - startMs
+
+                api.response(
+                    id = id,
+                    statusCode = response.response.status.value,
+                    headers =
+                        response.response.headers
+                            .entries()
+                            .associate { (key, values) -> key to values.joinToString(", ") },
+                    durationMs = durationMs,
+                )
+                return@on response
+            } catch (e: Exception) {
+                api.error(id = id, message = e.message ?: e.toString())
+                throw e
+            }
         }
     }
-}

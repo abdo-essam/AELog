@@ -29,4 +29,3 @@ public enum class NetworkMethod {
             entries.firstOrNull { it.name.equals(value, ignoreCase = true) } ?: GET
     }
 }
-

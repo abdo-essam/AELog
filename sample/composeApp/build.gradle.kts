@@ -24,11 +24,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":logs"))              // core + ui + logs aggregator
-            implementation(project(":logs-network"))      // NetworkPlugin
+            implementation(project(":logs")) // core + ui + logs aggregator
+            implementation(project(":logs-network")) // NetworkPlugin
             implementation(project(":logs-network-ktor")) // Ktor auto-interceptor
-            implementation(project(":logs-analytics"))    // AnalyticsPlugin
-            implementation(libs.ktor.client.core)          // HttpClient DSL in commonMain
+            implementation(project(":logs-analytics")) // AnalyticsPlugin
+            implementation(libs.ktor.client.core) // HttpClient DSL in commonMain
             implementation(libs.runtime)
             implementation(libs.foundation)
             implementation(libs.material3)

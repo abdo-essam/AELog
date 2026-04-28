@@ -68,7 +68,6 @@ fun NetworkScreen() {
             item {
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
                     Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-
                         OutlinedButton(
                             onClick = {
                                 scope.launch {
@@ -153,7 +152,6 @@ fun NetworkScreen() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-
 
             // ── Success responses ──────────────────────────────────────────
             item { SectionLabel("✅ Success (2xx)") }
@@ -355,11 +353,15 @@ private fun SectionLabel(text: String) {
 }
 
 @Composable
-private fun MethodBadge(label: String, color: Color) {
+private fun MethodBadge(
+    label: String,
+    color: Color,
+) {
     Box(
-        modifier = Modifier
-            .background(color, RoundedCornerShape(4.dp))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
+        modifier =
+            Modifier
+                .background(color, RoundedCornerShape(4.dp))
+                .padding(horizontal = 6.dp, vertical = 2.dp),
     ) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = Color.White)
     }
