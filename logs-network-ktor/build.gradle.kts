@@ -46,6 +46,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation("io.ktor:ktor-client-cio:3.4.2")
         }
     }
 }
