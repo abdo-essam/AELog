@@ -142,27 +142,50 @@ public fun com.ae.logs.AELogs.log(
 // All methods are silent no-ops when AELogs.init() has not been called yet,
 // matching the behaviour of Timber before a Tree is planted.
 
-public fun com.ae.logs.AELogs.Companion.v(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.v(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     defaultOrNull()?.log(com.ae.logs.plugins.logs.model.LogSeverity.VERBOSE, tag, message, throwable)
 }
 
-public fun com.ae.logs.AELogs.Companion.d(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.d(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     defaultOrNull()?.log(com.ae.logs.plugins.logs.model.LogSeverity.DEBUG, tag, message, throwable)
 }
 
-public fun com.ae.logs.AELogs.Companion.i(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.i(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     defaultOrNull()?.log(com.ae.logs.plugins.logs.model.LogSeverity.INFO, tag, message, throwable)
 }
 
-public fun com.ae.logs.AELogs.Companion.w(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.w(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     defaultOrNull()?.log(com.ae.logs.plugins.logs.model.LogSeverity.WARN, tag, message, throwable)
 }
 
-public fun com.ae.logs.AELogs.Companion.e(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.e(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     defaultOrNull()?.log(com.ae.logs.plugins.logs.model.LogSeverity.ERROR, tag, message, throwable)
 }
 
-public fun com.ae.logs.AELogs.Companion.wtf(tag: String, message: String, throwable: Throwable? = null) {
+public fun com.ae.logs.AELogs.Companion.wtf(
+    tag: String,
+    message: String,
+    throwable: Throwable? = null,
+) {
     defaultOrNull()?.log(com.ae.logs.plugins.logs.model.LogSeverity.ASSERT, tag, message, throwable)
 }
-

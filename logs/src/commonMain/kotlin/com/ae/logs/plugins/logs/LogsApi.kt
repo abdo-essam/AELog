@@ -37,27 +37,44 @@ public class LogsApi internal constructor(
     }
 
     /** Convenience shortcut for [LogSeverity.VERBOSE] logs. */
-    public fun v(tag: String, message: String, throwable: Throwable? = null): Unit =
-        log(LogSeverity.VERBOSE, tag, message, throwable)
+    public fun v(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.VERBOSE, tag, message, throwable)
 
     /** Convenience shortcut for [LogSeverity.DEBUG] logs. */
-    public fun d(tag: String, message: String, throwable: Throwable? = null): Unit =
-        log(LogSeverity.DEBUG, tag, message, throwable)
+    public fun d(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.DEBUG, tag, message, throwable)
 
     /** Convenience shortcut for [LogSeverity.INFO] logs. */
-    public fun i(tag: String, message: String, throwable: Throwable? = null): Unit =
-        log(LogSeverity.INFO, tag, message, throwable)
+    public fun i(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.INFO, tag, message, throwable)
 
     /** Convenience shortcut for [LogSeverity.WARN] logs. */
-    public fun w(tag: String, message: String, throwable: Throwable? = null): Unit =
-        log(LogSeverity.WARN, tag, message, throwable)
+    public fun w(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.WARN, tag, message, throwable)
 
     /** Convenience shortcut for [LogSeverity.ERROR] logs. */
-    public fun e(tag: String, message: String, throwable: Throwable? = null): Unit =
-        log(LogSeverity.ERROR, tag, message, throwable)
+    public fun e(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.ERROR, tag, message, throwable)
 
     /** Convenience shortcut for [LogSeverity.ASSERT] ("What a Terrible Failure") logs. */
-    public fun wtf(tag: String, message: String, throwable: Throwable? = null): Unit =
-        log(LogSeverity.ASSERT, tag, message, throwable)
+    public fun wtf(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.ASSERT, tag, message, throwable)
 }
-

@@ -22,31 +22,44 @@ import com.ae.logs.AELogs
  *
  * @param tag The tag that will be prepended to every log entry.
  */
-public class TaggedLogger(public val tag: String) {
-
+public class TaggedLogger(
+    public val tag: String,
+) {
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.VERBOSE] message. */
-    public fun v(message: String, throwable: Throwable? = null): Unit =
-        AELogs.v(tag, message, throwable)
+    public fun v(
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AELogs.v(tag, message, throwable)
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.DEBUG] message. */
-    public fun d(message: String, throwable: Throwable? = null): Unit =
-        AELogs.d(tag, message, throwable)
+    public fun d(
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AELogs.d(tag, message, throwable)
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.INFO] message. */
-    public fun i(message: String, throwable: Throwable? = null): Unit =
-        AELogs.i(tag, message, throwable)
+    public fun i(
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AELogs.i(tag, message, throwable)
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.WARN] message. */
-    public fun w(message: String, throwable: Throwable? = null): Unit =
-        AELogs.w(tag, message, throwable)
+    public fun w(
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AELogs.w(tag, message, throwable)
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.ERROR] message. */
-    public fun e(message: String, throwable: Throwable? = null): Unit =
-        AELogs.e(tag, message, throwable)
+    public fun e(
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AELogs.e(tag, message, throwable)
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.ASSERT] ("What a Terrible Failure") message. */
-    public fun wtf(message: String, throwable: Throwable? = null): Unit =
-        AELogs.wtf(tag, message, throwable)
+    public fun wtf(
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = AELogs.wtf(tag, message, throwable)
 }
 
 // ── Factory ───────────────────────────────────────────────────────────────────
