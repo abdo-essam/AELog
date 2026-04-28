@@ -2,6 +2,7 @@ package com.ae.logs.sample
 
 import com.ae.logs.plugins.analytics.AnalyticsApi
 import com.ae.logs.plugins.network.NetworkApi
+import io.ktor.client.HttpClient
 
 /**
  * Singleton that holds plugin API references after [SampleApp.onCreate].
@@ -14,4 +15,10 @@ import com.ae.logs.plugins.network.NetworkApi
 object SampleState {
     var networkApi: NetworkApi? = null
     var analyticsApi: AnalyticsApi? = null
+
+    /**
+     * Real [HttpClient] created in [SampleApp] with [AELogsKtorPlugin] installed.
+     * Every call made through this client is automatically captured by [NetworkPlugin].
+     */
+    var httpClient: HttpClient? = null
 }

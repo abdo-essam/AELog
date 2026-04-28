@@ -12,6 +12,10 @@ pluginManagement {
     }
 }
 
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
+
 dependencyResolutionManagement {
     repositories {
         google {
@@ -28,6 +32,8 @@ dependencyResolutionManagement {
 rootProject.name = "AELogs"
 
 include(":logs-network")
+include(":logs-network-ktor")
+include(":logs-network-okhttp")
 include(":logs-analytics")
 include(":logs")
 include(":sample:composeApp")

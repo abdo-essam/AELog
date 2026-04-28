@@ -4,8 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
 }
 
 group = "io.github.abdo-essam"
@@ -16,15 +14,9 @@ kotlin {
     explicitApiWarning()
 
     androidLibrary {
-        namespace = "com.ae.logs.network"
-        compileSdk =
-            libs.versions.android.compileSdk
-                .get()
-                .toInt()
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
+        namespace = "com.ae.logs.network.ktor"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -38,7 +30,7 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "AELogsNetwork"
+            baseName = "AELogsNetworkKtor"
             isStatic = true
         }
     }
@@ -47,22 +39,13 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.logs)
-            implementation(libs.runtime)
-            implementation(libs.foundation)
-            implementation(libs.material3)
-            implementation(libs.ui)
-            implementation(libs.material.icons.extended)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.coroutines.core)
+            // Brings in logs-network (and transitively logs core)
+            api(projects.logsNetwork)
+            // Ktor is a required dep here — consumers of this module need it
+            implementation(libs.ktor.client.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
         }
     }
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    classpath = files()
 }

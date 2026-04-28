@@ -14,19 +14,21 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(23)
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_23)
         }
     }
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":logs")) // core + ui + logs aggregator
-            implementation(project(":logs-network")) // NetworkPlugin
-            implementation(project(":logs-analytics")) // AnalyticsPlugin
+            implementation(project(":logs"))              // core + ui + logs aggregator
+            implementation(project(":logs-network"))      // NetworkPlugin
+            implementation(project(":logs-network-ktor")) // Ktor auto-interceptor
+            implementation(project(":logs-analytics"))    // AnalyticsPlugin
+            implementation(libs.ktor.client.core)          // HttpClient DSL in commonMain
             implementation(libs.runtime)
             implementation(libs.foundation)
             implementation(libs.material3)
@@ -36,6 +38,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp) // OkHttp engine for Android
         }
     }
 }
@@ -63,8 +66,8 @@ android {
         versionName = "1.0"
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_23
+        targetCompatibility = JavaVersion.VERSION_23
     }
     buildFeatures {
         buildConfig = true // Required in AGP 8+ — disabled by default

@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,12 +28,19 @@ import androidx.compose.ui.unit.dp
 import com.ae.logs.plugins.network.NetworkApi
 import com.ae.logs.plugins.network.model.NetworkMethod
 import com.ae.logs.sample.SampleState
+import io.ktor.client.request.get
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NetworkScreen() {
     // Access via SampleState — no reified inline needed
     val api: NetworkApi? = SampleState.networkApi
+    val client = SampleState.httpClient
+    val scope = rememberCoroutineScope()
 
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBar(
@@ -47,6 +55,97 @@ fun NetworkScreen() {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            // ── Live Calls — real HTTP via AELogsKtorPlugin ────────────────
+            item { SectionLabel("🌐 Live HTTP Calls (real network)") }
+            item {
+                Text(
+                    "Tap a button — the request hits jsonplaceholder.typicode.com " +
+                        "and appears in the Network inspector automatically.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            item {
+                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    runCatching {
+                                        client?.get("https://jsonplaceholder.typicode.com/posts/1")
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                MethodBadge("GET", Color(0xFF2196F3))
+                                Text("/posts/1")
+                            }
+                        }
+
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    runCatching {
+                                        client?.get("https://jsonplaceholder.typicode.com/users")
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                MethodBadge("GET", Color(0xFF2196F3))
+                                Text("/users")
+                            }
+                        }
+
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    runCatching {
+                                        client?.post("https://jsonplaceholder.typicode.com/posts") {
+                                            headers {
+                                                append("Content-Type", "application/json")
+                                            }
+                                            setBody(
+                                                """{"title":"AELogs Test","body":"Real POST captured!","userId":1}""",
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                MethodBadge("POST", Color(0xFF4CAF50))
+                                Text("/posts")
+                            }
+                        }
+
+                        OutlinedButton(
+                            onClick = {
+                                scope.launch {
+                                    // Intentional bad URL — captured as a network error
+                                    runCatching {
+                                        client?.get("https://jsonplaceholder.typicode.com/posts/99999999")
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                MethodBadge("GET", Color(0xFF2196F3))
+                                Text("/posts/99999999  (→ 404)")
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ── Simulated calls — manual NetworkApi ───────────────────────
+            item { SectionLabel("🧪 Simulated Calls (manual NetworkApi)") }
             item {
                 Text(
                     "Simulate intercepted HTTP requests",
@@ -54,6 +153,7 @@ fun NetworkScreen() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+
 
             // ── Success responses ──────────────────────────────────────────
             item { SectionLabel("✅ Success (2xx)") }
@@ -252,4 +352,15 @@ private fun SectionLabel(text: String) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(vertical = 4.dp),
     )
+}
+
+@Composable
+private fun MethodBadge(label: String, color: Color) {
+    Box(
+        modifier = Modifier
+            .background(color, RoundedCornerShape(4.dp))
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+    ) {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = Color.White)
+    }
 }

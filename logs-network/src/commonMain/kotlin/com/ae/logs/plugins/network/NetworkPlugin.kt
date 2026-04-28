@@ -19,16 +19,35 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELogs.default.install(NetworkPlugin())
+ * AELogs.init(NetworkPlugin())
  * ```
  *
- * ## Recording from your OkHttp/Ktor interceptor:
+ * ## Recording — Ktor (zero boilerplate)
+ *
  * ```kotlin
- * val api = AELogs.default.getPlugin<NetworkPlugin>()?.api
+ * val client = HttpClient(CIO) {
+ *     install(AELogsKtorPlugin)   // ← one line, done
+ * }
+ * ```
+ *
+ * ## Recording — OkHttp (zero boilerplate, Android)
+ *
+ * ```kotlin
+ * val client = OkHttpClient.Builder()
+ *     .addInterceptor(AELogsOkHttpInterceptor())
+ *     .build()
+ * ```
+ *
+ * ## Recording — manual / custom clients
+ *
+ * For HTTP clients without a first-class interceptor, record calls directly:
+ *
+ * ```kotlin
+ * val api = AELogs.plugin<NetworkPlugin>()?.api
  * val id = api?.newId() ?: return
- * api.request(id, call.request.url.toString(), NetworkMethod.GET)
- * // ... later ...
- * api.response(id, statusCode = response.code, durationMs = elapsed)
+ * api.request(id, url, NetworkMethod.GET)
+ * // … later …
+ * api.response(id, statusCode = 200, durationMs = elapsed)
  * ```
  */
 public class NetworkPlugin(

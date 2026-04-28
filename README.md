@@ -72,12 +72,21 @@ AELogs is fully modularized. Include only the plugins you need to keep your app 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Default setup: Core UI + LogsPlugin
+            // Core: inspector UI + LogsPlugin
             implementation("io.github.abdo-essam:logs:1.0.0")
-            
-            // Optional Plugins
+
+            // Optional: Network inspector panel
             implementation("io.github.abdo-essam:logs-network:1.0.0")
+
+            // Optional: Ktor auto-interceptor (KMP — Android / iOS / JVM)
+            implementation("io.github.abdo-essam:logs-network-ktor:1.0.0")
+
+            // Optional: Analytics inspector panel
             implementation("io.github.abdo-essam:logs-analytics:1.0.0")
+        }
+        androidMain.dependencies {
+            // Optional: OkHttp auto-interceptor (Android + JVM only)
+            implementation("io.github.abdo-essam:logs-network-okhttp:1.0.0")
         }
     }
 }
@@ -92,9 +101,11 @@ kotlin {
 logs = "1.0.0"
 
 [libraries]
-logs-core      = { module = "io.github.abdo-essam:logs", version.ref = "logs" }
-logs-network   = { module = "io.github.abdo-essam:logs-network", version.ref = "logs" }
-logs-analytics = { module = "io.github.abdo-essam:logs-analytics", version.ref = "logs" }
+logs-core              = { module = "io.github.abdo-essam:logs",                version.ref = "logs" }
+logs-network           = { module = "io.github.abdo-essam:logs-network",        version.ref = "logs" }
+logs-network-ktor      = { module = "io.github.abdo-essam:logs-network-ktor",   version.ref = "logs" }
+logs-network-okhttp    = { module = "io.github.abdo-essam:logs-network-okhttp", version.ref = "logs" }
+logs-analytics         = { module = "io.github.abdo-essam:logs-analytics",      version.ref = "logs" }
 ```
 
 ## 🚀 Quick Start

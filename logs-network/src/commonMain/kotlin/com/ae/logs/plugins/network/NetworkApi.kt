@@ -6,14 +6,25 @@ import com.ae.logs.plugins.network.store.NetworkStore
 import kotlin.time.Clock
 
 /**
- * Public write-only API for [NetworkPlugin].
+ * Low-level write API for [NetworkPlugin].
+ *
+ * **Prefer the first-class interceptors** — they handle ID management, timing,
+ * and error recording automatically:
+ *
+ * - Ktor: `install(AELogsKtorPlugin)` — see [com.ae.logs.plugins.network.interceptor.AELogsKtorPlugin]
+ * - OkHttp: `.addInterceptor(AELogsOkHttpInterceptor())` — see [com.ae.logs.plugins.network.interceptor.AELogsOkHttpInterceptor]
+ *
+ * Use this API directly only for custom or unsupported HTTP clients:
  *
  * ```kotlin
- * val api = AELogs.default.getPlugin<NetworkPlugin>()?.api
- * val id = newId()
- * api?.request(id, "https://api.example.com/users", NetworkMethod.GET)
- * // ... later ...
- * api?.response(id, statusCode = 200, body = responseBody, durationMs = elapsed)
+ * val api = AELogs.plugin<NetworkPlugin>()?.api ?: return
+ * val id  = api.newId()
+ *
+ * api.request(id, "https://api.example.com/users", NetworkMethod.GET)
+ * // … perform the request …
+ * api.response(id, statusCode = 200, body = body, durationMs = elapsed)
+ * // or on failure:
+ * api.error(id, "Connection timed out")
  * ```
  */
 public class NetworkApi internal constructor(
