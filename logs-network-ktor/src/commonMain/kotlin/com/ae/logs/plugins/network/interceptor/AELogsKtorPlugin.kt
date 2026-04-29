@@ -4,7 +4,11 @@ import com.ae.logs.AELogs
 import com.ae.logs.plugins.network.NetworkPlugin
 import com.ae.logs.plugins.network.model.NetworkMethod
 import io.ktor.client.plugins.api.ClientPlugin
+import io.ktor.client.plugins.api.Send
 import io.ktor.client.plugins.api.createClientPlugin
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.content.ByteArrayContent
+import io.ktor.http.content.TextContent
 import kotlin.time.Clock
 
 /**
@@ -50,7 +54,7 @@ import kotlin.time.Clock
 
 public val AELogsKtorPlugin: ClientPlugin<Unit> =
     createClientPlugin("AELogsKtor") {
-        on(io.ktor.client.plugins.api.Send) { request ->
+        on(Send) { request ->
             val api = AELogs.plugin<NetworkPlugin>()?.api ?: return@on proceed(request)
 
             val id = api.newId()
@@ -58,6 +62,13 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
                 Clock.System
                     .now()
                     .toEpochMilliseconds()
+
+            val reqBody = when (val content = request.body) {
+                is TextContent -> content.text
+                is ByteArrayContent -> content.bytes().decodeToString()
+                is String -> content
+                else -> null
+            }
 
             api.request(
                 id = id,
@@ -67,6 +78,7 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
                     request.headers
                         .entries()
                         .associate { (key, values) -> key to values.joinToString(", ") },
+                body = reqBody,
             )
 
             try {
@@ -76,6 +88,12 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
                         .now()
                         .toEpochMilliseconds() - startMs
 
+                val resBody = try {
+                    response.response.bodyAsText()
+                } catch (e: Exception) {
+                    "Error reading body: ${e.message}"
+                }
+
                 api.response(
                     id = id,
                     statusCode = response.response.status.value,
@@ -83,6 +101,7 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
                         response.response.headers
                             .entries()
                             .associate { (key, values) -> key to values.joinToString(", ") },
+                    body = resBody,
                     durationMs = durationMs,
                 )
                 return@on response
