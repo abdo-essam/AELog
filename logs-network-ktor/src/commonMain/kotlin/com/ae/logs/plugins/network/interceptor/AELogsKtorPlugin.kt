@@ -63,12 +63,13 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
                     .now()
                     .toEpochMilliseconds()
 
-            val reqBody = when (val content = request.body) {
-                is TextContent -> content.text
-                is ByteArrayContent -> content.bytes().decodeToString()
-                is String -> content
-                else -> null
-            }
+            val reqBody =
+                when (val content = request.body) {
+                    is TextContent -> content.text
+                    is ByteArrayContent -> content.bytes().decodeToString()
+                    is String -> content
+                    else -> null
+                }
 
             api.request(
                 id = id,
@@ -88,11 +89,12 @@ public val AELogsKtorPlugin: ClientPlugin<Unit> =
                         .now()
                         .toEpochMilliseconds() - startMs
 
-                val resBody = try {
-                    response.response.bodyAsText()
-                } catch (e: Exception) {
-                    "Error reading body: ${e.message}"
-                }
+                val resBody =
+                    try {
+                        response.response.bodyAsText()
+                    } catch (e: Exception) {
+                        "Error reading body: ${e.message}"
+                    }
 
                 api.response(
                     id = id,
