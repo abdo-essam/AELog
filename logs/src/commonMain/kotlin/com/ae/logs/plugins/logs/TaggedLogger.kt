@@ -29,37 +29,49 @@ public class TaggedLogger(
     public fun v(
         message: String,
         throwable: Throwable? = null,
-    ): Unit { AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.VERBOSE, tag, message, throwable) }
+    ) {
+        AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.VERBOSE, tag, message, throwable)
+    }
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.DEBUG] message. */
     public fun d(
         message: String,
         throwable: Throwable? = null,
-    ): Unit { AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.DEBUG, tag, message, throwable) }
+    ) {
+        AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.DEBUG, tag, message, throwable)
+    }
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.INFO] message. */
     public fun i(
         message: String,
         throwable: Throwable? = null,
-    ): Unit { AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.INFO, tag, message, throwable) }
+    ) {
+        AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.INFO, tag, message, throwable)
+    }
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.WARN] message. */
     public fun w(
         message: String,
         throwable: Throwable? = null,
-    ): Unit { AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.WARN, tag, message, throwable) }
+    ) {
+        AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.WARN, tag, message, throwable)
+    }
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.ERROR] message. */
     public fun e(
         message: String,
         throwable: Throwable? = null,
-    ): Unit { AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.ERROR, tag, message, throwable) }
+    ) {
+        AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.ERROR, tag, message, throwable)
+    }
 
     /** Log a [com.ae.logs.plugins.logs.model.LogSeverity.ASSERT] ("What a Terrible Failure") message. */
     public fun wtf(
         message: String,
         throwable: Throwable? = null,
-    ): Unit { AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.ASSERT, tag, message, throwable) }
+    ) {
+        AELogs.logs?.log(com.ae.logs.plugins.logs.model.LogSeverity.ASSERT, tag, message, throwable)
+    }
 }
 
 // ── Factory ───────────────────────────────────────────────────────────────────

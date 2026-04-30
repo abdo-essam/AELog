@@ -22,9 +22,11 @@ public interface AdapterSource {
     public val sourceName: String
 }
 
-public enum class DefaultAdapterSource(override val sourceName: String) : AdapterSource {
+public enum class DefaultAdapterSource(
+    override val sourceName: String,
+) : AdapterSource {
     FIREBASE("Firebase"),
     MIXPANEL("Mixpanel"),
     AMPLITUDE("Amplitude"),
-    CUSTOM("Custom")
+    CUSTOM("Custom"),
 }

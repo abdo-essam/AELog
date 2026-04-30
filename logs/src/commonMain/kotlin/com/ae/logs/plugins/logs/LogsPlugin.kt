@@ -13,7 +13,6 @@ import com.ae.logs.plugins.logs.ui.LogsContent
 import com.ae.logs.plugins.logs.ui.LogsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 
 /**
@@ -84,7 +83,8 @@ public class LogsPlugin(
         }
 
         context.scope.launch {
-            context.eventBus.subscribe<com.ae.logs.core.bus.RegisterLogTagEvent>()
+            context.eventBus
+                .subscribe<com.ae.logs.core.bus.RegisterLogTagEvent>()
                 .collect { event ->
                     com.ae.logs.plugins.logs.model.LogTagRegistry
                         .register(event.tag, event.badgeLabel)
@@ -111,11 +111,10 @@ public class LogsPlugin(
         )
     }
 
-    override fun export(): String {
-        return logStore.logsFlow.value.joinToString("\n") { log ->
+    override fun export(): String =
+        logStore.logsFlow.value.joinToString("\n") { log ->
             "[${log.severity.name}] ${log.tag}: ${log.message}"
         }
-    }
 
     public companion object {
         public const val ID: String = "ae_logs_logs"

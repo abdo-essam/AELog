@@ -3,7 +3,6 @@ package com.ae.logs.core
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -16,8 +15,8 @@ public interface UIPlugin : AELogsPlugin {
     /** Icon displayed on the plugin's tab in the AELogs panel. */
     public val icon: ImageVector
 
-    /** 
-     * Badge count shown on the plugin's tab. 
+    /**
+     * Badge count shown on the plugin's tab.
      * A value <= 0 means no badge is shown.
      */
     public val badgeCount: StateFlow<Int>

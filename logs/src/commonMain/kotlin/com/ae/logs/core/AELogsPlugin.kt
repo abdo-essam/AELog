@@ -1,8 +1,5 @@
 package com.ae.logs.core
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-
 /**
  * Base interface for all AELogs plugins.
  *
@@ -30,8 +27,6 @@ public interface AELogsPlugin {
 
     /** Display name shown in tabs and headers */
     public val name: String
-
-
 
     /**
      * Called once when the plugin is registered.
@@ -64,6 +59,4 @@ public interface AELogsPlugin {
      * Use this to attach data to bug reports or logs.
      */
     public fun export(): String = ""
-
-
 }

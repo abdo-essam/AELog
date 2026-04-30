@@ -28,7 +28,7 @@ public class AnalyticsApi internal constructor(
         source: com.ae.logs.plugins.analytics.model.AdapterSource? = null,
     ) {
         if (!com.ae.logs.AELogs.isEnabled) return
-        
+
         store.record(
             AnalyticsEvent(
                 id = generateId(),

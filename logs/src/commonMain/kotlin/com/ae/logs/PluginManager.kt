@@ -4,7 +4,6 @@ import com.ae.logs.core.AELogsPlugin
 import com.ae.logs.core.PluginContext
 import com.ae.logs.core.bus.EventBus
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,8 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlin.reflect.KClass
-import kotlinx.atomicfu.update as atomicUpdate
 import kotlinx.atomicfu.getAndUpdate as atomicGetAndUpdate
+import kotlinx.atomicfu.update as atomicUpdate
 
 /**
  * Manages the full lifecycle of registered [AELogsPlugin]s.
@@ -47,9 +46,11 @@ internal class PluginManager(
     // ── Registration ──────────────────────────────────────────────────────────
 
     fun install(plugin: AELogsPlugin) {
-        val wasAdded = _plugins.updateAndGet { current ->
-            if (current.any { it.id == plugin.id }) current else current + plugin
-        }.contains(plugin)
+        val wasAdded =
+            _plugins
+                .updateAndGet { current ->
+                    if (current.any { it.id == plugin.id }) current else current + plugin
+                }.contains(plugin)
 
         if (wasAdded && !scopes.value.containsKey(plugin.id)) {
             val scope = CoroutineScope(SupervisorJob() + config.dispatcher)
@@ -103,8 +104,12 @@ internal class PluginManager(
             block: () -> Unit,
         ) {
             runCatching { block() }
-                .onFailure { error -> 
-                    AELogs.defaultOrNull()?.config?.errorHandler?.invoke(error)
+                .onFailure { error ->
+                    AELogs
+                        .defaultOrNull()
+                        ?.config
+                        ?.errorHandler
+                        ?.invoke(error)
                 }
         }
     }

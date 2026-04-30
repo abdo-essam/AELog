@@ -61,7 +61,10 @@ public class RingBuffer<T>(
     /**
      * Replace the item at the logical [index] (0 is oldest).
      */
-    public fun replace(index: Int, item: T) {
+    public fun replace(
+        index: Int,
+        item: T,
+    ) {
         if (index !in 0 until size) throw IndexOutOfBoundsException("Index $index out of bounds for size $size")
         val start = if (size < capacity) 0 else head
         val realIndex = (start + index) % capacity

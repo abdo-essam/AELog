@@ -1,8 +1,8 @@
 package com.ae.logs.plugins.logs.model
 
+import kotlinx.atomicfu.update
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.atomicfu.update
 
 public object LogTagRegistry {
     private val tags = kotlinx.atomicfu.atomic(emptyMap<String, String>())

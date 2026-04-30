@@ -1,19 +1,19 @@
-public final class com/ae/logs/AELog {
+public final class com/ae/logs/AELogger {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/logs/AELog;
+	public static final field INSTANCE Lcom/ae/logs/AELogger;
 	public final fun d (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun d$default (Lcom/ae/logs/AELog;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun d$default (Lcom/ae/logs/AELogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun e$default (Lcom/ae/logs/AELog;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun e$default (Lcom/ae/logs/AELogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun i (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun i$default (Lcom/ae/logs/AELog;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun i$default (Lcom/ae/logs/AELogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun logger (Ljava/lang/String;)Lcom/ae/logs/plugins/logs/TaggedLogger;
 	public final fun v (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun v$default (Lcom/ae/logs/AELog;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun v$default (Lcom/ae/logs/AELogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun w (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun w$default (Lcom/ae/logs/AELog;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun w$default (Lcom/ae/logs/AELogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun wtf (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun wtf$default (Lcom/ae/logs/AELog;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun wtf$default (Lcom/ae/logs/AELogger;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
 public final class com/ae/logs/AELogs {
@@ -21,33 +21,48 @@ public final class com/ae/logs/AELogs {
 	public static final field Companion Lcom/ae/logs/AELogs$Companion;
 	public synthetic fun <init> (Lcom/ae/logs/AELogsConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun clearAll ()V
+	public final fun getConfig ()Lcom/ae/logs/AELogsConfig;
 	public final fun getEventBus ()Lcom/ae/logs/core/bus/EventBus;
-	public final fun getPluginById (Ljava/lang/String;)Lcom/ae/logs/core/AELogsPlugin;
 	public final fun getPlugins ()Lkotlinx/coroutines/flow/StateFlow;
 	public final fun install (Lcom/ae/logs/core/AELogsPlugin;)Lcom/ae/logs/AELogs;
-	public final fun notifyClose ()V
-	public final fun notifyOpen ()V
-	public final fun notifyStart ()V
-	public final fun notifyStop ()V
 	public final fun uninstall (Ljava/lang/String;)Lcom/ae/logs/AELogs;
 }
 
 public final class com/ae/logs/AELogs$Companion {
-	public final fun create (Lcom/ae/logs/AELogsConfig;)Lcom/ae/logs/AELogs;
-	public static synthetic fun create$default (Lcom/ae/logs/AELogs$Companion;Lcom/ae/logs/AELogsConfig;ILjava/lang/Object;)Lcom/ae/logs/AELogs;
 	public final fun defaultOrNull ()Lcom/ae/logs/AELogs;
+	public final fun export ()Ljava/lang/String;
 	public final fun getDefault ()Lcom/ae/logs/AELogs;
 	public final fun init ([Lcom/ae/logs/core/AELogsPlugin;Lcom/ae/logs/AELogsConfig;)Lcom/ae/logs/AELogs;
 	public static synthetic fun init$default (Lcom/ae/logs/AELogs$Companion;[Lcom/ae/logs/core/AELogsPlugin;Lcom/ae/logs/AELogsConfig;ILjava/lang/Object;)Lcom/ae/logs/AELogs;
+	public final fun isEnabled ()Z
+	public final fun setEnabled (Z)V
 }
 
 public final class com/ae/logs/AELogsConfig {
 	public static final field $stable I
 	public fun <init> ()V
+	public fun <init> (ZLcom/ae/logs/plugins/logs/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/logs/PlatformLogSink;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (ZLcom/ae/logs/plugins/logs/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/logs/PlatformLogSink;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Lcom/ae/logs/plugins/logs/model/LogSeverity;
+	public final fun component3 ()Lkotlinx/coroutines/CoroutineDispatcher;
+	public final fun component4 ()Lcom/ae/logs/PlatformLogSink;
+	public final fun component5 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (ZLcom/ae/logs/plugins/logs/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/logs/PlatformLogSink;Lkotlin/jvm/functions/Function1;)Lcom/ae/logs/AELogsConfig;
+	public static synthetic fun copy$default (Lcom/ae/logs/AELogsConfig;ZLcom/ae/logs/plugins/logs/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/logs/PlatformLogSink;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/ae/logs/AELogsConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
+	public final fun getErrorHandler ()Lkotlin/jvm/functions/Function1;
+	public final fun getMinSeverity ()Lcom/ae/logs/plugins/logs/model/LogSeverity;
+	public final fun getPlatformLogSink ()Lcom/ae/logs/PlatformLogSink;
+	public fun hashCode ()I
+	public final fun isEnabled ()Z
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/ae/logs/AELogsProviderKt {
-	public static final fun AELogsProvider (Lcom/ae/logs/AELogsUiConfig;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AELogsProvider (Lcom/ae/logs/AELogs;Lcom/ae/logs/AELogsUiConfig;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AELogsProvider (Ljava/util/List;Lcom/ae/logs/AELogsUiConfig;Lcom/ae/logs/AELogsConfig;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 	public static final fun getUiPlugins (Lcom/ae/logs/AELogs;)Ljava/util/List;
 }
 
@@ -74,6 +89,20 @@ public final class com/ae/logs/AELogsUiConfig {
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class com/ae/logs/PlatformLogSink {
+	public static final field Companion Lcom/ae/logs/PlatformLogSink$Companion;
+	public abstract fun log (Lcom/ae/logs/plugins/logs/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun log$default (Lcom/ae/logs/PlatformLogSink;Lcom/ae/logs/plugins/logs/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
+public final class com/ae/logs/PlatformLogSink$Companion {
+	public final fun getDefault ()Lcom/ae/logs/PlatformLogSink;
+}
+
+public final class com/ae/logs/PlatformLogSink$DefaultImpls {
+	public static synthetic fun log$default (Lcom/ae/logs/PlatformLogSink;Lcom/ae/logs/plugins/logs/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
 public final class com/ae/logs/PresentationMode : java/lang/Enum {
 	public static final field Adaptive Lcom/ae/logs/PresentationMode;
 	public static final field BottomSheet Lcom/ae/logs/PresentationMode;
@@ -97,8 +126,7 @@ public final class com/ae/logs/core/AELogsControllerKt {
 }
 
 public abstract interface class com/ae/logs/core/AELogsPlugin {
-	public static final field Companion Lcom/ae/logs/core/AELogsPlugin$Companion;
-	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
+	public fun export ()Ljava/lang/String;
 	public abstract fun getId ()Ljava/lang/String;
 	public abstract fun getName ()Ljava/lang/String;
 	public fun onAttach (Lcom/ae/logs/core/PluginContext;)V
@@ -110,12 +138,8 @@ public abstract interface class com/ae/logs/core/AELogsPlugin {
 	public fun onStop ()V
 }
 
-public final class com/ae/logs/core/AELogsPlugin$Companion {
-	public final fun getNoBadge ()Lkotlinx/coroutines/flow/StateFlow;
-}
-
 public final class com/ae/logs/core/AELogsPlugin$DefaultImpls {
-	public static fun getBadgeCount (Lcom/ae/logs/core/AELogsPlugin;)Lkotlinx/coroutines/flow/StateFlow;
+	public static fun export (Lcom/ae/logs/core/AELogsPlugin;)Ljava/lang/String;
 	public static fun onAttach (Lcom/ae/logs/core/AELogsPlugin;Lcom/ae/logs/core/PluginContext;)V
 	public static fun onClear (Lcom/ae/logs/core/AELogsPlugin;)V
 	public static fun onClose (Lcom/ae/logs/core/AELogsPlugin;)V
@@ -129,7 +153,7 @@ public abstract interface class com/ae/logs/core/DataPlugin : com/ae/logs/core/A
 }
 
 public final class com/ae/logs/core/DataPlugin$DefaultImpls {
-	public static fun getBadgeCount (Lcom/ae/logs/core/DataPlugin;)Lkotlinx/coroutines/flow/StateFlow;
+	public static fun export (Lcom/ae/logs/core/DataPlugin;)Ljava/lang/String;
 	public static fun onAttach (Lcom/ae/logs/core/DataPlugin;Lcom/ae/logs/core/PluginContext;)V
 	public static fun onClear (Lcom/ae/logs/core/DataPlugin;)V
 	public static fun onClose (Lcom/ae/logs/core/DataPlugin;)V
@@ -150,13 +174,14 @@ public abstract interface class com/ae/logs/core/UIPlugin : com/ae/logs/core/AEL
 	public abstract fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
 	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
 	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
+	public abstract fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
 }
 
 public final class com/ae/logs/core/UIPlugin$DefaultImpls {
 	public static fun HeaderActions (Lcom/ae/logs/core/UIPlugin;Landroidx/compose/runtime/Composer;I)V
 	public static fun HeaderContent (Lcom/ae/logs/core/UIPlugin;Landroidx/compose/runtime/Composer;I)V
-	public static fun getBadgeCount (Lcom/ae/logs/core/UIPlugin;)Lkotlinx/coroutines/flow/StateFlow;
+	public static fun export (Lcom/ae/logs/core/UIPlugin;)Ljava/lang/String;
 	public static fun onAttach (Lcom/ae/logs/core/UIPlugin;Lcom/ae/logs/core/PluginContext;)V
 	public static fun onClear (Lcom/ae/logs/core/UIPlugin;)V
 	public static fun onClose (Lcom/ae/logs/core/UIPlugin;)V
@@ -220,6 +245,7 @@ public final class com/ae/logs/core/store/PluginStore {
 	public static final field $stable I
 	public fun <init> (I)V
 	public final fun add (Ljava/lang/Object;)V
+	public final fun addOrReplace (Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)V
 	public final fun clear ()V
 	public final fun getCount ()I
 	public final fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
@@ -236,6 +262,7 @@ public final class com/ae/logs/core/store/RingBuffer {
 	public final fun getCapacity ()I
 	public final fun getCount ()I
 	public final fun isEmpty ()Z
+	public final fun replace (ILjava/lang/Object;)V
 	public final fun toList ()Ljava/util/List;
 }
 
@@ -273,6 +300,7 @@ public final class com/ae/logs/plugins/logs/LogsPlugin : com/ae/logs/core/UIPlug
 	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
 	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
 	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
+	public fun export ()Ljava/lang/String;
 	public final fun getApi ()Lcom/ae/logs/plugins/logs/LogsApi;
 	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
 	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
@@ -291,20 +319,7 @@ public final class com/ae/logs/plugins/logs/LogsPlugin$Companion {
 }
 
 public final class com/ae/logs/plugins/logs/LogsPluginKt {
-	public static final fun d (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun d$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun e (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun e$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun i (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun i$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun log (Lcom/ae/logs/AELogs;Lcom/ae/logs/plugins/logs/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun log$default (Lcom/ae/logs/AELogs;Lcom/ae/logs/plugins/logs/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun v (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun v$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun w (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun w$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun wtf (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun wtf$default (Lcom/ae/logs/AELogs$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun getLogs (Lcom/ae/logs/AELogs$Companion;)Lcom/ae/logs/plugins/logs/LogsApi;
 }
 
 public final class com/ae/logs/plugins/logs/TaggedLogger {

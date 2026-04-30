@@ -60,11 +60,10 @@ public class AnalyticsPlugin(
         store.clear()
     }
 
-    override fun export(): String {
-        return store.events.value.joinToString("\n") { event ->
+    override fun export(): String =
+        store.events.value.joinToString("\n") { event ->
             "Event: ${event.name} | Source: ${event.source?.sourceName} | Time: ${event.timestamp}\nProperties: ${event.properties}"
         }
-    }
 
     @Composable
     override fun Content(modifier: Modifier) {

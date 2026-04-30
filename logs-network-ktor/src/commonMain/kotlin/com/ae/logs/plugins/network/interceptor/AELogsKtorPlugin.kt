@@ -6,7 +6,6 @@ import com.ae.logs.plugins.network.model.NetworkMethod
 import io.ktor.client.plugins.api.ClientPlugin
 import io.ktor.client.plugins.api.Send
 import io.ktor.client.plugins.api.createClientPlugin
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.content.ByteArrayContent
 import io.ktor.http.content.TextContent
 import kotlin.time.Clock

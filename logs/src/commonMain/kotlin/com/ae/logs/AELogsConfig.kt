@@ -19,7 +19,7 @@ public data class AELogsConfig(
     val minSeverity: LogSeverity = LogSeverity.VERBOSE,
     val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     val platformLogSink: PlatformLogSink = PlatformLogSink.Default,
-    val errorHandler: (Throwable) -> Unit = { 
-        platformLogSink.log(LogSeverity.ERROR, "AELogs", "Plugin error", it) 
-    }
+    val errorHandler: (Throwable) -> Unit = {
+        platformLogSink.log(LogSeverity.ERROR, "AELogs", "Plugin error", it)
+    },
 )

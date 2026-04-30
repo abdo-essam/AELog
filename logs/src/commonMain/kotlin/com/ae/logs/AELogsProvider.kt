@@ -48,7 +48,7 @@ public fun AELogsProvider(
         instance = if (enabled) AELogs.defaultOrNull() else null,
         uiConfig = uiConfig,
         enabled = enabled,
-        content = content
+        content = content,
     )
 }
 

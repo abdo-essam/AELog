@@ -1,10 +1,9 @@
 public final class com/ae/logs/plugins/network/interceptor/AELogsOkHttpInterceptor : okhttp3/Interceptor {
-	public static final field Companion Lcom/ae/logs/plugins/network/interceptor/AELogsOkHttpInterceptor$Companion;
-	public static final field MAX_BODY_BYTES J
 	public fun <init> ()V
+	public fun <init> (JLjava/util/Set;)V
+	public synthetic fun <init> (JLjava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getMaxBodyBytes ()J
+	public final fun getRedactHeaders ()Ljava/util/Set;
 	public fun intercept (Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;
-}
-
-public final class com/ae/logs/plugins/network/interceptor/AELogsOkHttpInterceptor$Companion {
 }
 

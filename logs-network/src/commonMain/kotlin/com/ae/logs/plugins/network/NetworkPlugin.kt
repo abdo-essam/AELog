@@ -80,15 +80,14 @@ public class NetworkPlugin(
         store.clear()
     }
 
-    override fun export(): String {
-        return store.entries.value.joinToString("\n\n") { entry ->
+    override fun export(): String =
+        store.entries.value.joinToString("\n\n") { entry ->
             "${entry.method.name} ${entry.url} - ${entry.statusCode ?: "PENDING"}\n" +
-            "Duration: ${entry.durationMs ?: "?"}ms\n" +
-            "Request: ${entry.requestHeaders}\nBody: ${entry.requestBody}\n" +
-            "Response: ${entry.responseHeaders}\nBody: ${entry.responseBody}" +
-            (if (entry.error != null) "\nError: ${entry.error}" else "")
+                "Duration: ${entry.durationMs ?: "?"}ms\n" +
+                "Request: ${entry.requestHeaders}\nBody: ${entry.requestBody}\n" +
+                "Response: ${entry.responseHeaders}\nBody: ${entry.responseBody}" +
+                (if (entry.error != null) "\nError: ${entry.error}" else "")
         }
-    }
 
     @Composable
     override fun Content(modifier: Modifier) {

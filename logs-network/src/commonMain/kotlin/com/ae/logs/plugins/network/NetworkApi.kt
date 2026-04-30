@@ -40,7 +40,7 @@ public class NetworkApi internal constructor(
         method: NetworkMethod,
         headers: Map<String, String> = emptyMap(),
         body: String? = null,
-    ): Unit {
+    ) {
         if (!com.ae.logs.AELogs.isEnabled) return
         store.recordOrReplace(
             NetworkEntry(
@@ -114,7 +114,7 @@ public class NetworkApi internal constructor(
         val id = newId()
         request(id, url, method, headers, body)
         val start = Clock.System.now().toEpochMilliseconds()
-        
+
         return try {
             val result = block()
             val durationMs = Clock.System.now().toEpochMilliseconds() - start

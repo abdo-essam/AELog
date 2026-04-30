@@ -34,7 +34,10 @@ public class LogsApi internal constructor(
     ) {
         if (!com.ae.logs.AELogs.isEnabled) return
 
-        val config = com.ae.logs.AELogs.defaultOrNull()?.config
+        val config =
+            com.ae.logs.AELogs
+                .defaultOrNull()
+                ?.config
         if (config != null && !config.isEnabled) return
         if (config != null && severity < config.minSeverity) return
 
