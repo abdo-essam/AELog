@@ -68,7 +68,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
         }
-        
+
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
         }
