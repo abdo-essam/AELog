@@ -16,10 +16,6 @@ repositories {
 kotlin {
     jvmToolchain(21)
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
     }
 
     sourceSets {

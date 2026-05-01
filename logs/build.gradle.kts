@@ -33,10 +33,6 @@ kotlin {
                 .get()
                 .toInt()
 
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
     }
 
     listOf(
