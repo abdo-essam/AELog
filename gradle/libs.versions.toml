@@ -7,7 +7,7 @@ compose-multiplatform = "1.10.3"
 android-compileSdk = "35"
 android-minSdk = "24"
 kotlinx-datetime = "0.7.1"
-atomicfu = "0.23.1"
+atomicfu = "0.32.1"
 ktor = "3.4.3"
 coroutines = "1.10.2"
 dokka = "2.2.0"
@@ -29,7 +29,7 @@ kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "a
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.3" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.11.0" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
