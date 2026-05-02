@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,6 +68,20 @@ internal fun NetworkContent(
     val query by viewModel.searchQuery.collectAsState()
     val filter by viewModel.filter.collectAsState()
 
+    val hasPending by viewModel.hasPending.collectAsState()
+    
+    LaunchedEffect(hasPending, filter) {
+        if (!hasPending && filter == NetworkFilters.PENDING) {
+            viewModel.setFilter(NetworkFilters.ALL)
+        }
+    }
+
+    val activeFilters = if (hasPending) {
+        NetworkFilters.defaultFilters
+    } else {
+        NetworkFilters.defaultFilters.filter { it != NetworkFilters.PENDING }
+    }
+
     var expandedId by remember { mutableStateOf<String?>(null) }
     val clipboard = LocalClipboardManager.current
     val listState = rememberLazyListState()
@@ -93,10 +108,10 @@ internal fun NetworkContent(
 
         // ── Filter chips ───────────────────────────────────────────────────
         AELogsFilterChips(
-            labels = NetworkFilters.defaultFilters.map { it.label },
-            selectedIndex = NetworkFilters.defaultFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
+            labels = activeFilters.map { it.label },
+            selectedIndex = activeFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
             onSelect = { index ->
-                val newFilter = NetworkFilters.defaultFilters.getOrNull(index) ?: NetworkFilters.ALL
+                val newFilter = activeFilters.getOrNull(index) ?: NetworkFilters.ALL
                 viewModel.setFilter(newFilter)
             },
             modifier = Modifier.padding(horizontal = AELogsSpacing.x5),
@@ -179,8 +194,12 @@ private fun NetworkEntryItem(
 
             // URL + timestamp
             Column(modifier = Modifier.weight(1f)) {
+                val urlWithoutScheme = entry.url.substringAfter("://", entry.url)
+                val pathIndex = urlWithoutScheme.indexOf('/')
+                val displayUrl = if (pathIndex != -1) urlWithoutScheme.substring(pathIndex) else urlWithoutScheme
+
                 Text(
-                    text = entry.url,
+                    text = displayUrl,
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -238,6 +257,8 @@ private fun NetworkEntryDetails(
             else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         }
 
+    val clipboard = LocalClipboardManager.current
+
     Column(
         modifier =
             Modifier
@@ -257,7 +278,13 @@ private fun NetworkEntryDetails(
                     HeadersSection("Request Headers", entry.requestHeaders)
                 }
                 // Request body
-                entry.requestBody?.let { DetailSection("Request Body", it.prettyPrintJson()) }
+                entry.requestBody?.let {
+                    BodySection(
+                        label = "Request Body",
+                        body = it.prettyPrintJson(),
+                        onCopy = { clipboard.setText(AnnotatedString(it)) }
+                    )
+                }
                 // Status
                 entry.statusCode?.let { DetailSection("Status", it.toString()) }
                 // Response headers
@@ -265,7 +292,13 @@ private fun NetworkEntryDetails(
                     HeadersSection("Response Headers", entry.responseHeaders)
                 }
                 // Response body
-                entry.responseBody?.let { DetailSection("Response Body", it.prettyPrintJson()) }
+                entry.responseBody?.let {
+                    BodySection(
+                        label = "Response Body",
+                        body = it.prettyPrintJson(),
+                        onCopy = { clipboard.setText(AnnotatedString(it)) }
+                    )
+                }
                 // Error
                 entry.error?.let { DetailSection("Error", it) }
                 // Duration
@@ -345,6 +378,56 @@ private fun HeadersSection(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BodySection(
+    label: String,
+    body: String,
+    onCopy: (String) -> Unit
+) {
+    Column(modifier = Modifier.padding(bottom = AELogsSpacing.x2).fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Icon(
+                imageVector = Icons.Default.ContentCopy,
+                contentDescription = "Copy $label",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .size(16.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { onCopy(body) }
+            )
+        }
+        Spacer(Modifier.height(4.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(8.dp)
+        ) {
+            androidx.compose.foundation.text.selection.SelectionContainer {
+                Text(
+                    text = body,
+                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
     }

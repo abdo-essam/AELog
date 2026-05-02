@@ -11,7 +11,7 @@ public open class NetworkFilter(
 public object NetworkFilters {
     public val ALL: NetworkFilter = NetworkFilter("All") { true }
     public val PENDING: NetworkFilter = NetworkFilter("Pending") { it.isPending }
-    public val SUCCESS: NetworkFilter = NetworkFilter("2xx") { it.isSuccess }
+    public val SUCCESS: NetworkFilter = NetworkFilter("Success") { it.isSuccess }
     public val ERRORS: NetworkFilter = NetworkFilter("Errors") { it.isError }
 
     public val defaultFilters: List<NetworkFilter> = listOf(ALL, PENDING, SUCCESS, ERRORS)

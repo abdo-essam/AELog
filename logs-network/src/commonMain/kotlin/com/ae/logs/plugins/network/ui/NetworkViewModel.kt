@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 /** Controls search/filter UI state for the network monitor panel. */
@@ -57,4 +58,8 @@ internal class NetworkViewModel(
         _searchQuery.value = ""
         _filter.value = com.ae.logs.plugins.network.model.NetworkFilters.ALL
     }
+
+    val hasPending: StateFlow<Boolean> =
+        store.entries.map { entries -> entries.any { it.isPending } }
+            .stateIn(scope, SharingStarted.WhileSubscribed(5000), false)
 }

@@ -38,6 +38,7 @@ public data class NetworkEntry(
             when {
                 isPending -> "…"
                 error != null -> "ERR"
-                else -> statusCode.toString()
+                isSuccess -> "Success"
+                else -> statusCode?.toString() ?: "…"
             }
 }

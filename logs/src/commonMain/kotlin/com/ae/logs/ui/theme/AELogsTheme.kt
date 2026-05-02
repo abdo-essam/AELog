@@ -73,11 +73,10 @@ private val DarkColorScheme =
 @Composable
 public fun AELogsTheme(
     colorScheme: ColorScheme? = null,
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colorScheme = colorScheme ?: if (darkTheme) DarkColorScheme else LightColorScheme,
+        colorScheme = colorScheme ?: LightColorScheme,
         content = content,
     )
 }
