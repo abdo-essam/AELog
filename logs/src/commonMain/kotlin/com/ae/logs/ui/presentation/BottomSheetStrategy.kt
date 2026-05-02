@@ -45,18 +45,15 @@ public object BottomSheetStrategy : PresentationStrategy {
                                     override fun onPostScroll(
                                         consumed: Offset,
                                         available: Offset,
-                                        source: NestedScrollSource
-                                    ): Offset {
-                                        return available
-                                    }
+                                        source: NestedScrollSource,
+                                    ): Offset = available
+
                                     override suspend fun onPostFling(
                                         consumed: Velocity,
-                                        available: Velocity
-                                    ): Velocity {
-                                        return available
-                                    }
+                                        available: Velocity,
+                                    ): Velocity = available
                                 }
-                            }
+                            },
                         ),
             ) {
                 content()

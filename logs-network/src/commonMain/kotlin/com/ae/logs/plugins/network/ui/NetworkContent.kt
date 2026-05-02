@@ -538,7 +538,7 @@ private fun String.prettyPrintJson(): String =
 private fun String.extractQueryParams(): Map<String, String> {
     val queryPart = this.substringAfter('?', "").substringBefore('#')
     if (queryPart.isEmpty()) return emptyMap()
-    
+
     val params = mutableMapOf<String, String>()
     queryPart.split('&').forEach { param ->
         val parts = param.split('=', limit = 2)
