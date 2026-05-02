@@ -1,5 +1,5 @@
 name: 🐛 Bug Report
-description: Report a bug in AELogs
+description: Report a bug in AELog
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
@@ -11,7 +11,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: AELogs Version
+      label: AELog Version
       placeholder: "1.0.0"
     validations:
       required: true

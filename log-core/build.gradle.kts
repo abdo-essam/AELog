@@ -68,7 +68,7 @@ dokka {
     dokkaSourceSets.configureEach {
         sourceLink {
             localDirectory.set(projectDir.resolve("src"))
-            remoteUrl("https://github.com/abdo-essam/AELog/tree/main/logs/src")
+            remoteUrl("https://github.com/abdo-essam/AELog/tree/main/log-core/src")
             remoteLineSuffix.set("#L")
         }
         perPackageOption {

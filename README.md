@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="docs/assets/logo.png" width="600" alt="AELog Banner" />
-</p>
-
 <h1 align="center">AELog</h1>
 
 <p align="center">

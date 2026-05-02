@@ -89,7 +89,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
 
       - name: Build iOS Framework
-        run: ./gradlew linkReleaseFrameworkIosArm64
+        run: ./gradlew compileKotlinIosArm64
 
       - name: iOS Tests
         run: ./gradlew iosSimulatorArm64Test
