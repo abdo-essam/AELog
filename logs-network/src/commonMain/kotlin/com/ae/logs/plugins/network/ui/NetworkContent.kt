@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
@@ -33,6 +35,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -50,6 +54,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.draw.clip
 import com.ae.logs.plugins.network.model.NetworkEntry
 import com.ae.logs.plugins.network.model.NetworkFilters
 import com.ae.logs.ui.components.AELogsFilterChips
@@ -250,6 +256,9 @@ private fun NetworkEntryDetails(
     entry: NetworkEntry,
     onCopy: () -> Unit,
 ) {
+    var selectedTabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf("Overview", "Request", "Response")
+
     val bgColor =
         when {
             entry.isError -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
@@ -270,39 +279,64 @@ private fun NetworkEntryDetails(
             shape = RoundedCornerShape(AELogsSpacing.x2),
             colors = CardDefaults.cardColors(containerColor = bgColor),
         ) {
-            Column(modifier = Modifier.padding(AELogsSpacing.x3)) {
-                // URL full
-                DetailSection("URL", entry.url)
-                // Request headers
-                if (entry.requestHeaders.isNotEmpty()) {
-                    HeadersSection("Request Headers", entry.requestHeaders)
+            Column(modifier = Modifier.fillMaxWidth()) {
+                TabRow(
+                    selectedTabIndex = selectedTabIndex,
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.primary,
+                ) {
+                    tabs.forEachIndexed { index, title ->
+                        Tab(
+                            selected = selectedTabIndex == index,
+                            onClick = { selectedTabIndex = index },
+                            text = { Text(title, style = MaterialTheme.typography.labelMedium) }
+                        )
+                    }
                 }
-                // Request body
-                entry.requestBody?.let {
-                    BodySection(
-                        label = "Request Body",
-                        body = it.prettyPrintJson(),
-                        onCopy = { clipboard.setText(AnnotatedString(it)) }
-                    )
+
+                Column(modifier = Modifier.padding(AELogsSpacing.x3)) {
+                    when (selectedTabIndex) {
+                        0 -> {
+                            // Overview
+                            DetailSection("URL", entry.url)
+                            entry.statusCode?.let { DetailSection("Status", it.toString()) }
+                            entry.durationMs?.let { DetailSection("Duration", "${it}ms") }
+                            entry.error?.let { DetailSection("Error", it) }
+                        }
+                        1 -> {
+                            // Request
+                            if (entry.requestHeaders.isNotEmpty()) {
+                                HeadersSection("Headers", entry.requestHeaders)
+                            }
+                            entry.requestBody?.let {
+                                BodySection(
+                                    label = "Body",
+                                    body = it.prettyPrintJson(),
+                                    onCopy = { clipboard.setText(AnnotatedString(it)) }
+                                )
+                            }
+                            if (entry.requestHeaders.isEmpty() && entry.requestBody == null) {
+                                Text("No Request Data", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                        2 -> {
+                            // Response
+                            if (entry.responseHeaders.isNotEmpty()) {
+                                HeadersSection("Headers", entry.responseHeaders)
+                            }
+                            entry.responseBody?.let {
+                                BodySection(
+                                    label = "Body",
+                                    body = it.prettyPrintJson(),
+                                    onCopy = { clipboard.setText(AnnotatedString(it)) }
+                                )
+                            }
+                            if (entry.responseHeaders.isEmpty() && entry.responseBody == null) {
+                                Text("No Response Data", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
                 }
-                // Status
-                entry.statusCode?.let { DetailSection("Status", it.toString()) }
-                // Response headers
-                if (entry.responseHeaders.isNotEmpty()) {
-                    HeadersSection("Response Headers", entry.responseHeaders)
-                }
-                // Response body
-                entry.responseBody?.let {
-                    BodySection(
-                        label = "Response Body",
-                        body = it.prettyPrintJson(),
-                        onCopy = { clipboard.setText(AnnotatedString(it)) }
-                    )
-                }
-                // Error
-                entry.error?.let { DetailSection("Error", it) }
-                // Duration
-                entry.durationMs?.let { DetailSection("Duration", "${it}ms") }
             }
         }
 
@@ -322,7 +356,7 @@ private fun NetworkEntryDetails(
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
-                    "Copy",
+                    "Copy All",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                 )
@@ -416,16 +450,17 @@ private fun BodySection(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                    shape = RoundedCornerShape(8.dp)
-                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                 .padding(8.dp)
+                .horizontalScroll(rememberScrollState())
         ) {
             androidx.compose.foundation.text.selection.SelectionContainer {
                 Text(
                     text = body,
-                    style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 11.sp,
+                    lineHeight = 16.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
