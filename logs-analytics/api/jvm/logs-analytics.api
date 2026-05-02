@@ -64,14 +64,20 @@ public final class com/ae/logs/plugins/analytics/model/AnalyticsEvent {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/logs/plugins/analytics/model/AnalyticsFilter : java/lang/Enum {
-	public static final field ALL Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
-	public static final field EVENTS Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
-	public static final field SCREENS Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+public class com/ae/logs/plugins/analytics/model/AnalyticsFilter {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun getLabel ()Ljava/lang/String;
-	public static fun valueOf (Ljava/lang/String;)Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
-	public static fun values ()[Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
+	public fun matches (Lcom/ae/logs/plugins/analytics/model/AnalyticsEvent;)Z
+}
+
+public final class com/ae/logs/plugins/analytics/model/AnalyticsFilters {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/logs/plugins/analytics/model/AnalyticsFilters;
+	public final fun getALL ()Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
+	public final fun getDefaultFilters ()Ljava/util/List;
+	public final fun getEVENTS ()Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
+	public final fun getSCREENS ()Lcom/ae/logs/plugins/analytics/model/AnalyticsFilter;
 }
 
 public final class com/ae/logs/plugins/analytics/model/DefaultAdapterSource : java/lang/Enum, com/ae/logs/plugins/analytics/model/AdapterSource {

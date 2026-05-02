@@ -17,6 +17,8 @@ import kotlin.time.Clock
  */
 public class AnalyticsApi internal constructor(
     private val store: AnalyticsStore,
+    private val clock: Clock = Clock.System,
+    private val idGenerator: () -> String = { generateId() },
 ) {
     /**
      * Track a custom event.
@@ -33,10 +35,10 @@ public class AnalyticsApi internal constructor(
 
         store.record(
             AnalyticsEvent(
-                id = generateId(),
+                id = idGenerator(),
                 name = name,
                 properties = properties,
-                timestamp = Clock.System.now().toEpochMilliseconds(),
+                timestamp = clock.now().toEpochMilliseconds(),
                 source = source,
             ),
         )

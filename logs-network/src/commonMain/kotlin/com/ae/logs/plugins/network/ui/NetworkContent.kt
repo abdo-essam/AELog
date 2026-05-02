@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
+
 package com.ae.logs.plugins.network.ui
 
 import androidx.compose.animation.AnimatedVisibility
@@ -48,16 +50,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ae.logs.plugins.network.model.NetworkEntry
-import com.ae.logs.plugins.network.model.NetworkFilter
+import com.ae.logs.plugins.network.model.NetworkFilters
 import com.ae.logs.ui.components.AELogsFilterChips
 import com.ae.logs.ui.components.AELogsSearchBar
 import com.ae.logs.ui.components.AELogsViewerHeader
 import com.ae.logs.ui.theme.AELogsSpacing
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-
-// ── Filter labels list (order must match NetworkFilter.entries) ───────────────
-private val FILTER_LABELS = NetworkFilter.entries.map { it.label }
 
 @Composable
 internal fun NetworkContent(
@@ -94,9 +93,12 @@ internal fun NetworkContent(
 
         // ── Filter chips ───────────────────────────────────────────────────
         AELogsFilterChips(
-            labels = FILTER_LABELS,
-            selectedIndex = NetworkFilter.entries.indexOf(filter),
-            onSelect = { viewModel.setFilter(NetworkFilter.entries[it]) },
+            labels = NetworkFilters.defaultFilters.map { it.label },
+            selectedIndex = NetworkFilters.defaultFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
+            onSelect = { index ->
+                val newFilter = NetworkFilters.defaultFilters.getOrNull(index) ?: NetworkFilters.ALL
+                viewModel.setFilter(newFilter)
+            },
             modifier = Modifier.padding(horizontal = AELogsSpacing.x5),
         )
 

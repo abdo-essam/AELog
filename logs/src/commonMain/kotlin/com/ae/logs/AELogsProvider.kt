@@ -82,12 +82,12 @@ public fun AELogsProvider(
 
     // Plugins are expected to be static after init, but we still use collectAsState()
     // because StateFlow.value is NOT observable by Compose — derivedStateOf won't help here.
-    val plugins by inspector.plugins.collectAsState()
+    val plugins by inspector.plugins.plugins.collectAsState()
     val uiPlugins = remember(plugins) { plugins.filterIsInstance<UIPlugin>() }
 
     // Notify plugins of open/close lifecycle events
     LaunchedEffect(isVisible) {
-        if (isVisible) inspector.notifyOpen() else inspector.notifyClose()
+        if (isVisible) inspector.lifecycle.notifyOpen() else inspector.lifecycle.notifyClose()
     }
 
     CompositionLocalProvider(LocalAELogsController provides controller) {
@@ -136,4 +136,4 @@ public fun AELogsProvider(
  * Available in logs-ui so logs-core stays Compose-free.
  */
 public val AELogs.uiPlugins: List<UIPlugin>
-    get() = plugins.value.filterIsInstance<UIPlugin>()
+    get() = plugins.plugins.value.filterIsInstance<UIPlugin>()

@@ -19,7 +19,7 @@ internal class NetworkViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _filter = MutableStateFlow(NetworkFilter.ALL)
+    private val _filter = MutableStateFlow<NetworkFilter>(com.ae.logs.plugins.network.model.NetworkFilters.ALL)
     val filter: StateFlow<NetworkFilter> = _filter.asStateFlow()
 
     /** Filtered + reversed (newest first) entry list. */
@@ -39,13 +39,7 @@ internal class NetworkViewModel(
                             entry.statusCode?.toString()?.contains(query) == true ||
                             entry.requestBody?.contains(query, ignoreCase = true) == true ||
                             entry.responseBody?.contains(query, ignoreCase = true) == true
-                    val matchesFilter =
-                        when (filter) {
-                            NetworkFilter.ALL -> true
-                            NetworkFilter.PENDING -> entry.isPending
-                            NetworkFilter.SUCCESS -> entry.isSuccess
-                            NetworkFilter.ERRORS -> entry.isError
-                        }
+                    val matchesFilter = filter.matches(entry)
                     matchesQuery && matchesFilter
                 }
         }.stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -61,6 +55,6 @@ internal class NetworkViewModel(
     fun clear() {
         store.clear()
         _searchQuery.value = ""
-        _filter.value = NetworkFilter.ALL
+        _filter.value = com.ae.logs.plugins.network.model.NetworkFilters.ALL
     }
 }

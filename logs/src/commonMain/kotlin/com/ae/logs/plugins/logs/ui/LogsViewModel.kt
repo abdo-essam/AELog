@@ -2,7 +2,6 @@ package com.ae.logs.plugins.logs.ui
 
 import com.ae.logs.plugins.logs.model.LogEntry
 import com.ae.logs.plugins.logs.model.LogFilter
-import com.ae.logs.plugins.logs.model.LogSeverity
 import com.ae.logs.plugins.logs.store.LogStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +18,7 @@ internal class LogsViewModel(
     private val _searchQuery = MutableStateFlow("")
     public val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _selectedFilter = MutableStateFlow(LogFilter.ALL)
+    private val _selectedFilter = MutableStateFlow<LogFilter>(com.ae.logs.plugins.logs.model.LogFilters.ALL)
     public val selectedFilter: StateFlow<LogFilter> = _selectedFilter.asStateFlow()
 
     public val filteredLogs: StateFlow<List<LogEntry>> =
@@ -31,16 +30,7 @@ internal class LogsViewModel(
             logs
                 .reversed()
                 .filter { entry ->
-                    when (filter) {
-                        LogFilter.ALL -> true
-                        LogFilter.VERBOSE -> entry.severity == LogSeverity.VERBOSE
-                        LogFilter.DEBUG -> entry.severity == LogSeverity.DEBUG
-                        LogFilter.INFO -> entry.severity == LogSeverity.INFO
-                        LogFilter.WARN -> entry.severity == LogSeverity.WARN
-                        LogFilter.ERROR ->
-                            entry.severity == LogSeverity.ERROR ||
-                                entry.severity == LogSeverity.ASSERT
-                    }
+                    filter.matches(entry)
                 }.filter { entry ->
                     query.isBlank() ||
                         entry.message.contains(query, ignoreCase = true) ||
@@ -64,6 +54,6 @@ internal class LogsViewModel(
     public fun clearLogs() {
         logStore.clear()
         _searchQuery.value = ""
-        _selectedFilter.value = LogFilter.ALL
+        _selectedFilter.value = com.ae.logs.plugins.logs.model.LogFilters.ALL
     }
 }

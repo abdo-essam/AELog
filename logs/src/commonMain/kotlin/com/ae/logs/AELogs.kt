@@ -1,14 +1,8 @@
 package com.ae.logs
 
 import com.ae.logs.core.AELogsPlugin
-import com.ae.logs.core.bus.AllDataClearedEvent
-import com.ae.logs.core.bus.AppStartedEvent
-import com.ae.logs.core.bus.AppStoppedEvent
 import com.ae.logs.core.bus.EventBus
-import com.ae.logs.core.bus.PanelClosedEvent
-import com.ae.logs.core.bus.PanelOpenedEvent
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.flow.StateFlow
 
 /**
  * AELogs — Extensible on-device dev tools for Kotlin Multiplatform.
@@ -72,103 +66,17 @@ public class AELogs private constructor(
 ) {
     // ── Sub-systems ───────────────────────────────────────────────────────────
 
-    /**
-     * Shared event bus for all plugins on this instance.
-     * Also exposed to each plugin via [com.ae.logs.core.PluginContext.eventBus].
-     */
     public val eventBus: EventBus = EventBus()
 
-    /** Internal plugin lifecycle manager. */
-    private val pluginManager = PluginManager(config, eventBus)
-
-    /** Hot stream of all currently registered plugins. */
-    public val plugins: StateFlow<List<AELogsPlugin>> = pluginManager.plugins
-
-    // ── Fluent plugin registration ────────────────────────────────────────────
+    /**
+     * Manages plugin registration, lookup, and lifecycle.
+     */
+    public val plugins: AELogsPluginManager = AELogsPluginManager(config, eventBus)
 
     /**
-     * Install a plugin and return **this** instance for chaining.
-     *
-     * Duplicate plugin IDs are silently ignored (idempotent).
-     * [com.ae.logs.core.AELogsPlugin.onAttach] is called synchronously.
-     *
-     * ```kotlin
-     * AELogs.create()
-     *     .install(LogsPlugin())
-     *     .install(NetworkPlugin())
-     *     .install(CrashPlugin())
-     * ```
+     * Manages app and UI lifecycle notifications to all installed plugins.
      */
-    public fun install(plugin: AELogsPlugin): AELogs {
-        pluginManager.install(plugin)
-        return this
-    }
-
-    /**
-     * Uninstall a plugin by ID and return **this** instance for chaining.
-     *
-     * The plugin's [com.ae.logs.core.PluginContext.scope] is cancelled
-     * before [com.ae.logs.core.AELogsPlugin.onDetach] is called.
-     */
-    public fun uninstall(pluginId: String): AELogs {
-        pluginManager.uninstall(pluginId)
-        return this
-    }
-
-    // ── Plugin lookup ─────────────────────────────────────────────────────────
-
-    /**
-     * Get a registered plugin by type. Returns `null` if not installed.
-     *
-     * ```kotlin
-     * val logs: LogsPlugin? = inspector.getPlugin<LogsPlugin>()
-     * ```
-     */
-    public inline fun <reified T : AELogsPlugin> getPlugin(): T? = plugins.value.filterIsInstance<T>().firstOrNull()
-
-    // ── Lifecycle notifications ───────────────────────────────────────────────
-
-    /**
-     * Notify all plugins the host app has moved to the **foreground**.
-     * Publishes [AppStartedEvent] to [eventBus].
-     */
-    internal fun notifyStart() {
-        pluginManager.forEach { it.onStart() }
-        eventBus.publish(AppStartedEvent)
-    }
-
-    /**
-     * Notify all plugins the host app has moved to the **background**.
-     * Publishes [AppStoppedEvent] to [eventBus].
-     */
-    internal fun notifyStop() {
-        pluginManager.forEach { it.onStop() }
-        eventBus.publish(AppStoppedEvent)
-    }
-
-    /**
-     * Notify all plugins the AELogs UI panel has been **opened**.
-     * Publishes [PanelOpenedEvent] to [eventBus].
-     */
-    internal fun notifyOpen() {
-        pluginManager.forEach { it.onOpen() }
-        eventBus.publish(PanelOpenedEvent)
-    }
-
-    /**
-     * Notify all plugins the AELogs UI panel has been **closed**.
-     * Publishes [PanelClosedEvent] to [eventBus].
-     */
-    internal fun notifyClose() {
-        pluginManager.forEach { it.onClose() }
-        eventBus.publish(PanelClosedEvent)
-    }
-
-    /** Clear all plugin data and publish [AllDataClearedEvent]. */
-    public fun clearAll() {
-        pluginManager.forEach { it.onClear() }
-        eventBus.publish(AllDataClearedEvent)
-    }
+    public val lifecycle: AELogsLifecycle = AELogsLifecycle(plugins, eventBus)
 
     // ── Companion (factory & singleton) ──────────────────────────────────────
 
@@ -238,7 +146,7 @@ public class AELogs private constructor(
             // CAS guarantees only one winner on concurrent calls; the loser
             // discards its instance and returns the already-set singleton.
             if (_default.compareAndSet(null, instance)) {
-                plugins.forEach { instance.install(it) }
+                plugins.forEach { instance.plugins.install(it) }
                 return instance
             } else {
                 return _default.value!!
@@ -258,7 +166,7 @@ public class AELogs private constructor(
          */
         public fun export(): String {
             val sb = StringBuilder()
-            defaultOrNull()?.plugins?.value?.forEach { plugin ->
+            defaultOrNull()?.plugins?.plugins?.value?.forEach { plugin ->
                 val exportedData = plugin.export()
                 if (exportedData.isNotBlank()) {
                     sb.append("--- ${plugin.name} ---\n")
@@ -279,7 +187,7 @@ public class AELogs private constructor(
          * val networkApi = AELogs.plugin<NetworkPlugin>()?.api
          * ```
          */
-        public inline fun <reified T : AELogsPlugin> plugin(): T? = defaultOrNull()?.getPlugin<T>()
+        public inline fun <reified T : AELogsPlugin> plugin(): T? = defaultOrNull()?.plugins?.getPlugin(T::class)
 
         /**
          * Create a new **isolated** [AELogs] instance with custom configuration.

@@ -2,6 +2,7 @@ public final class com/ae/logs/plugins/network/NetworkApi {
 	public static final field $stable I
 	public final fun clear ()V
 	public final fun error (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getClock ()Lkotlin/time/Clock;
 	public final fun newId ()Ljava/lang/String;
 	public final fun recordCall (Ljava/lang/String;Lcom/ae/logs/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
 	public static synthetic fun recordCall$default (Lcom/ae/logs/plugins/network/NetworkApi;Ljava/lang/String;Lcom/ae/logs/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/Object;
@@ -92,15 +93,21 @@ public final class com/ae/logs/plugins/network/model/NetworkEntry {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/logs/plugins/network/model/NetworkFilter : java/lang/Enum {
-	public static final field ALL Lcom/ae/logs/plugins/network/model/NetworkFilter;
-	public static final field ERRORS Lcom/ae/logs/plugins/network/model/NetworkFilter;
-	public static final field PENDING Lcom/ae/logs/plugins/network/model/NetworkFilter;
-	public static final field SUCCESS Lcom/ae/logs/plugins/network/model/NetworkFilter;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+public class com/ae/logs/plugins/network/model/NetworkFilter {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public final fun getLabel ()Ljava/lang/String;
-	public static fun valueOf (Ljava/lang/String;)Lcom/ae/logs/plugins/network/model/NetworkFilter;
-	public static fun values ()[Lcom/ae/logs/plugins/network/model/NetworkFilter;
+	public fun matches (Lcom/ae/logs/plugins/network/model/NetworkEntry;)Z
+}
+
+public final class com/ae/logs/plugins/network/model/NetworkFilters {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/logs/plugins/network/model/NetworkFilters;
+	public final fun getALL ()Lcom/ae/logs/plugins/network/model/NetworkFilter;
+	public final fun getDefaultFilters ()Ljava/util/List;
+	public final fun getERRORS ()Lcom/ae/logs/plugins/network/model/NetworkFilter;
+	public final fun getPENDING ()Lcom/ae/logs/plugins/network/model/NetworkFilter;
+	public final fun getSUCCESS ()Lcom/ae/logs/plugins/network/model/NetworkFilter;
 }
 
 public final class com/ae/logs/plugins/network/model/NetworkMethod : java/lang/Enum {

@@ -1,3 +1,5 @@
+@file:OptIn(kotlin.time.ExperimentalTime::class)
+
 package com.ae.logs.plugins.logs
 
 import androidx.compose.material.icons.Icons

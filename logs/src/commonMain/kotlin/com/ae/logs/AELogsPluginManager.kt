@@ -31,7 +31,7 @@ import kotlinx.atomicfu.update as atomicUpdate
  * - Cancel plugin scope before calling [AELogsPlugin.onDetach]
  * - Provide type-safe and ID-based plugin lookup
  */
-internal class PluginManager(
+public class AELogsPluginManager internal constructor(
     private val config: AELogsConfig,
     private val eventBus: EventBus,
 ) {
@@ -45,7 +45,7 @@ internal class PluginManager(
 
     // ── Registration ──────────────────────────────────────────────────────────
 
-    fun install(plugin: AELogsPlugin) {
+    public fun install(plugin: AELogsPlugin): AELogsPluginManager {
         val wasAdded =
             _plugins
                 .updateAndGet { current ->
@@ -57,9 +57,10 @@ internal class PluginManager(
             scopes.atomicUpdate { it + (plugin.id to scope) }
             safeCall(plugin.id) { plugin.onAttach(buildContext(scope)) }
         }
+        return this
     }
 
-    fun uninstall(pluginId: String) {
+    public fun uninstall(pluginId: String): AELogsPluginManager {
         var detached: AELogsPlugin? = null
         _plugins.update { current ->
             val plugin = current.find { it.id == pluginId } ?: return@update current
@@ -71,30 +72,32 @@ internal class PluginManager(
             removedScope?.cancel()
             safeCall(plugin.id) { plugin.onDetach() }
         }
+        return this
     }
 
     // ── Lookup ────────────────────────────────────────────────────────────────
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : AELogsPlugin> getPlugin(type: KClass<T>): T? = _plugins.value.firstOrNull { type.isInstance(it) } as? T
+    public fun <T : AELogsPlugin> getPlugin(type: KClass<T>): T? =
+        _plugins.value.firstOrNull { type.isInstance(it) } as? T
 
-    fun getPluginById(id: String): AELogsPlugin? = _plugins.value.find { it.id == id }
+    public fun getPluginById(id: String): AELogsPlugin? = _plugins.value.find { it.id == id }
 
     // ── Batch iteration ───────────────────────────────────────────────────────
 
     /** Iterate all plugins safely — one failure doesn't stop the rest. */
-    fun forEach(action: (AELogsPlugin) -> Unit) = _plugins.value.forEach { safeCall(it.id) { action(it) } }
+    internal fun forEach(action: (AELogsPlugin) -> Unit) = _plugins.value.forEach { safeCall(it.id) { action(it) } }
 
     // ── Internal ──────────────────────────────────────────────────────────────
 
     private fun buildContext(scope: CoroutineScope): PluginContext =
         object : PluginContext {
             override val scope: CoroutineScope = scope
-            override val config: AELogsConfig = this@PluginManager.config
-            override val eventBus: EventBus = this@PluginManager.eventBus
+            override val config: AELogsConfig = this@AELogsPluginManager.config
+            override val eventBus: EventBus = this@AELogsPluginManager.eventBus
 
             @Suppress("UNCHECKED_CAST")
-            override fun <T : AELogsPlugin> getPlugin(type: KClass<T>): T? = this@PluginManager.getPlugin(type)
+            override fun <T : AELogsPlugin> getPlugin(type: KClass<T>): T? = this@AELogsPluginManager.getPlugin(type)
         }
 
     companion object {

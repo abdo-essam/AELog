@@ -2,7 +2,6 @@ package com.ae.logs.plugins.logs.store
 
 import com.ae.logs.core.store.PluginStore
 import com.ae.logs.plugins.logs.model.LogEntry
-import com.ae.logs.plugins.logs.model.LogSeverity
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -22,12 +21,8 @@ public class LogStore(
     public val logsFlow: StateFlow<List<LogEntry>> = store.dataFlow
 
     /** Add a new log entry. */
-    public fun log(
-        severity: LogSeverity,
-        tag: String,
-        message: String,
-    ) {
-        store.add(LogEntry(severity = severity, tag = tag, message = message))
+    public fun log(entry: LogEntry) {
+        store.add(entry)
     }
 
     /** Remove all stored entries. */

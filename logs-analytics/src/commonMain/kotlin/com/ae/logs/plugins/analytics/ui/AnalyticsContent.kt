@@ -50,7 +50,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ae.logs.plugins.analytics.model.AnalyticsEvent
-import com.ae.logs.plugins.analytics.model.AnalyticsFilter
+import com.ae.logs.plugins.analytics.model.AnalyticsFilters
 import com.ae.logs.ui.components.AELogsFilterChips
 import com.ae.logs.ui.components.AELogsSearchBar
 import com.ae.logs.ui.components.AELogsViewerHeader
@@ -58,9 +58,6 @@ import com.ae.logs.ui.theme.AELogsSpacing
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
-
-// ── Filter labels list (order must match AnalyticsFilter.entries) ─────────────
-private val FILTER_LABELS = AnalyticsFilter.entries.map { it.label }
 
 @Composable
 internal fun AnalyticsContent(
@@ -97,9 +94,12 @@ internal fun AnalyticsContent(
 
         // ── Filter chips ───────────────────────────────────────────────────
         AELogsFilterChips(
-            labels = FILTER_LABELS,
-            selectedIndex = AnalyticsFilter.entries.indexOf(filter),
-            onSelect = { viewModel.setFilter(AnalyticsFilter.entries[it]) },
+            labels = AnalyticsFilters.defaultFilters.map { it.label },
+            selectedIndex = AnalyticsFilters.defaultFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
+            onSelect = { index ->
+                val newFilter = AnalyticsFilters.defaultFilters.getOrNull(index) ?: AnalyticsFilters.ALL
+                viewModel.setFilter(newFilter)
+            },
             modifier = Modifier.padding(horizontal = AELogsSpacing.x5),
         )
 

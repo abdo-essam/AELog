@@ -1,22 +1,18 @@
+@file:OptIn(kotlin.time.ExperimentalTime::class)
+
 package com.ae.logs.plugins.logs
 
 import com.ae.logs.plugins.logs.model.LogSeverity
 import com.ae.logs.plugins.logs.store.LogStore
+import kotlin.time.Clock
 
-/**
- * Public write API for [LogsPlugin].
- *
- * This is the only surface external code should use to send logs to AELogs.
- * It intentionally exposes no read access — UI reads via the plugin's internal store.
- *
- * ```kotlin
- * val api = inspector.getPlugin<LogsPlugin>()?.api
- * api?.log(LogSeverity.INFO, "MyTag", "Something happened")
- * api?.e("MyTag", "Oops", throwable)   // stack trace appended automatically
- * ```
- */
 public class LogsApi internal constructor(
     private val store: LogStore,
+    private val clock: Clock = Clock.System,
+    private val idGenerator: () -> String = {
+        com.ae.logs.core.utils.IdGenerator
+            .generateId()
+    },
 ) {
     /**
      * Record a log entry.
@@ -44,7 +40,15 @@ public class LogsApi internal constructor(
         config?.platformLogSink?.log(severity, tag, message, throwable)
 
         val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
-        store.log(severity, tag, fullMessage)
+        store.log(
+            com.ae.logs.plugins.logs.model.LogEntry(
+                id = idGenerator(),
+                severity = severity,
+                tag = tag,
+                message = fullMessage,
+                timestamp = clock.now().toEpochMilliseconds(),
+            ),
+        )
     }
 
     /** Convenience shortcut for [LogSeverity.VERBOSE] logs. */

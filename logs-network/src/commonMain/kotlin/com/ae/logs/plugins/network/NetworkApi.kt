@@ -31,6 +31,11 @@ import kotlin.time.Clock
  */
 public class NetworkApi internal constructor(
     private val store: NetworkStore,
+    @PublishedApi internal val clock: Clock = Clock.System,
+    private val idGenerator: () -> String = {
+        com.ae.logs.core.utils.IdGenerator
+            .generateId()
+    },
 ) {
     /**
      * Record the start of an outgoing request.
@@ -53,7 +58,7 @@ public class NetworkApi internal constructor(
                 rawMethod = rawMethod,
                 requestHeaders = headers,
                 requestBody = body,
-                timestamp = Clock.System.now().toEpochMilliseconds(),
+                timestamp = clock.now().toEpochMilliseconds(),
             ),
         )
     }
@@ -118,11 +123,11 @@ public class NetworkApi internal constructor(
     ): T {
         val id = newId()
         request(id, url, method, rawMethod, headers, body)
-        val start = Clock.System.now().toEpochMilliseconds()
+        val start = clock.now().toEpochMilliseconds()
 
         return try {
             val result = block()
-            val durationMs = Clock.System.now().toEpochMilliseconds() - start
+            val durationMs = clock.now().toEpochMilliseconds() - start
             response(
                 id = id,
                 statusCode = result.statusCode,
@@ -140,10 +145,7 @@ public class NetworkApi internal constructor(
     /** Clear all recorded entries. */
     public fun clear(): Unit = store.clear()
 
-    /** Generate a unique request ID. */
-    public fun newId(): String =
-        com.ae.logs.core.utils.IdGenerator
-            .generateId()
+    public fun newId(): String = idGenerator()
 }
 
 /**

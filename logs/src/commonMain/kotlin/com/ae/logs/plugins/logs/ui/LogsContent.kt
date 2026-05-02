@@ -76,10 +76,10 @@ internal fun LogsContent(
         Spacer(modifier = Modifier.height(AELogsSpacing.x3))
 
         AELogsFilterChips(
-            labels = LogFilter.entries.map { it.label },
-            selectedIndex = LogFilter.entries.indexOf(selectedFilter).takeIf { it >= 0 } ?: 0,
+            labels = LogFilters.defaultFilters.map { it.label },
+            selectedIndex = LogFilters.defaultFilters.indexOf(selectedFilter).takeIf { it >= 0 } ?: 0,
             onSelect = { index ->
-                val filter = LogFilter.entries.getOrNull(index) ?: LogFilter.ALL
+                val filter = LogFilters.defaultFilters.getOrNull(index) ?: LogFilters.ALL
                 viewModel.updateSelectedFilter(filter)
             },
             modifier = Modifier.padding(horizontal = AELogsSpacing.x5),

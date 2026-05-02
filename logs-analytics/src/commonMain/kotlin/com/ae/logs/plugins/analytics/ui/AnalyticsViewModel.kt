@@ -19,7 +19,7 @@ internal class AnalyticsViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _filter = MutableStateFlow(AnalyticsFilter.ALL)
+    private val _filter = MutableStateFlow<AnalyticsFilter>(com.ae.logs.plugins.analytics.model.AnalyticsFilters.ALL)
     val filter: StateFlow<AnalyticsFilter> = _filter.asStateFlow()
 
     /** Filtered + reversed (newest first) event list. */
@@ -39,12 +39,7 @@ internal class AnalyticsViewModel(
                             event.properties.any { (k, v) ->
                                 k.contains(query, ignoreCase = true) || v.toString().contains(query, ignoreCase = true)
                             }
-                    val matchesFilter =
-                        when (filter) {
-                            AnalyticsFilter.ALL -> true
-                            AnalyticsFilter.SCREENS -> event.name == "screen_view"
-                            AnalyticsFilter.EVENTS -> event.name != "screen_view"
-                        }
+                    val matchesFilter = filter.matches(event)
                     matchesQuery && matchesFilter
                 }
         }.stateIn(scope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -60,6 +55,6 @@ internal class AnalyticsViewModel(
     fun clear() {
         store.clear()
         _searchQuery.value = ""
-        _filter.value = AnalyticsFilter.ALL
+        _filter.value = com.ae.logs.plugins.analytics.model.AnalyticsFilters.ALL
     }
 }
