@@ -1,6 +1,5 @@
 package com.ae.logs.sample.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -45,9 +44,7 @@ private val LightScheme =
     )
 
 @Composable
-fun SampleTheme(
-    content: @Composable () -> Unit,
-) {
+fun SampleTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = LightScheme,
         content = content,

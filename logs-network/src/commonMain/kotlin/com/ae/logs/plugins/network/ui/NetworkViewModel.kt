@@ -60,6 +60,7 @@ internal class NetworkViewModel(
     }
 
     val hasPending: StateFlow<Boolean> =
-        store.entries.map { entries -> entries.any { it.isPending } }
+        store.entries
+            .map { entries -> entries.any { it.isPending } }
             .stateIn(scope, SharingStarted.WhileSubscribed(5000), false)
 }

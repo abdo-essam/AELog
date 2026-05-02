@@ -520,6 +520,6 @@ public final class com/ae/logs/ui/theme/AELogsSpacing {
 }
 
 public final class com/ae/logs/ui/theme/AELogsThemeKt {
-	public static final fun AELogsTheme (Landroidx/compose/material3/ColorScheme;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AELogsTheme (Landroidx/compose/material3/ColorScheme;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 }
 

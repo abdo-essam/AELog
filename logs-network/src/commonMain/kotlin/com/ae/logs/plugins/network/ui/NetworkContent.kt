@@ -7,6 +7,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +25,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
@@ -55,7 +56,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.draw.clip
 import com.ae.logs.plugins.network.model.NetworkEntry
 import com.ae.logs.plugins.network.model.NetworkFilters
 import com.ae.logs.ui.components.AELogsFilterChips
@@ -75,18 +75,19 @@ internal fun NetworkContent(
     val filter by viewModel.filter.collectAsState()
 
     val hasPending by viewModel.hasPending.collectAsState()
-    
+
     LaunchedEffect(hasPending, filter) {
         if (!hasPending && filter == NetworkFilters.PENDING) {
             viewModel.setFilter(NetworkFilters.ALL)
         }
     }
 
-    val activeFilters = if (hasPending) {
-        NetworkFilters.defaultFilters
-    } else {
-        NetworkFilters.defaultFilters.filter { it != NetworkFilters.PENDING }
-    }
+    val activeFilters =
+        if (hasPending) {
+            NetworkFilters.defaultFilters
+        } else {
+            NetworkFilters.defaultFilters.filter { it != NetworkFilters.PENDING }
+        }
 
     var expandedId by remember { mutableStateOf<String?>(null) }
     val clipboard = LocalClipboardManager.current
@@ -289,7 +290,7 @@ private fun NetworkEntryDetails(
                         Tab(
                             selected = selectedTabIndex == index,
                             onClick = { selectedTabIndex = index },
-                            text = { Text(title, style = MaterialTheme.typography.labelMedium) }
+                            text = { Text(title, style = MaterialTheme.typography.labelMedium) },
                         )
                     }
                 }
@@ -312,11 +313,15 @@ private fun NetworkEntryDetails(
                                 BodySection(
                                     label = "Body",
                                     body = it.prettyPrintJson(),
-                                    onCopy = { clipboard.setText(AnnotatedString(it)) }
+                                    onCopy = { clipboard.setText(AnnotatedString(it)) },
                                 )
                             }
                             if (entry.requestHeaders.isEmpty() && entry.requestBody == null) {
-                                Text("No Request Data", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(
+                                    "No Request Data",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
                             }
                         }
                         2 -> {
@@ -328,11 +333,15 @@ private fun NetworkEntryDetails(
                                 BodySection(
                                     label = "Body",
                                     body = it.prettyPrintJson(),
-                                    onCopy = { clipboard.setText(AnnotatedString(it)) }
+                                    onCopy = { clipboard.setText(AnnotatedString(it)) },
                                 )
                             }
                             if (entry.responseHeaders.isEmpty() && entry.responseBody == null) {
-                                Text("No Response Data", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(
+                                    "No Response Data",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
                             }
                         }
                     }
@@ -421,13 +430,13 @@ private fun HeadersSection(
 private fun BodySection(
     label: String,
     body: String,
-    onCopy: (String) -> Unit
+    onCopy: (String) -> Unit,
 ) {
     Column(modifier = Modifier.padding(bottom = AELogsSpacing.x2).fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = label,
@@ -438,22 +447,24 @@ private fun BodySection(
                 imageVector = Icons.Default.ContentCopy,
                 contentDescription = "Copy $label",
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .size(16.dp)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onCopy(body) }
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                        ) { onCopy(body) },
             )
         }
         Spacer(Modifier.height(4.dp))
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(8.dp)
-                .horizontalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(8.dp)
+                    .horizontalScroll(rememberScrollState()),
         ) {
             androidx.compose.foundation.text.selection.SelectionContainer {
                 Text(
