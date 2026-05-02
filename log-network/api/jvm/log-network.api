@@ -1,17 +1,3 @@
-public final class com/ae/log/plugins/network/NetworkRecorder {
-	public static final field $stable I
-	public final fun clear ()V
-	public final fun error (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun getClock ()Lkotlin/time/Clock;
-	public final fun newId ()Ljava/lang/String;
-	public final fun recordCall (Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
-	public static synthetic fun recordCall$default (Lcom/ae/log/plugins/network/NetworkRecorder;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/Object;
-	public final fun request (Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;)V
-	public static synthetic fun request$default (Lcom/ae/log/plugins/network/NetworkRecorder;Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
-	public final fun response (Ljava/lang/String;ILjava/lang/String;Ljava/util/Map;Ljava/lang/Long;)V
-	public static synthetic fun response$default (Lcom/ae/log/plugins/network/NetworkRecorder;Ljava/lang/String;ILjava/lang/String;Ljava/util/Map;Ljava/lang/Long;ILjava/lang/Object;)V
-}
-
 public final class com/ae/log/plugins/network/NetworkPlugin : com/ae/log/core/UIPlugin {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/plugins/network/NetworkPlugin$Companion;
@@ -23,11 +9,11 @@ public final class com/ae/log/plugins/network/NetworkPlugin : com/ae/log/core/UI
 	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
 	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
 	public fun export ()Ljava/lang/String;
-	public final fun getApi ()Lcom/ae/log/plugins/network/NetworkRecorder;
 	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
 	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
 	public fun getId ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
+	public final fun getRecorder ()Lcom/ae/log/plugins/network/NetworkRecorder;
 	public fun onAttach (Lcom/ae/log/core/PluginContext;)V
 	public fun onClear ()V
 	public fun onClose ()V
@@ -42,6 +28,20 @@ public final class com/ae/log/plugins/network/NetworkPlugin$Companion {
 
 public final class com/ae/log/plugins/network/NetworkPluginKt {
 	public static final fun getNetwork (Lcom/ae/log/AELog$Companion;)Lcom/ae/log/plugins/network/NetworkRecorder;
+}
+
+public final class com/ae/log/plugins/network/NetworkRecorder {
+	public static final field $stable I
+	public final fun clear ()V
+	public final fun error (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun getClock ()Lkotlin/time/Clock;
+	public final fun newId ()Ljava/lang/String;
+	public final fun recordCall (Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public static synthetic fun recordCall$default (Lcom/ae/log/plugins/network/NetworkRecorder;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun request (Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;)V
+	public static synthetic fun request$default (Lcom/ae/log/plugins/network/NetworkRecorder;Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun response (Ljava/lang/String;ILjava/lang/String;Ljava/util/Map;Ljava/lang/Long;)V
+	public static synthetic fun response$default (Lcom/ae/log/plugins/network/NetworkRecorder;Ljava/lang/String;ILjava/lang/String;Ljava/util/Map;Ljava/lang/Long;ILjava/lang/Object;)V
 }
 
 public final class com/ae/log/plugins/network/NetworkResult {
@@ -127,11 +127,5 @@ public final class com/ae/log/plugins/network/model/NetworkMethod : java/lang/En
 
 public final class com/ae/log/plugins/network/model/NetworkMethod$Companion {
 	public final fun fromString (Ljava/lang/String;)Lcom/ae/log/plugins/network/model/NetworkMethod;
-}
-
-public final class com/ae/log/plugins/network/ui/ComposableSingletons$NetworkContentKt {
-	public static final field INSTANCE Lcom/ae/log/plugins/network/ui/ComposableSingletons$NetworkContentKt;
-	public fun <init> ()V
-	public final fun getLambda$1079185877$log_network ()Lkotlin/jvm/functions/Function3;
 }
 

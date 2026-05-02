@@ -12,17 +12,13 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,15 +26,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -58,9 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ae.log.plugins.network.model.NetworkEntry
 import com.ae.log.plugins.network.model.NetworkFilters
-import com.ae.log.ui.components.LogFilterChips
-import com.ae.log.ui.components.LogSearchBar
-import com.ae.log.ui.components.PanelHeader
+import com.ae.log.ui.components.AELogsExpandedDetails
+import com.ae.log.ui.components.AELogsListPanel
 import com.ae.log.ui.theme.LogSpacing
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -93,81 +85,46 @@ internal fun NetworkContent(
     val clipboard = LocalClipboardManager.current
     val listState = rememberLazyListState()
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        // ── Header ─────────────────────────────────────────────────────────
-        PanelHeader(
-            itemCount = entries.size,
-            itemLabel = "requests",
-            onClearAll = { viewModel.clear() },
-        )
-
-        Spacer(Modifier.height(LogSpacing.x3))
-
-        // ── Search bar ─────────────────────────────────────────────────────
-        LogSearchBar(
-            query = query,
-            onQueryChange = { viewModel.search(it) },
-            placeholder = "Search URL, method, status…",
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
-
-        Spacer(Modifier.height(LogSpacing.x3))
-
-        // ── Filter chips ───────────────────────────────────────────────────
-        LogFilterChips(
-            labels = activeFilters.map { it.label },
-            selectedIndex = activeFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
-            onSelect = { index ->
-                val newFilter = activeFilters.getOrNull(index) ?: NetworkFilters.ALL
-                viewModel.setFilter(newFilter)
-            },
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
-
-        Spacer(Modifier.height(LogSpacing.x3))
-
-        // ── Content ────────────────────────────────────────────────────────
-        if (entries.isEmpty()) {
-            NetworkEmptyPlaceholder(query)
-        } else {
-            Card(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = LogSpacing.x5),
-                shape = RoundedCornerShape(LogSpacing.x3),
-                colors =
-                    CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                    ),
-            ) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = LogSpacing.x2),
-                ) {
-                    itemsIndexed(entries, key = { _, e -> e.id }) { index, entry ->
-                        NetworkEntryItem(
-                            entry = entry,
-                            isExpanded = expandedId == entry.id,
-                            onToggleExpand = {
-                                expandedId = if (expandedId == entry.id) null else entry.id
-                            },
-                            onCopy = {
-                                clipboard.setText(AnnotatedString(entry.toClipboardText()))
-                            },
-                        )
-                        if (index < entries.lastIndex) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(horizontal = LogSpacing.x3),
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                thickness = 1.dp,
-                            )
-                        }
-                    }
-                }
+    val onToggleExpand =
+        remember {
+            { id: String ->
+                expandedId = if (expandedId == id) null else id
             }
         }
+
+    val onCopyEvent =
+        remember(clipboard) {
+            { entry: NetworkEntry ->
+                clipboard.setText(AnnotatedString(entry.toClipboardText()))
+            }
+        }
+
+    AELogsListPanel(
+        items = entries,
+        itemLabel = "requests",
+        searchQuery = query,
+        searchPlaceholder = "Search URL, method, status…",
+        onSearchChange = { viewModel.search(it) },
+        filterLabels = activeFilters.map { it.label },
+        selectedFilterIndex = activeFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
+        onFilterSelect = { index ->
+            val newFilter = activeFilters.getOrNull(index) ?: NetworkFilters.ALL
+            viewModel.setFilter(newFilter)
+        },
+        onClearAll = { viewModel.clear() },
+        onCopyAll = null,
+        emptyMessage = "No requests recorded yet",
+        emptyQueryMessage = "No results for \"$query\"",
+        listState = listState,
+        itemKey = { it.id },
+        modifier = modifier,
+    ) { _, entry ->
+        NetworkEntryItem(
+            entry = entry,
+            isExpanded = expandedId == entry.id,
+            onToggleExpand = onToggleExpand,
+            onCopy = onCopyEvent,
+        )
     }
 }
 
@@ -177,17 +134,18 @@ internal fun NetworkContent(
 private fun NetworkEntryItem(
     entry: NetworkEntry,
     isExpanded: Boolean,
-    onToggleExpand: () -> Unit,
-    onCopy: () -> Unit,
+    onToggleExpand: (String) -> Unit,
+    onCopy: (NetworkEntry) -> Unit,
 ) {
     Column(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .clickable(
-                    indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                ) { onToggleExpand() }
+                    indication = null,
+                    onClickLabel = if (isExpanded) "Collapse network entry" else "Expand network entry",
+                ) { onToggleExpand(entry.id) }
                 .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
     ) {
         // ── Summary row ───────────────────────────────────────────────────
@@ -247,7 +205,7 @@ private fun NetworkEntryItem(
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {
-            NetworkEntryDetails(entry = entry, onCopy = onCopy)
+            NetworkEntryDetails(entry = entry, onCopy = { onCopy(entry) })
         }
     }
 }
@@ -269,111 +227,78 @@ private fun NetworkEntryDetails(
 
     val clipboard = LocalClipboardManager.current
 
-    Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(top = LogSpacing.x3),
+    AELogsExpandedDetails(
+        bgColor = bgColor,
+        onCopy = onCopy,
     ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(LogSpacing.x2),
-            colors = CardDefaults.cardColors(containerColor = bgColor),
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.primary,
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                TabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTabIndex == index,
-                            onClick = { selectedTabIndex = index },
-                            text = { Text(title, style = MaterialTheme.typography.labelMedium) },
-                        )
-                    }
-                }
-
-                Column(modifier = Modifier.padding(LogSpacing.x3)) {
-                    when (selectedTabIndex) {
-                        0 -> {
-                            // Overview
-                            DetailSection("URL", entry.url)
-                            entry.statusCode?.let { DetailSection("Status", it.toString()) }
-                            entry.durationMs?.let { DetailSection("Duration", "${it}ms") }
-                            entry.error?.let { DetailSection("Error", it) }
-                        }
-                        1 -> {
-                            // Request
-                            DetailSection("URL", entry.url)
-                            val queryParams = entry.url.extractQueryParams()
-                            if (queryParams.isNotEmpty()) {
-                                HeadersSection("Query Parameters", queryParams)
-                            }
-                            if (entry.requestHeaders.isNotEmpty()) {
-                                HeadersSection("Headers", entry.requestHeaders)
-                            }
-                            entry.requestBody?.let {
-                                BodySection(
-                                    label = "Body",
-                                    body = it.prettyPrintJson(),
-                                    onCopy = { clipboard.setText(AnnotatedString(it)) },
-                                )
-                            }
-                            if (entry.requestHeaders.isEmpty() && entry.requestBody == null) {
-                                Text(
-                                    "No Request Data",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
-                        2 -> {
-                            // Response
-                            if (entry.responseHeaders.isNotEmpty()) {
-                                HeadersSection("Headers", entry.responseHeaders)
-                            }
-                            entry.responseBody?.let {
-                                BodySection(
-                                    label = "Body",
-                                    body = it.prettyPrintJson(),
-                                    onCopy = { clipboard.setText(AnnotatedString(it)) },
-                                )
-                            }
-                            if (entry.responseHeaders.isEmpty() && entry.responseBody == null) {
-                                Text(
-                                    "No Response Data",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
-                    }
-                }
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(title, style = MaterialTheme.typography.labelMedium) },
+                )
             }
         }
 
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = LogSpacing.x2),
-            horizontalArrangement = Arrangement.End,
-        ) {
-            TextButton(onClick = onCopy) {
-                Icon(
-                    Icons.Default.ContentCopy,
-                    null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(16.dp),
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    "Copy All",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                )
+        Column(modifier = Modifier.padding(LogSpacing.x3)) {
+            when (selectedTabIndex) {
+                0 -> {
+                    // Overview
+                    DetailSection("URL", entry.url)
+                    entry.statusCode?.let { DetailSection("Status", it.toString()) }
+                    entry.durationMs?.let { DetailSection("Duration", "${it}ms") }
+                    entry.error?.let { DetailSection("Error", it) }
+                }
+                1 -> {
+                    // Request
+                    DetailSection("URL", entry.url)
+                    val queryParams = entry.url.extractQueryParams()
+                    if (queryParams.isNotEmpty()) {
+                        HeadersSection("Query Parameters", queryParams)
+                    }
+                    if (entry.requestHeaders.isNotEmpty()) {
+                        HeadersSection("Headers", entry.requestHeaders)
+                    }
+                    entry.requestBody?.let {
+                        BodySection(
+                            label = "Body",
+                            body = it.prettyPrintJson(),
+                            onCopy = { clipboard.setText(AnnotatedString(it)) },
+                        )
+                    }
+                    if (entry.requestHeaders.isEmpty() && entry.requestBody == null) {
+                        Text(
+                            "No Request Data",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+                2 -> {
+                    // Response
+                    if (entry.responseHeaders.isNotEmpty()) {
+                        HeadersSection("Headers", entry.responseHeaders)
+                    }
+                    entry.responseBody?.let {
+                        BodySection(
+                            label = "Body",
+                            body = it.prettyPrintJson(),
+                            onCopy = { clipboard.setText(AnnotatedString(it)) },
+                        )
+                    }
+                    if (entry.responseHeaders.isEmpty() && entry.responseBody == null) {
+                        Text(
+                            "No Response Data",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
             }
         }
     }
@@ -448,18 +373,17 @@ private fun BodySection(
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary,
             )
-            Icon(
-                imageVector = Icons.Default.ContentCopy,
-                contentDescription = "Copy $label",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier =
-                    Modifier
-                        .size(16.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                        ) { onCopy(body) },
-            )
+            IconButton(
+                onClick = { onCopy(body) },
+                modifier = Modifier.size(48.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ContentCopy,
+                    contentDescription = "Copy $label",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(24.dp),
+                )
+            }
         }
         Spacer(Modifier.height(4.dp))
         Box(
@@ -550,19 +474,6 @@ private fun String.extractQueryParams(): Map<String, String> {
         }
     }
     return params
-}
-
-// ── Empty placeholder ─────────────────────────────────────────────────────────
-
-@Composable
-private fun NetworkEmptyPlaceholder(query: String) {
-    Box(Modifier.fillMaxSize().padding(LogSpacing.x8), Alignment.Center) {
-        Text(
-            text = if (query.isNotEmpty()) "No results for \"$query\"" else "No requests recorded yet",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
 }
 
 // ── Clipboard helper ──────────────────────────────────────────────────────────

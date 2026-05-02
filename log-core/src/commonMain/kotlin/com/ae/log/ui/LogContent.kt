@@ -36,8 +36,9 @@ internal fun LogContent(
         return
     }
 
-    var selectedIndex by remember { mutableIntStateOf(0) }
-    val selectedPlugin = plugins.getOrElse(selectedIndex) { plugins.first() }
+    var selectedIndex by remember(plugins.size) { mutableIntStateOf(0) }
+    val safeIndex = selectedIndex.coerceIn(0, plugins.lastIndex.coerceAtLeast(0))
+    val selectedPlugin = plugins.getOrElse(safeIndex) { plugins.first() }
 
     Column(modifier = modifier.fillMaxSize()) {
         // Header — title + active plugin's action buttons
@@ -60,25 +61,26 @@ internal fun LogContent(
         // Tab row (only shown when there are multiple plugins)
         if (plugins.size > 1) {
             PrimaryScrollableTabRow(
-                selectedTabIndex = selectedIndex,
+                selectedTabIndex = safeIndex,
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.primary,
                 edgePadding = LogSpacing.x4,
             ) {
                 plugins.forEachIndexed { index, plugin ->
                     val badgeCount by plugin.badgeCount.collectAsState()
+                    val count = badgeCount
                     Tab(
-                        selected = index == selectedIndex,
+                        selected = index == safeIndex,
                         onClick = { selectedIndex = index },
                         text = {
                             Text(plugin.name, style = MaterialTheme.typography.labelMedium)
                         },
                         icon = {
-                            if (badgeCount != null && badgeCount!! > 0) {
+                            if (count != null && count > 0) {
                                 BadgedBox(badge = {
                                     Badge {
                                         Text(
-                                            text = if (badgeCount!! > 99) "99+" else badgeCount.toString(),
+                                            text = if (count > 99) "99+" else count.toString(),
                                             style = MaterialTheme.typography.labelSmall,
                                         )
                                     }

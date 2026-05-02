@@ -98,7 +98,7 @@ public fun AELogProvider(
                         .fillMaxSize()
                         .then(
                             if (uiConfig.enableLongPress) {
-                                Modifier.pointerInput(Unit) {
+                                Modifier.pointerInput(controller) {
                                     detectTapGestures(onLongPress = { controller.show() })
                                 }
                             } else {

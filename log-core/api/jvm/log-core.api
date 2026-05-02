@@ -288,6 +288,38 @@ public final class com/ae/log/core/utils/IdGenerator {
 	public final fun generateId ()Ljava/lang/String;
 }
 
+public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/plugins/log/LogPlugin$Companion;
+	public static final field ID Ljava/lang/String;
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
+	public fun export ()Ljava/lang/String;
+	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
+	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public fun getId ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public final fun getRecorder ()Lcom/ae/log/plugins/log/LogRecorder;
+	public fun onAttach (Lcom/ae/log/core/PluginContext;)V
+	public fun onClear ()V
+	public fun onClose ()V
+	public fun onDetach ()V
+	public fun onOpen ()V
+	public fun onStart ()V
+	public fun onStop ()V
+}
+
+public final class com/ae/log/plugins/log/LogPlugin$Companion {
+}
+
+public final class com/ae/log/plugins/log/LogPluginKt {
+	public static final fun getLog (Lcom/ae/log/AELog$Companion;)Lcom/ae/log/plugins/log/LogRecorder;
+}
+
 public final class com/ae/log/plugins/log/LogRecorder {
 	public static final field $stable I
 	public final fun d (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
@@ -304,38 +336,6 @@ public final class com/ae/log/plugins/log/LogRecorder {
 	public static synthetic fun w$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public final fun wtf (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static synthetic fun wtf$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-}
-
-public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin {
-	public static final field $stable I
-	public static final field Companion Lcom/ae/log/plugins/log/LogPlugin$Companion;
-	public static final field ID Ljava/lang/String;
-	public fun <init> ()V
-	public fun <init> (I)V
-	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
-	public fun export ()Ljava/lang/String;
-	public final fun getApi ()Lcom/ae/log/plugins/log/LogRecorder;
-	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
-	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
-	public fun getId ()Ljava/lang/String;
-	public fun getName ()Ljava/lang/String;
-	public fun onAttach (Lcom/ae/log/core/PluginContext;)V
-	public fun onClear ()V
-	public fun onClose ()V
-	public fun onDetach ()V
-	public fun onOpen ()V
-	public fun onStart ()V
-	public fun onStop ()V
-}
-
-public final class com/ae/log/plugins/log/LogPlugin$Companion {
-}
-
-public final class com/ae/log/plugins/log/LogPluginKt {
-	public static final fun getLog (Lcom/ae/log/AELog$Companion;)Lcom/ae/log/plugins/log/LogRecorder;
 }
 
 public final class com/ae/log/plugins/log/Logger {
@@ -436,16 +436,17 @@ public final class com/ae/log/plugins/log/model/LogTagRegistry {
 	public final fun register (Ljava/lang/String;Ljava/lang/String;)V
 }
 
-public final class com/ae/log/plugins/log/ui/ComposableSingletons$LogContentKt {
-	public static final field INSTANCE Lcom/ae/log/plugins/log/ui/ComposableSingletons$LogContentKt;
-	public fun <init> ()V
-	public final fun getLambda$1264204878$log_core ()Lkotlin/jvm/functions/Function3;
+public final class com/ae/log/ui/components/AELogsListPanelKt {
+	public static final fun AELogsEmptyPlaceholder (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
+	public static final fun AELogsExpandedDetails-KTwxG1Y (JLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AELogsListPanel (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/foundation/lazy/LazyListState;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
 }
 
-public final class com/ae/log/plugins/log/ui/ComposableSingletons$LogEntryItemKt {
-	public static final field INSTANCE Lcom/ae/log/plugins/log/ui/ComposableSingletons$LogEntryItemKt;
+public final class com/ae/log/ui/components/ComposableSingletons$AELogsListPanelKt {
+	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$AELogsListPanelKt;
 	public fun <init> ()V
-	public final fun getLambda$634407810$log_core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1006805112$log_core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$89675128$log_core ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$LogSearchBarKt {

@@ -190,7 +190,7 @@ fun AnalyticsScreen() {
             // ── Utils ──────────────────────────────────────────────────────
             item {
                 OutlinedButton(
-                    onClick = { api?.clear() },
+                    onClick = { tracker?.clear() },
                     modifier = Modifier.fillMaxWidth(),
                 ) { Text("Clear all analytics events") }
             }

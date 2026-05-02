@@ -32,8 +32,9 @@ internal fun LogFloatingButton(
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary)
                 .clickable(
-                    indication = null,
                     interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClickLabel = "Open AELogs panel",
                 ) { onClick() },
         contentAlignment = Alignment.Center,
     ) {

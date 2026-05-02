@@ -35,5 +35,5 @@ public class LogController {
  */
 public val LocalLogController: ProvidableCompositionLocal<LogController> =
     compositionLocalOf {
-        error("LogController not provided. Wrap your content with AELogProvider.")
+        LogController()
     }

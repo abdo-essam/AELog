@@ -2,6 +2,8 @@ package com.ae.log.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -13,6 +15,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import com.ae.log.ui.theme.LogSpacing
 
 /**
@@ -28,6 +32,7 @@ public fun LogSearchBar(
     placeholder: String = "Search…",
     modifier: Modifier = Modifier,
 ) {
+    val focusManager = LocalFocusManager.current
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
@@ -67,5 +72,10 @@ public fun LogSearchBar(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
             ),
         textStyle = MaterialTheme.typography.bodySmall,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions =
+            KeyboardActions(onSearch = {
+                focusManager.clearFocus()
+            }),
     )
 }

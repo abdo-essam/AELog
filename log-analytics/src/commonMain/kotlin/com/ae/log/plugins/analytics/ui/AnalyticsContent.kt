@@ -8,35 +8,24 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -51,9 +40,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ae.log.plugins.analytics.model.AnalyticsEvent
 import com.ae.log.plugins.analytics.model.AnalyticsFilters
-import com.ae.log.ui.components.LogFilterChips
-import com.ae.log.ui.components.LogSearchBar
-import com.ae.log.ui.components.PanelHeader
+import com.ae.log.ui.components.AELogsExpandedDetails
+import com.ae.log.ui.components.AELogsListPanel
 import com.ae.log.ui.theme.LogSpacing
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -72,81 +60,46 @@ internal fun AnalyticsContent(
     val clipboard = LocalClipboardManager.current
     val listState = rememberLazyListState()
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        // ── Header ─────────────────────────────────────────────────────────
-        PanelHeader(
-            itemCount = events.size,
-            itemLabel = "events",
-            onClearAll = { viewModel.clear() },
-        )
-
-        Spacer(Modifier.height(LogSpacing.x3))
-
-        // ── Search bar ─────────────────────────────────────────────────────
-        LogSearchBar(
-            query = query,
-            onQueryChange = { viewModel.search(it) },
-            placeholder = "Search event name, property…",
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
-
-        Spacer(Modifier.height(LogSpacing.x3))
-
-        // ── Filter chips ───────────────────────────────────────────────────
-        LogFilterChips(
-            labels = AnalyticsFilters.defaultFilters.map { it.label },
-            selectedIndex = AnalyticsFilters.defaultFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
-            onSelect = { index ->
-                val newFilter = AnalyticsFilters.defaultFilters.getOrNull(index) ?: AnalyticsFilters.ALL
-                viewModel.setFilter(newFilter)
-            },
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
-
-        Spacer(Modifier.height(LogSpacing.x3))
-
-        // ── Content ────────────────────────────────────────────────────────
-        if (events.isEmpty()) {
-            AnalyticsEmptyPlaceholder(query)
-        } else {
-            Card(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = LogSpacing.x5),
-                shape = RoundedCornerShape(LogSpacing.x3),
-                colors =
-                    CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                    ),
-            ) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = LogSpacing.x2),
-                ) {
-                    itemsIndexed(events, key = { _, e -> e.id }) { index, event ->
-                        AnalyticsEventItem(
-                            event = event,
-                            isExpanded = expandedId == event.id,
-                            onToggleExpand = {
-                                expandedId = if (expandedId == event.id) null else event.id
-                            },
-                            onCopy = {
-                                clipboard.setText(AnnotatedString(event.toClipboardText()))
-                            },
-                        )
-                        if (index < events.lastIndex) {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(horizontal = LogSpacing.x3),
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                thickness = 1.dp,
-                            )
-                        }
-                    }
-                }
+    val onToggleExpand =
+        remember {
+            { id: String ->
+                expandedId = if (expandedId == id) null else id
             }
         }
+
+    val onCopyEvent =
+        remember(clipboard) {
+            { event: AnalyticsEvent ->
+                clipboard.setText(AnnotatedString(event.toClipboardText()))
+            }
+        }
+
+    AELogsListPanel(
+        items = events,
+        itemLabel = "events",
+        searchQuery = query,
+        searchPlaceholder = "Search event name, property…",
+        onSearchChange = { viewModel.search(it) },
+        filterLabels = AnalyticsFilters.defaultFilters.map { it.label },
+        selectedFilterIndex = AnalyticsFilters.defaultFilters.indexOf(filter).takeIf { it >= 0 } ?: 0,
+        onFilterSelect = { index ->
+            val newFilter = AnalyticsFilters.defaultFilters.getOrNull(index) ?: AnalyticsFilters.ALL
+            viewModel.setFilter(newFilter)
+        },
+        onClearAll = { viewModel.clear() },
+        onCopyAll = null,
+        emptyMessage = "No events recorded yet",
+        emptyQueryMessage = "No results for \"$query\"",
+        listState = listState,
+        itemKey = { it.id },
+        modifier = modifier,
+    ) { _, event ->
+        AnalyticsEventItem(
+            event = event,
+            isExpanded = expandedId == event.id,
+            onToggleExpand = onToggleExpand,
+            onCopy = onCopyEvent,
+        )
     }
 }
 
@@ -156,17 +109,18 @@ internal fun AnalyticsContent(
 private fun AnalyticsEventItem(
     event: AnalyticsEvent,
     isExpanded: Boolean,
-    onToggleExpand: () -> Unit,
-    onCopy: () -> Unit,
+    onToggleExpand: (String) -> Unit,
+    onCopy: (AnalyticsEvent) -> Unit,
 ) {
     Column(
         modifier =
             Modifier
                 .fillMaxWidth()
                 .clickable(
-                    indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                ) { onToggleExpand() }
+                    indication = null,
+                    onClickLabel = if (isExpanded) "Collapse analytics event" else "Expand analytics event",
+                ) { onToggleExpand(event.id) }
                 .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
     ) {
         // ── Summary row ───────────────────────────────────────────────────
@@ -225,7 +179,7 @@ private fun AnalyticsEventItem(
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {
-            AnalyticsEventDetails(event = event, onCopy = onCopy)
+            AnalyticsEventDetails(event = event, onCopy = { onCopy(event) })
         }
     }
 }
@@ -236,123 +190,77 @@ private fun AnalyticsEventDetails(
     event: AnalyticsEvent,
     onCopy: () -> Unit,
 ) {
-    Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(top = LogSpacing.x3),
+    AELogsExpandedDetails(
+        bgColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        onCopy = onCopy,
     ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(LogSpacing.x2),
-            colors =
-                CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                ),
-        ) {
-            Column(modifier = Modifier.padding(LogSpacing.x3)) {
-                // Event name
-                Text(
-                    "Event",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    event.name,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-
-                // Source
-                event.source?.let {
-                    Spacer(Modifier.height(LogSpacing.x2))
-                    Text(
-                        "Source",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Text(
-                        it.sourceName,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-
-                // Timestamp
-                Spacer(Modifier.height(LogSpacing.x2))
-                Text(
-                    "Time",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    event.timestamp.toFullTimeLabel(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-
-                // Properties
-                if (event.properties.isNotEmpty()) {
-                    Spacer(Modifier.height(LogSpacing.x2))
-                    Text(
-                        "Properties",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        event.properties.entries.forEach { (k, v) ->
-                            SuggestionChip(
-                                onClick = {},
-                                label = {
-                                    Text(
-                                        "$k = $v",
-                                        style = MaterialTheme.typography.labelSmall,
-                                    )
-                                },
-                                colors =
-                                    SuggestionChipDefaults.suggestionChipColors(
-                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    ),
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(top = LogSpacing.x2),
-            horizontalArrangement = Arrangement.End,
-        ) {
-            TextButton(onClick = onCopy) {
-                Icon(
-                    Icons.Default.ContentCopy,
-                    null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(16.dp),
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(
-                    "Copy",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-        }
-    }
-}
-
-// ── Empty placeholder ─────────────────────────────────────────────────────────
-
-@Composable
-private fun AnalyticsEmptyPlaceholder(query: String) {
-    Box(Modifier.fillMaxSize().padding(LogSpacing.x8), Alignment.Center) {
+        // Event name
         Text(
-            text = if (query.isNotEmpty()) "No results for \"$query\"" else "No events recorded yet",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            "Event",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
         )
+        Text(
+            event.name,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+
+        // Source
+        event.source?.let {
+            Spacer(Modifier.height(LogSpacing.x2))
+            Text(
+                "Source",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                it.sourceName,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+
+        // Timestamp
+        Spacer(Modifier.height(LogSpacing.x2))
+        Text(
+            "Time",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            event.timestamp.toFullTimeLabel(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+
+        // Properties
+        if (event.properties.isNotEmpty()) {
+            Spacer(Modifier.height(LogSpacing.x2))
+            Text(
+                "Properties",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(Modifier.height(4.dp))
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                event.properties.entries.forEach { (k, v) ->
+                    SuggestionChip(
+                        onClick = {},
+                        label = {
+                            Text(
+                                "$k = $v",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        },
+                        colors =
+                            SuggestionChipDefaults.suggestionChipColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            ),
+                    )
+                }
+            }
+        }
     }
 }
 

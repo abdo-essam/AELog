@@ -6,9 +6,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
@@ -21,14 +19,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ae.log.plugins.log.model.*
 import com.ae.log.plugins.log.model.LogEntry
+import com.ae.log.ui.components.AELogsExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
 
 @Composable
 internal fun LogEntryItem(
     log: LogEntry,
     isExpanded: Boolean,
-    onToggleExpand: () -> Unit,
-    onCopy: () -> Unit,
+    onToggleExpand: (String) -> Unit,
+    onCopy: (LogEntry) -> Unit,
 ) {
     val (_, bgColor) = LogUtils.getLogTypeColor(log)
 
@@ -37,9 +36,10 @@ internal fun LogEntryItem(
             Modifier
                 .fillMaxWidth()
                 .clickable(
-                    indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                ) { onToggleExpand() }
+                    indication = null,
+                    onClickLabel = if (isExpanded) "Collapse log entry" else "Expand log entry",
+                ) { onToggleExpand(log.id) }
                 .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
     ) {
         LogEntryHeader(log = log, isExpanded = isExpanded)
@@ -52,7 +52,7 @@ internal fun LogEntryItem(
             LogEntryExpandedContent(
                 log = log,
                 bgColor = bgColor,
-                onCopy = onCopy,
+                onCopy = { onCopy(log) },
             )
         }
     }
@@ -103,7 +103,7 @@ private fun LogEntryHeader(
 
         Icon(
             imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-            contentDescription = if (isExpanded) "Collapse" else "Expand",
+            contentDescription = null,
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -112,11 +112,18 @@ private fun LogEntryHeader(
 
 @Composable
 private fun LogEntryPreview(log: LogEntry) {
-    if (log.isAnalytics) {
-        val content = log.message.removePrefix("📊 EVENT: ").removePrefix("📄 PAGE: ")
-        val parts = content.split("|", limit = 2)
-        val title = parts.getOrNull(0)?.trim() ?: content
-        val subtitle = parts.getOrNull(1)?.trim()
+    val isAnalytics = remember(log.id) { log.isAnalytics }
+    val isNetworkLog = remember(log.id) { log.isNetworkLog }
+
+    if (isAnalytics) {
+        val titleAndSubtitle =
+            remember(log.id) {
+                val content = log.message.removePrefix("📊 EVENT: ").removePrefix("📄 PAGE: ")
+                val parts = content.split("|", limit = 2)
+                Pair(parts.getOrNull(0)?.trim() ?: content, parts.getOrNull(1)?.trim())
+            }
+        val title = titleAndSubtitle.first
+        val subtitle = titleAndSubtitle.second
 
         Column {
             Text(
@@ -137,36 +144,42 @@ private fun LogEntryPreview(log: LogEntry) {
                 )
             }
         }
-    } else if (log.isNetworkLog) {
+    } else if (isNetworkLog) {
+        val method = remember(log.id) { log.httpMethod }
+        val status = remember(log.id) { log.httpStatusCode }
+        val isRequest = remember(log.id) { log.isRequest }
+        val isResponse = remember(log.id) { log.isResponse }
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(LogSpacing.x2),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            log.httpMethod?.let { method ->
-                HttpMethodBadge(method = method)
+            method?.let { m ->
+                HttpMethodBadge(method = m)
             }
 
-            log.httpStatusCode?.let { status ->
-                HttpStatusBadge(statusCode = status)
+            status?.let { s ->
+                HttpStatusBadge(statusCode = s)
             }
 
             Text(
                 text =
-                    if (log.isRequest) {
+                    if (isRequest) {
                         "→"
-                    } else if (log.isResponse) {
+                    } else if (isResponse) {
                         "←"
                     } else {
                         ""
                     },
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
-                color = if (log.isRequest) Color(0xFF2196F3) else Color(0xFF4CAF50),
+                color = if (isRequest) Color(0xFF2196F3) else Color(0xFF4CAF50),
             )
         }
     } else {
+        val cleanMessage = remember(log.id) { log.cleanMessage.take(80).replace("\n", " ") }
         Text(
-            text = log.cleanMessage.take(80).replace("\n", " "),
+            text = cleanMessage,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1,
@@ -181,43 +194,10 @@ private fun LogEntryExpandedContent(
     bgColor: Color,
     onCopy: () -> Unit,
 ) {
-    Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(top = LogSpacing.x3),
+    AELogsExpandedDetails(
+        bgColor = bgColor,
+        onCopy = onCopy,
     ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(LogSpacing.x2),
-            colors = CardDefaults.cardColors(containerColor = bgColor),
-        ) {
-            Column(modifier = Modifier.padding(LogSpacing.x3)) {
-                LogDetailsContent(log = log)
-            }
-        }
-
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = LogSpacing.x2),
-            horizontalArrangement = Arrangement.End,
-        ) {
-            TextButton(onClick = onCopy) {
-                Icon(
-                    imageVector = Icons.Default.ContentCopy,
-                    contentDescription = "Copy",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(16.dp),
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Copy",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-        }
+        LogDetailsContent(log = log)
     }
 }

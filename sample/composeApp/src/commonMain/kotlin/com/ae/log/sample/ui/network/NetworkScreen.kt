@@ -249,7 +249,7 @@ fun NetworkScreen() {
                             onClick = {
                                 val id = recorder?.newId() ?: return@OutlinedButton
                                 recorder.request(id, "https://unreachable.example.com/data", NetworkMethod.GET)
-                                api.error(id, "java.net.SocketTimeoutException: timeout after 30000ms")
+                                recorder?.error(id, "java.net.SocketTimeoutException: timeout after 30000ms")
                             },
                             modifier = Modifier.fillMaxWidth(),
                         ) { Text("Timeout error") }
@@ -258,7 +258,7 @@ fun NetworkScreen() {
                             onClick = {
                                 val id = recorder?.newId() ?: return@OutlinedButton
                                 recorder.request(id, "https://no-dns.invalid/path", NetworkMethod.GET)
-                                api.error(id, "java.net.UnknownHostException: Unable to resolve host")
+                                recorder?.error(id, "java.net.UnknownHostException: Unable to resolve host")
                             },
                             modifier = Modifier.fillMaxWidth(),
                         ) { Text("DNS resolution failure") }
@@ -269,7 +269,7 @@ fun NetworkScreen() {
             // ── Utils ──────────────────────────────────────────────────────
             item {
                 OutlinedButton(
-                    onClick = { api?.clear() },
+                    onClick = { recorder?.clear() },
                     modifier = Modifier.fillMaxWidth(),
                 ) { Text("Clear all network entries") }
             }
