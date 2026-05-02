@@ -71,12 +71,12 @@ internal fun LogContent(
                     val count = badgeCount
                     Tab(
                         selected = index == safeIndex,
-                        onClick = { selectedIndex = index },
+                        onClick = { },
                         text = {
                             Text(plugin.name, style = MaterialTheme.typography.labelMedium)
                         },
                         icon = {
-                            if (count != null && count > 0) {
+                            if (count > 0) {
                                 BadgedBox(badge = {
                                     Badge {
                                         Text(

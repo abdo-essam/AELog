@@ -19,6 +19,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ae.log.plugins.log.model.*
 import com.ae.log.plugins.log.model.LogEntry
+import com.ae.log.plugins.log.utils.getAnalyticsPreview
+import com.ae.log.plugins.log.utils.getCleanMessagePreview
 import com.ae.log.ui.components.AELogsExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
 
@@ -116,14 +118,9 @@ private fun LogEntryPreview(log: LogEntry) {
     val isNetworkLog = remember(log.id) { log.isNetworkLog }
 
     if (isAnalytics) {
-        val titleAndSubtitle =
-            remember(log.id) {
-                val content = log.message.removePrefix("📊 EVENT: ").removePrefix("📄 PAGE: ")
-                val parts = content.split("|", limit = 2)
-                Pair(parts.getOrNull(0)?.trim() ?: content, parts.getOrNull(1)?.trim())
-            }
-        val title = titleAndSubtitle.first
-        val subtitle = titleAndSubtitle.second
+        val titleAndSubtitle = remember(log.id) { log.getAnalyticsPreview() }
+        val title = titleAndSubtitle.title
+        val subtitle = titleAndSubtitle.subtitle
 
         Column {
             Text(
@@ -177,7 +174,7 @@ private fun LogEntryPreview(log: LogEntry) {
             )
         }
     } else {
-        val cleanMessage = remember(log.id) { log.cleanMessage.take(80).replace("\n", " ") }
+        val cleanMessage = remember(log.id) { log.getCleanMessagePreview() }
         Text(
             text = cleanMessage,
             style = MaterialTheme.typography.labelSmall,
