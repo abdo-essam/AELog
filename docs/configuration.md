@@ -1,12 +1,12 @@
 # Configuration
 
-Configure AELogs structure via `AELogsSetup.init()` and behaviour via `AELogsUiConfig`.
+Configure AELog structure via `AELogSetup.init()` and behaviour via `AELogUiConfig`.
 
 ## Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `enabled` | `Boolean` | `false` | Enable or disable the overlay entirely (passed into `AELogsProvider`) |
+| `enabled` | `Boolean` | `false` | Enable or disable the overlay entirely (passed into `AELogProvider`) |
 | `showFloatingButton` | `Boolean` | `true` | Show floating bug button overlay |
 | `enableLongPress` | `Boolean` | `true` | Show panel on 3-finger long press |
 
@@ -14,15 +14,15 @@ Configure AELogs structure via `AELogsSetup.init()` and behaviour via `AELogsUiC
 
 ```kotlin
 // Data config
-AELogsSetup.init(
-    config = AELogsConfig(maxLogEntries = 1000)
+AELogSetup.init(
+    config = AELogConfig(maxLogEntries = 1000)
 )
 
 // UI config
-AELogsProvider(
-    inspector = AELogs.default,
+AELogProvider(
+    inspector = AELog.default,
     enabled = BuildConfig.DEBUG,
-    uiConfig = AELogsUiConfig(
+    uiConfig = AELogUiConfig(
         showFloatingButton = true,
         enableLongPress = true
     )

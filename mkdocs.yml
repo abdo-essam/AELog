@@ -1,9 +1,9 @@
-site_name: AELogs
-site_url: https://abdo-essam.github.io/AELogs/
+site_name: AELog
+site_url: https://abdo-essam.github.io/AELog/
 site_description: Extensible on-device dev tools for Kotlin Multiplatform
 site_author: Abdo Essam
-repo_url: https://github.com/abdo-essam/AELogs
-repo_name: abdo-essam/AELogs
+repo_url: https://github.com/abdo-essam/AELog
+repo_name: abdo-essam/AELog
 edit_uri: edit/main/docs/
 
 theme:

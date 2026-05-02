@@ -1,12 +1,12 @@
 # Plugins Overview
 
-AELogs uses a plugin architecture. Each plugin adds a tab to the AELogs overlay.
+AELog uses a plugin architecture. Each plugin adds a tab to the AELog overlay.
 
 ## Built-in Plugins
 
 | Plugin | Type | Description |
 |--------|------|-------------|
-| `LogsPlugin` | `UIPlugin` | Real-time log viewer with level filtering |
+| `LogPlugin` | `UIPlugin` | Real-time log viewer with level filtering |
 | `NetworkPlugin` | `UIPlugin` | HTTP traffic inspector with detailed request/response views |
 | `AnalyticsPlugin` | `UIPlugin` | Tracks events and screen views with custom payload properties |
 
@@ -21,9 +21,9 @@ Background data collector with no UI. Feeds data to a `UIPlugin`.
 ## Installing Plugins
 
 ```kotlin
-AELogsSetup.init(
+AELogSetup.init(
     plugins = listOf(
-        LogsPlugin(),
+        LogPlugin(),
         NetworkPlugin(),
         AnalyticsPlugin(),
         MyCustomPlugin()

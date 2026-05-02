@@ -17,10 +17,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":logs")) // core + ui + logs aggregator
-            implementation(project(":logs-network")) // NetworkPlugin
-            implementation(project(":logs-network-ktor")) // Ktor auto-interceptor
-            implementation(project(":logs-analytics")) // AnalyticsPlugin
+            implementation(project(":log-core")) // core + ui + logs aggregator
+            implementation(project(":log-network")) // NetworkPlugin
+            implementation(project(":log-network-ktor")) // Ktor auto-interceptor
+            implementation(project(":log-analytics")) // AnalyticsPlugin
             implementation(libs.ktor.client.core) // HttpClient DSL in commonMain
             implementation(libs.runtime)
             implementation(libs.foundation)
@@ -37,7 +37,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.ae.logs.sample"
+    namespace = "com.ae.log.sample"
     compileSdk =
         libs.versions.android.compileSdk
             .get()
@@ -46,7 +46,7 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
     defaultConfig {
-        applicationId = "com.ae.logs.sample"
+        applicationId = "com.ae.log.sample"
         minSdk =
             libs.versions.android.minSdk
                 .get()

@@ -29,13 +29,13 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AELogs"
+rootProject.name = "AELog"
 
-include(":logs-network")
-include(":logs-network-ktor")
-include(":logs-network-okhttp")
-include(":logs-analytics")
-include(":logs")
+include(":log-network")
+include(":log-network-ktor")
+include(":log-network-okhttp")
+include(":log-analytics")
+include(":log-core")
 include(":sample:composeApp")
 
 // Build cache

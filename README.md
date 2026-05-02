@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="docs/assets/logo.png" width="600" alt="AELogs Banner" />
+  <img src="docs/assets/logo.png" width="600" alt="AELog Banner" />
 </p>
 
-<h1 align="center">AELogs</h1>
+<h1 align="center">AELog</h1>
 
 <p align="center">
   <strong>Extensible on-device dev tools for Kotlin Multiplatform</strong>
@@ -14,17 +14,17 @@
   <a href="https://central.sonatype.com/artifact/io.github.abdo-essam/logs">
     <img src="https://img.shields.io/maven-central/v/io.github.abdo-essam/logs?style=flat-square&color=BF3547" alt="Maven Central" />
   </a>
-  <a href="https://github.com/abdo-essam/AELogs/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/abdo-essam/AELogs/ci.yml?branch=main&style=flat-square" alt="CI" />
+  <a href="https://github.com/abdo-essam/AELog/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/abdo-essam/AELog/ci.yml?branch=main&style=flat-square" alt="CI" />
   </a>
-  <a href="https://codecov.io/gh/abdo-essam/AELogs">
-    <img src="https://img.shields.io/codecov/c/github/abdo-essam/AELogs?style=flat-square&color=00B894" alt="Code Coverage" />
+  <a href="https://codecov.io/gh/abdo-essam/AELog">
+    <img src="https://img.shields.io/codecov/c/github/abdo-essam/AELog?style=flat-square&color=00B894" alt="Code Coverage" />
   </a>
   <a href="https://kotlin.github.io/binary-compatibility-validator/">
     <img src="https://img.shields.io/badge/API-stable-blue?style=flat-square" alt="API Stability" />
   </a>
   <a href="LICENSE">
-    <img src="https://img.shields.io/github/license/abdo-essam/AELogs?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/github/license/abdo-essam/AELog?style=flat-square" alt="License" />
   </a>
   <a href="https://kotlinlang.org">
     <img src="https://img.shields.io/badge/Kotlin-2.3.0-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin" />
@@ -37,7 +37,7 @@
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-plugins">Plugins</a> •
   <a href="#-custom-plugins">Custom Plugins</a> •
-  <a href="https://abdo-essam.github.io/AELogs/">Documentation</a>
+  <a href="https://abdo-essam.github.io/AELog/">Documentation</a>
 </p>
 
 ---
@@ -63,7 +63,7 @@
 
 ## 📦 Installation
 
-AELogs is fully modularized. Include only the plugins you need to keep your app light!
+AELog is fully modularized. Include only the plugins you need to keep your app light!
 
 ### Kotlin Multiplatform
 
@@ -72,27 +72,27 @@ AELogs is fully modularized. Include only the plugins you need to keep your app 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Core: inspector UI + LogsPlugin
-            implementation("io.github.abdo-essam:logs:1.0.0")
+            // Core: inspector UI + LogPlugin
+            implementation("io.github.abdo-essam:log:1.0.0")
 
             // Optional: Network inspector panel
-            implementation("io.github.abdo-essam:logs-network:1.0.0")
+            implementation("io.github.abdo-essam:log-network:1.0.0")
 
             // Optional: Ktor auto-interceptor (KMP — Android / iOS / JVM)
-            implementation("io.github.abdo-essam:logs-network-ktor:1.0.0")
+            implementation("io.github.abdo-essam:log-network-ktor:1.0.0")
 
             // Optional: Analytics inspector panel
-            implementation("io.github.abdo-essam:logs-analytics:1.0.0")
+            implementation("io.github.abdo-essam:log-analytics:1.0.0")
         }
         androidMain.dependencies {
             // Optional: OkHttp auto-interceptor (Android + JVM only)
-            implementation("io.github.abdo-essam:logs-network-okhttp:1.0.0")
+            implementation("io.github.abdo-essam:log-network-okhttp:1.0.0")
         }
     }
 }
 ```
 
-> **🔥 True Modularity**: Worried about APK/bundle size? You can drop the `LogsPlugin` entirely! Just remove the `logs` dependency and import `logs-network:1.0.0` or `logs-analytics:1.0.0` directly. Because each acts completely independently and transitively exports `logs-core` and `logs-ui`, your app stays incredibly lightweight!
+> **🔥 True Modularity**: Worried about APK/bundle size? You can drop the `LogPlugin` entirely! Just remove the `logs` dependency and import `logs-network:1.0.0` or `logs-analytics:1.0.0` directly. Because each acts completely independently and transitively exports `logs-core` and `logs-ui`, your app stays incredibly lightweight!
 
 ### Version Catalog
 
@@ -101,11 +101,11 @@ kotlin {
 logs = "1.0.0"
 
 [libraries]
-logs-core              = { module = "io.github.abdo-essam:logs",                version.ref = "logs" }
-logs-network           = { module = "io.github.abdo-essam:logs-network",        version.ref = "logs" }
-logs-network-ktor      = { module = "io.github.abdo-essam:logs-network-ktor",   version.ref = "logs" }
-logs-network-okhttp    = { module = "io.github.abdo-essam:logs-network-okhttp", version.ref = "logs" }
-logs-analytics         = { module = "io.github.abdo-essam:logs-analytics",      version.ref = "logs" }
+logs-core              = { module = "io.github.abdo-essam:log",                version.ref = "logs" }
+logs-network           = { module = "io.github.abdo-essam:log-network",        version.ref = "logs" }
+logs-network-ktor      = { module = "io.github.abdo-essam:log-network-ktor",   version.ref = "logs" }
+logs-network-okhttp    = { module = "io.github.abdo-essam:log-network-okhttp", version.ref = "logs" }
+logs-analytics         = { module = "io.github.abdo-essam:log-analytics",      version.ref = "logs" }
 ```
 
 ## 🚀 Quick Start
@@ -115,8 +115,8 @@ logs-analytics         = { module = "io.github.abdo-essam:logs-analytics",      
 Best called early in your platform-specific entry points (e.g. `Application.onCreate` for Android, or main `ViewController` for iOS):
 
 ```kotlin
-AELogs.init(
-    LogsPlugin(),      // Built-in log viewer
+AELog.init(
+    LogPlugin(),      // Built-in log viewer
     NetworkPlugin(),   // Network inspector
     AnalyticsPlugin()  // Analytics tracker
 )
@@ -130,9 +130,9 @@ Wrap your main content:
 ```kotlin
 @Composable
 fun App(debugMode: Boolean) {
-    AELogsProvider(
+    AELogProvider(
         enabled = debugMode, // ← disables UI overhead in release builds
-        uiConfig = AELogsUiConfig(
+        uiConfig = AELogUiConfig(
             showFloatingButton = true, // Enables the 'bug' overlay button
             enableLongPress = true,    // Show panel on 3-finger long press
         )
@@ -148,11 +148,11 @@ fun App(debugMode: Boolean) {
 No need to add Compose to your app! Just launch the built-in activity anywhere (like a developer menu button):
 
 ```kotlin
-import com.ae.logs.launchViewer
-import com.ae.logs.AELogs
+import com.ae.log.launchViewer
+import com.ae.log.AELog
 
 // Call from any Activity or Fragment
-AELogs.launchViewer(requireContext()) 
+AELog.launchViewer(requireContext()) 
 ```
 
 ### 3. Log — primary API (`AELog`)
@@ -169,7 +169,7 @@ AELog.e("Database", "Failed to clear cache", exception) // stack trace auto-appe
 AELog.wtf("Auth", "Unexpected state")
 ```
 
-> All calls are **silent no-ops** if `AELogs.init()` has not been called yet — safe in shared modules that run before app startup.
+> All calls are **silent no-ops** if `AELog.init()` has not been called yet — safe in shared modules that run before app startup.
 
 #### Tagged logger — eliminate tag repetition (recommended for classes)
 
@@ -179,7 +179,7 @@ Create one `TaggedLogger` per class. The tag is set once and applied to every ca
 class AuthViewModel {
     // ✅ Tag declared once — never repeated
     private val log = AELog.logger("AuthViewModel")
-    // or: private val log = AELogs.logger("AuthViewModel")
+    // or: private val log = AELog.logger("AuthViewModel")
 
     fun login() {
         log.d("Login started")
@@ -192,9 +192,9 @@ class AuthViewModel {
 #### Companion shorthands (alternative — same result)
 
 ```kotlin
-// If you already have AELogs imported, these are identical to AELog.*
-AELogs.d("Auth", "Token refreshed")
-AELogs.e("Database", "Failed to clear cache", exception)
+// If you already have AELog imported, these are identical to AELog.*
+AELog.d("Auth", "Token refreshed")
+AELog.e("Database", "Failed to clear cache", exception)
 ```
 
 ```kotlin
@@ -204,20 +204,20 @@ NetworkApi.logResponse(url = "https://api.example.com/users", statusCode = 200, 
 AnalyticsApi.logEvent("item_added_to_cart", properties = mapOf("id" to "123", "price" to "29.99"))
 ```
 
-### 4. Open AELogs
+### 4. Open AELog
 
 Three ways to open the inspector:
 1. Tap the floating **bug button** (bottom-right corner)
 2. Long-press with multiple fingers anywhere on screen (if enabled)
-3. Programmatically: `LocalAELogsController.current.show()`
+3. Programmatically: `LocalLogController.current.show()`
 
 ## 🧩 Modularity & Available Plugins
 
 | Module / Plugin | Class | Description |
 |--------|------|-------------|
-| `:logs` | `LogsPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
-| `:logs-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
-| `:logs-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
+| `:log` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
+| `:log-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
+| `:log-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
 
 ## 🔨 Custom Plugins
 
@@ -248,21 +248,21 @@ class FeatureFlagsPlugin : UIPlugin {
 }
 
 // Install it
-AELogs.init(LogsPlugin(), FeatureFlagsPlugin())
+AELog.init(LogPlugin(), FeatureFlagsPlugin())
 ```
 
-📖 See the [Custom Plugins Guide](https://abdo-essam.github.io/AELogs/custom-plugins) for the full API reference.
+📖 See the [Custom Plugins Guide](https://abdo-essam.github.io/AELog/custom-plugins) for the full API reference.
 
 ## 🔗 Logging Integrations
 
-AELogs works seamlessly with your existing logging infrastructures (like Kermit or Napier). Just forward your logs to the APIs.
+AELog works seamlessly with your existing logging infrastructures (like Kermit or Napier). Just forward your logs to the APIs.
 
 ```kotlin
-class AELogsKermitWriter : LogWriter() {
+class AELogKermitWriter : LogWriter() {
     override fun log(severity: Severity, message: String, tag: String, throwable: Throwable?) {
-        // Pass throwable directly — stack trace is appended automatically by AELogs
-        AELogs.log(
-            severity = severity.toAELogsLogSeverity(),
+        // Pass throwable directly — stack trace is appended automatically by AELog
+        AELog.log(
+            severity = severity.toAELogLogSeverity(),
             tag = tag,
             message = message,
             throwable = throwable,
@@ -271,7 +271,7 @@ class AELogsKermitWriter : LogWriter() {
 }
 ```
 
-📖 See the [Logging Integrations Guide](https://abdo-essam.github.io/AELogs/integrations) for more examples.
+📖 See the [Logging Integrations Guide](https://abdo-essam.github.io/AELog/integrations) for more examples.
 
 ## 🏗️ Architecture
 
@@ -279,9 +279,9 @@ The SDK follows an encapsulated `Model-Store-API-UI` pattern, making plugins 100
 
 ```text
 ┌─────────────────────────────────────────────────┐
-│              AELogsProvider                   │  Compose wrapper
+│              AELogProvider                   │  Compose wrapper
 │  ┌───────────────────────────────────────────┐  │
-│  │            AELogs (Core)               │  │  Plugin engine
+│  │            AELog (Core)               │  │  Plugin engine
 │  │  ┌─────────┐ ┌─────────┐ ┌────────────┐  │  │
 │  │  │  Logs   │ │ Network │ │ Analytics  │  │  │  Plugins
 │  │  │ Plugin  │ │ Plugin  │ │  Plugin    │  │  │
@@ -308,8 +308,8 @@ The SDK follows an encapsulated `Model-Store-API-UI` pattern, making plugins 100
 Contributions are welcome! Please read the [Contributing Guide](CONTRIBUTING.md) first.
 
 ```bash
-git clone https://github.com/abdo-essam/AELogs.git
-cd AELogs
+git clone https://github.com/abdo-essam/AELog.git
+cd AELog
 ./gradlew build
 ./gradlew allTests
 ```

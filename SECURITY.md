@@ -13,7 +13,7 @@
 
 Instead, please report them via:
 - Email: security@ae.com
-- GitHub Security Advisories: [Report](https://github.com/abdo-essam/AELogs/security/advisories/new)
+- GitHub Security Advisories: [Report](https://github.com/abdo-essam/AELog/security/advisories/new)
 
 ### What to include
 - Description of the vulnerability
@@ -28,7 +28,7 @@ Instead, please report them via:
 
 ## Scope
 
-This policy applies to the AELogs library code. 
+This policy applies to the AELog library code. 
 Since this is a debug-only tool, the primary concern is:
 - Accidental inclusion in release builds leaking sensitive log data
 - Plugin system being exploitable to execute arbitrary code

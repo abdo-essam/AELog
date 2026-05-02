@@ -20,14 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - 🎉 Initial release
-- Core `AELogs` engine with plugin architecture
-- Built-in `LogsPlugin` with search, filter, and copy
+- Core `AELog` engine with plugin architecture
+- Built-in `LogPlugin` with search, filter, and copy
 - Material3 themed UI with light/dark mode support
 - Adaptive layout: bottom sheet (phones) / dialog (tablets)
 - Floating debug button with configurable position
 - Long-press gesture to open inspector
-- `AELogsProvider` composable wrapper
-- `AELogsConfig` for customization
+- `AELogProvider` composable wrapper
+- `AELogConfig` for customization
 - `UIPlugin` and `DataPlugin` interfaces for extensions
 - KMP support: Android, iOS (arm64, x64, simulatorArm64)
 - JSON syntax highlighting in log details
@@ -41,5 +41,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStore` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELogs/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/abdo-essam/AELogs/releases/tag/v1.0.0
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/abdo-essam/AELog/releases/tag/v1.0.0

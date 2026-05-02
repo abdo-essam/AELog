@@ -1,4 +1,4 @@
-# Contributing to AELogs
+# Contributing to AELog
 
 First off, thank you for considering contributing! 🎉
 
@@ -28,8 +28,8 @@ By participating, you agree to uphold this code.
 
 ```bash
 # Clone the repository
-git clone https://github.com/abdo-essam/AELogs.git
-cd AELogs
+git clone https://github.com/abdo-essam/AELog.git
+cd AELog
 
 # Build the project
 ./gradlew build
@@ -109,11 +109,11 @@ ci: add iOS build to CI pipeline
 ## Architecture Overview
 ```text
 ┌─────────────────────────────────────────┐
-│              AELogsProvider           │  ← Compose entry point
+│              AELogProvider           │  ← Compose entry point
 ├─────────────────────────────────────────┤
-│              AELogs                  │  ← Core engine
+│              AELog                  │  ← Core engine
 ├──────────┬──────────┬───────────────────┤
-│ LogsPlugin│ (Your   │  DataPlugin       │  ← Plugin system
+│ LogPlugin│ (Your   │  DataPlugin       │  ← Plugin system
 │ (UIPlugin)│  Plugin) │  (headless)       │
 ├──────────┴──────────┴───────────────────┤
 │              LogStore / DataStore        │  ← Storage layer

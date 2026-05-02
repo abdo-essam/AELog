@@ -1,17 +1,17 @@
 # Logging Integrations
 
-AELogs works with **any** logging library. Just forward logs to `AELogs.default.log()`.
+AELog works with **any** logging library. Just forward logs to `AELog.default.log()`.
 
 ## Kermit
 
 ```kotlin
 import co.touchlab.kermit.LogWriter
 import co.touchlab.kermit.Severity
-import com.ae.logs.AELogs
-import com.ae.logs.plugins.logs.model.LogSeverity
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
 
-class AELogsKermitWriter(
-    private val inspector: AELogs = AELogs.default
+class AELogKermitWriter(
+    private val inspector: AELog = AELog.default
 ) : LogWriter() {
     override fun log(
         severity: Severity,
@@ -20,7 +20,7 @@ class AELogsKermitWriter(
         throwable: Throwable?
     ) {
         inspector.log(
-            severity = severity.toAELogsLogSeverity(),
+            severity = severity.toAELogLogSeverity(),
             tag = tag,
             message = buildString {
                 append(message)
@@ -30,7 +30,7 @@ class AELogsKermitWriter(
     }
 }
 
-private fun Severity.toAELogsLogSeverity(): LogSeverity = when (this) {
+private fun Severity.toAELogLogSeverity(): LogSeverity = when (this) {
     Severity.Verbose -> LogSeverity.VERBOSE
     Severity.Debug -> LogSeverity.DEBUG
     Severity.Info -> LogSeverity.INFO
@@ -40,7 +40,7 @@ private fun Severity.toAELogsLogSeverity(): LogSeverity = when (this) {
 }
 
 // Setup
-Logger.addLogWriter(AELogsKermitWriter())
+Logger.addLogWriter(AELogKermitWriter())
 ```
 
 ## Napier
@@ -48,11 +48,11 @@ Logger.addLogWriter(AELogsKermitWriter())
 ```kotlin
 import io.github.aakira.napier.Antilog
 import io.github.aakira.napier.LogLevel
-import com.ae.logs.AELogs
-import com.ae.logs.plugins.logs.model.LogSeverity
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
 
-class AELogsNapierAntilog(
-    private val inspector: AELogs = AELogs.default
+class AELogNapierAntilog(
+    private val inspector: AELog = AELog.default
 ) : Antilog() {
     override fun performLog(
         priority: LogLevel,
@@ -61,7 +61,7 @@ class AELogsNapierAntilog(
         message: String?
     ) {
         inspector.log(
-            severity = priority.toAELogsLogSeverity(),
+            severity = priority.toAELogLogSeverity(),
             tag = tag ?: "Napier",
             message = buildString {
                 message?.let { append(it) }
@@ -71,7 +71,7 @@ class AELogsNapierAntilog(
     }
 }
 
-private fun LogLevel.toAELogsLogSeverity(): LogSeverity = when (this) {
+private fun LogLevel.toAELogLogSeverity(): LogSeverity = when (this) {
     LogLevel.VERBOSE -> LogSeverity.VERBOSE
     LogLevel.DEBUG -> LogSeverity.DEBUG
     LogLevel.INFO -> LogSeverity.INFO
@@ -81,22 +81,22 @@ private fun LogLevel.toAELogsLogSeverity(): LogSeverity = when (this) {
 }
 
 // Setup
-Napier.base(AELogsNapierAntilog())
+Napier.base(AELogNapierAntilog())
 ```
 
 ## Timber (Android)
 
 ```kotlin
 import timber.log.Timber
-import com.ae.logs.AELogs
-import com.ae.logs.plugins.logs.model.LogSeverity
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
 
-class AELogsTimberTree(
-    private val inspector: AELogs = AELogs.default
+class AELogTimberTree(
+    private val inspector: AELog = AELog.default
 ) : Timber.Tree() {
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         inspector.log(
-            severity = priority.toAELogsLogSeverity(),
+            severity = priority.toAELogLogSeverity(),
             tag = tag ?: "Timber",
             message = buildString {
                 append(message)
@@ -106,7 +106,7 @@ class AELogsTimberTree(
     }
 }
 
-private fun Int.toAELogsLogSeverity(): LogSeverity = when (this) {
+private fun Int.toAELogLogSeverity(): LogSeverity = when (this) {
     android.util.Log.VERBOSE -> LogSeverity.VERBOSE
     android.util.Log.DEBUG -> LogSeverity.DEBUG
     android.util.Log.INFO -> LogSeverity.INFO
@@ -117,31 +117,31 @@ private fun Int.toAELogsLogSeverity(): LogSeverity = when (this) {
 }
 
 // Setup
-Timber.plant(AELogsTimberTree())
+Timber.plant(AELogTimberTree())
 ```
 
 ## KotlinLogging / SLF4J
 
 ```kotlin
 import org.slf4j.event.Level
-import com.ae.logs.AELogs
-import com.ae.logs.plugins.logs.model.LogSeverity
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
 
-class AELogsSlf4jAppender(
-    private val inspector: AELogs = AELogs.default
+class AELogSlf4jAppender(
+    private val inspector: AELog = AELog.default
 ) : AppenderBase<ILoggingEvent>() {
     override fun append(event: ILoggingEvent) {
         inspector.log(
-            severity = event.level.toAELogsLogSeverity(),
+            severity = event.level.toAELogLogSeverity(),
             tag = event.loggerName.substringAfterLast('.'),
             message = event.formattedMessage
         )
     }
 }
 
-private fun Level.toAELogsLogSeverity(): LogSeverity = when (this) {
+private fun Level.toAELogLogSeverity(): LogSeverity = when (this) {
     Level.TRACE -> LogSeverity.VERBOSE
     Level.DEBUG -> LogSeverity.DEBUG
     Level.INFO -> LogSeverity.INFO
@@ -155,14 +155,14 @@ private fun Level.toAELogsLogSeverity(): LogSeverity = when (this) {
 ```kotlin
 import io.ktor.client.*
 import io.ktor.client.plugins.logging.*
-import com.ae.logs.AELogs
-import com.ae.logs.plugins.logs.model.LogSeverity
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
 
 val client = HttpClient {
     install(Logging) {
         logger = object : Logger {
             override fun log(message: String) {
-                AELogs.default.log(
+                AELog.default.log(
                     severity = LogSeverity.DEBUG,
                     tag = "HTTP",
                     message = message
@@ -178,7 +178,7 @@ val client = HttpClient {
 
 ```kotlin
 // Just call log() directly — no bridge needed
-val inspector = AELogs.default
+val inspector = AELog.default
 
 inspector.log(LogSeverity.INFO, "MyApp", "App started")
 inspector.log(LogSeverity.ERROR, "Auth", "Login failed: $error")

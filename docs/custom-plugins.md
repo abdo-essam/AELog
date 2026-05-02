@@ -1,6 +1,6 @@
 # Creating Custom Plugins
 
-AELogs is designed to be extended. You can create two types of plugins:
+AELog is designed to be extended. You can create two types of plugins:
 
 ## Plugin Types
 
@@ -23,20 +23,20 @@ class FeatureFlagsPlugin : UIPlugin {
     private val _badgeCount = MutableStateFlow<Int?>(null)
     override val badgeCount: StateFlow<Int?> = _badgeCount
     
-    private var inspector: AELogs? = null
+    private var inspector: AELog? = null
     
     // Called once when installed
-    override fun onAttach(inspector: AELogs) {
+    override fun onAttach(inspector: AELog) {
         this.inspector = inspector
         _badgeCount.value = getFlags().size
     }
     
-    // Called when AELogs panel opens
+    // Called when AELog panel opens
     override fun onOpen() {
         refreshFlags()
     }
     
-    // Called when AELogs panel closes
+    // Called when AELog panel closes
     override fun onClose() {
         // Pause expensive operations
     }
@@ -52,7 +52,7 @@ class FeatureFlagsPlugin : UIPlugin {
         inspector = null
     }
     
-    // Main content rendered in the AELogs panel
+    // Main content rendered in the AELog panel
     @Composable
     override fun Content(modifier: Modifier) {
         val flags = remember { getFlags() }
@@ -91,11 +91,11 @@ class FeatureFlagsPlugin : UIPlugin {
 ### Step 2: Install the Plugin
 
 ```kotlin
-AELogsSetup.init(plugins = listOf(LogsPlugin(), FeatureFlagsPlugin()))
+AELogSetup.init(plugins = listOf(LogPlugin(), FeatureFlagsPlugin()))
 ```
 
 ### Step 3: Done!
-Your plugin now appears as a tab in the AELogs panel.
+Your plugin now appears as a tab in the AELog panel.
 
 ## Creating a Data Plugin
 
@@ -107,7 +107,7 @@ class PerformancePlugin : DataPlugin {
     private val _metrics = MutableStateFlow<List<Metric>>(emptyList())
     val metrics: StateFlow<List<Metric>> = _metrics.asStateFlow()
     
-    override fun onAttach(inspector: AELogs) {
+    override fun onAttach(inspector: AELog) {
         startCollecting()
     }
     
@@ -131,7 +131,7 @@ perfPlugin?.recordMetric("api_call", 250L)
 install() → onAttach()
                 ↓
          ┌→ onOpen()  ←┐
-         │      ↓       │   (user opens/closes AELogs)
+         │      ↓       │   (user opens/closes AELog)
          └─ onClose() ──┘
                 ↓
            onDetach()  ← uninstall()

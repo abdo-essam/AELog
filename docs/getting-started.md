@@ -18,9 +18,9 @@
     logs = "1.0.0"
 
     [libraries]
-    logs-core      = { module = "io.github.abdo-essam:logs", version.ref = "logs" }
-    logs-network   = { module = "io.github.abdo-essam:logs-network", version.ref = "logs" }
-    logs-analytics = { module = "io.github.abdo-essam:logs-analytics", version.ref = "logs" }
+    logs-core      = { module = "io.github.abdo-essam:log", version.ref = "logs" }
+    logs-network   = { module = "io.github.abdo-essam:log-network", version.ref = "logs" }
+    logs-analytics = { module = "io.github.abdo-essam:log-analytics", version.ref = "logs" }
     ```
 
     ```kotlin title="shared/build.gradle.kts"
@@ -41,9 +41,9 @@
     kotlin {
         sourceSets {
             commonMain.dependencies {
-                implementation("io.github.abdo-essam:logs:1.0.0")
-                implementation("io.github.abdo-essam:logs-network:1.0.0")
-                implementation("io.github.abdo-essam:logs-analytics:1.0.0")
+                implementation("io.github.abdo-essam:log:1.0.0")
+                implementation("io.github.abdo-essam:log-network:1.0.0")
+                implementation("io.github.abdo-essam:log-analytics:1.0.0")
             }
         }
     }
@@ -53,24 +53,24 @@
 
     ```kotlin title="app/build.gradle.kts"
     dependencies {
-        debugImplementation("io.github.abdo-essam:logs-android:1.0.0")
+        debugImplementation("io.github.abdo-essam:log-android:1.0.0")
     }
     ```
 
 ## Verify Installation
 
 ```kotlin
-import com.ae.logs.AELogs
+import com.ae.log.AELog
 
 fun main() {
-    val inspector = AELogs.default
-    println("AELogs ready: ${inspector.plugins.value.size} plugins loaded")
+    val inspector = AELog.default
+    println("AELog ready: ${inspector.plugins.value.size} plugins loaded")
 }
 ```
 
 !!! success "Expected output"
     ```text
-    AELogs ready: 1 plugins loaded    
+    AELog ready: 1 plugins loaded    
     ```
 
 ## Next Steps
