@@ -8,6 +8,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 
 /**
@@ -32,7 +38,26 @@ public object BottomSheetStrategy : PresentationStrategy {
                 modifier =
                     androidx.compose.ui.Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.9f),
+                        .fillMaxHeight(0.9f)
+                        .nestedScroll(
+                            remember {
+                                object : NestedScrollConnection {
+                                    override fun onPostScroll(
+                                        consumed: Offset,
+                                        available: Offset,
+                                        source: NestedScrollSource
+                                    ): Offset {
+                                        return available
+                                    }
+                                    override suspend fun onPostFling(
+                                        consumed: Velocity,
+                                        available: Velocity
+                                    ): Velocity {
+                                        return available
+                                    }
+                                }
+                            }
+                        ),
             ) {
                 content()
             }
