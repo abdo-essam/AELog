@@ -154,12 +154,18 @@ public class AELog private constructor(
             }
         }
 
+        private val _isEnabled = atomic(true)
+
         /**
          * Global toggle to enable or disable logging.
          * If `false`, all `AELog.*` calls become silent no-ops, and network interceptors bypass recording.
          * Default: `true`.
          */
-        public var isEnabled: Boolean = true
+        public var isEnabled: Boolean
+            get() = _isEnabled.value
+            set(value) {
+                _isEnabled.value = value
+            }
 
         /**
          * Export data from all installed plugins as a formatted string.

@@ -33,7 +33,6 @@ public class LogRecorder internal constructor(
             com.ae.log.AELog
                 .defaultOrNull()
                 ?.config
-        if (config != null && !config.isEnabled) return
         if (config != null && severity < config.minSeverity) return
 
         config?.platformLogSink?.log(severity, tag, message, throwable)

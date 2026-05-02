@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
  * ```
  */
 public data class AELogConfig(
-    val isEnabled: Boolean = true,
     val minSeverity: LogSeverity = LogSeverity.VERBOSE,
     val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     val platformLogSink: PlatformLogSink = PlatformLogSink.Default,
