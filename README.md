@@ -356,7 +356,7 @@ cd AELog
 ## 📄 License
 
 ```text
-Copyright 2024 Abdo Essam
+Copyright 2026 Abdo Essam
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

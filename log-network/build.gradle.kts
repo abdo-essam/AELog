@@ -64,7 +64,7 @@ mavenPublishing {
         name.set("AELog Network")
         description.set("Network monitoring plugin for AELog SDK")
         url.set("https://github.com/abdo-essam/AELog")
-        inceptionYear.set("2024")
+        inceptionYear.set("2026")
 
         licenses {
             license {

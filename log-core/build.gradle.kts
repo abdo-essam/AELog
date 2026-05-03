@@ -89,7 +89,7 @@ mavenPublishing {
                 "inspect logs, network, and more with a beautiful Compose UI.",
         )
         url.set("https://github.com/abdo-essam/AELog")
-        inceptionYear.set("2024")
+        inceptionYear.set("2026")
 
         licenses {
             license {
