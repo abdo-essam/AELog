@@ -74,7 +74,7 @@ fun NetworkScreen() {
                             method = "GET",
                             url = "https://api.example.com/crash",
                             statusCode = 500,
-                            responseBody = "Internal Server Error"
+                            responseBody = "Internal Server Error",
                         )
                     }
                 }
