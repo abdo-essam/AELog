@@ -70,6 +70,7 @@ public val AELogKtorInterceptor: ClientPlugin<AELogKtorConfig> =
     createClientPlugin("AELogKtor", ::AELogKtorConfig) {
         val redactHeaders = pluginConfig.redactHeaders
         val excludeUrls = pluginConfig.excludeUrls
+        val maxRequestBodyBytes = pluginConfig.maxRequestBodyBytes
 
         fun Map<String, String>.redact(): Map<String, String> {
             if (redactHeaders.isEmpty()) return this
@@ -101,11 +102,20 @@ public val AELogKtorInterceptor: ClientPlugin<AELogKtorConfig> =
             val contentType = request.headers["Content-Type"]
             val reqBody =
                 if (shouldCaptureBody(contentType)) {
-                    when (val content = request.body) {
-                        is TextContent -> content.text
-                        is ByteArrayContent -> content.bytes().decodeToString()
-                        is String -> content
-                        else -> "<streamed or unknown body>"
+                    val fullBody =
+                        when (val content = request.body) {
+                            is TextContent -> content.text
+                            is ByteArrayContent -> content.bytes().decodeToString()
+                            is String -> content
+                            else -> null
+                        }
+
+                    if (fullBody == null) {
+                        "<streamed or unknown body>"
+                    } else if (fullBody.length > maxRequestBodyBytes) {
+                        fullBody.take(maxRequestBodyBytes.toInt()) + "\n… [truncated]"
+                    } else {
+                        fullBody
                     }
                 } else {
                     val len = request.headers["Content-Length"]

@@ -102,7 +102,11 @@ public class AELogOkHttpInterceptor(
                     runCatching {
                         val buffer = Buffer()
                         body.writeTo(buffer)
-                        buffer.readUtf8()
+                        if (buffer.size > maxRequestBodyBytes) {
+                            buffer.readUtf8(maxRequestBodyBytes) + "\n… [truncated]"
+                        } else {
+                            buffer.readUtf8()
+                        }
                     }.getOrNull()
                 } else {
                     "<binary or unsupported, ${body.contentLength()} bytes>"
@@ -130,7 +134,13 @@ public class AELogOkHttpInterceptor(
             val responseBody =
                 if (shouldCaptureBody(response.body?.contentType()?.toString())) {
                     runCatching {
-                        response.peekBody(maxResponseBodyBytes).string()
+                        val bodyString = response.peekBody(maxResponseBodyBytes).string()
+                        val contentLength = response.body?.contentLength() ?: -1L
+                        if (contentLength > maxResponseBodyBytes || (contentLength == -1L && bodyString.length.toLong() >= maxResponseBodyBytes)) {
+                            bodyString + "\n… [truncated]"
+                        } else {
+                            bodyString
+                        }
                     }.getOrNull()
                 } else {
                     val len = response.body?.contentLength() ?: -1
