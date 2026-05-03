@@ -17,10 +17,10 @@ import kotlin.jvm.JvmStatic
  * - [analytics] for event tracking (via the Analytics module).
  */
 public object AELog {
-    private val _instance = atomic<LogInspector?>(null)
+    private val instanceAtomic = atomic<LogInspector?>(null)
 
     @PublishedApi
-    internal val instance: LogInspector? get() = _instance.value
+    internal val instance: LogInspector? get() = instanceAtomic.value
 
     /**
      * Initialise the shared AELog instance.
@@ -33,9 +33,9 @@ public object AELog {
         vararg plugins: Plugin,
         config: LogConfig = LogConfig(),
     ) {
-        _instance.value?.let { return }
+        instanceAtomic.value?.let { return }
         val newInstance = LogInspector(config)
-        if (_instance.compareAndSet(null, newInstance)) {
+        if (instanceAtomic.compareAndSet(null, newInstance)) {
             plugins.forEach { newInstance.plugins.install(it) }
         }
     }
@@ -51,14 +51,14 @@ public object AELog {
     @JvmStatic
     public fun clearAll(): Unit = instance?.clearAll() ?: Unit
 
-    private val _isEnabled = atomic(true)
+    private val enabledAtomic = atomic(true)
 
     /** Internal Kill-switch. */
     @JvmStatic
     @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
     internal var isEnabled: Boolean
-        get() = _isEnabled.value
-        set(value) { _isEnabled.value = value }
+        get() = enabledAtomic.value
+        set(value) { enabledAtomic.value = value }
 
     /** Internal lookup. */
     @PublishedApi
