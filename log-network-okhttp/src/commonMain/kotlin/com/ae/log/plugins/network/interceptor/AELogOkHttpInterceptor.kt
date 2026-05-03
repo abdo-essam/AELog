@@ -52,7 +52,7 @@ import okio.Buffer
 public class AELogOkHttpInterceptor(
     public val maxRequestBodyBytes: Long = 250_000L,
     public val maxResponseBodyBytes: Long = 250_000L,
-    public val redactHeaders: Set<String> = emptySet(),
+    public val redactHeaders: Set<String> = DEFAULT_REDACTED,
 ) : Interceptor {
     public companion object {
         public val DEFAULT_REDACTED: Set<String> =
