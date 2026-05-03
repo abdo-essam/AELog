@@ -1,6 +1,6 @@
 site_name: AELog
 site_url: https://abdo-essam.github.io/AELog/
-site_description: Extensible on-device dev tools for Kotlin Multiplatform
+site_description: AELog is an in-app debugging overlay for Kotlin Multiplatform — inspect logs, network traffic, and analytics events without leaving your app
 site_author: Abdo Essam
 repo_url: https://github.com/abdo-essam/AELog
 repo_name: abdo-essam/AELog

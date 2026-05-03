@@ -15,19 +15,19 @@ import kotlinx.atomicfu.atomic
  *
  * Lives in commonMain so [App] can access it without Target mismatches.
  */
-public object SampleState {
+object SampleState {
     private val _networkApi = atomic<NetworkRecorder?>(null)
-    public val networkApi: NetworkRecorder? get() = _networkApi.value
+    val networkApi: NetworkRecorder? get() = _networkApi.value
 
     private val _analyticsApi = atomic<AnalyticsTracker?>(null)
-    public val analyticsApi: AnalyticsTracker? get() = _analyticsApi.value
+    val analyticsApi: AnalyticsTracker? get() = _analyticsApi.value
 
     private val _httpClient = atomic<HttpClient?>(null)
-    public val httpClient: HttpClient? get() = _httpClient.value
+    val httpClient: HttpClient? get() = _httpClient.value
 
     private val isInitialized = atomic(false)
 
-    public fun initialize() {
+    fun initialize() {
         if (isInitialized.compareAndSet(expect = false, update = true)) {
             AELog.init(
                 LogPlugin(),

@@ -3,7 +3,7 @@
 <p align="center">
   <strong>Extensible on-device dev tools for Kotlin Multiplatform</strong>
   <br />
-  A mini Flipper for KMP — inspect logs, network, and more with a beautiful Compose UI.
+  An in-app debugging overlay for KMP — inspect logs, network traffic, and analytics events with a beautiful Compose UI. No external tools needed.
 </p>
 
 <p align="center">
@@ -294,23 +294,19 @@ AELog.init(LogPlugin(), FeatureFlagsPlugin())
 
 ## 🔗 Logging Integrations
 
-AELog works seamlessly with your existing logging infrastructures (like Kermit or Napier). Just forward your logs to the APIs.
+AELog works with **any** logging setup — just forward your log calls to the AELog API:
 
 ```kotlin
-class AELogKermitWriter : LogWriter() {
-    override fun log(severity: Severity, message: String, tag: String, throwable: Throwable?) {
-        // Pass throwable directly — stack trace is appended automatically by AELog
-        AELog.log(
-            severity = severity.toAELogLogSeverity(),
-            tag = tag,
-            message = message,
-            throwable = throwable,
-        )
-    }
-}
+// Forward any log call directly — no bridge library needed
+AELog.log(
+    severity = LogSeverity.INFO,
+    tag = "MyTag",
+    message = "Something happened",
+    throwable = null, // stack trace is appended automatically when present
+)
 ```
 
-📖 See the [Logging Integrations Guide](https://abdo-essam.github.io/AELog/integrations) for more examples.
+📖 See the [Logging Integrations Guide](https://abdo-essam.github.io/AELog/integrations) for adapter examples (Kermit, Napier, Timber, SLF4J).
 
 ## 🏗️ Architecture
 
@@ -368,6 +364,4 @@ You may obtain a copy of the License at
 ## 💖 Acknowledgements
 
 - Jetpack Compose — UI toolkit
-- Kotlin Multiplatform — Cross-platform
-- Flipper — Inspiration for the plugin architecture
-- Chucker — Inspiration for network inspection
+- Kotlin Multiplatform — Cross-platform framework
