@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ae.log.AELog
 import com.ae.log.sample.ui.components.ActionCard
-import com.ae.log.sample.ui.components.SampleActionButton
+import com.ae.log.sample.ui.components.ActionButton
 import com.ae.log.sample.ui.components.SectionHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,15 +29,15 @@ fun LogScreen() {
                     title = "Standard Severity Levels",
                     description = "AELog.log.d(), .i(), .e(), etc.",
                 ) {
-                    SampleActionButton("Log VERBOSE (Gray)", Color(0xFF9E9E9E)) {
+                    ActionButton("Log VERBOSE (Gray)", Color(0xFF9E9E9E)) {
                         AELog.log.v("Simple logs are easy")
                     }
                     Spacer(Modifier.height(8.dp))
-                    SampleActionButton("Log DEBUG (Green)", Color(0xFF4CAF50)) {
+                    ActionButton("Log DEBUG (Green)", Color(0xFF4CAF50)) {
                         AELog.log.d("API", "User data fetched successfully")
                     }
                     Spacer(Modifier.height(8.dp))
-                    SampleActionButton("Log ERROR (Red)", Color(0xFFF44336)) {
+                    ActionButton("Log ERROR (Red)", Color(0xFFF44336)) {
                         AELog.log.e("Database", "Failed to write record", RuntimeException("Disk Full"))
                     }
                 }
@@ -49,7 +49,7 @@ fun LogScreen() {
                     title = "Performance Test",
                     description = "Sending multiple logs to verify the ring buffer",
                 ) {
-                    SampleActionButton("Send 20 logs", MaterialTheme.colorScheme.secondary) {
+                    ActionButton("Send 20 logs", MaterialTheme.colorScheme.secondary) {
                         repeat(20) { i -> AELog.log.d("Batch", "Entry #${i + 1}") }
                     }
                 }

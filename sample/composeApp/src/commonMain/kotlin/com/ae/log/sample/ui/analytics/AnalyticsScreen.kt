@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.ae.log.AELog
 import com.ae.log.plugins.analytics.analytics
 import com.ae.log.sample.ui.components.ActionCard
-import com.ae.log.sample.ui.components.SampleActionButton
+import com.ae.log.sample.ui.components.ActionButton
 import com.ae.log.sample.ui.components.SectionHeader
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,14 +30,14 @@ fun AnalyticsScreen() {
                     title = "Events & Screens",
                     description = "Using AELog.analytics.logEvent()",
                 ) {
-                    SampleActionButton("Track 'purchase' event", Color(0xFF9C27B0)) {
+                    ActionButton("Track 'purchase' event", Color(0xFF9C27B0)) {
                         AELog.analytics.logEvent(
                             name = "purchase_success",
                             properties = mapOf("amount" to 49.99, "currency" to "USD"),
                         )
                     }
                     Spacer(Modifier.height(8.dp))
-                    SampleActionButton("Log 'Home' Screen", Color(0xFF673AB7)) {
+                    ActionButton("Log 'Home' Screen", Color(0xFF673AB7)) {
                         AELog.analytics.logScreen("HomeScreen")
                     }
                 }
@@ -45,7 +45,7 @@ fun AnalyticsScreen() {
 
             item {
                 SectionHeader("Management")
-                SampleActionButton("Clear Analytics", MaterialTheme.colorScheme.error) {
+                ActionButton("Clear Analytics", MaterialTheme.colorScheme.error) {
                     AELog.analytics.clear()
                 }
             }

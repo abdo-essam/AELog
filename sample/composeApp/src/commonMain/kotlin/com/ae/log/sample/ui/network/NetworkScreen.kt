@@ -12,7 +12,7 @@ import com.ae.log.AELog
 import com.ae.log.plugins.network.network
 import com.ae.log.sample.SampleState
 import com.ae.log.sample.ui.components.ActionCard
-import com.ae.log.sample.ui.components.SampleActionButton
+import com.ae.log.sample.ui.components.ActionButton
 import com.ae.log.sample.ui.components.SectionHeader
 import io.ktor.client.request.get
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ fun NetworkScreen() {
                     title = "Real HTTP Requests",
                     description = "Captured automatically via KtorInterceptor",
                 ) {
-                    SampleActionButton("GET /posts/1 (Ktor)", Color(0xFF2196F3)) {
+                    ActionButton("GET /posts/1 (Ktor)", Color(0xFF2196F3)) {
                         scope.launch {
                             runCatching { client?.get("https://jsonplaceholder.typicode.com/posts/1") }
                         }
@@ -51,7 +51,7 @@ fun NetworkScreen() {
                     title = "Custom Entries",
                     description = "Using AELog.network.logRequest()",
                 ) {
-                    SampleActionButton("Log 200 OK", Color(0xFF4CAF50)) {
+                    ActionButton("Log 200 OK", Color(0xFF4CAF50)) {
                         AELog.network.logRequest(
                             method = "GET",
                             url = "https://api.example.com/status",
@@ -60,7 +60,7 @@ fun NetworkScreen() {
                         )
                     }
                     Spacer(Modifier.height(8.dp))
-                    SampleActionButton("Log 404 Not Found", Color(0xFFFFC107)) {
+                    ActionButton("Log 404 Not Found", Color(0xFFFFC107)) {
                         AELog.network.logRequest(
                             method = "POST",
                             url = "https://api.example.com/v1/auth",
@@ -69,7 +69,7 @@ fun NetworkScreen() {
                         )
                     }
                     Spacer(Modifier.height(8.dp))
-                    SampleActionButton("Log 500 Server Error", Color(0xFFF44336)) {
+                    ActionButton("Log 500 Server Error", Color(0xFFF44336)) {
                         AELog.network.logRequest(
                             method = "GET",
                             url = "https://api.example.com/crash",
