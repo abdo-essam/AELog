@@ -10,11 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ae.log.plugins.network.model.NetworkEntry
+import com.ae.log.ui.theme.NetworkColors
 
 @Composable
 internal fun MethodBadge(label: String) {
     val color =
-        com.ae.log.ui.theme.NetworkColors
+        NetworkColors
             .getMethodColor(label)
     Box(
         modifier =
@@ -34,7 +35,7 @@ internal fun StatusBadge(entry: NetworkEntry) {
             entry.isPending -> MaterialTheme.colorScheme.onSurfaceVariant
             entry.isError -> MaterialTheme.colorScheme.error
             else ->
-                com.ae.log.ui.theme.NetworkColors
+                NetworkColors
                     .getStatusCodeColor(entry.statusCode)
         }
     Text(text = text, style = MaterialTheme.typography.labelSmall, color = color)

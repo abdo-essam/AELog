@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.ae.log.UiConfig
 
 /**
  * Presents the AELog panel as a centered [Dialog].
@@ -17,7 +18,7 @@ import androidx.compose.ui.window.DialogProperties
 public object DialogStrategy : PresentationStrategy {
     @Composable
     override fun Present(
-        uiConfig: com.ae.log.UiConfig,
+        uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {

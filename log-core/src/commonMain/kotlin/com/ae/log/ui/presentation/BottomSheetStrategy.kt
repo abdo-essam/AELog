@@ -1,5 +1,6 @@
 package com.ae.log.ui.presentation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import com.ae.log.UiConfig
 
 /**
  * Presents the AELog panel as a [ModalBottomSheet].
@@ -24,7 +26,7 @@ import androidx.compose.ui.unit.dp
 public object BottomSheetStrategy : PresentationStrategy {
     @Composable
     override fun Present(
-        uiConfig: com.ae.log.UiConfig,
+        uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
@@ -35,7 +37,7 @@ public object BottomSheetStrategy : PresentationStrategy {
             containerColor = MaterialTheme.colorScheme.surface,
             shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
         ) {
-            androidx.compose.foundation.layout.Box(
+            Box(
                 modifier =
                     androidx.compose.ui.Modifier
                         .fillMaxWidth()

@@ -1,6 +1,7 @@
 package com.ae.log.ui.presentation
 
 import androidx.compose.runtime.Composable
+import com.ae.log.UiConfig
 
 /**
  * Strategy interface for how the AELog panel is presented on screen.
@@ -26,7 +27,7 @@ public interface PresentationStrategy {
      */
     @Composable
     public fun Present(
-        uiConfig: com.ae.log.UiConfig,
+        uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     )
