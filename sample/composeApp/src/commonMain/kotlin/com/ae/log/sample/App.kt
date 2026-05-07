@@ -27,7 +27,6 @@ fun App(debugMode: Boolean = true) {
             uiConfig =
                 UiConfig(
                     showFloatingButton = true,
-                    floatingButtonOffset = 160.dp,
                 ),
             enabled = debugMode,
         ) {
