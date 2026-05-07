@@ -51,6 +51,7 @@ kotlin {
             implementation(libs.ui)
             implementation(libs.material.icons.extended)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.datetime)
         }
 
