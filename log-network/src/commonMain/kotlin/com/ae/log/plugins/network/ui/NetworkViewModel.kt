@@ -2,6 +2,7 @@ package com.ae.log.plugins.network.ui
 
 import com.ae.log.plugins.network.model.NetworkEntry
 import com.ae.log.plugins.network.model.NetworkFilter
+import com.ae.log.plugins.network.model.NetworkFilters
 import com.ae.log.plugins.network.store.NetworkStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,7 @@ internal class NetworkViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _filter = MutableStateFlow<NetworkFilter>(com.ae.log.plugins.network.model.NetworkFilters.ALL)
+    private val _filter = MutableStateFlow<NetworkFilter>(NetworkFilters.ALL)
     val filter: StateFlow<NetworkFilter> = _filter.asStateFlow()
 
     /** Filtered + reversed (newest first) entry list. */
@@ -56,7 +57,7 @@ internal class NetworkViewModel(
     fun clear() {
         store.clear()
         _searchQuery.value = ""
-        _filter.value = com.ae.log.plugins.network.model.NetworkFilters.ALL
+        _filter.value = NetworkFilters.ALL
     }
 
     val hasPending: StateFlow<Boolean> =

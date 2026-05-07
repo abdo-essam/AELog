@@ -4,7 +4,6 @@ import com.ae.log.plugins.log.LogStore
 import com.ae.log.plugins.log.model.LogEntry
 import com.ae.log.plugins.log.model.LogSeverityFilter
 import com.ae.log.plugins.log.model.LogSeverityFilters
-import com.ae.log.plugins.log.model.LogTagRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.stateIn
 
 internal class LogViewModel(
     private val logStore: LogStore,
-    val registry: com.ae.log.plugins.log.model.LogTagRegistry,
     scope: CoroutineScope,
 ) {
     private val _searchQuery = MutableStateFlow("")
@@ -25,35 +23,19 @@ internal class LogViewModel(
     val selectedFilter: StateFlow<LogSeverityFilter> = _selectedFilter.asStateFlow()
 
     val filteredLogs: StateFlow<List<LogEntry>> =
-        combine(
-            logStore.dataFlow,
-            _searchQuery,
-            _selectedFilter,
-        ) { logs, query, filter ->
-            logs
-                .reversed()
+        combine(logStore.dataFlow, _searchQuery, _selectedFilter) { logs, query, filter ->
+            logs.reversed()
+                .filter { entry -> filter.matches(entry) }
                 .filter { entry ->
-                    filter.matches(entry)
-                }.filter { entry ->
                     query.isBlank() ||
                         entry.message.contains(query, ignoreCase = true) ||
                         entry.tag.contains(query, ignoreCase = true)
                 }
-        }.stateIn(
-            scope = scope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList(),
-        )
+        }.stateIn(scope = scope, started = SharingStarted.WhileSubscribed(5000), initialValue = emptyList())
 
-    fun updateSearchQuery(query: String) {
-        _searchQuery.value = query
-    }
+    fun updateSearchQuery(query: String) { _searchQuery.value = query }
+    fun updateSelectedFilter(filter: LogSeverityFilter) { _selectedFilter.value = filter }
 
-    fun updateSelectedFilter(filter: LogSeverityFilter) {
-        _selectedFilter.value = filter
-    }
-
-    /** Clear all stored log entries and reset search + filter. */
     fun clearLogs() {
         logStore.clear()
         _searchQuery.value = ""

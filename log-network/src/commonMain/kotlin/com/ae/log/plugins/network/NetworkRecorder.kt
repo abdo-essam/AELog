@@ -1,4 +1,3 @@
-@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
 @file:OptIn(kotlin.time.ExperimentalTime::class)
 
 package com.ae.log.plugins.network
@@ -36,7 +35,7 @@ public class NetworkRecorder internal constructor(
             NetworkEntry(
                 id = id,
                 url = url,
-                method = NetworkMethod.valueOf(method.uppercase()),
+                method = NetworkMethod.fromString(method),
                 rawMethod = method,
                 requestHeaders = headers,
                 requestBody = body,
@@ -87,6 +86,12 @@ public class NetworkRecorder internal constructor(
                 durationMs = durationMs,
             )
         }
+    }
+
+    /** Patch the response body after an entry has already been recorded. */
+    public fun updateResponseBody(id: String, body: String?) {
+        if (!AELog.isEnabled) return
+        store.update(id) { it.copy(responseBody = body) }
     }
 
     /** Record a failed request. */

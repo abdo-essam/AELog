@@ -13,7 +13,7 @@ version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 
 kotlin {
     jvmToolchain(21)
-    explicitApiWarning()
+    explicitApi()
 
     androidLibrary {
         namespace = "com.ae.log.network.ktor"
@@ -40,7 +40,7 @@ kotlin {
             // Brings in logs-network (and transitively logs core)
             api(projects.logNetwork)
             // Ktor is a required dep here — consumers of this module need it
-            implementation(libs.ktor.client.core)
+            api(libs.ktor.client.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

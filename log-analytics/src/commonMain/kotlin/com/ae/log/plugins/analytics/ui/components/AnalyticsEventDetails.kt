@@ -1,13 +1,12 @@
 package com.ae.log.plugins.analytics.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +16,6 @@ import com.ae.log.plugins.analytics.utils.toFullTimeLabel
 import com.ae.log.ui.components.ExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun AnalyticsEventDetails(
     event: AnalyticsEvent,
@@ -67,7 +65,7 @@ internal fun AnalyticsEventDetails(
             color = MaterialTheme.colorScheme.onSurface,
         )
 
-        // Properties
+        // Properties — replaced FlowRow (requires newer Compose) with simple key=value rows
         if (event.properties.isNotEmpty()) {
             Spacer(Modifier.height(LogSpacing.x2))
             Text(
@@ -76,20 +74,29 @@ internal fun AnalyticsEventDetails(
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(Modifier.height(4.dp))
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                event.properties.entries.forEach { (k, v) ->
-                    SuggestionChip(
-                        onClick = {},
-                        label = {
-                            Text(
-                                "$k = $v",
-                                style = MaterialTheme.typography.labelSmall,
-                            )
-                        },
-                        colors =
-                            SuggestionChipDefaults.suggestionChipColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            ),
+            event.properties.entries.forEach { (k, v) ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 2.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = k,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.weight(0.4f),
+                    )
+                    Text(
+                        text = "=",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = v.toString(),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(0.6f),
                     )
                 }
             }

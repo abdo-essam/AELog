@@ -2,6 +2,7 @@ package com.ae.log.plugins.analytics.ui
 
 import com.ae.log.plugins.analytics.model.AnalyticsEvent
 import com.ae.log.plugins.analytics.model.AnalyticsFilter
+import com.ae.log.plugins.analytics.model.AnalyticsFilters
 import com.ae.log.plugins.analytics.store.AnalyticsStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ internal class AnalyticsViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _filter = MutableStateFlow<AnalyticsFilter>(com.ae.log.plugins.analytics.model.AnalyticsFilters.ALL)
+    private val _filter = MutableStateFlow<AnalyticsFilter>(AnalyticsFilters.ALL)
     val filter: StateFlow<AnalyticsFilter> = _filter.asStateFlow()
 
     /** Filtered + reversed (newest first) event list. */
@@ -55,6 +56,6 @@ internal class AnalyticsViewModel(
     fun clear() {
         store.clear()
         _searchQuery.value = ""
-        _filter.value = com.ae.log.plugins.analytics.model.AnalyticsFilters.ALL
+        _filter.value = AnalyticsFilters.ALL
     }
 }

@@ -3,6 +3,7 @@ package com.ae.log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -86,10 +87,10 @@ public fun LogProvider(
                 if (uiConfig.showFloatingButton) {
                     LogFloatingButton(
                         onClick = { controller.show() },
-                        modifier =
-                            Modifier
-                                .align(uiConfig.floatingButtonAlignment)
-                                .padding(end = LogSpacing.x5, bottom = uiConfig.floatingButtonOffset),
+                        modifier = Modifier
+                            .align(uiConfig.floatingButtonAlignment)
+                            .navigationBarsPadding()
+                            .padding(end = LogSpacing.x5, bottom = LogSpacing.x5),
                     )
                 }
 

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.vanniktechPublish)
     `maven-publish`
     signing
@@ -15,7 +16,7 @@ version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 
 kotlin {
     jvmToolchain(21)
-    explicitApiWarning()
+    explicitApi()
 
     androidLibrary {
         namespace = "com.ae.log.network"

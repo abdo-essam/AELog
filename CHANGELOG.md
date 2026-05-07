@@ -8,13 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- 
-
-### Changed
-- 
+- Real dark color scheme (`DarkColorScheme`) in `LogTheme` — automatically follows system dark/light mode
+- `stability-config.conf` — Compose compiler stability config for better recomposition performance
 
 ### Fixed
-- 
+- **Critical:** `NetworkMethod.valueOf()` crash on unknown HTTP verbs (CONNECT, TRACE, custom) in `NetworkRecorder` and `KtorInterceptor` — replaced with safe `fromString()`
+- **Critical:** Race condition in `PluginManager.install()` — replaced TOCTOU check with `SynchronizedObject` lock ensuring `onAttach()` is never called twice
+- `LogController.toggle()` non-atomic read-write — replaced with `MutableStateFlow.update { !it }`
+- `LogConfig` KDoc referenced non-existent `AELog.create()` — corrected to `AELog.init()`
+- `AnalyticsTracker` KDoc referenced non-existent `AELog.default` — corrected to `AELog.analytics` proxy
+- Missing `kotlinx.coroutines.flow.update` import in `LogController`
+- README: version references updated from `1.0.0` to `1.0.2`
+- README: `AELog.v()` direct calls corrected to `AELog.log.v()` to match actual API
+- README: Modularity callout referenced wrong artifact names (`logs-network`) — corrected to `log-network`
+
+### Changed
+- All modules: `explicitApiWarning()` → `explicitApi()` to enforce strict visibility for published library
+- `log-network-ktor`: `ktor-client-core` changed from `implementation` to `api` — consumers need Ktor types transitively
+- `log-network-okhttp`: `okhttp` changed from `implementation` to `api` — consumers need OkHttp types transitively
+- Ktor version unified to `3.4.3` across all Ktor dependencies (was mismatched `3.0.0` + `3.4.3`)
 
 ## [1.0.2] - 2026-05-03
 

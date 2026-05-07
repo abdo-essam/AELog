@@ -1,5 +1,4 @@
 @file:OptIn(kotlin.time.ExperimentalTime::class)
-@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
 
 package com.ae.log.plugins.network.interceptor
 
@@ -12,84 +11,108 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.content.TextContent
 import io.ktor.util.*
+import io.ktor.utils.io.*
+import kotlinx.io.readByteArray
 import kotlin.time.Clock
 
 /**
- * Ktor Client interceptor that automatically records HTTP traffic to AELog.
+ * Ktor 3.x interceptor that records HTTP traffic to AELog.
  *
- * Works with Ktor 2.x and 3.x.
+ * Uses a two-phase approach:
+ *  1. [receivePipeline] – records status, headers, and duration immediately.
+ *  2. [responsePipeline] – patches the body once the app reads it, without
+ *     consuming it (bytes are re-injected via a fresh [ByteReadChannel]).
+ *
+ * No Ktor `@InternalAPI` required.
  */
 public class AELogKtorInterceptor internal constructor() {
     public companion object Plugin : HttpClientPlugin<Unit, AELogKtorInterceptor> {
         override val key: AttributeKey<AELogKtorInterceptor> = AttributeKey("AELogKtorInterceptor")
 
-        private val RequestIdKey = AttributeKey<String>("AELogRequestId")
-        private val StartTimeKey = AttributeKey<Long>("AELogStartTime")
+        private val RequestIdKey  = AttributeKey<String>("AELogRequestId")
+        private val StartTimeKey  = AttributeKey<Long>("AELogStartTime")
 
         override fun prepare(block: Unit.() -> Unit): AELogKtorInterceptor = AELogKtorInterceptor()
 
-        override fun install(
-            plugin: AELogKtorInterceptor,
-            scope: HttpClient,
-        ) {
+        override fun install(plugin: AELogKtorInterceptor, scope: HttpClient) {
             val clock = Clock.System
 
-            // Intercept Outgoing Requests
+            // ── Phase 1: Outgoing requests ────────────────────────────────
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 if (!AELog.isEnabled) return@intercept
-
                 val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder ?: return@intercept
-                val id = recorder.newId()
 
+                val id = recorder.newId()
                 context.attributes.put(RequestIdKey, id)
                 context.attributes.put(StartTimeKey, clock.now().toEpochMilliseconds())
 
-                val method = NetworkMethod.valueOf(context.method.value.uppercase()) ?: NetworkMethod.GET
-                val headersMap =
-                    context.headers
-                        .build()
-                        .entries()
-                        .associate { it.key to it.value.joinToString(", ") }
-
-                val bodyString =
-                    when (val body = context.body) {
-                        is TextContent -> body.text
-                        else -> null
-                    }
+                val headersMap = context.headers.build().entries()
+                    .associate { it.key to it.value.joinToString(", ") }
 
                 recorder.startRequest(
-                    id = id,
-                    url = context.url.buildString(),
-                    method = method,
+                    id      = id,
+                    url     = context.url.buildString(),
+                    method  = NetworkMethod.fromString(context.method.value),
                     headers = headersMap,
-                    body = bodyString,
+                    body    = (context.body as? TextContent)?.text,
                 )
             }
 
-            // Intercept Incoming Responses
+            // ── Phase 2a: Response metadata (status, headers, duration) ───
             scope.receivePipeline.intercept(HttpReceivePipeline.State) { response ->
-                if (!AELog.isEnabled) return@intercept
+                if (!AELog.isEnabled) { proceed(); return@intercept }
+                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder
+                    ?: run { proceed(); return@intercept }
 
-                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder ?: return@intercept
-                val call = response.call
-                val id = call.attributes.getOrNull(RequestIdKey) ?: return@intercept
-                val start = call.attributes.getOrNull(StartTimeKey) ?: clock.now().toEpochMilliseconds()
-                val duration = clock.now().toEpochMilliseconds() - start
-
-                val headersMap = response.headers.entries().associate { it.key to it.value.joinToString(", ") }
+                val id = response.call.attributes.getOrNull(RequestIdKey)
+                    ?: run { proceed(); return@intercept }
+                val start = response.call.attributes.getOrNull(StartTimeKey)
+                    ?: clock.now().toEpochMilliseconds()
 
                 recorder.logResponse(
-                    id = id,
+                    id         = id,
                     statusCode = response.status.value,
-                    headers = headersMap,
-                    durationMs = duration,
+                    headers    = response.headers.entries().associate { it.key to it.value.joinToString(", ") },
+                    body       = null,          // body patched in Phase 2b
+                    durationMs = clock.now().toEpochMilliseconds() - start,
                 )
+                proceed()
+            }
+
+            // ── Phase 2b: Response body — intercept when app reads it ─────
+            scope.responsePipeline.intercept(HttpResponsePipeline.Receive) { (info, body) ->
+                if (!AELog.isEnabled || body !is ByteReadChannel) { proceed(); return@intercept }
+                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder
+                    ?: run { proceed(); return@intercept }
+
+                val id = context.attributes.getOrNull(RequestIdKey)
+                    ?: run { proceed(); return@intercept }
+                val contentType = context.response.headers["Content-Type"] ?: ""
+
+                if (shouldCaptureBody(contentType)) {
+                    // readBuffer() reads all bytes into a kotlinx.io.Buffer (Ktor 3.x public API)
+                    val buffer = body.readBuffer()
+                    val bytes  = buffer.readByteArray()
+                    val bodyText = runCatching {
+                        bytes.decodeToString().trim().ifBlank { null }
+                    }.getOrNull()
+
+                    recorder.updateResponseBody(id, bodyText)
+
+                    // Re-inject fresh channel so the rest of the pipeline can decode the body
+                    proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
+                } else {
+                    proceed()
+                }
             }
         }
+
+        private fun shouldCaptureBody(contentType: String): Boolean =
+            contentType.contains("json", ignoreCase = true) ||
+            contentType.startsWith("text/", ignoreCase = true) ||
+            contentType.contains("xml", ignoreCase = true) ||
+            contentType.contains("form-urlencoded", ignoreCase = true)
     }
 }
 
-/**
- * Accessor for the Ktor Interceptor.
- */
 public val KtorInterceptor: AELogKtorInterceptor.Plugin = AELogKtorInterceptor.Plugin

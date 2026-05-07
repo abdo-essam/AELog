@@ -7,11 +7,12 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.ae.log.core.LogRecordSink
 import com.ae.log.core.PluginContext
 import com.ae.log.core.UIPlugin
-import com.ae.log.core.bus.subscribe
 import com.ae.log.core.store.PluginStore
 import com.ae.log.plugins.log.model.LogEntry
+import com.ae.log.plugins.log.model.LogSeverity
 import com.ae.log.plugins.log.ui.LogContent
 import com.ae.log.plugins.log.ui.LogViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,73 +31,48 @@ public typealias LogStore = PluginStore<LogEntry>
  * AELog.init(LogPlugin())
  * ```
  *
- * ## Logging — zero ceremony (preferred)
- *
- * Use the static shorthands on the [AELog] companion object. No instance,
- * no nullable chain, no plugin lookup required:
- *
+ * ## Logging
  * ```kotlin
- * AELog.v("MyTag", "Verbose detail")
- * AELog.d("MyTag", "Debug info")
- * AELog.i("MyTag", "Something happened")
- * AELog.w("MyTag", "Watch out")
- * AELog.e("MyTag", "Something went wrong", throwable)
- * AELog.wtf("MyTag", "Should never happen", throwable)
+ * AELog.log.v("MyTag", "Verbose detail")
+ * AELog.log.d("MyTag", "Debug info")
+ * AELog.log.i("MyTag", "Something happened")
+ * AELog.log.w("MyTag", "Watch out")
+ * AELog.log.e("MyTag", "Something went wrong", throwable)
+ * AELog.log.wtf("MyTag", "Should never happen", throwable)
  * ```
  *
- * All calls are **silent no-ops** if [AELog.init] has not been called yet —
- * consistent with Timber's behaviour before a Tree is planted.
- *
- * ## Logging — on an instance (advanced / multi-instance)
- *
- * If you hold a specific [AELog] instance (e.g. in tests or an embedded SDK):
- *
- * ```kotlin
- * inspector.log(LogSeverity.INFO, "MyTag", "Something happened")
- * // or directly through the plugin:
- * inspector.getPlugin<LogPlugin>()?.recorder?.i("MyTag", "Something happened")
- * ```
+ * All calls are **silent no-ops** if [AELog.init] has not been called yet.
  */
 public class LogPlugin(
     maxEntries: Int = 500,
-) : UIPlugin {
+) : UIPlugin, LogRecordSink {
     override val id: String = ID
     override val name: String = "Logs"
     override val icon: ImageVector = Icons.Default.Description
 
     internal val logStore = PluginStore<LogEntry>(capacity = maxEntries)
-    internal val registry =
-        com.ae.log.plugins.log.model
-            .LogTagRegistry()
 
-    /** Public write API — use this to send logs to the viewer. */
-    public val recorder: LogRecorder = LogRecorder(store = logStore, registry = registry)
+    /** Public write API — use this to send logs directly to the viewer. */
+    public val recorder: LogRecorder = LogRecorder(store = logStore)
 
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
     private var viewModel: LogViewModel? = null
 
-    /**
-     * Starts observing the log store to keep [badgeCount] in sync.
-     * Creates [LogViewModel] bound to the plugin's managed scope.
-     */
     override fun onAttach(context: PluginContext) {
-        viewModel = LogViewModel(logStore = logStore, registry = registry, scope = context.scope)
+        viewModel = LogViewModel(logStore = logStore, scope = context.scope)
 
         context.scope.launch {
             logStore.dataFlow.collect { logs ->
                 _badgeCount.value = logs.size
             }
         }
+    }
 
-        context.scope.launch {
-            context.eventBus
-                .subscribe<com.ae.log.core.bus.LogTagRegisteredEvent>()
-                .collect { event ->
-                    registry.register(event.tag, event.badgeLabel)
-                }
-        }
+    /** Routes [AELog.record] calls to this plugin's recorder via the [LogRecordSink] interface. */
+    override fun record(severity: LogSeverity, tag: String, msg: String, throwable: Throwable?) {
+        recorder.log(severity, tag, msg, throwable)
     }
 
     override fun onClear() {
@@ -104,23 +80,18 @@ public class LogPlugin(
     }
 
     override fun onDetach() {
-        // context.scope is cancelled by AELog before this call —
-        // all coroutines are stopped. Only clean up non-coroutine state here.
         viewModel = null
     }
 
     @Composable
     override fun Content(modifier: Modifier) {
         val vm = viewModel ?: return
-        LogContent(
-            viewModel = vm,
-            modifier = modifier,
-        )
+        LogContent(viewModel = vm, modifier = modifier)
     }
 
     override fun export(): String =
         logStore.dataFlow.value.joinToString("\n") { log ->
-            "[${log.severity.name}] ${log.tag}: ${log.message}"
+            "[${log.severity.label}] ${log.tag}: ${log.message}"
         }
 
     public companion object {

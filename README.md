@@ -69,32 +69,32 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Core: inspector UI + LogPlugin
-            implementation("io.github.abdo-essam:log:1.0.0")
+            implementation("io.github.abdo-essam:log:1.0.2")
 
             // Optional: Network inspector panel
-            implementation("io.github.abdo-essam:log-network:1.0.0")
+            implementation("io.github.abdo-essam:log-network:1.0.2")
 
             // Optional: Ktor auto-interceptor (KMP — Android / iOS / JVM)
-            implementation("io.github.abdo-essam:log-network-ktor:1.0.0")
+            implementation("io.github.abdo-essam:log-network-ktor:1.0.2")
 
             // Optional: Analytics inspector panel
-            implementation("io.github.abdo-essam:log-analytics:1.0.0")
+            implementation("io.github.abdo-essam:log-analytics:1.0.2")
         }
         androidMain.dependencies {
             // Optional: OkHttp auto-interceptor (Android + JVM only)
-            implementation("io.github.abdo-essam:log-network-okhttp:1.0.0")
+            implementation("io.github.abdo-essam:log-network-okhttp:1.0.2")
         }
     }
 }
 ```
 
-> **🔥 True Modularity**: Worried about APK/bundle size? You can drop the `LogPlugin` entirely! Just remove the `logs` dependency and import `logs-network:1.0.0` or `logs-analytics:1.0.0` directly. Because each acts completely independently and transitively exports `logs-core` and `logs-ui`, your app stays incredibly lightweight!
+> **🔥 True Modularity**: You can depend on any plugin module independently! For example, if you only need network inspection, import `log-network:1.0.2` directly — it transitively brings in `log-core`. Your app stays lightweight by only including what it needs.
 
 ### Version Catalog
 
 ```toml
 [versions]
-logs = "1.0.0"
+logs = "1.0.2"
 
 [libraries]
 logs-core              = { module = "io.github.abdo-essam:log",                version.ref = "logs" }
@@ -157,12 +157,12 @@ AELog.launchViewer(requireContext())
 Just type `AELog.` and the IDE lists every method — no extension hunting required:
 
 ```kotlin
-AELog.v("Auth", "Token checked")
-AELog.d("Auth", "Token refreshed")
-AELog.i("HomeScreen", "App launched!")
-AELog.w("Auth", "Session expiring soon")
-AELog.e("Database", "Failed to clear cache", exception) // stack trace auto-appended
-AELog.wtf("Auth", "Unexpected state")
+AELog.log.v("Auth", "Token checked")
+AELog.log.d("Auth", "Token refreshed")
+AELog.log.i("HomeScreen", "App launched!")
+AELog.log.w("Auth", "Session expiring soon")
+AELog.log.e("Database", "Failed to clear cache", exception) // stack trace auto-appended
+AELog.log.wtf("Auth", "Unexpected state")
 ```
 
 > All calls are **silent no-ops** if `AELog.init()` has not been called yet — safe in shared modules that run before app startup.

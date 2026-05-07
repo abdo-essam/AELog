@@ -13,7 +13,7 @@ version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 
 kotlin {
     jvmToolchain(21)
-    explicitApiWarning()
+    explicitApi()
 
     // OkHttp is JVM-only — no iOS targets
     androidLibrary {
@@ -35,7 +35,7 @@ kotlin {
             // Brings in logs-network (and transitively logs core)
             api(projects.logNetwork)
             // OkHttp is a required dep here — consumers only pull this in if they use OkHttp
-            implementation(libs.okhttp)
+            api(libs.okhttp)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

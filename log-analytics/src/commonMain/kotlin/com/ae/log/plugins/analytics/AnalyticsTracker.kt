@@ -1,4 +1,3 @@
-@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
 @file:OptIn(kotlin.time.ExperimentalTime::class)
 
 package com.ae.log.plugins.analytics
@@ -11,9 +10,12 @@ import kotlin.time.Clock
  * Public write-only API for [AnalyticsPlugin].
  *
  * ```kotlin
- * val analytics = AELog.default.getPlugin<AnalyticsPlugin>()?.tracker
- * analytics?.track("button_tap", mapOf("screen" to "home", "id" to "cta_buy"))
- * analytics?.screen("ProductDetail", mapOf("productId" to "123"))
+ * // Preferred: via the analytics proxy
+ * AELog.analytics.logEvent("button_tap", mapOf("screen" to "home", "id" to "cta_buy"))
+ * AELog.analytics.logScreen("ProductDetail", mapOf("productId" to "123"))
+ *
+ * // Advanced: direct plugin access
+ * AELog.getPlugin<AnalyticsPlugin>()?.tracker?.track("button_tap")
  * ```
  */
 public class AnalyticsTracker internal constructor(

@@ -115,15 +115,19 @@ internal fun NetworkEntryDetails(
                     if (entry.responseHeaders.isNotEmpty()) {
                         HeadersSection("Headers", entry.responseHeaders)
                     }
-                    entry.responseBody?.let {
-                        BodySection(
+                    val body = entry.responseBody
+                    when {
+                        body != null && body.isNotBlank() -> BodySection(
                             label = "Body",
-                            body = it.prettyPrintJson(),
-                            onCopy = { clipboard.setText(AnnotatedString(it)) },
+                            body = body.prettyPrintJson(),
+                            onCopy = { clipboard.setText(AnnotatedString(body)) },
                         )
-                    }
-                    if (entry.responseHeaders.isEmpty() && entry.responseBody == null) {
-                        Text(
+                        body != null -> Text(
+                            "Empty body",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        entry.responseHeaders.isEmpty() -> Text(
                             "No Response Data",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -232,7 +236,7 @@ private fun BodySection(
                     fontFamily = FontFamily.Monospace,
                     fontSize = 11.sp,
                     lineHeight = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
         }

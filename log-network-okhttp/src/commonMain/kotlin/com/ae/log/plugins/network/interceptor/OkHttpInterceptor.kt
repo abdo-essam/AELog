@@ -1,5 +1,3 @@
-@file:Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
-
 package com.ae.log.plugins.network.interceptor
 
 import com.ae.log.AELog

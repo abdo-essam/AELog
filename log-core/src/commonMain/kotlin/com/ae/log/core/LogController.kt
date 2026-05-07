@@ -5,6 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * Controls the visibility of the AELog UI overlay.
@@ -24,7 +25,7 @@ public class LogController {
     }
 
     public fun toggle() {
-        _isVisible.value = !_isVisible.value
+        _isVisible.update { !it }
     }
 }
 

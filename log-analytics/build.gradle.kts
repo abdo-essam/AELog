@@ -15,7 +15,7 @@ version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 
 kotlin {
     jvmToolchain(21)
-    explicitApiWarning()
+    explicitApi()
 
     androidLibrary {
         namespace = "com.ae.log.analytics"

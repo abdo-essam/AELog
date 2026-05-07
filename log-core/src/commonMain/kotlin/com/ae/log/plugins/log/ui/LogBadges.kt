@@ -11,65 +11,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.ae.log.plugins.log.model.LogEntry
+import com.ae.log.plugins.log.model.LogSeverity
 
+/** Severity-coloured badge (V / D / I / W / E / A). */
 @Composable
-internal fun LogTypeBadge(
-    log: LogEntry,
-    registry: com.ae.log.plugins.log.model.LogTagRegistry? = null,
-) {
-    val (color, _) = LogUtils.getLogTypeColor(log)
-    val label = LogUtils.getBadgeLabel(log, registry)
-
+internal fun SeverityBadge(severity: LogSeverity) {
+    val (bg, fg) = severityColors(severity)
     Box(
-        modifier =
-            Modifier
-                .clip(RoundedCornerShape(6.dp))
-                .background(color)
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+        modifier = Modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(bg)
+            .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Text(
-            text = label,
+            text = severity.label,
             style = MaterialTheme.typography.labelSmall,
-            color = Color.White,
+            color = fg,
         )
     }
 }
 
-@Composable
-internal fun HttpMethodBadge(method: String) {
-    val color = LogUtils.getMethodColor(method)
-
-    Box(
-        modifier =
-            Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(color)
-                .padding(horizontal = 6.dp, vertical = 2.dp),
-    ) {
-        Text(
-            text = method,
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.White,
-        )
-    }
-}
-
-@Composable
-internal fun HttpStatusBadge(statusCode: Int) {
-    val color = LogUtils.getStatusCodeColor(statusCode)
-
-    Box(
-        modifier =
-            Modifier
-                .clip(RoundedCornerShape(4.dp))
-                .background(color.copy(alpha = 0.15f))
-                .padding(horizontal = 6.dp, vertical = 2.dp),
-    ) {
-        Text(
-            text = statusCode.toString(),
-            style = MaterialTheme.typography.labelSmall,
-            color = color,
-        )
-    }
+private fun severityColors(severity: LogSeverity): Pair<Color, Color> = when (severity) {
+    LogSeverity.VERBOSE  -> Color(0xFFBDBDBD) to Color.White
+    LogSeverity.DEBUG    -> Color(0xFF64B5F6) to Color.White
+    LogSeverity.INFO     -> Color(0xFF4CAF50) to Color.White
+    LogSeverity.WARN     -> Color(0xFFFFA726) to Color.White
+    LogSeverity.ERROR    -> Color(0xFFEF5350) to Color.White
+    LogSeverity.ASSERT   -> Color(0xFF7B1FA2) to Color.White
 }

@@ -14,13 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.ae.log.plugins.log.model.*
 import com.ae.log.plugins.log.model.LogEntry
-import com.ae.log.plugins.log.utils.getAnalyticsPreview
-import com.ae.log.plugins.log.utils.getCleanMessagePreview
 import com.ae.log.ui.components.ExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
 
@@ -28,50 +24,43 @@ import com.ae.log.ui.theme.LogSpacing
 internal fun LogEntryItem(
     log: LogEntry,
     isExpanded: Boolean,
-    registry: com.ae.log.plugins.log.model.LogTagRegistry,
     onToggleExpand: (String) -> Unit,
     onCopy: (LogEntry) -> Unit,
 ) {
-    val (_, bgColor) = LogUtils.getLogTypeColor(log)
-
     Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClickLabel = if (isExpanded) "Collapse log entry" else "Expand log entry",
-                ) { onToggleExpand(log.id) }
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClickLabel = if (isExpanded) "Collapse log entry" else "Expand log entry",
+            ) { onToggleExpand(log.id) }
+            .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
     ) {
-        LogEntryHeader(log = log, isExpanded = isExpanded, registry = registry)
+        LogEntryHeader(log = log, isExpanded = isExpanded)
 
         AnimatedVisibility(
             visible = isExpanded,
             enter = expandVertically(),
             exit = shrinkVertically(),
         ) {
-            LogEntryExpandedContent(
-                log = log,
-                bgColor = bgColor,
+            ExpandedDetails(
+                bgColor = MaterialTheme.colorScheme.surfaceVariant,
                 onCopy = { onCopy(log) },
-            )
+            ) {
+                LogDetailsContent(log = log)
+            }
         }
     }
 }
 
 @Composable
-private fun LogEntryHeader(
-    log: LogEntry,
-    isExpanded: Boolean,
-    registry: com.ae.log.plugins.log.model.LogTagRegistry,
-) {
+private fun LogEntryHeader(log: LogEntry, isExpanded: Boolean) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        LogTypeBadge(log = log, registry = registry)
+        SeverityBadge(severity = log.severity)
 
         Spacer(modifier = Modifier.width(LogSpacing.x3))
 
@@ -82,7 +71,7 @@ private fun LogEntryHeader(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = log.endpoint ?: log.tag,
+                    text = log.tag,
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -90,7 +79,6 @@ private fun LogEntryHeader(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                 )
-
                 Text(
                     text = LogUtils.formatTimestamp(log.timestamp),
                     style = MaterialTheme.typography.labelSmall,
@@ -100,7 +88,15 @@ private fun LogEntryHeader(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            LogEntryPreview(log = log)
+            // Show first line of message as preview
+            val preview = remember(log.id) { log.message.lines().firstOrNull()?.trim() ?: "" }
+            Text(
+                text = preview,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
 
         Spacer(modifier = Modifier.width(LogSpacing.x2))
@@ -111,92 +107,5 @@ private fun LogEntryHeader(
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-    }
-}
-
-@Composable
-private fun LogEntryPreview(log: LogEntry) {
-    val isAnalytics = remember(log.id) { log.isAnalytics }
-    val isNetworkLog = remember(log.id) { log.isNetworkLog }
-
-    if (isAnalytics) {
-        val titleAndSubtitle = remember(log.id) { log.getAnalyticsPreview() }
-        val title = titleAndSubtitle.title
-        val subtitle = titleAndSubtitle.subtitle
-
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (subtitle != null) {
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
-    } else if (isNetworkLog) {
-        val method = remember(log.id) { log.httpMethod }
-        val status = remember(log.id) { log.httpStatusCode }
-        val isRequest = remember(log.id) { log.isRequest }
-        val isResponse = remember(log.id) { log.isResponse }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(LogSpacing.x2),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            method?.let { m ->
-                HttpMethodBadge(method = m)
-            }
-
-            status?.let { s ->
-                HttpStatusBadge(statusCode = s)
-            }
-
-            Text(
-                text =
-                    if (isRequest) {
-                        "→"
-                    } else if (isResponse) {
-                        "←"
-                    } else {
-                        ""
-                    },
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
-                color = if (isRequest) Color(0xFF2196F3) else Color(0xFF4CAF50),
-            )
-        }
-    } else {
-        val cleanMessage = remember(log.id) { log.getCleanMessagePreview() }
-        Text(
-            text = cleanMessage,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-    }
-}
-
-@Composable
-private fun LogEntryExpandedContent(
-    log: LogEntry,
-    bgColor: Color,
-    onCopy: () -> Unit,
-) {
-    ExpandedDetails(
-        bgColor = bgColor,
-        onCopy = onCopy,
-    ) {
-        LogDetailsContent(log = log)
     }
 }

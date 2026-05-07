@@ -18,7 +18,7 @@ version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 
 kotlin {
     jvmToolchain(21)
-    explicitApiWarning()
+    explicitApi()
 
     androidLibrary {
         namespace = "com.ae.log"
@@ -42,12 +42,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // Re-export all modules — consumers only need this one dependency
-
             implementation(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.atomicfu)
             implementation(libs.components.resources)
-
             implementation(libs.runtime)
             implementation(libs.foundation)
             implementation(libs.material3)
@@ -55,6 +52,11 @@ kotlin {
             implementation(libs.material.icons.extended)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         androidMain.dependencies {

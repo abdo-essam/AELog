@@ -71,7 +71,6 @@ internal fun LogContent(
         LogEntryItem(
             log = log,
             isExpanded = expandedLogId == log.id,
-            registry = viewModel.registry,
             onToggleExpand = onToggleExpand,
             onCopy = onCopyLog,
         )

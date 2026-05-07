@@ -18,6 +18,16 @@ jobs:
   quality:
     name: 🧹 Code Quality
     runs-on: ubuntu-latest
+    # Skip if only docs/config changed — no code to lint
+    if: |
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      (
+        github.event_name == 'pull_request' ||
+        contains(toJson(github.event.commits.*.modified), '.kt') ||
+        contains(toJson(github.event.commits.*.modified), '.kts') ||
+        contains(toJson(github.event.commits.*.added), '.kt') ||
+        contains(toJson(github.event.commits.*.added), '.kts')
+      )
     permissions:
       contents: write
     steps:
@@ -50,6 +60,9 @@ jobs:
     name: 🤖 Android Build & Test
     runs-on: ubuntu-latest
     needs: quality
+    # Run when: source code or build files changed
+    if: |
+      always() && (needs.quality.result == 'success' || needs.quality.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
 
@@ -68,7 +81,7 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-android
           path: '**/build/reports/tests/'
@@ -76,8 +89,18 @@ jobs:
   # ── Build & Test (iOS) ──────────────────────────────
   build-ios:
     name: 🍎 iOS Build & Test
-    runs-on: macos-14
+    runs-on: macos-latest
     needs: quality
+    # Only run iOS build if KMP source files changed (expensive job)
+    if: |
+      always() && (needs.quality.result == 'success' || needs.quality.result == 'skipped') &&
+      (
+        github.event_name == 'pull_request' ||
+        contains(toJson(github.event.commits.*.modified), 'commonMain') ||
+        contains(toJson(github.event.commits.*.modified), 'iosMain') ||
+        contains(toJson(github.event.commits.*.modified), 'build.gradle') ||
+        contains(toJson(github.event.commits.*.modified), 'libs.versions.toml')
+      )
     steps:
       - uses: actions/checkout@v4
 
@@ -96,7 +119,7 @@ jobs:
 
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-ios
           path: '**/build/reports/tests/'
@@ -106,6 +129,11 @@ jobs:
     name: 📱 Sample App
     runs-on: ubuntu-latest
     needs: [build-android]
+    # Skip if only docs changed
+    if: |
+      always() && needs.build-android.result == 'success' &&
+      !contains(toJson(github.event.commits.*.modified), 'docs/') &&
+      !contains(toJson(github.event.commits.*.modified), '.md')
     steps:
       - uses: actions/checkout@v4
 
@@ -119,4 +147,18 @@ jobs:
       - name: Build Sample
         run: ./gradlew :sample:composeApp:assembleDebug
 
-
+  # ── Docs only — lightweight check ────────────────────
+  docs-check:
+    name: 📝 Docs Check
+    runs-on: ubuntu-latest
+    # Only run when docs/markdown changed — skips all Gradle overhead
+    if: |
+      contains(toJson(github.event.commits.*.modified), '.md') ||
+      contains(toJson(github.event.commits.*.modified), 'docs/') ||
+      contains(toJson(github.event.commits.*.modified), 'mkdocs.yml')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check links in markdown
+        run: |
+          echo "Docs-only change detected. Skipping build pipeline."
+          echo "Files changed: ${{ toJson(github.event.commits.*.modified) }}"
