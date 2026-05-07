@@ -4,10 +4,13 @@ public final class com/ae/log/AELog {
 	public static final fun clearAll ()V
 	public static final fun export ()Ljava/lang/String;
 	public final fun getInstance ()Lcom/ae/log/LogInspector;
+	public final fun getInstanceAtomic ()Lkotlinx/atomicfu/AtomicRef;
 	public final fun getLog ()Lcom/ae/log/LogProxy;
 	public static final fun init ([Lcom/ae/log/core/Plugin;Lcom/ae/log/LogConfig;)V
 	public static synthetic fun init$default ([Lcom/ae/log/core/Plugin;Lcom/ae/log/LogConfig;ILjava/lang/Object;)V
+	public static final fun isEnabled ()Z
 	public final fun record (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun setEnabled (Z)V
 }
 
 public final class com/ae/log/Lifecycle {
@@ -22,16 +25,18 @@ public final class com/ae/log/Lifecycle {
 public final class com/ae/log/LogConfig {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/log/PlatformLogSink;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/log/PlatformLogSink;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lcom/ae/log/plugins/log/model/LogSeverity;
-	public final fun component2 ()Lkotlinx/coroutines/CoroutineDispatcher;
-	public final fun component3 ()Lcom/ae/log/PlatformLogSink;
-	public final fun component4 ()Lkotlin/jvm/functions/Function1;
-	public final fun copy (Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/log/PlatformLogSink;Lkotlin/jvm/functions/Function1;)Lcom/ae/log/LogConfig;
-	public static synthetic fun copy$default (Lcom/ae/log/LogConfig;Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lcom/ae/log/PlatformLogSink;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/ae/log/LogConfig;
+	public fun <init> (ZLcom/ae/log/PlatformLogSink;Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (ZLcom/ae/log/PlatformLogSink;Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Lcom/ae/log/PlatformLogSink;
+	public final fun component3 ()Lcom/ae/log/plugins/log/model/LogSeverity;
+	public final fun component4 ()Lkotlinx/coroutines/CoroutineDispatcher;
+	public final fun component5 ()Lkotlin/jvm/functions/Function1;
+	public final fun copy (ZLcom/ae/log/PlatformLogSink;Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;)Lcom/ae/log/LogConfig;
+	public static synthetic fun copy$default (Lcom/ae/log/LogConfig;ZLcom/ae/log/PlatformLogSink;Lcom/ae/log/plugins/log/model/LogSeverity;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/ae/log/LogConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
+	public final fun getEnabled ()Z
 	public final fun getErrorHandler ()Lkotlin/jvm/functions/Function1;
 	public final fun getMinSeverity ()Lcom/ae/log/plugins/log/model/LogSeverity;
 	public final fun getPlatformLogSink ()Lcom/ae/log/PlatformLogSink;
@@ -60,8 +65,6 @@ public final class com/ae/log/LogProxy {
 	public static final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun entry (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun entry$default (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public static final fun i (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
@@ -114,25 +117,24 @@ public final class com/ae/log/PresentationMode : java/lang/Enum {
 
 public final class com/ae/log/UiConfig {
 	public static final field $stable I
-	public synthetic fun <init> (ZLandroidx/compose/ui/Alignment;FZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (ZLandroidx/compose/ui/Alignment;FZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> ()V
+	public fun <init> (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;)V
+	public synthetic fun <init> (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()Landroidx/compose/ui/Alignment;
-	public final fun component3-D9Ej5fM ()F
-	public final fun component4 ()Z
-	public final fun component5 ()Landroidx/compose/material3/ColorScheme;
-	public final fun component6 ()Lcom/ae/log/PresentationMode;
-	public final fun component7 ()F
-	public final fun component8 ()Lkotlin/Pair;
-	public final fun copy-TN_CM5M (ZLandroidx/compose/ui/Alignment;FZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;)Lcom/ae/log/UiConfig;
-	public static synthetic fun copy-TN_CM5M$default (Lcom/ae/log/UiConfig;ZLandroidx/compose/ui/Alignment;FZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;ILjava/lang/Object;)Lcom/ae/log/UiConfig;
+	public final fun component3 ()Z
+	public final fun component4 ()Landroidx/compose/material3/ColorScheme;
+	public final fun component5 ()Lcom/ae/log/PresentationMode;
+	public final fun component6 ()F
+	public final fun component7 ()Lkotlin/Pair;
+	public final fun copy (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;)Lcom/ae/log/UiConfig;
+	public static synthetic fun copy$default (Lcom/ae/log/UiConfig;ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;ILjava/lang/Object;)Lcom/ae/log/UiConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBottomSheetHeightFraction ()F
 	public final fun getColorScheme ()Landroidx/compose/material3/ColorScheme;
 	public final fun getDialogSizeFraction ()Lkotlin/Pair;
 	public final fun getEnableLongPress ()Z
 	public final fun getFloatingButtonAlignment ()Landroidx/compose/ui/Alignment;
-	public final fun getFloatingButtonOffset-D9Ej5fM ()F
 	public final fun getPresentationMode ()Lcom/ae/log/PresentationMode;
 	public final fun getShowFloatingButton ()Z
 	public fun hashCode ()I
@@ -164,6 +166,21 @@ public final class com/ae/log/core/LogController {
 
 public final class com/ae/log/core/LogControllerKt {
 	public static final fun getLocalLogController ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public abstract interface class com/ae/log/core/LogRecordSink : com/ae/log/core/Plugin {
+	public abstract fun record (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public final class com/ae/log/core/LogRecordSink$DefaultImpls {
+	public static fun export (Lcom/ae/log/core/LogRecordSink;)Ljava/lang/String;
+	public static fun onAttach (Lcom/ae/log/core/LogRecordSink;Lcom/ae/log/core/PluginContext;)V
+	public static fun onClear (Lcom/ae/log/core/LogRecordSink;)V
+	public static fun onClose (Lcom/ae/log/core/LogRecordSink;)V
+	public static fun onDetach (Lcom/ae/log/core/LogRecordSink;)V
+	public static fun onOpen (Lcom/ae/log/core/LogRecordSink;)V
+	public static fun onStart (Lcom/ae/log/core/LogRecordSink;)V
+	public static fun onStop (Lcom/ae/log/core/LogRecordSink;)V
 }
 
 public abstract interface class com/ae/log/core/Plugin {
@@ -305,7 +322,7 @@ public final class com/ae/log/core/utils/TimeUtils {
 	public final fun formatTimestamp (J)Ljava/lang/String;
 }
 
-public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin {
+public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/LogRecordSink, com/ae/log/core/UIPlugin {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/plugins/log/LogPlugin$Companion;
 	public static final field ID Ljava/lang/String;
@@ -328,6 +345,7 @@ public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin {
 	public fun onOpen ()V
 	public fun onStart ()V
 	public fun onStop ()V
+	public fun record (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 }
 
 public final class com/ae/log/plugins/log/LogPlugin$Companion {
@@ -351,74 +369,25 @@ public final class com/ae/log/plugins/log/LogRecorder {
 	public static synthetic fun wtf$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
-public final class com/ae/log/plugins/log/model/HttpFields {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Z)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/Integer;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Z
-	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Z)Lcom/ae/log/plugins/log/model/HttpFields;
-	public static synthetic fun copy$default (Lcom/ae/log/plugins/log/model/HttpFields;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;ZILjava/lang/Object;)Lcom/ae/log/plugins/log/model/HttpFields;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getMethod ()Ljava/lang/String;
-	public final fun getStatusCode ()Ljava/lang/Integer;
-	public final fun getUrl ()Ljava/lang/String;
-	public fun hashCode ()I
-	public final fun isResponse ()Z
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/ae/log/plugins/log/model/LogClassifierKt {
-	public static final fun classify (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogTagRegistry;)Lkotlin/Triple;
-	public static final fun getBodyOnly (Lcom/ae/log/plugins/log/model/LogEntry;)Ljava/lang/String;
-	public static final fun getDisplayTag (Lcom/ae/log/plugins/log/model/LogEntry;)Ljava/lang/String;
-	public static final fun getEndpoint (Lcom/ae/log/plugins/log/model/LogEntry;)Ljava/lang/String;
-	public static final fun getHttpMethod (Lcom/ae/log/plugins/log/model/LogEntry;)Ljava/lang/String;
-	public static final fun getHttpStatusCode (Lcom/ae/log/plugins/log/model/LogEntry;)Ljava/lang/Integer;
-	public static final fun getJsonBody (Lcom/ae/log/plugins/log/model/LogEntry;)Ljava/lang/String;
-	public static final fun getUrl (Lcom/ae/log/plugins/log/model/LogEntry;)Ljava/lang/String;
-	public static final fun isAnalytics (Lcom/ae/log/plugins/log/model/LogEntry;)Z
-	public static final fun isError (Lcom/ae/log/plugins/log/model/LogEntry;)Z
-	public static final fun isNetworkLog (Lcom/ae/log/plugins/log/model/LogEntry;)Z
-	public static final fun isRequest (Lcom/ae/log/plugins/log/model/LogEntry;)Z
-	public static final fun isResponse (Lcom/ae/log/plugins/log/model/LogEntry;)Z
-}
-
 public final class com/ae/log/plugins/log/model/LogEntry {
 	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JLcom/ae/log/plugins/log/model/LogKind;Lcom/ae/log/plugins/log/model/HttpFields;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JLcom/ae/log/plugins/log/model/LogKind;Lcom/ae/log/plugins/log/model/HttpFields;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lcom/ae/log/plugins/log/model/LogSeverity;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()J
-	public final fun component6 ()Lcom/ae/log/plugins/log/model/LogKind;
-	public final fun component7 ()Lcom/ae/log/plugins/log/model/HttpFields;
-	public final fun component8 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JLcom/ae/log/plugins/log/model/LogKind;Lcom/ae/log/plugins/log/model/HttpFields;Ljava/lang/String;)Lcom/ae/log/plugins/log/model/LogEntry;
-	public static synthetic fun copy$default (Lcom/ae/log/plugins/log/model/LogEntry;Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JLcom/ae/log/plugins/log/model/LogKind;Lcom/ae/log/plugins/log/model/HttpFields;Ljava/lang/String;ILjava/lang/Object;)Lcom/ae/log/plugins/log/model/LogEntry;
+	public final fun copy (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;J)Lcom/ae/log/plugins/log/model/LogEntry;
+	public static synthetic fun copy$default (Lcom/ae/log/plugins/log/model/LogEntry;Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/ae/log/plugins/log/model/LogEntry;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAnalyticsLabel ()Ljava/lang/String;
-	public final fun getHttpFields ()Lcom/ae/log/plugins/log/model/HttpFields;
 	public final fun getId ()Ljava/lang/String;
-	public final fun getKind ()Lcom/ae/log/plugins/log/model/LogKind;
 	public final fun getMessage ()Ljava/lang/String;
 	public final fun getSeverity ()Lcom/ae/log/plugins/log/model/LogSeverity;
 	public final fun getTag ()Ljava/lang/String;
 	public final fun getTimestamp ()J
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/ae/log/plugins/log/model/LogKind : java/lang/Enum {
-	public static final field ANALYTICS Lcom/ae/log/plugins/log/model/LogKind;
-	public static final field LOG Lcom/ae/log/plugins/log/model/LogKind;
-	public static final field NETWORK Lcom/ae/log/plugins/log/model/LogKind;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/plugins/log/model/LogKind;
-	public static fun values ()[Lcom/ae/log/plugins/log/model/LogKind;
 }
 
 public final class com/ae/log/plugins/log/model/LogSeverity : java/lang/Enum {
@@ -451,14 +420,6 @@ public final class com/ae/log/plugins/log/model/LogSeverityFilters {
 	public final fun getINFO ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
 	public final fun getVERBOSE ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
 	public final fun getWARN ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
-}
-
-public final class com/ae/log/plugins/log/model/LogTagRegistry {
-	public static final field $stable I
-	public fun <init> ()V
-	public final fun getLabel (Ljava/lang/String;)Ljava/lang/String;
-	public final fun isRegistered (Ljava/lang/String;)Z
-	public final fun register (Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$ListPanelKt {

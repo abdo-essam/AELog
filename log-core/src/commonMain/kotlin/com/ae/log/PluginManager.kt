@@ -46,8 +46,7 @@ public class PluginManager internal constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    public fun <T : Plugin> getPlugin(type: KClass<T>): T? =
-        _plugins.value.firstOrNull { type.isInstance(it) } as? T
+    public fun <T : Plugin> getPlugin(type: KClass<T>): T? = _plugins.value.firstOrNull { type.isInstance(it) } as? T
 
     public fun getPluginById(id: String): Plugin? = _plugins.value.find { it.id == id }
 
@@ -58,6 +57,7 @@ public class PluginManager internal constructor(
             override val scope = scope
             override val config = this@PluginManager.config
             override val eventBus = this@PluginManager.eventBus
+
             @Suppress("UNCHECKED_CAST")
             override fun <T : Plugin> getPlugin(type: KClass<T>): T? = this@PluginManager.getPlugin(type)
         }

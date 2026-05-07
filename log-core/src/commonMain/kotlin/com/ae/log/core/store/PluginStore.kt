@@ -6,15 +6,31 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-public class PluginStore<T>(capacity: Int) : SynchronizedObject() {
+public class PluginStore<T>(
+    capacity: Int,
+) : SynchronizedObject() {
     private val ring = RingBuffer<T>(capacity)
     private val _dataFlow = MutableStateFlow<List<T>>(emptyList())
     public val dataFlow: StateFlow<List<T>> = _dataFlow.asStateFlow()
 
-    public fun add(item: T) { synchronized(this) { ring.add(item); _dataFlow.value = ring.toList() } }
-    public fun clear() { synchronized(this) { ring.clear(); _dataFlow.value = emptyList() } }
+    public fun add(item: T) {
+        synchronized(this) {
+            ring.add(item)
+            _dataFlow.value = ring.toList()
+        }
+    }
 
-    public fun replace(index: Int, item: T) {
+    public fun clear() {
+        synchronized(this) {
+            ring.clear()
+            _dataFlow.value = emptyList()
+        }
+    }
+
+    public fun replace(
+        index: Int,
+        item: T,
+    ) {
         synchronized(this) {
             if (index !in 0 until ring.count) return
             ring.replace(index, item)
@@ -22,7 +38,10 @@ public class PluginStore<T>(capacity: Int) : SynchronizedObject() {
         }
     }
 
-    public fun updateFirst(predicate: (T) -> Boolean, transform: (T) -> T) {
+    public fun updateFirst(
+        predicate: (T) -> Boolean,
+        transform: (T) -> T,
+    ) {
         synchronized(this) {
             val index = _dataFlow.value.indexOfFirst(predicate)
             if (index == -1) return
@@ -31,7 +50,10 @@ public class PluginStore<T>(capacity: Int) : SynchronizedObject() {
         }
     }
 
-    public fun addOrReplace(predicate: (T) -> Boolean, item: T) {
+    public fun addOrReplace(
+        predicate: (T) -> Boolean,
+        item: T,
+    ) {
         synchronized(this) {
             val index = _dataFlow.value.indexOfFirst(predicate)
             if (index == -1) ring.add(item) else ring.replace(index, item)

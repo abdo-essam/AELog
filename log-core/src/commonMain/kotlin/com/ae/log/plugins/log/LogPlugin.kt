@@ -45,7 +45,8 @@ public typealias LogStore = PluginStore<LogEntry>
  */
 public class LogPlugin(
     maxEntries: Int = 500,
-) : UIPlugin, LogRecordSink {
+) : UIPlugin,
+    LogRecordSink {
     override val id: String = ID
     override val name: String = "Logs"
     override val icon: ImageVector = Icons.Default.Description
@@ -71,7 +72,12 @@ public class LogPlugin(
     }
 
     /** Routes [AELog.record] calls to this plugin's recorder via the [LogRecordSink] interface. */
-    override fun record(severity: LogSeverity, tag: String, msg: String, throwable: Throwable?) {
+    override fun record(
+        severity: LogSeverity,
+        tag: String,
+        msg: String,
+        throwable: Throwable?,
+    ) {
         recorder.log(severity, tag, msg, throwable)
     }
 

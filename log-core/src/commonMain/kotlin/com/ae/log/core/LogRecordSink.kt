@@ -7,5 +7,10 @@ import com.ae.log.plugins.log.model.LogSeverity
  * Breaks the direct [com.ae.log.AELog] → [com.ae.log.plugins.log.LogPlugin] coupling.
  */
 public interface LogRecordSink : Plugin {
-    public fun record(severity: LogSeverity, tag: String, msg: String, throwable: Throwable?)
+    public fun record(
+        severity: LogSeverity,
+        tag: String,
+        msg: String,
+        throwable: Throwable?,
+    )
 }

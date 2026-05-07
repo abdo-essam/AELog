@@ -76,9 +76,10 @@ internal fun AnalyticsEventDetails(
             Spacer(Modifier.height(4.dp))
             event.properties.entries.forEach { (k, v) ->
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 2.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Text(

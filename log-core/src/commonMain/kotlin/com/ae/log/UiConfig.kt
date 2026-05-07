@@ -1,10 +1,7 @@
 package com.ae.log
 
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
 
 /**
  * UI-specific configuration for the AELog overlay.
@@ -44,8 +41,10 @@ public data class UiConfig(
 public enum class PresentationMode {
     /** Bottom sheet on compact screens, dialog on large screens (default). */
     Adaptive,
+
     /** Always use a bottom sheet. */
     BottomSheet,
+
     /** Always use a centered dialog. */
     Dialog,
 }

@@ -28,14 +28,15 @@ internal fun LogEntryItem(
     onCopy: (LogEntry) -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClickLabel = if (isExpanded) "Collapse log entry" else "Expand log entry",
-            ) { onToggleExpand(log.id) }
-            .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClickLabel = if (isExpanded) "Collapse log entry" else "Expand log entry",
+                ) { onToggleExpand(log.id) }
+                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
     ) {
         LogEntryHeader(log = log, isExpanded = isExpanded)
 
@@ -55,7 +56,10 @@ internal fun LogEntryItem(
 }
 
 @Composable
-private fun LogEntryHeader(log: LogEntry, isExpanded: Boolean) {
+private fun LogEntryHeader(
+    log: LogEntry,
+    isExpanded: Boolean,
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -89,7 +93,13 @@ private fun LogEntryHeader(log: LogEntry, isExpanded: Boolean) {
             Spacer(modifier = Modifier.height(4.dp))
 
             // Show first line of message as preview
-            val preview = remember(log.id) { log.message.lines().firstOrNull()?.trim() ?: "" }
+            val preview =
+                remember(log.id) {
+                    log.message
+                        .lines()
+                        .firstOrNull()
+                        ?.trim() ?: ""
+                }
             Text(
                 text = preview,
                 style = MaterialTheme.typography.labelSmall,

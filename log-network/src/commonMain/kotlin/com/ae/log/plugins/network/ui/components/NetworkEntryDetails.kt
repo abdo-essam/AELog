@@ -117,21 +117,24 @@ internal fun NetworkEntryDetails(
                     }
                     val body = entry.responseBody
                     when {
-                        body != null && body.isNotBlank() -> BodySection(
-                            label = "Body",
-                            body = body.prettyPrintJson(),
-                            onCopy = { clipboard.setText(AnnotatedString(body)) },
-                        )
-                        body != null -> Text(
-                            "Empty body",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                        entry.responseHeaders.isEmpty() -> Text(
-                            "No Response Data",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        body != null && body.isNotBlank() ->
+                            BodySection(
+                                label = "Body",
+                                body = body.prettyPrintJson(),
+                                onCopy = { clipboard.setText(AnnotatedString(body)) },
+                            )
+                        body != null ->
+                            Text(
+                                "Empty body",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        entry.responseHeaders.isEmpty() ->
+                            Text(
+                                "No Response Data",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
                     }
                 }
             }

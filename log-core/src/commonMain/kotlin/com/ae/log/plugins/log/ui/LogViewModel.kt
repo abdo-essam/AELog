@@ -24,7 +24,8 @@ internal class LogViewModel(
 
     val filteredLogs: StateFlow<List<LogEntry>> =
         combine(logStore.dataFlow, _searchQuery, _selectedFilter) { logs, query, filter ->
-            logs.reversed()
+            logs
+                .reversed()
                 .filter { entry -> filter.matches(entry) }
                 .filter { entry ->
                     query.isBlank() ||
@@ -33,8 +34,13 @@ internal class LogViewModel(
                 }
         }.stateIn(scope = scope, started = SharingStarted.WhileSubscribed(5000), initialValue = emptyList())
 
-    fun updateSearchQuery(query: String) { _searchQuery.value = query }
-    fun updateSelectedFilter(filter: LogSeverityFilter) { _selectedFilter.value = filter }
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+    }
+
+    fun updateSelectedFilter(filter: LogSeverityFilter) {
+        _selectedFilter.value = filter
+    }
 
     fun clearLogs() {
         logStore.clear()

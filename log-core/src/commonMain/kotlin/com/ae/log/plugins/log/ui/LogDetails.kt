@@ -24,11 +24,12 @@ internal fun LogDetailsContent(log: LogEntry) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(LogSpacing.x2))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .padding(LogSpacing.x2),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(LogSpacing.x2))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .padding(LogSpacing.x2),
                 ) {
                     Text(
                         text = log.message,

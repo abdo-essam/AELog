@@ -87,10 +87,11 @@ public fun LogProvider(
                 if (uiConfig.showFloatingButton) {
                     LogFloatingButton(
                         onClick = { controller.show() },
-                        modifier = Modifier
-                            .align(uiConfig.floatingButtonAlignment)
-                            .navigationBarsPadding()
-                            .padding(end = LogSpacing.x5, bottom = LogSpacing.x5),
+                        modifier =
+                            Modifier
+                                .align(uiConfig.floatingButtonAlignment)
+                                .navigationBarsPadding()
+                                .padding(end = LogSpacing.x5, bottom = LogSpacing.x5),
                     )
                 }
 

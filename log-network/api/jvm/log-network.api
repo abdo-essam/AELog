@@ -49,6 +49,7 @@ public final class com/ae/log/plugins/network/NetworkRecorder {
 	public final fun newId ()Ljava/lang/String;
 	public final fun startRequest (Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/util/Map;Ljava/lang/String;)V
 	public static synthetic fun startRequest$default (Lcom/ae/log/plugins/network/NetworkRecorder;Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun updateResponseBody (Ljava/lang/String;Ljava/lang/String;)V
 }
 
 public final class com/ae/log/plugins/network/model/NetworkEntry {

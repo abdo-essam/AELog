@@ -45,10 +45,39 @@ public class LogRecorder internal constructor(
         )
     }
 
-    public fun v(tag: String, message: String, throwable: Throwable? = null): Unit = log(LogSeverity.VERBOSE, tag, message, throwable)
-    public fun d(tag: String, message: String, throwable: Throwable? = null): Unit = log(LogSeverity.DEBUG, tag, message, throwable)
-    public fun i(tag: String, message: String, throwable: Throwable? = null): Unit = log(LogSeverity.INFO, tag, message, throwable)
-    public fun w(tag: String, message: String, throwable: Throwable? = null): Unit = log(LogSeverity.WARN, tag, message, throwable)
-    public fun e(tag: String, message: String, throwable: Throwable? = null): Unit = log(LogSeverity.ERROR, tag, message, throwable)
-    public fun wtf(tag: String, message: String, throwable: Throwable? = null): Unit = log(LogSeverity.ASSERT, tag, message, throwable)
+    public fun v(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.VERBOSE, tag, message, throwable)
+
+    public fun d(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.DEBUG, tag, message, throwable)
+
+    public fun i(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.INFO, tag, message, throwable)
+
+    public fun w(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.WARN, tag, message, throwable)
+
+    public fun e(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.ERROR, tag, message, throwable)
+
+    public fun wtf(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.ASSERT, tag, message, throwable)
 }

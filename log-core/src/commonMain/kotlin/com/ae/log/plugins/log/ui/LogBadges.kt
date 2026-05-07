@@ -18,10 +18,11 @@ import com.ae.log.plugins.log.model.LogSeverity
 internal fun SeverityBadge(severity: LogSeverity) {
     val (bg, fg) = severityColors(severity)
     Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(bg)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(6.dp))
+                .background(bg)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
     ) {
         Text(
             text = severity.label,
@@ -31,11 +32,12 @@ internal fun SeverityBadge(severity: LogSeverity) {
     }
 }
 
-private fun severityColors(severity: LogSeverity): Pair<Color, Color> = when (severity) {
-    LogSeverity.VERBOSE  -> Color(0xFFBDBDBD) to Color.White
-    LogSeverity.DEBUG    -> Color(0xFF64B5F6) to Color.White
-    LogSeverity.INFO     -> Color(0xFF4CAF50) to Color.White
-    LogSeverity.WARN     -> Color(0xFFFFA726) to Color.White
-    LogSeverity.ERROR    -> Color(0xFFEF5350) to Color.White
-    LogSeverity.ASSERT   -> Color(0xFF7B1FA2) to Color.White
-}
+private fun severityColors(severity: LogSeverity): Pair<Color, Color> =
+    when (severity) {
+        LogSeverity.VERBOSE -> Color(0xFFBDBDBD) to Color.White
+        LogSeverity.DEBUG -> Color(0xFF64B5F6) to Color.White
+        LogSeverity.INFO -> Color(0xFF4CAF50) to Color.White
+        LogSeverity.WARN -> Color(0xFFFFA726) to Color.White
+        LogSeverity.ERROR -> Color(0xFFEF5350) to Color.White
+        LogSeverity.ASSERT -> Color(0xFF7B1FA2) to Color.White
+    }

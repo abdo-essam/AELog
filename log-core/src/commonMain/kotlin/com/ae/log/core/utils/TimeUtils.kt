@@ -10,6 +10,9 @@ public object TimeUtils {
         runCatching {
             val instant = Instant.fromEpochMilliseconds(timestamp)
             val dt = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-            "${dt.hour.toString().padStart(2,'0')}:${dt.minute.toString().padStart(2,'0')}:${dt.second.toString().padStart(2,'0')}"
+            "${dt.hour.toString().padStart(
+                2,
+                '0',
+            )}:${dt.minute.toString().padStart(2,'0')}:${dt.second.toString().padStart(2,'0')}"
         }.getOrDefault("")
 }

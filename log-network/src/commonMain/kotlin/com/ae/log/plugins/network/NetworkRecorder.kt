@@ -89,7 +89,10 @@ public class NetworkRecorder internal constructor(
     }
 
     /** Patch the response body after an entry has already been recorded. */
-    public fun updateResponseBody(id: String, body: String?) {
+    public fun updateResponseBody(
+        id: String,
+        body: String?,
+    ) {
         if (!AELog.isEnabled) return
         store.update(id) { it.copy(responseBody = body) }
     }
