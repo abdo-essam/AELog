@@ -1,4 +1,3 @@
-
 package com.ae.log.plugins.network.utils
 
 import com.ae.log.plugins.network.model.NetworkEntry
@@ -57,12 +56,53 @@ private fun decodeUrl(value: String): String {
     return result.toString()
 }
 
+/**
+ * Produces clipboard text that matches exactly what is displayed on screen:
+ *
+ * ```
+ * POST https://example.com/api/auth
+ * Status: 200
+ * Duration: 1219ms
+ *
+ * --- Request Body ---
+ * {
+ *   "key": "value"
+ * }
+ *
+ * --- Response Body ---
+ * {"username":"..."}
+ *
+ * --- Error ---
+ * java.net.UnknownHostException: Unable to resolve host ...
+ * ```
+ */
 internal fun NetworkEntry.toClipboardText(): String =
     buildString {
-        appendLine("${method.label} $url")
+        // ── Request line ──────────────────────────────────────────────────
+        appendLine("${rawMethod.ifBlank { method.label }} $url")
+
+        // ── Status / timing ───────────────────────────────────────────────
         statusCode?.let { appendLine("Status: $it") }
         durationMs?.let { appendLine("Duration: ${it}ms") }
-        requestBody?.let { appendLine("\n--- Request Body ---\n$it") }
-        responseBody?.let { appendLine("\n--- Response Body ---\n$it") }
-        error?.let { appendLine("\n--- Error ---\n$it") }
-    }
+
+        // ── Request Body ──────────────────────────────────────────────────
+        requestBody?.let {
+            appendLine()
+            appendLine("--- Request Body ---")
+            appendLine(it.prettyPrintJson())
+        }
+
+        // ── Response Body ─────────────────────────────────────────────────
+        responseBody?.let {
+            appendLine()
+            appendLine("--- Response Body ---")
+            appendLine(it.prettyPrintJson())
+        }
+
+        // ── Error ─────────────────────────────────────────────────────────
+        error?.let {
+            appendLine()
+            appendLine("--- Error ---")
+            appendLine(it)
+        }
+    }.trimEnd()

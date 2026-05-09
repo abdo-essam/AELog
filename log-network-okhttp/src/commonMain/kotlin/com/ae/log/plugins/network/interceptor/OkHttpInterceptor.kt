@@ -10,29 +10,61 @@ import okio.Buffer
 /**
  * OkHttp [Interceptor] that automatically records every request/response pair
  * into the [NetworkPlugin] viewer — zero boilerplate, no ID management.
+ *
+ * @param excludeHeaders Headers that will be **completely removed** from the UI.
+ *   Matching is case-insensitive. Defaults to [DEFAULT_EXCLUDED].
  */
 public class OkHttpInterceptor(
     public val maxRequestBodyBytes: Long = 250_000L,
     public val maxResponseBodyBytes: Long = 250_000L,
-    public val redactHeaders: Set<String> = DEFAULT_REDACTED,
+    public val excludeHeaders: Set<String> = DEFAULT_EXCLUDED,
 ) : Interceptor {
     public companion object {
-        public val DEFAULT_REDACTED: Set<String> =
+        /**
+         * Headers excluded from the UI by default.
+         *
+         * Includes security-sensitive headers (Authorization, Cookie, Set-Cookie)
+         * and verbose system headers that add noise without debugging value
+         * (cache-control, date, strict-transport-security, etc.).
+         *
+         * Pass an empty set to show all headers, or override with your own list.
+         */
+        public val DEFAULT_EXCLUDED: Set<String> =
             setOf(
+                // Security — never log raw tokens/cookies
                 "Authorization",
                 "Cookie",
                 "Set-Cookie",
                 "Proxy-Authorization",
                 "X-Api-Key",
+                // Auto-injected request headers — noise, set by the HTTP client
+                "Accept-Encoding",
+                "Accept-Language",
+                "Connection",
+                "Host",
+                "User-Agent",
+                // Noisy system response headers
+                "Cache-Control",
+                "Date",
+                "Expires",
+                "Pragma",
+                "Strict-Transport-Security",
+                "Transfer-Encoding",
+                "Vary",
+                "X-Content-Type-Options",
+                "X-Frame-Options",
+                "X-XSS-Protection",
             )
     }
 
-    private fun Map<String, String>.redact(): Map<String, String> {
-        if (redactHeaders.isEmpty()) return this
-        return mapValues { (key, value) ->
-            if (redactHeaders.any { it.equals(key, ignoreCase = true) }) "***" else value
+    /** Returns a new map with all [excludeHeaders] entries removed (case-insensitive). */
+    private fun Map<String, String>.exclude(): Map<String, String> {
+        if (excludeHeaders.isEmpty()) return this
+        return filter { (key, _) ->
+            excludeHeaders.none { it.equals(key, ignoreCase = true) }
         }
     }
+
 
     private fun okhttp3.Headers.toMultiMap(): Map<String, String> =
         names().associateWith { name -> values(name).joinToString(", ") }
@@ -83,7 +115,7 @@ public class OkHttpInterceptor(
             id = id,
             url = request.url.toString(),
             method = NetworkMethod.fromString(request.method),
-            headers = request.headers.toMultiMap().redact(),
+            headers = request.headers.toMultiMap().exclude(),
             body = requestBody,
         )
 
@@ -112,13 +144,14 @@ public class OkHttpInterceptor(
             recorder.logResponse(
                 id = id,
                 statusCode = response.code,
-                headers = response.headers.toMultiMap().redact(),
+                headers = response.headers.toMultiMap().exclude(),
                 body = responseBody,
                 durationMs = durationMs,
             )
             response
         } catch (t: Throwable) {
-            recorder.logError(id, t.message ?: t::class.simpleName ?: "Unknown error")
+            val message = t.message ?: t::class.simpleName ?: "Unknown error"
+            recorder.logError(id, "failed with exception: ${t::class.simpleName}: $message")
             throw t
         }
     }

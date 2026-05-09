@@ -83,7 +83,32 @@ internal fun NetworkEntryDetails(
                     DetailSection("URL", entry.url)
                     entry.statusCode?.let { DetailSection("Status", it.toString()) }
                     entry.durationMs?.let { DetailSection("Duration", "${it}ms") }
-                    entry.error?.let { DetailSection("Error", it) }
+                    entry.error?.let { error ->
+                        Spacer(Modifier.height(LogSpacing.x2))
+                        Text(
+                            text = "Error",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
+                                .padding(8.dp),
+                        ) {
+                            androidx.compose.foundation.text.selection.SelectionContainer {
+                                Text(
+                                    text = error,
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontFamily = FontFamily.Monospace,
+                                    ),
+                                    color = MaterialTheme.colorScheme.onErrorContainer,
+                                )
+                            }
+                        }
+                    }
                 }
                 1 -> {
                     // Request
@@ -102,7 +127,8 @@ internal fun NetworkEntryDetails(
                             onCopy = { clipboard.setText(AnnotatedString(it)) },
                         )
                     }
-                    if (entry.requestHeaders.isEmpty() && entry.requestBody == null) {
+                    if (entry.requestHeaders.isEmpty() && entry.requestBody == null
+                        && entry.url.extractQueryParams().isEmpty()) {
                         Text(
                             "No Request Data",
                             style = MaterialTheme.typography.bodySmall,

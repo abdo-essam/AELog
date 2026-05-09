@@ -30,6 +30,44 @@ public class AELogKtorInterceptor internal constructor() {
         private val RequestIdKey = AttributeKey<String>("AELogRequestId")
         private val StartTimeKey = AttributeKey<Long>("AELogStartTime")
 
+        /** Same default exclusion list as OkHttpInterceptor.DEFAULT_EXCLUDED. */
+        public val DEFAULT_EXCLUDED: Set<String> =
+            setOf(
+                // Security — never log raw tokens/cookies
+                "Authorization",
+                "Cookie",
+                "Set-Cookie",
+                "Proxy-Authorization",
+                "X-Api-Key",
+                // Auto-injected request headers — noise, set by the HTTP client
+                "Accept-Encoding",
+                "Accept-Language",
+                "Connection",
+                "Host",
+                "User-Agent",
+                // Noisy system response headers
+                "Cache-Control",
+                "Date",
+                "Expires",
+                "Pragma",
+                "Strict-Transport-Security",
+                "Transfer-Encoding",
+                "Vary",
+                "X-Content-Type-Options",
+                "X-Frame-Options",
+                "X-XSS-Protection",
+            )
+
+        /** The currently active exclusion set. Change before installing if needed. */
+        public var excludeHeaders: Set<String> = DEFAULT_EXCLUDED
+
+        private fun Map<String, String>.exclude(): Map<String, String> {
+            if (excludeHeaders.isEmpty()) return this
+            return filter { (key, _) ->
+                excludeHeaders.none { it.equals(key, ignoreCase = true) }
+            }
+        }
+
         override fun prepare(block: Unit.() -> Unit): AELogKtorInterceptor = AELogKtorInterceptor()
 
         override fun install(
@@ -57,9 +95,18 @@ public class AELogKtorInterceptor internal constructor() {
                     id = id,
                     url = context.url.buildString(),
                     method = NetworkMethod.fromString(context.method.value),
-                    headers = headersMap,
+                    headers = headersMap.exclude(),
                     body = (context.body as? TextContent)?.text,
                 )
+
+                // Catch send-level failures (UnknownHostException, timeout, etc.)
+                try {
+                    proceed()
+                } catch (cause: Throwable) {
+                    val message = cause.message ?: cause::class.simpleName ?: "Unknown error"
+                    recorder.logError(id, "failed with exception: ${cause::class.simpleName}: $message")
+                    throw cause // re-throw so Ktor still surfaces the error to the caller
+                }
             }
 
             // ── Phase 2a: Response metadata (status, headers, duration) ───
@@ -86,7 +133,7 @@ public class AELogKtorInterceptor internal constructor() {
                 recorder.logResponse(
                     id = id,
                     statusCode = response.status.value,
-                    headers = response.headers.entries().associate { it.key to it.value.joinToString(", ") },
+                    headers = response.headers.entries().associate { it.key to it.value.joinToString(", ") }.exclude(),
                     body = null, // body patched in Phase 2b
                     durationMs = clock.now().toEpochMilliseconds() - start,
                 )
