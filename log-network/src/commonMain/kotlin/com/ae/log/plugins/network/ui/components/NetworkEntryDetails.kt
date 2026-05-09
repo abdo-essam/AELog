@@ -1,5 +1,11 @@
 package com.ae.log.plugins.network.ui.components
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
@@ -28,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -81,31 +89,36 @@ internal fun NetworkEntryDetails(
                 0 -> {
                     // Overview
                     DetailSection("URL", entry.url)
-                    entry.statusCode?.let { DetailSection("Status", it.toString()) }
-                    entry.durationMs?.let { DetailSection("Duration", "${it}ms") }
-                    entry.error?.let { error ->
+                    if (entry.isPending) {
                         Spacer(Modifier.height(LogSpacing.x2))
-                        Text(
-                            text = "Error",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.error,
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
-                                .padding(8.dp),
-                        ) {
-                            androidx.compose.foundation.text.selection.SelectionContainer {
-                                Text(
-                                    text = error,
-                                    style = MaterialTheme.typography.bodySmall.copy(
-                                        fontFamily = FontFamily.Monospace,
-                                    ),
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
-                                )
+                        PendingWaitingIndicator()
+                    } else {
+                        entry.statusCode?.let { DetailSection("Status", it.toString()) }
+                        entry.durationMs?.let { DetailSection("Duration", "${it}ms") }
+                        entry.error?.let { error ->
+                            Spacer(Modifier.height(LogSpacing.x2))
+                            Text(
+                                text = "Error",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.error,
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
+                                    .padding(8.dp),
+                            ) {
+                                androidx.compose.foundation.text.selection.SelectionContainer {
+                                    Text(
+                                        text = error,
+                                        style = MaterialTheme.typography.bodySmall.copy(
+                                            fontFamily = FontFamily.Monospace,
+                                        ),
+                                        color = MaterialTheme.colorScheme.onErrorContainer,
+                                    )
+                                }
                             }
                         }
                     }
@@ -269,5 +282,55 @@ private fun BodySection(
                 )
             }
         }
+    }
+}
+
+/** Three pulsing dots + label shown in the Overview tab while a request is in-flight. */
+@Composable
+private fun PendingWaitingIndicator() {
+    val infiniteTransition = rememberInfiniteTransition(label = "waiting_dots")
+    val dot1 by infiniteTransition.animateFloat(
+        initialValue = 0.2f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(500, delayMillis = 0, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "dot1",
+    )
+    val dot2 by infiniteTransition.animateFloat(
+        initialValue = 0.2f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(500, delayMillis = 160, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "dot2",
+    )
+    val dot3 by infiniteTransition.animateFloat(
+        initialValue = 0.2f, targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(500, delayMillis = 320, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "dot3",
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        listOf(dot1, dot2, dot3).forEach { alpha ->
+            Box(
+                modifier = Modifier
+                    .size(7.dp)
+                    .alpha(alpha)
+                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+            )
+        }
+        Spacer(Modifier.size(4.dp))
+        Text(
+            text = "Waiting for response\u2026",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
