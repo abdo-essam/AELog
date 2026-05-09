@@ -12,9 +12,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import com.ae.log.LogProvider
 import com.ae.log.UiConfig
-import com.ae.log.sample.ui.analytics.AnalyticsScreen
-import com.ae.log.sample.ui.log.LogScreen
-import com.ae.log.sample.ui.network.NetworkScreen
+import com.ae.log.sample.ui.features.analytics.AnalyticsScreen
+import com.ae.log.sample.ui.features.log.LogScreen
+import com.ae.log.sample.ui.features.network.NetworkScreen
 import com.ae.log.sample.ui.theme.SampleTheme
 
 @Composable

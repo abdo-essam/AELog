@@ -1,4 +1,4 @@
-package com.ae.log.sample.ui.analytics
+package com.ae.log.sample.ui.features.analytics
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

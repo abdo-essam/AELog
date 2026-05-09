@@ -99,7 +99,7 @@ public class OkHttpInterceptor(
                         if (contentLength > maxResponseBodyBytes ||
                             (contentLength == -1L && bodyString.length.toLong() >= maxResponseBodyBytes)
                         ) {
-                            bodyString + "\n… [truncated]"
+                            "$bodyString\n… [truncated]"
                         } else {
                             bodyString
                         }

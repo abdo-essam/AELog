@@ -37,7 +37,7 @@ public class RingBuffer<T>(
         index: Int,
         item: T,
     ) {
-        if (index !in 0 until size) throw IndexOutOfBoundsException("Index $index out of bounds for size $size")
+        if (index !in 0..size) throw IndexOutOfBoundsException("Index $index out of bounds for size $size")
         val start = if (size < capacity) 0 else head
         buffer[(start + index) % capacity] = item
     }

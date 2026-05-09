@@ -51,19 +51,17 @@ public fun LogProvider(
         return
     }
 
-    val inspector = instance
-
     val controller = remember { LogController() }
     val isVisible by controller.isVisible.collectAsState()
 
     // Plugins are expected to be static after init, but we still use collectAsState()
     // because StateFlow.value is NOT observable by Compose — derivedStateOf won't help here.
-    val plugins by inspector.plugins.plugins.collectAsState()
+    val plugins by instance.plugins.plugins.collectAsState()
     val uiPlugins = remember(plugins) { plugins.filterIsInstance<UIPlugin>() }
 
     // Notify plugins of open/close lifecycle events
     LaunchedEffect(isVisible) {
-        if (isVisible) inspector.lifecycle.notifyOpen() else inspector.lifecycle.notifyClose()
+        if (isVisible) instance.lifecycle.notifyOpen() else instance.lifecycle.notifyClose()
     }
 
     CompositionLocalProvider(LocalLogController provides controller) {

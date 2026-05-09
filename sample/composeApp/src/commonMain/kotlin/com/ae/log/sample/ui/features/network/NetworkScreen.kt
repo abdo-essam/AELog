@@ -1,4 +1,4 @@
-package com.ae.log.sample.ui.network
+package com.ae.log.sample.ui.features.network
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
