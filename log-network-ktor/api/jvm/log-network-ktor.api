@@ -3,11 +3,14 @@ public final class com/ae/log/plugins/network/interceptor/AELogKtorInterceptor {
 }
 
 public final class com/ae/log/plugins/network/interceptor/AELogKtorInterceptor$Plugin : io/ktor/client/plugins/HttpClientPlugin {
+	public final fun getDEFAULT_EXCLUDED ()Ljava/util/Set;
+	public final fun getExcludeHeaders ()Ljava/util/Set;
 	public fun getKey ()Lio/ktor/util/AttributeKey;
 	public fun install (Lcom/ae/log/plugins/network/interceptor/AELogKtorInterceptor;Lio/ktor/client/HttpClient;)V
 	public synthetic fun install (Ljava/lang/Object;Lio/ktor/client/HttpClient;)V
 	public fun prepare (Lkotlin/jvm/functions/Function1;)Lcom/ae/log/plugins/network/interceptor/AELogKtorInterceptor;
 	public synthetic fun prepare (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public final fun setExcludeHeaders (Ljava/util/Set;)V
 }
 
 public final class com/ae/log/plugins/network/interceptor/AELogKtorInterceptorKt {

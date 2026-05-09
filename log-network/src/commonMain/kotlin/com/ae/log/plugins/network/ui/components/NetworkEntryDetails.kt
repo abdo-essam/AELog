@@ -104,18 +104,20 @@ internal fun NetworkEntryDetails(
                             )
                             Spacer(Modifier.height(4.dp))
                             Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
-                                    .padding(8.dp),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
+                                        .padding(8.dp),
                             ) {
                                 androidx.compose.foundation.text.selection.SelectionContainer {
                                     Text(
                                         text = error,
-                                        style = MaterialTheme.typography.bodySmall.copy(
-                                            fontFamily = FontFamily.Monospace,
-                                        ),
+                                        style =
+                                            MaterialTheme.typography.bodySmall.copy(
+                                                fontFamily = FontFamily.Monospace,
+                                            ),
                                         color = MaterialTheme.colorScheme.onErrorContainer,
                                     )
                                 }
@@ -140,8 +142,10 @@ internal fun NetworkEntryDetails(
                             onCopy = { clipboard.setText(AnnotatedString(it)) },
                         )
                     }
-                    if (entry.requestHeaders.isEmpty() && entry.requestBody == null
-                        && entry.url.extractQueryParams().isEmpty()) {
+                    if (entry.requestHeaders.isEmpty() &&
+                        entry.requestBody == null &&
+                        entry.url.extractQueryParams().isEmpty()
+                    ) {
                         Text(
                             "No Request Data",
                             style = MaterialTheme.typography.bodySmall,
@@ -290,27 +294,33 @@ private fun BodySection(
 private fun PendingWaitingIndicator() {
     val infiniteTransition = rememberInfiniteTransition(label = "waiting_dots")
     val dot1 by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500, delayMillis = 0, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        initialValue = 0.2f,
+        targetValue = 1f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(500, delayMillis = 0, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "dot1",
     )
     val dot2 by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500, delayMillis = 160, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        initialValue = 0.2f,
+        targetValue = 1f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(500, delayMillis = 160, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "dot2",
     )
     val dot3 by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500, delayMillis = 320, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        initialValue = 0.2f,
+        targetValue = 1f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(500, delayMillis = 320, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "dot3",
     )
 
@@ -320,10 +330,11 @@ private fun PendingWaitingIndicator() {
     ) {
         listOf(dot1, dot2, dot3).forEach { alpha ->
             Box(
-                modifier = Modifier
-                    .size(7.dp)
-                    .alpha(alpha)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+                modifier =
+                    Modifier
+                        .size(7.dp)
+                        .alpha(alpha)
+                        .background(MaterialTheme.colorScheme.primary, CircleShape),
             )
         }
         Spacer(Modifier.size(4.dp))

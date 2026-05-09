@@ -133,7 +133,11 @@ public class AELogKtorInterceptor internal constructor() {
                 recorder.logResponse(
                     id = id,
                     statusCode = response.status.value,
-                    headers = response.headers.entries().associate { it.key to it.value.joinToString(", ") }.exclude(),
+                    headers =
+                        response.headers
+                            .entries()
+                            .associate { it.key to it.value.joinToString(", ") }
+                            .exclude(),
                     body = null, // body patched in Phase 2b
                     durationMs = clock.now().toEpochMilliseconds() - start,
                 )

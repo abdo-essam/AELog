@@ -46,24 +46,28 @@ internal fun StatusBadge(entry: NetworkEntry) {
         val alpha by infiniteTransition.animateFloat(
             initialValue = 0.3f,
             targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(600, easing = FastOutSlowInEasing),
-                repeatMode = RepeatMode.Reverse,
-            ),
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(600, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse,
+                ),
             label = "pending_alpha",
         )
         androidx.compose.foundation.layout.Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
+            horizontalArrangement =
+                androidx.compose.foundation.layout.Arrangement
+                    .spacedBy(4.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(6.dp)
-                    .alpha(alpha)
-                    .background(
-                        MaterialTheme.colorScheme.primary,
-                        CircleShape,
-                    ),
+                modifier =
+                    Modifier
+                        .size(6.dp)
+                        .alpha(alpha)
+                        .background(
+                            MaterialTheme.colorScheme.primary,
+                            CircleShape,
+                        ),
             )
             Text(
                 text = "Waiting…",

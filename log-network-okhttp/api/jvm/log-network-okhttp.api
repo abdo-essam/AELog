@@ -3,13 +3,13 @@ public final class com/ae/log/plugins/network/interceptor/OkHttpInterceptor : ok
 	public fun <init> ()V
 	public fun <init> (JJLjava/util/Set;)V
 	public synthetic fun <init> (JJLjava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getExcludeHeaders ()Ljava/util/Set;
 	public final fun getMaxRequestBodyBytes ()J
 	public final fun getMaxResponseBodyBytes ()J
-	public final fun getRedactHeaders ()Ljava/util/Set;
 	public fun intercept (Lokhttp3/Interceptor$Chain;)Lokhttp3/Response;
 }
 
 public final class com/ae/log/plugins/network/interceptor/OkHttpInterceptor$Companion {
-	public final fun getDEFAULT_REDACTED ()Ljava/util/Set;
+	public final fun getDEFAULT_EXCLUDED ()Ljava/util/Set;
 }
 
