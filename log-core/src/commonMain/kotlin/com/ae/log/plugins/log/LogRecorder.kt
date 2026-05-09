@@ -28,7 +28,7 @@ public class LogRecorder internal constructor(
         if (!AELog.isEnabled) return
 
         val config = AELog.instance?.config
-        if (config != null && severity.ordinal < config.minSeverity.ordinal) return
+        if (config != null && (!config.enabled || severity.ordinal < config.minSeverity.ordinal)) return
 
         config?.platformLogSink?.log(severity, tag, message, throwable)
 

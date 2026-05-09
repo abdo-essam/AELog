@@ -17,6 +17,9 @@ version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 kotlin {
     jvmToolchain(21)
     explicitApi()
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+    }
 
     androidLibrary {
         namespace = "com.ae.log.network"

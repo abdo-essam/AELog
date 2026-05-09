@@ -59,7 +59,7 @@ public class LogPlugin(
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    private var viewModel: LogViewModel? = null
+    @Volatile private var viewModel: LogViewModel? = null
 
     override fun onAttach(context: PluginContext) {
         viewModel = LogViewModel(logStore = logStore, scope = context.scope)

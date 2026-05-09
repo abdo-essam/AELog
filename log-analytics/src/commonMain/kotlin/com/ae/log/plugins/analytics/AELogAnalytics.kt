@@ -21,7 +21,7 @@ public object AnalyticsProxy {
      */
     public fun logEvent(
         name: String,
-        properties: Map<String, Any> = emptyMap(),
+        properties: Map<String, String> = emptyMap(),
     ) {
         AELog.getPlugin<AnalyticsPlugin>()?.tracker?.track(name, properties)
     }
@@ -31,7 +31,7 @@ public object AnalyticsProxy {
      */
     public fun logScreen(
         screenName: String,
-        properties: Map<String, Any> = emptyMap(),
+        properties: Map<String, String> = emptyMap(),
     ) {
         AELog.getPlugin<AnalyticsPlugin>()?.tracker?.screen(screenName, properties)
     }

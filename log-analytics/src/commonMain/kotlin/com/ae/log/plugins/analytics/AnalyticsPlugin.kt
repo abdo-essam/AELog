@@ -42,7 +42,7 @@ public class AnalyticsPlugin(
     override val badgeCount: StateFlow<Int> = _badgeCount
 
     private val store = AnalyticsStore(capacity = maxEntries)
-    private var viewModel: AnalyticsViewModel? = null
+    @Volatile private var viewModel: AnalyticsViewModel? = null
 
     /** Public API for recording events from your analytics adapters. */
     public val tracker: AnalyticsTracker = AnalyticsTracker(store)

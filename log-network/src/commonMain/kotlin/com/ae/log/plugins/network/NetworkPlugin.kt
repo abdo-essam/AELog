@@ -63,7 +63,7 @@ public class NetworkPlugin(
     override val badgeCount: StateFlow<Int> = _badgeCount
 
     private val store = NetworkStore(capacity = maxEntries)
-    private var viewModel: NetworkViewModel? = null
+    @Volatile private var viewModel: NetworkViewModel? = null
 
     /** Public API for recording requests/responses from interceptors. */
     public val recorder: NetworkRecorder = NetworkRecorder(store)

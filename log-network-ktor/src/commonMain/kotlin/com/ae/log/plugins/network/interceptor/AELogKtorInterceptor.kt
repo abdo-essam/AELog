@@ -115,18 +115,21 @@ public class AELogKtorInterceptor internal constructor() {
                 val contentType = context.response.headers["Content-Type"] ?: ""
 
                 if (shouldCaptureBody(contentType)) {
-                    // readBuffer() reads all bytes into a kotlinx.io.Buffer (Ktor 3.x public API)
-                    val buffer = body.readBuffer()
-                    val bytes = buffer.readByteArray()
-                    val bodyText =
-                        runCatching {
+                    runCatching {
+                        // readBuffer() reads all bytes into a kotlinx.io.Buffer (Ktor 3.x public API)
+                        val buffer = body.readBuffer()
+                        val bytes = buffer.readByteArray()
+                        val bodyText =
                             bytes.decodeToString().trim().ifBlank { null }
-                        }.getOrNull()
 
-                    recorder.updateResponseBody(id, bodyText)
+                        recorder.updateResponseBody(id, bodyText)
 
-                    // Re-inject fresh channel so the rest of the pipeline can decode the body
-                    proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
+                        // Re-inject fresh channel so the rest of the pipeline can decode the body
+                        proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
+                    }.onFailure { cause ->
+                        recorder.logError(id, "body capture failed: ${cause.message}")
+                        proceed()
+                    }
                 } else {
                     proceed()
                 }

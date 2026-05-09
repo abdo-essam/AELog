@@ -2,6 +2,9 @@
 
 package com.ae.log.plugins.analytics
 
+import com.ae.log.AELog
+import com.ae.log.core.utils.IdGenerator
+import com.ae.log.plugins.analytics.model.AdapterSource
 import com.ae.log.plugins.analytics.model.AnalyticsEvent
 import com.ae.log.plugins.analytics.store.AnalyticsStore
 import kotlin.time.Clock
@@ -21,23 +24,20 @@ import kotlin.time.Clock
 public class AnalyticsTracker internal constructor(
     private val store: AnalyticsStore,
     private val clock: Clock = Clock.System,
-    private val idGenerator: () -> String = {
-        com.ae.log.core.utils.IdGenerator
-            .next()
-    },
+    private val idGenerator: () -> String = { IdGenerator.next() },
 ) {
     /**
      * Track a custom event.
      * @param name       Event name, e.g. `"button_tap"`.
-     * @param properties Arbitrary key-value metadata.
+     * @param properties Key-value metadata. Values are passed as [String].
      * @param source     Optional adapter label.
      */
     public fun track(
         name: String,
-        properties: Map<String, Any> = emptyMap(),
-        source: com.ae.log.plugins.analytics.model.AdapterSource? = null,
+        properties: Map<String, String> = emptyMap(),
+        source: AdapterSource? = null,
     ) {
-        if (!com.ae.log.AELog.isEnabled) return
+        if (!AELog.isEnabled) return
 
         store.record(
             AnalyticsEvent(
@@ -53,7 +53,7 @@ public class AnalyticsTracker internal constructor(
     /** Convenience shorthand for screen-view events. */
     public fun screen(
         screenName: String,
-        properties: Map<String, Any> = emptyMap(),
+        properties: Map<String, String> = emptyMap(),
     ): Unit = track("screen_view", properties + mapOf("screen" to screenName))
 
     /** Clear all recorded events. */

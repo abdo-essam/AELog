@@ -23,11 +23,15 @@ public object AELog {
         vararg plugins: Plugin,
         config: LogConfig = LogConfig(),
     ) {
-        instanceAtomic.value?.let { return }
+        // Fast-path: already initialized
+        if (instanceAtomic.value != null) return
+        // Construct and install only if we win the CAS
         val newInstance = LogInspector(config)
         if (instanceAtomic.compareAndSet(null, newInstance)) {
             plugins.forEach { newInstance.plugins.install(it) }
         }
+        // If CAS lost, newInstance is abandoned — its SupervisorJob
+        // has no children yet, so it is immediately eligible for GC.
     }
 
     public val log: LogProxy get() = LogProxy
@@ -143,8 +147,7 @@ public class LogInspector internal constructor(
     ) {
         plugins.plugins.value
             .filterIsInstance<LogRecordSink>()
-            .firstOrNull()
-            ?.record(severity, tag, msg, t)
+            .forEach { it.record(severity, tag, msg, t) }
     }
 
     internal fun export(): String {

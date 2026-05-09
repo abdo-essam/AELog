@@ -1,16 +1,16 @@
 package com.ae.log.plugins.analytics.model
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
 /** A single analytics event with arbitrary properties. */
-@Immutable
+@Stable
 public data class AnalyticsEvent(
     /** Unique ID for stable list keys. */
     val id: String,
     /** Event name, e.g. `"button_tap"`, `"screen_view"`. */
     val name: String,
-    /** Arbitrary key-value properties. */
-    val properties: Map<String, Any> = emptyMap(),
+    /** Key-value properties. Values are stringified for safe immutability. */
+    val properties: Map<String, String> = emptyMap(),
     /** Set by [com.ae.log.plugins.analytics.AnalyticsTracker] at track time (epoch millis). */
     val timestamp: Long,
     /** Optional source adapter name to prevent drift (e.g. `"Firebase"`, `"Mixpanel"`). */
