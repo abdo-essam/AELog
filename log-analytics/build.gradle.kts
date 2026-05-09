@@ -17,7 +17,10 @@ kotlin {
     jvmToolchain(21)
     explicitApi()
     compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+        freeCompilerArgs.addAll(
+            "-opt-in=kotlin.time.ExperimentalTime",
+            "-Xexpect-actual-classes",
+        )
     }
 
     androidLibrary {

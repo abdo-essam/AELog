@@ -1,5 +1,3 @@
-@file:OptIn(kotlin.time.ExperimentalTime::class)
-
 package com.ae.log.plugins.log
 
 import androidx.compose.material.icons.Icons
@@ -59,7 +57,7 @@ public class LogPlugin(
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    @Volatile private var viewModel: LogViewModel? = null
+    @kotlin.concurrent.Volatile private var viewModel: LogViewModel? = null
 
     override fun onAttach(context: PluginContext) {
         viewModel = LogViewModel(logStore = logStore, scope = context.scope)

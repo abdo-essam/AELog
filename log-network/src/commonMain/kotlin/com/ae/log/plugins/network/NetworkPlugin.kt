@@ -1,5 +1,3 @@
-@file:OptIn(kotlin.time.ExperimentalTime::class)
-
 package com.ae.log.plugins.network
 
 import androidx.compose.material.icons.Icons
@@ -63,7 +61,7 @@ public class NetworkPlugin(
     override val badgeCount: StateFlow<Int> = _badgeCount
 
     private val store = NetworkStore(capacity = maxEntries)
-    @Volatile private var viewModel: NetworkViewModel? = null
+    @kotlin.concurrent.Volatile private var viewModel: NetworkViewModel? = null
 
     /** Public API for recording requests/responses from interceptors. */
     public val recorder: NetworkRecorder = NetworkRecorder(store)

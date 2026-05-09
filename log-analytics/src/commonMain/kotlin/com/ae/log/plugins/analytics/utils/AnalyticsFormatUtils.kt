@@ -1,5 +1,3 @@
-@file:OptIn(kotlin.time.ExperimentalTime::class)
-
 package com.ae.log.plugins.analytics.utils
 
 import com.ae.log.plugins.analytics.model.AnalyticsEvent

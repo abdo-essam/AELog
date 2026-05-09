@@ -1,5 +1,3 @@
-@file:OptIn(kotlin.time.ExperimentalTime::class)
-
 package com.ae.log.plugins.network.interceptor
 
 import com.ae.log.AELog

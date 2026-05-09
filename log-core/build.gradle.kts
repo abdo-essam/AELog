@@ -23,6 +23,7 @@ kotlin {
         freeCompilerArgs.addAll(
             "-opt-in=kotlin.time.ExperimentalTime",
             "-opt-in=kotlin.uuid.ExperimentalUuidApi",
+            "-Xexpect-actual-classes",
         )
     }
 

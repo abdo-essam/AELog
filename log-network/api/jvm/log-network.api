@@ -117,6 +117,7 @@ public final class com/ae/log/plugins/network/model/NetworkMethod : java/lang/En
 	public static final field PATCH Lcom/ae/log/plugins/network/model/NetworkMethod;
 	public static final field POST Lcom/ae/log/plugins/network/model/NetworkMethod;
 	public static final field PUT Lcom/ae/log/plugins/network/model/NetworkMethod;
+	public static final field UNKNOWN Lcom/ae/log/plugins/network/model/NetworkMethod;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public final fun getLabel ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/plugins/network/model/NetworkMethod;

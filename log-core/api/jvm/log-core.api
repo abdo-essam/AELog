@@ -13,15 +13,6 @@ public final class com/ae/log/AELog {
 	public static final fun setEnabled (Z)V
 }
 
-public final class com/ae/log/Lifecycle {
-	public static final field $stable I
-	public final fun clearAll ()V
-	public final fun notifyClose ()V
-	public final fun notifyOpen ()V
-	public final fun notifyStart ()V
-	public final fun notifyStop ()V
-}
-
 public final class com/ae/log/LogConfig {
 	public static final field $stable I
 	public fun <init> ()V
@@ -298,18 +289,6 @@ public final class com/ae/log/core/store/PluginStore {
 	public final fun updateFirst (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 }
 
-public final class com/ae/log/core/store/RingBuffer {
-	public static final field $stable I
-	public fun <init> (I)V
-	public final fun add (Ljava/lang/Object;)V
-	public final fun clear ()V
-	public final fun getCapacity ()I
-	public final fun getCount ()I
-	public final fun isEmpty ()Z
-	public final fun replace (ILjava/lang/Object;)V
-	public final fun toList ()Ljava/util/List;
-}
-
 public final class com/ae/log/core/utils/IdGenerator {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/core/utils/IdGenerator;
@@ -372,7 +351,6 @@ public final class com/ae/log/plugins/log/LogRecorder {
 public final class com/ae/log/plugins/log/model/LogEntry {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;J)V
-	public synthetic fun <init> (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lcom/ae/log/plugins/log/model/LogSeverity;
 	public final fun component3 ()Ljava/lang/String;

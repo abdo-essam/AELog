@@ -1,5 +1,3 @@
-@file:OptIn(kotlin.time.ExperimentalTime::class)
-
 package com.ae.log.plugins.analytics.ui
 
 import androidx.compose.foundation.lazy.rememberLazyListState

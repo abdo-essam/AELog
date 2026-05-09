@@ -5,7 +5,6 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Instant
 
 public object TimeUtils {
-    @OptIn(kotlin.time.ExperimentalTime::class)
     public fun formatTimestamp(timestamp: Long): String =
         runCatching {
             val instant = Instant.fromEpochMilliseconds(timestamp)

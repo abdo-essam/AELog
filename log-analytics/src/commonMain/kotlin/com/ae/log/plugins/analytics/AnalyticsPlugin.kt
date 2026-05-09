@@ -1,5 +1,3 @@
-@file:OptIn(kotlin.time.ExperimentalTime::class)
-
 package com.ae.log.plugins.analytics
 
 import androidx.compose.material.icons.Icons
@@ -42,7 +40,7 @@ public class AnalyticsPlugin(
     override val badgeCount: StateFlow<Int> = _badgeCount
 
     private val store = AnalyticsStore(capacity = maxEntries)
-    @Volatile private var viewModel: AnalyticsViewModel? = null
+    @kotlin.concurrent.Volatile private var viewModel: AnalyticsViewModel? = null
 
     /** Public API for recording events from your analytics adapters. */
     public val tracker: AnalyticsTracker = AnalyticsTracker(store)
