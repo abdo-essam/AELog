@@ -20,4 +20,3 @@ public data class LogEntry(
     val message: String,
     val timestamp: Long,
 )
-
