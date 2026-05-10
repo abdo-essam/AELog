@@ -16,6 +16,8 @@ public class LogController {
     private val _isVisible = MutableStateFlow(false)
     public val isVisible: StateFlow<Boolean> = _isVisible.asStateFlow()
 
+    public val activeTabIndex: MutableStateFlow<Int> = MutableStateFlow(0)
+
     public fun show() {
         _isVisible.value = true
     }

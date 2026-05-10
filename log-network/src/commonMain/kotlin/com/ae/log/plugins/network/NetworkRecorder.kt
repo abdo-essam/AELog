@@ -95,6 +95,15 @@ public class NetworkRecorder internal constructor(
         store.update(id) { it.copy(responseBody = body) }
     }
 
+    /** Patch the request body after an entry has already been started (e.g. after serialization). */
+    public fun updateRequestBody(
+        id: String,
+        body: String?,
+    ) {
+        if (!AELog.isEnabled) return
+        store.update(id) { it.copy(requestBody = body) }
+    }
+
     /** Record a failed request. */
     public fun logError(
         id: String,

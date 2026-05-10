@@ -7,6 +7,7 @@ import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.http.content.OutgoingContent
 import io.ktor.http.content.TextContent
 import io.ktor.util.*
 import io.ktor.utils.io.*
@@ -40,9 +41,11 @@ public class AELogKtorInterceptor internal constructor() {
                 "Proxy-Authorization",
                 "X-Api-Key",
                 // Auto-injected request headers — noise, set by the HTTP client
+                "Accept",
                 "Accept-Encoding",
                 "Accept-Language",
                 "Connection",
+                "Content-Type",
                 "Host",
                 "User-Agent",
                 // Noisy system response headers
@@ -50,11 +53,13 @@ public class AELogKtorInterceptor internal constructor() {
                 "Date",
                 "Expires",
                 "Pragma",
+                "Server",
                 "Strict-Transport-Security",
                 "Transfer-Encoding",
                 "Vary",
                 "X-Content-Type-Options",
                 "X-Frame-Options",
+                "X-Powered-By",
                 "X-XSS-Protection",
             )
 
@@ -96,16 +101,45 @@ public class AELogKtorInterceptor internal constructor() {
                     url = context.url.buildString(),
                     method = NetworkMethod.fromString(context.method.value),
                     headers = headersMap.exclude(),
-                    body = (context.body as? TextContent)?.text,
+                    body = extractBodyPreview(context.body),
                 )
 
                 // Catch send-level failures (UnknownHostException, timeout, etc.)
+                // Note: 4xx/5xx ResponseExceptions are NOT recorded as errors — the status
+                // code already captures that. Only true connection failures are logged here.
                 try {
                     proceed()
                 } catch (cause: Throwable) {
-                    val message = cause.message ?: cause::class.simpleName ?: "Unknown error"
-                    recorder.logError(id, "failed with exception: ${cause::class.simpleName}: $message")
-                    throw cause // re-throw so Ktor still surfaces the error to the caller
+                    // Skip ResponseException (4xx/5xx) — status code is already recorded
+                    val isHttpError = cause::class.simpleName
+                        ?.contains("ResponseException") == true ||
+                        cause::class.simpleName
+                        ?.contains("ClientRequestException") == true ||
+                        cause::class.simpleName
+                        ?.contains("ServerResponseException") == true
+                    if (!isHttpError) {
+                        // Real connection failure: strip noise, keep the core message
+                        val raw = cause.message ?: cause::class.simpleName ?: "Unknown error"
+                        val clean = raw.substringBefore(". Text:").trim()
+                        recorder.logError(id, "${cause::class.simpleName}: $clean")
+                    }
+                    throw cause
+                }
+            }
+
+            // ── Phase 1b: Request Body (after serialization) ──────────────
+            scope.requestPipeline.intercept(HttpRequestPipeline.Render) { content ->
+                proceedWith(content) // Let Ktor do its serialization first
+                if (!AELog.isEnabled) return@intercept
+                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder ?: return@intercept
+
+                val id = context.attributes.getOrNull(RequestIdKey) ?: return@intercept
+                
+                // After serialization, context.body is usually a TextContent (e.g. JSON string)
+                // or a MultiPartFormDataContent.
+                val bodyText = extractBodyPreview(context.body)
+                if (bodyText != null) {
+                    recorder.updateRequestBody(id, bodyText)
                 }
             }
 
@@ -183,6 +217,17 @@ public class AELogKtorInterceptor internal constructor() {
                     proceed()
                 }
             }
+        }
+
+        private fun extractBodyPreview(body: Any): String? {
+            if (body is TextContent) return body.text
+            
+            val name = body::class.simpleName ?: ""
+            if (name.contains("MultiPart", ignoreCase = true) || name.contains("FormData", ignoreCase = true)) {
+                val size = (body as? OutgoingContent)?.contentLength?.let { "$it bytes" } ?: "unknown size"
+                return "<multipart/form-data: $size>"
+            }
+            return null
         }
 
         private fun shouldCaptureBody(contentType: String): Boolean =

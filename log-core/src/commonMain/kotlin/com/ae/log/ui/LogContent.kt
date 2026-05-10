@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.ae.log.core.LocalLogController
 import com.ae.log.core.UIPlugin
 import com.ae.log.ui.theme.LogSpacing
 
@@ -36,8 +37,10 @@ internal fun LogContent(
         return
     }
 
-    var selectedIndex by remember(plugins.size) { mutableIntStateOf(0) }
-    val safeIndex = selectedIndex.coerceIn(0, plugins.lastIndex.coerceAtLeast(0))
+    val controller = LocalLogController.current
+    val activeTabIndex by controller.activeTabIndex.collectAsState()
+    
+    val safeIndex = activeTabIndex.coerceIn(0, plugins.lastIndex.coerceAtLeast(0))
     val selectedPlugin = plugins.getOrElse(safeIndex) { plugins.first() }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -71,7 +74,7 @@ internal fun LogContent(
                     val count = badgeCount
                     Tab(
                         selected = index == safeIndex,
-                        onClick = { selectedIndex = index },
+                        onClick = { controller.activeTabIndex.value = index },
                         text = {
                             Text(plugin.name, style = MaterialTheme.typography.labelMedium)
                         },
