@@ -39,7 +39,7 @@ internal fun LogContent(
 
     val controller = LocalLogController.current
     val activeTabIndex by controller.activeTabIndex.collectAsState()
-    
+
     val safeIndex = activeTabIndex.coerceIn(0, plugins.lastIndex.coerceAtLeast(0))
     val selectedPlugin = plugins.getOrElse(safeIndex) { plugins.first() }
 

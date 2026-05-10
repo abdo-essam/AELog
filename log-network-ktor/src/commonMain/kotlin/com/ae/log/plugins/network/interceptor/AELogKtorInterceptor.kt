@@ -111,12 +111,16 @@ public class AELogKtorInterceptor internal constructor() {
                     proceed()
                 } catch (cause: Throwable) {
                     // Skip ResponseException (4xx/5xx) — status code is already recorded
-                    val isHttpError = cause::class.simpleName
-                        ?.contains("ResponseException") == true ||
-                        cause::class.simpleName
-                        ?.contains("ClientRequestException") == true ||
-                        cause::class.simpleName
-                        ?.contains("ServerResponseException") == true
+                    val isHttpError =
+                        cause::class
+                            .simpleName
+                            ?.contains("ResponseException") == true ||
+                            cause::class
+                                .simpleName
+                                ?.contains("ClientRequestException") == true ||
+                            cause::class
+                                .simpleName
+                                ?.contains("ServerResponseException") == true
                     if (!isHttpError) {
                         // Real connection failure: strip noise, keep the core message
                         val raw = cause.message ?: cause::class.simpleName ?: "Unknown error"
@@ -134,7 +138,7 @@ public class AELogKtorInterceptor internal constructor() {
                 val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder ?: return@intercept
 
                 val id = context.attributes.getOrNull(RequestIdKey) ?: return@intercept
-                
+
                 // After serialization, context.body is usually a TextContent (e.g. JSON string)
                 // or a MultiPartFormDataContent.
                 val bodyText = extractBodyPreview(context.body)
@@ -221,7 +225,7 @@ public class AELogKtorInterceptor internal constructor() {
 
         private fun extractBodyPreview(body: Any): String? {
             if (body is TextContent) return body.text
-            
+
             val name = body::class.simpleName ?: ""
             if (name.contains("MultiPart", ignoreCase = true) || name.contains("FormData", ignoreCase = true)) {
                 val size = (body as? OutgoingContent)?.contentLength?.let { "$it bytes" } ?: "unknown size"

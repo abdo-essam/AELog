@@ -38,7 +38,7 @@ public data class NetworkEntry(
             when {
                 isPending -> "…"
                 statusCode != null -> statusCode.toString() // always show code when available
-                error != null -> "Error"                    // connection failure, no code
+                error != null -> "Error" // connection failure, no code
                 else -> "…"
             }
 }

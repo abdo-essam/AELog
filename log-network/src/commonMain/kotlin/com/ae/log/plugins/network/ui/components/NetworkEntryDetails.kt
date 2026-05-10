@@ -63,7 +63,6 @@ internal fun NetworkEntryDetails(
 
     ExpandedDetails(bgColor = bgColor, onCopy = onCopy) {
         Column(modifier = Modifier.padding(LogSpacing.x3)) {
-
             // ── Overview: URL + Status + Duration ─────────────────────────
             DetailSection("URL", entry.url)
             entry.statusCode?.let { DetailSection("Status", it.toString()) }
@@ -133,18 +132,20 @@ internal fun NetworkEntryDetails(
                 SectionDivider("Error")
                 Spacer(Modifier.height(4.dp))
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
-                        .padding(8.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
+                            .padding(8.dp),
                 ) {
                     SelectionContainer {
                         Text(
                             text = error,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                fontFamily = FontFamily.Monospace,
-                            ),
+                            style =
+                                MaterialTheme.typography.bodySmall.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                ),
                             color = MaterialTheme.colorScheme.onErrorContainer,
                         )
                     }
@@ -152,9 +153,11 @@ internal fun NetworkEntryDetails(
             }
 
             // ── Response ──────────────────────────────────────────────────
-            if (!entry.isPending && entry.error == null ||
-                entry.responseHeaders.isNotEmpty() || entry.responseBody != null) {
-
+            if (!entry.isPending &&
+                entry.error == null ||
+                entry.responseHeaders.isNotEmpty() ||
+                entry.responseBody != null
+            ) {
                 Spacer(Modifier.height(LogSpacing.x3))
                 SectionDivider("Response")
 
@@ -219,7 +222,10 @@ private fun SectionDivider(label: String) {
 // ── Key/value detail row ──────────────────────────────────────────────────────
 
 @Composable
-private fun DetailSection(label: String, value: String) {
+private fun DetailSection(
+    label: String,
+    value: String,
+) {
     Column(modifier = Modifier.padding(bottom = LogSpacing.x2)) {
         Text(
             text = label,
@@ -237,7 +243,10 @@ private fun DetailSection(label: String, value: String) {
 // ── Headers grid ─────────────────────────────────────────────────────────────
 
 @Composable
-private fun HeadersSection(label: String, headers: Map<String, String>) {
+private fun HeadersSection(
+    label: String,
+    headers: Map<String, String>,
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
@@ -256,9 +265,10 @@ private fun HeadersSection(label: String, headers: Map<String, String>) {
                         )
                         Text(
                             text = value,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                fontFamily = FontFamily.Monospace,
-                            ),
+                            style =
+                                MaterialTheme.typography.bodySmall.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                ),
                             color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
@@ -271,7 +281,11 @@ private fun HeadersSection(label: String, headers: Map<String, String>) {
 // ── Body block ────────────────────────────────────────────────────────────────
 
 @Composable
-private fun BodySection(label: String, body: String, onCopy: (String) -> Unit) {
+private fun BodySection(
+    label: String,
+    body: String,
+    onCopy: (String) -> Unit,
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -293,12 +307,13 @@ private fun BodySection(label: String, body: String, onCopy: (String) -> Unit) {
             }
         }
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(8.dp)
-                .horizontalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(8.dp)
+                    .horizontalScroll(rememberScrollState()),
         ) {
             SelectionContainer {
                 Text(
@@ -319,27 +334,33 @@ private fun BodySection(label: String, body: String, onCopy: (String) -> Unit) {
 private fun PendingWaitingIndicator() {
     val infiniteTransition = rememberInfiniteTransition(label = "waiting_dots")
     val dot1 by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500, delayMillis = 0, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        initialValue = 0.2f,
+        targetValue = 1f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(500, delayMillis = 0, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "dot1",
     )
     val dot2 by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500, delayMillis = 160, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        initialValue = 0.2f,
+        targetValue = 1f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(500, delayMillis = 160, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "dot2",
     )
     val dot3 by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500, delayMillis = 320, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
+        initialValue = 0.2f,
+        targetValue = 1f,
+        animationSpec =
+            infiniteRepeatable(
+                animation = tween(500, delayMillis = 320, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse,
+            ),
         label = "dot3",
     )
     Row(
@@ -348,10 +369,11 @@ private fun PendingWaitingIndicator() {
     ) {
         listOf(dot1, dot2, dot3).forEach { alpha ->
             Box(
-                modifier = Modifier
-                    .size(7.dp)
-                    .alpha(alpha)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+                modifier =
+                    Modifier
+                        .size(7.dp)
+                        .alpha(alpha)
+                        .background(MaterialTheme.colorScheme.primary, CircleShape),
             )
         }
         Spacer(Modifier.width(4.dp))
