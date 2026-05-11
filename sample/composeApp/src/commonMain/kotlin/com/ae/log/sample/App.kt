@@ -10,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import com.ae.log.AELog
 import com.ae.log.LogProvider
 import com.ae.log.UiConfig
 import com.ae.log.sample.ui.features.analytics.AnalyticsScreen
