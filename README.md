@@ -69,32 +69,32 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Core: inspector UI + LogPlugin
-            implementation("io.github.abdo-essam:log:1.0.2")
+            implementation("io.github.abdo-essam:log:1.0.3")
 
             // Optional: Network inspector panel
-            implementation("io.github.abdo-essam:log-network:1.0.2")
+            implementation("io.github.abdo-essam:log-network:1.0.3")
 
             // Optional: Ktor auto-interceptor (KMP — Android / iOS / JVM)
-            implementation("io.github.abdo-essam:log-network-ktor:1.0.2")
+            implementation("io.github.abdo-essam:log-network-ktor:1.0.3")
 
             // Optional: Analytics inspector panel
-            implementation("io.github.abdo-essam:log-analytics:1.0.2")
+            implementation("io.github.abdo-essam:log-analytics:1.0.3")
         }
         androidMain.dependencies {
             // Optional: OkHttp auto-interceptor (Android + JVM only)
-            implementation("io.github.abdo-essam:log-network-okhttp:1.0.2")
+            implementation("io.github.abdo-essam:log-network-okhttp:1.0.3")
         }
     }
 }
 ```
 
-> **🔥 True Modularity**: You can depend on any plugin module independently! For example, if you only need network inspection, import `log-network:1.0.2` directly — it transitively brings in `log-core`. Your app stays lightweight by only including what it needs.
+> **🔥 True Modularity**: You can depend on any plugin module independently! For example, if you only need network inspection, import `log-network:1.0.3` directly — it transitively brings in `log-core`. Your app stays lightweight by only including what it needs.
 
 ### Version Catalog
 
 ```toml
 [versions]
-logs = "1.0.2"
+logs = "1.0.3"
 
 [libraries]
 logs-core              = { module = "io.github.abdo-essam:log",                version.ref = "logs" }
