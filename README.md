@@ -68,8 +68,11 @@ AELog is fully modularized. Include only the plugins you need to keep your app l
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Core: inspector UI + LogPlugin
-            implementation("io.github.abdo-essam:log:1.0.3")
+            // Core: infrastructure + inspector UI shell
+            implementation("io.github.abdo-essam:log-core:1.0.3")
+
+            // Log: standard log viewer plugin
+            implementation("io.github.abdo-essam:log-logs:1.0.3")
 
             // Optional: Network inspector panel
             implementation("io.github.abdo-essam:log-network:1.0.3")
@@ -97,7 +100,8 @@ kotlin {
 logs = "1.0.3"
 
 [libraries]
-logs-core              = { module = "io.github.abdo-essam:log",                version.ref = "logs" }
+logs-core              = { module = "io.github.abdo-essam:log-core",           version.ref = "logs" }
+logs-logs              = { module = "io.github.abdo-essam:log-logs",           version.ref = "logs" }
 logs-network           = { module = "io.github.abdo-essam:log-network",        version.ref = "logs" }
 logs-network-ktor      = { module = "io.github.abdo-essam:log-network-ktor",   version.ref = "logs" }
 logs-network-okhttp    = { module = "io.github.abdo-essam:log-network-okhttp", version.ref = "logs" }
@@ -238,7 +242,8 @@ Three ways to open the inspector:
 
 | Module / Plugin | Class | Description |
 |--------|------|-------------|
-| `:log` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
+| `:log-core` | - | Infrastructure, EventBus, and UI Shell |
+| `:log-logs` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
 | `:log-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
 | `:log-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
 

@@ -1,13 +1,11 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
-
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
-    alias(libs.plugins.dokka)
     alias(libs.plugins.vanniktechPublish)
     `maven-publish`
     signing
@@ -22,13 +20,12 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-opt-in=kotlin.time.ExperimentalTime",
-            "-opt-in=kotlin.uuid.ExperimentalUuidApi",
             "-Xexpect-actual-classes",
         )
     }
 
     androidLibrary {
-        namespace = "com.ae.log"
+        namespace = "com.ae.log.plugins.log"
         compileSdk =
             libs.versions.android.compileSdk
                 .get()
@@ -49,41 +46,18 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlinx.coroutines.core)
-            api(libs.kotlinx.atomicfu)
-            implementation(libs.components.resources)
+            api(projects.logCore)
             implementation(libs.runtime)
             implementation(libs.foundation)
             implementation(libs.material3)
             implementation(libs.ui)
             implementation(libs.material.icons.extended)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.coroutines.core)
         }
-
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.androidx.activity.compose)
-        }
-    }
-}
-
-dokka {
-    moduleName.set("AELog")
-    dokkaSourceSets.configureEach {
-        sourceLink {
-            localDirectory.set(projectDir.resolve("src"))
-            remoteUrl("https://github.com/abdo-essam/AELog/tree/main/log-core/src")
-            remoteLineSuffix.set("#L")
-        }
-        perPackageOption {
-            matchingRegex.set(".*\\.internal.*")
-            suppress.set(true)
         }
     }
 }
@@ -93,11 +67,8 @@ mavenPublishing {
     signAllPublications()
 
     pom {
-        name.set("AELog Core")
-        description.set(
-            "Core infrastructure and UI shell for the AELog SDK — " +
-                "provides the plugin engine and floating UI container.",
-        )
+        name.set("AELog Logs")
+        description.set("Standard log viewer plugin for AELog SDK")
         url.set("https://github.com/abdo-essam/AELog")
         inceptionYear.set("2026")
 

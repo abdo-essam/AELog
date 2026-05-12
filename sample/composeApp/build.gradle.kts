@@ -28,7 +28,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":log-core")) // core + ui + logs aggregator
+            implementation(project(":log-core")) // infrastructure + ui shell
+            implementation(project(":log-logs")) // LogPlugin
             implementation(project(":log-network")) // NetworkPlugin
             implementation(project(":log-network-ktor")) // Ktor auto-interceptor
             implementation(project(":log-analytics")) // AnalyticsPlugin

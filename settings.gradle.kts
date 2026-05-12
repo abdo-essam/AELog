@@ -35,6 +35,7 @@ include(":log-network")
 include(":log-network-ktor")
 include(":log-network-okhttp")
 include(":log-analytics")
+include(":log-logs")
 include(":log-core")
 include(":sample:composeApp")
 

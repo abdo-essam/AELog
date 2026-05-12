@@ -2,7 +2,7 @@ package com.ae.log.core.utils
 
 import platform.Foundation.NSThread
 
-internal actual fun callerTag(): String {
+public actual fun callerTag(): String {
     val skip =
         listOf(
             "com.ae.log.core.",
