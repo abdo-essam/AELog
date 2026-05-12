@@ -15,4 +15,3 @@ internal object LogUtils {
     fun formatAllLogsForCopy(logs: List<LogEntry>): String =
         logs.joinToString("\n\n") { "${"=".repeat(50)}\n${formatLogForCopy(it)}" }
 }
-

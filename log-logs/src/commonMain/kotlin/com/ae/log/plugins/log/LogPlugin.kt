@@ -53,11 +53,12 @@ public class LogPlugin(
     internal val logStore = PluginStore<LogEntry>(capacity = maxEntries)
 
     /** Public write API — use this to send logs directly to the viewer. */
-    public val recorder: LogRecorder = LogRecorder(
-        store = logStore,
-        minSeverity = minSeverity,
-        platformLogSink = platformLogSink
-    )
+    public val recorder: LogRecorder =
+        LogRecorder(
+            store = logStore,
+            minSeverity = minSeverity,
+            platformLogSink = platformLogSink,
+        )
 
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount

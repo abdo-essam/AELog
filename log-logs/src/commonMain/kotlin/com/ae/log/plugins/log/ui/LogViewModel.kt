@@ -23,7 +23,11 @@ internal class LogViewModel(
     val selectedFilter: StateFlow<LogSeverityFilter> = _selectedFilter.asStateFlow()
 
     val filteredLogs: StateFlow<List<LogEntry>> =
-        combine(logStore.dataFlow, _searchQuery, _selectedFilter) { logs: List<LogEntry>, query: String, filter: LogSeverityFilter ->
+        combine(
+            logStore.dataFlow,
+            _searchQuery,
+            _selectedFilter,
+        ) { logs: List<LogEntry>, query: String, filter: LogSeverityFilter ->
             logs
                 .reversed()
                 .filter { entry -> filter.matches(entry) }
@@ -48,4 +52,3 @@ internal class LogViewModel(
         _selectedFilter.value = LogSeverityFilters.ALL
     }
 }
-

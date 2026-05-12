@@ -119,4 +119,3 @@ private fun LogEntryHeader(
         )
     }
 }
-

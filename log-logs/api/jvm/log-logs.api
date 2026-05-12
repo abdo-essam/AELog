@@ -1,0 +1,164 @@
+public final class com/ae/log/AELogLogsKt {
+	public static final fun getLog (Lcom/ae/log/AELog;)Lcom/ae/log/LogProxy;
+}
+
+public final class com/ae/log/LogProxy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/LogProxy;
+	public static final fun d (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun d (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun d$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun d$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun i (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun v (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun v$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun v$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun w (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun wtf (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun wtf (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun wtf$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun wtf$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
+public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin, com/ae/log/plugins/log/LogRecordSink {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/plugins/log/LogPlugin$Companion;
+	public static final field ID Ljava/lang/String;
+	public fun <init> ()V
+	public fun <init> (ILcom/ae/log/plugins/log/model/LogSeverity;Lcom/ae/log/plugins/log/PlatformLogSink;)V
+	public synthetic fun <init> (ILcom/ae/log/plugins/log/model/LogSeverity;Lcom/ae/log/plugins/log/PlatformLogSink;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
+	public fun export ()Ljava/lang/String;
+	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
+	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public fun getId ()Ljava/lang/String;
+	public final fun getMaxEntries ()I
+	public final fun getMinSeverity ()Lcom/ae/log/plugins/log/model/LogSeverity;
+	public fun getName ()Ljava/lang/String;
+	public final fun getPlatformLogSink ()Lcom/ae/log/plugins/log/PlatformLogSink;
+	public final fun getRecorder ()Lcom/ae/log/plugins/log/LogRecorder;
+	public fun onAttach (Lcom/ae/log/core/PluginContext;)V
+	public fun onClear ()V
+	public fun onClose ()V
+	public fun onDetach ()V
+	public fun onOpen ()V
+	public fun onStart ()V
+	public fun onStop ()V
+	public fun record (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public final class com/ae/log/plugins/log/LogPlugin$Companion {
+}
+
+public abstract interface class com/ae/log/plugins/log/LogRecordSink : com/ae/log/core/Plugin {
+	public abstract fun record (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public final class com/ae/log/plugins/log/LogRecordSink$DefaultImpls {
+	public static fun export (Lcom/ae/log/plugins/log/LogRecordSink;)Ljava/lang/String;
+	public static fun onAttach (Lcom/ae/log/plugins/log/LogRecordSink;Lcom/ae/log/core/PluginContext;)V
+	public static fun onClear (Lcom/ae/log/plugins/log/LogRecordSink;)V
+	public static fun onClose (Lcom/ae/log/plugins/log/LogRecordSink;)V
+	public static fun onDetach (Lcom/ae/log/plugins/log/LogRecordSink;)V
+	public static fun onOpen (Lcom/ae/log/plugins/log/LogRecordSink;)V
+	public static fun onStart (Lcom/ae/log/plugins/log/LogRecordSink;)V
+	public static fun onStop (Lcom/ae/log/plugins/log/LogRecordSink;)V
+}
+
+public final class com/ae/log/plugins/log/LogRecorder {
+	public static final field $stable I
+	public final fun d (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun d$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun e$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun i (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun i$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun log (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun log$default (Lcom/ae/log/plugins/log/LogRecorder;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun v (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun v$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun w (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun w$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public final fun wtf (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun wtf$default (Lcom/ae/log/plugins/log/LogRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
+public abstract interface class com/ae/log/plugins/log/PlatformLogSink {
+	public static final field Companion Lcom/ae/log/plugins/log/PlatformLogSink$Companion;
+	public abstract fun log (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun log$default (Lcom/ae/log/plugins/log/PlatformLogSink;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
+public final class com/ae/log/plugins/log/PlatformLogSink$Companion {
+	public final fun getDefault ()Lcom/ae/log/plugins/log/PlatformLogSink;
+}
+
+public final class com/ae/log/plugins/log/PlatformLogSink$DefaultImpls {
+	public static synthetic fun log$default (Lcom/ae/log/plugins/log/PlatformLogSink;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
+public final class com/ae/log/plugins/log/model/LogEntry {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;J)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/ae/log/plugins/log/model/LogSeverity;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()J
+	public final fun copy (Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;J)Lcom/ae/log/plugins/log/model/LogEntry;
+	public static synthetic fun copy$default (Lcom/ae/log/plugins/log/model/LogEntry;Ljava/lang/String;Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;JILjava/lang/Object;)Lcom/ae/log/plugins/log/model/LogEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getSeverity ()Lcom/ae/log/plugins/log/model/LogSeverity;
+	public final fun getTag ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/ae/log/plugins/log/model/LogSeverity : java/lang/Enum {
+	public static final field ASSERT Lcom/ae/log/plugins/log/model/LogSeverity;
+	public static final field DEBUG Lcom/ae/log/plugins/log/model/LogSeverity;
+	public static final field ERROR Lcom/ae/log/plugins/log/model/LogSeverity;
+	public static final field INFO Lcom/ae/log/plugins/log/model/LogSeverity;
+	public static final field VERBOSE Lcom/ae/log/plugins/log/model/LogSeverity;
+	public static final field WARN Lcom/ae/log/plugins/log/model/LogSeverity;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getLabel ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/plugins/log/model/LogSeverity;
+	public static fun values ()[Lcom/ae/log/plugins/log/model/LogSeverity;
+}
+
+public class com/ae/log/plugins/log/model/LogSeverityFilter {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun getLabel ()Ljava/lang/String;
+	public fun matches (Lcom/ae/log/plugins/log/model/LogEntry;)Z
+}
+
+public final class com/ae/log/plugins/log/model/LogSeverityFilters {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/plugins/log/model/LogSeverityFilters;
+	public final fun getALL ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
+	public final fun getDEBUG ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
+	public final fun getDefaultFilters ()Ljava/util/List;
+	public final fun getERROR ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
+	public final fun getINFO ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
+	public final fun getVERBOSE ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
+	public final fun getWARN ()Lcom/ae/log/plugins/log/model/LogSeverityFilter;
+}
+

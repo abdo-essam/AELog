@@ -1,7 +1,7 @@
 package com.ae.log.plugins.log
 
-import com.ae.log.plugins.log.model.LogSeverity
 import com.ae.log.core.Plugin
+import com.ae.log.plugins.log.model.LogSeverity
 
 /**
  * Implemented by plugins that want to receive log entries from [com.ae.log.AELog.log].

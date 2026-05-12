@@ -41,4 +41,3 @@ internal fun LogDetailsContent(log: LogEntry) {
         }
     }
 }
-

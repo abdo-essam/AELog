@@ -1,8 +1,7 @@
 package com.ae.log.plugins.log.model
 
-import com.ae.log.plugins.log.model.LogSeverity
-
 import androidx.compose.runtime.Immutable
+import com.ae.log.plugins.log.model.LogSeverity
 
 /**
  * Represents a single log entry captured by AELog.
@@ -22,4 +21,3 @@ public data class LogEntry(
     val message: String,
     val timestamp: Long,
 )
-

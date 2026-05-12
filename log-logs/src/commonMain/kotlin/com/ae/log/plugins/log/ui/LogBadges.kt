@@ -41,4 +41,3 @@ private fun severityColors(severity: LogSeverity): Pair<Color, Color> =
         LogSeverity.ERROR -> Color(0xFFEF5350) to Color.White
         LogSeverity.ASSERT -> Color(0xFF7B1FA2) to Color.White
     }
-

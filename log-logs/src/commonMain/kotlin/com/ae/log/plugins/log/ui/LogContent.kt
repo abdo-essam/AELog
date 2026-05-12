@@ -77,4 +77,3 @@ internal fun LogContent(
         )
     }
 }
-

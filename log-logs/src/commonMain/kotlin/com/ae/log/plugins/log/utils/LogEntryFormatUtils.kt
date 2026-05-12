@@ -8,4 +8,3 @@ internal fun LogEntry.getCleanMessagePreview(maxLength: Int = 80): String =
         .firstOrNull()
         ?.trim()
         ?.take(maxLength) ?: ""
-

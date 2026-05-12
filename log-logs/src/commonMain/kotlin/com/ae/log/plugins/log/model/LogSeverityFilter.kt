@@ -29,4 +29,3 @@ public object LogSeverityFilters {
 
     public val defaultFilters: List<LogSeverityFilter> = listOf(ALL, VERBOSE, DEBUG, INFO, WARN, ERROR)
 }
-
