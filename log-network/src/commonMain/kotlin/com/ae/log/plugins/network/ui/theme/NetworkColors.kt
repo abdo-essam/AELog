@@ -1,4 +1,4 @@
-package com.ae.log.ui.theme
+package com.ae.log.plugins.network.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

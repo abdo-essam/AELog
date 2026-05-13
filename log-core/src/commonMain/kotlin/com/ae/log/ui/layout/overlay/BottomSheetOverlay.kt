@@ -1,13 +1,10 @@
-package com.ae.log.ui.presentation
+package com.ae.log.ui.layout.overlay
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
@@ -23,9 +20,9 @@ import com.ae.log.ui.UiConfig
  * Suited for compact/phone screens.
  */
 @OptIn(ExperimentalMaterial3Api::class)
-public object BottomSheetStrategy : PresentationStrategy {
+public object BottomSheetOverlay : OverlayStrategy {
     @Composable
-    override fun Present(
+    override fun Overlay(
         uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,

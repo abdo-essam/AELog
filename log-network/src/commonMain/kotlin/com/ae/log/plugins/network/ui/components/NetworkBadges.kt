@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import com.ae.log.plugins.network.model.NetworkEntry
-import com.ae.log.ui.theme.NetworkColors
+import com.ae.log.plugins.network.ui.theme.NetworkColors
 
 @Composable
 internal fun MethodBadge(label: String) {

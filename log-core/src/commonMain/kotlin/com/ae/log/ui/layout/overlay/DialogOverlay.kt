@@ -1,4 +1,4 @@
-package com.ae.log.ui.presentation
+package com.ae.log.ui.layout.overlay
 
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,9 +15,9 @@ import com.ae.log.ui.UiConfig
  * Presents the AELog panel as a centered [Dialog].
  * Suited for large screens (tablets, desktop).
  */
-public object DialogStrategy : PresentationStrategy {
+public object DialogOverlay : OverlayStrategy {
     @Composable
-    override fun Present(
+    override fun Overlay(
         uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
