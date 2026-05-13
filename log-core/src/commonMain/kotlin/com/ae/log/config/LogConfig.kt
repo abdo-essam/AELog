@@ -1,4 +1,4 @@
-package com.ae.log
+package com.ae.log.config
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

@@ -1,6 +1,6 @@
 package com.ae.log.plugins.log
 
-import com.ae.log.core.Plugin
+import com.ae.log.plugin.Plugin
 import com.ae.log.plugins.log.model.LogSeverity
 
 /**

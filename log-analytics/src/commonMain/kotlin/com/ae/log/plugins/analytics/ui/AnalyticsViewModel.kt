@@ -3,7 +3,7 @@ package com.ae.log.plugins.analytics.ui
 import com.ae.log.plugins.analytics.model.AnalyticsEvent
 import com.ae.log.plugins.analytics.model.AnalyticsFilter
 import com.ae.log.plugins.analytics.model.AnalyticsFilters
-import com.ae.log.plugins.analytics.store.AnalyticsStore
+import com.ae.log.plugins.analytics.storage.AnalyticsStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 
 /** Controls search/filter UI state for the analytics panel. */
 internal class AnalyticsViewModel(
-    private val store: AnalyticsStore,
+    private val storage: AnalyticsStorage,
     scope: CoroutineScope,
 ) {
     private val _searchQuery = MutableStateFlow("")
@@ -26,7 +26,7 @@ internal class AnalyticsViewModel(
     /** Filtered + reversed (newest first) event list. */
     val filteredEvents: StateFlow<List<AnalyticsEvent>> =
         combine(
-            store.events,
+            storage.events,
             _searchQuery,
             _filter,
         ) { all, query, filter ->
@@ -54,7 +54,7 @@ internal class AnalyticsViewModel(
     }
 
     fun clear() {
-        store.clear()
+        storage.clear()
         _searchQuery.value = ""
         _filter.value = AnalyticsFilters.ALL
     }

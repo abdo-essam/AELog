@@ -5,8 +5,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.ae.log.core.LocalLogController
-import com.ae.log.core.UIPlugin
+import com.ae.log.plugin.UIPlugin
+import com.ae.log.ui.LocalLogController
 import com.ae.log.ui.theme.LogSpacing
 
 /**

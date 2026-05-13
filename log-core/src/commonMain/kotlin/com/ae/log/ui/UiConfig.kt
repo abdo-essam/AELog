@@ -1,4 +1,4 @@
-package com.ae.log
+package com.ae.log.ui
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.Alignment

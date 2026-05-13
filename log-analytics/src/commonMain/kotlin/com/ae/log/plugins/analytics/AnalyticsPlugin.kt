@@ -5,9 +5,9 @@ import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.ae.log.core.PluginContext
-import com.ae.log.core.UIPlugin
-import com.ae.log.plugins.analytics.store.AnalyticsStore
+import com.ae.log.plugin.PluginContext
+import com.ae.log.plugin.UIPlugin
+import com.ae.log.plugins.analytics.storage.AnalyticsStorage
 import com.ae.log.plugins.analytics.ui.AnalyticsContent
 import com.ae.log.plugins.analytics.ui.AnalyticsViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,30 +39,30 @@ public class AnalyticsPlugin(
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    private val store = AnalyticsStore(capacity = maxEntries)
+    private val storage = AnalyticsStorage(capacity = maxEntries)
 
     @kotlin.concurrent.Volatile private var viewModel: AnalyticsViewModel? = null
 
     /** Public API for recording events from your analytics adapters. */
-    public val tracker: AnalyticsTracker = AnalyticsTracker(store)
+    public val tracker: AnalyticsTracker = AnalyticsTracker(storage)
 
     override fun onAttach(context: PluginContext) {
-        viewModel = AnalyticsViewModel(store, context.scope)
+        viewModel = AnalyticsViewModel(storage, context.scope)
 
         // Update badge count whenever events change
         context.scope.launch {
-            store.events.collect { events ->
+            storage.events.collect { events ->
                 _badgeCount.value = events.size
             }
         }
     }
 
     override fun onClear() {
-        store.clear()
+        storage.clear()
     }
 
     override fun export(): String =
-        store.events.value.joinToString("\n") { event ->
+        storage.events.value.joinToString("\n") { event ->
             "Event: ${event.name} | Source: ${event.source?.sourceName} | Time: ${event.timestamp}\nProperties: ${event.properties}"
         }
 

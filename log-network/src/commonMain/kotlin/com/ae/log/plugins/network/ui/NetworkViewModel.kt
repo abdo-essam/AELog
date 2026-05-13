@@ -3,7 +3,7 @@ package com.ae.log.plugins.network.ui
 import com.ae.log.plugins.network.model.NetworkEntry
 import com.ae.log.plugins.network.model.NetworkFilter
 import com.ae.log.plugins.network.model.NetworkFilters
-import com.ae.log.plugins.network.store.NetworkStore
+import com.ae.log.plugins.network.storage.NetworkStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.stateIn
 
 /** Controls search/filter UI state for the network monitor panel. */
 internal class NetworkViewModel(
-    private val store: NetworkStore,
+    private val storage: NetworkStorage,
     scope: CoroutineScope,
 ) {
     private val _searchQuery = MutableStateFlow("")
@@ -27,7 +27,7 @@ internal class NetworkViewModel(
     /** Filtered + reversed (newest first) entry list. */
     val filteredEntries: StateFlow<List<NetworkEntry>> =
         combine(
-            store.entries,
+            storage.entries,
             _searchQuery,
             _filter,
         ) { all, query, filter ->
@@ -55,13 +55,13 @@ internal class NetworkViewModel(
     }
 
     fun clear() {
-        store.clear()
+        storage.clear()
         _searchQuery.value = ""
         _filter.value = NetworkFilters.ALL
     }
 
     val hasPending: StateFlow<Boolean> =
-        store.entries
+        storage.entries
             .map { entries -> entries.any { it.isPending } }
             .stateIn(scope, SharingStarted.WhileSubscribed(5000), false)
 }

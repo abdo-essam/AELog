@@ -1,4 +1,4 @@
-package com.ae.log.core
+package com.ae.log.ui
 
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 /**
  * Controls the visibility of the AELog UI overlay.
  *
- * Access via [LocalLogController] inside [com.ae.log.LogProvider].
+ * Access via [LocalLogController] inside [com.ae.log.ui.LogProvider].
  */
 public class LogController {
     private val _isVisible = MutableStateFlow(false)
@@ -34,7 +34,7 @@ public class LogController {
 /**
  * CompositionLocal providing the [LogController].
  *
- * Available anywhere inside [com.ae.log.LogProvider].
+ * Available anywhere inside [com.ae.log.ui.LogProvider].
  */
 public val LocalLogController: ProvidableCompositionLocal<LogController> =
     staticCompositionLocalOf {

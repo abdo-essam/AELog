@@ -8,7 +8,7 @@ public actual fun callerTag(): String {
             "com.ae.log.AELog",
             "com.ae.log.LogProxy",
             "com.ae.log.DefaultPlatformLogSink",
-            "com.ae.log.LogProvider",
+            "com.ae.log.ui.LogProvider",
             "java.",
             "kotlin.",
             "dalvik.",

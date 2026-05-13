@@ -1,4 +1,4 @@
-package com.ae.log
+package com.ae.log.ui
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -9,10 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import com.ae.log.core.LocalLogController
-import com.ae.log.core.LogController
-import com.ae.log.core.UIPlugin
+import com.ae.log.AELog
+import com.ae.log.LogInspector
+import com.ae.log.plugin.UIPlugin
+import com.ae.log.ui.LocalLogController
 import com.ae.log.ui.LogContainer
+import com.ae.log.ui.LogController
 import com.ae.log.ui.LogFloatingButton
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme

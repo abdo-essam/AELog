@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `Lifecycle` class is now `internal` — it was unreachable by consumers but incorrectly exposed in binary API
-- `RingBuffer` class is now `internal` — it is a pure implementation detail of `PluginStore`
+- `RingBuffer` class is now `internal` — it is a pure implementation detail of `PluginStorage`
 - `AnalyticsTracker.track()` and `AnalyticsProxy.logEvent/logScreen` now accept `Map<String, String>` (was `Map<String, Any>`)
 - `@kotlin.concurrent.Volatile` replaces `@Volatile` in `LogPlugin`, `NetworkPlugin`, `AnalyticsPlugin` for common multiplatform compatibility
 - All modules: `explicitApiWarning()` → `explicitApi()` to enforce strict visibility for published library
@@ -92,7 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Architecture
 - Instance-based design (no hidden globals)
 - `StateFlow`-based reactive data layer
-- Thread-safe `LogStore` with configurable max entries
+- Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
 [Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.0.2...HEAD

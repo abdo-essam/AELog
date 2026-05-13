@@ -4,7 +4,7 @@ import com.ae.log.AELog
 import com.ae.log.core.utils.IdGenerator
 import com.ae.log.plugins.analytics.model.AdapterSource
 import com.ae.log.plugins.analytics.model.AnalyticsEvent
-import com.ae.log.plugins.analytics.store.AnalyticsStore
+import com.ae.log.plugins.analytics.storage.AnalyticsStorage
 import kotlin.time.Clock
 
 /**
@@ -20,7 +20,7 @@ import kotlin.time.Clock
  * ```
  */
 public class AnalyticsTracker internal constructor(
-    private val store: AnalyticsStore,
+    private val storage: AnalyticsStorage,
     private val clock: Clock = Clock.System,
     private val idGenerator: () -> String = { IdGenerator.next() },
 ) {
@@ -37,7 +37,7 @@ public class AnalyticsTracker internal constructor(
     ) {
         if (!AELog.isEnabled) return
 
-        store.record(
+        storage.record(
             AnalyticsEvent(
                 id = idGenerator(),
                 name = name,
@@ -55,5 +55,5 @@ public class AnalyticsTracker internal constructor(
     ): Unit = track("screen_view", properties + mapOf("screen" to screenName))
 
     /** Clear all recorded events. */
-    public fun clear(): Unit = store.clear()
+    public fun clear(): Unit = storage.clear()
 }

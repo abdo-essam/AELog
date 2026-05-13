@@ -41,7 +41,7 @@ private val LightColorScheme =
  * AELog Material3 theme.
  *
  * Light theme is used by default. Provide a custom [ColorScheme]
- * via [com.ae.log.UiConfig.colorScheme] to override.
+ * via [com.ae.log.ui.UiConfig.colorScheme] to override.
  */
 @Composable
 public fun LogTheme(

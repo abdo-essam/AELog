@@ -2,7 +2,7 @@ package com.ae.log.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.ae.log.core.UIPlugin
+import com.ae.log.plugin.UIPlugin
 
 /**
  * Wrapper for plugin content.

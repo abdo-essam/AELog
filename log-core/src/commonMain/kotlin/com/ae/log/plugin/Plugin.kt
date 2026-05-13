@@ -1,4 +1,4 @@
-package com.ae.log.core
+package com.ae.log.plugin
 
 public interface Plugin {
     public val id: String

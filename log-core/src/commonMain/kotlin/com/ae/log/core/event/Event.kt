@@ -1,4 +1,4 @@
-package com.ae.log.core.bus
+package com.ae.log.core.event
 
 public interface Event
 

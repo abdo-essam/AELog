@@ -1,7 +1,7 @@
 package com.ae.log.ui.presentation
 
 import androidx.compose.runtime.Composable
-import com.ae.log.UiConfig
+import com.ae.log.ui.UiConfig
 
 /**
  * Strategy interface for how the AELog panel is presented on screen.

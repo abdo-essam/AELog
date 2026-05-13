@@ -2,7 +2,7 @@ public final class com/ae/log/plugins/network/AELogNetworkKt {
 	public static final fun getNetwork (Lcom/ae/log/AELog;)Lcom/ae/log/plugins/network/NetworkProxy;
 }
 
-public final class com/ae/log/plugins/network/NetworkPlugin : com/ae/log/core/UIPlugin {
+public final class com/ae/log/plugins/network/NetworkPlugin : com/ae/log/plugin/UIPlugin {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/plugins/network/NetworkPlugin$Companion;
 	public static final field ID Ljava/lang/String;
@@ -18,7 +18,7 @@ public final class com/ae/log/plugins/network/NetworkPlugin : com/ae/log/core/UI
 	public fun getId ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
 	public final fun getRecorder ()Lcom/ae/log/plugins/network/NetworkRecorder;
-	public fun onAttach (Lcom/ae/log/core/PluginContext;)V
+	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
 	public fun onClose ()V
 	public fun onDetach ()V

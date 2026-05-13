@@ -5,9 +5,9 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.ae.log.core.PluginContext
-import com.ae.log.core.UIPlugin
-import com.ae.log.core.store.PluginStore
+import com.ae.log.core.storage.PluginStorage
+import com.ae.log.plugin.PluginContext
+import com.ae.log.plugin.UIPlugin
 import com.ae.log.plugins.log.model.LogEntry
 import com.ae.log.plugins.log.model.LogSeverity
 import com.ae.log.plugins.log.ui.LogContent
@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-public typealias LogStore = PluginStore<LogEntry>
+public typealias LogStorage = PluginStorage<LogEntry>
 
 /**
  * Built-in logs plugin for AELog.
@@ -50,12 +50,12 @@ public class LogPlugin(
     override val name: String = "Logs"
     override val icon: ImageVector = Icons.Default.Description
 
-    internal val logStore = PluginStore<LogEntry>(capacity = maxEntries)
+    internal val logStorage = PluginStorage<LogEntry>(capacity = maxEntries)
 
     /** Public write API — use this to send logs directly to the viewer. */
     public val recorder: LogRecorder =
         LogRecorder(
-            store = logStore,
+            storage = logStorage,
             minSeverity = minSeverity,
             platformLogSink = platformLogSink,
         )
@@ -66,10 +66,10 @@ public class LogPlugin(
     @kotlin.concurrent.Volatile private var viewModel: LogViewModel? = null
 
     override fun onAttach(context: PluginContext) {
-        viewModel = LogViewModel(logStore = logStore, scope = context.scope)
+        viewModel = LogViewModel(logStorage = logStorage, scope = context.scope)
 
         context.scope.launch {
-            logStore.dataFlow.collect { logs ->
+            logStorage.dataFlow.collect { logs ->
                 _badgeCount.value = logs.size
             }
         }
@@ -86,7 +86,7 @@ public class LogPlugin(
     }
 
     override fun onClear() {
-        logStore.clear()
+        logStorage.clear()
     }
 
     override fun onDetach() {
@@ -100,7 +100,7 @@ public class LogPlugin(
     }
 
     override fun export(): String =
-        logStore.dataFlow.value.joinToString("\n") { log ->
+        logStorage.dataFlow.value.joinToString("\n") { log ->
             "[${log.severity.label}] ${log.tag}: ${log.message}"
         }
 

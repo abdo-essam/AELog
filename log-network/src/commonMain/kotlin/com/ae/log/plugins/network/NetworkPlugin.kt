@@ -5,9 +5,9 @@ import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.ae.log.core.PluginContext
-import com.ae.log.core.UIPlugin
-import com.ae.log.plugins.network.store.NetworkStore
+import com.ae.log.plugin.PluginContext
+import com.ae.log.plugin.UIPlugin
+import com.ae.log.plugins.network.storage.NetworkStorage
 import com.ae.log.plugins.network.ui.NetworkContent
 import com.ae.log.plugins.network.ui.NetworkViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,29 +60,29 @@ public class NetworkPlugin(
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    private val store = NetworkStore(capacity = maxEntries)
+    private val storage = NetworkStorage(capacity = maxEntries)
 
     @kotlin.concurrent.Volatile private var viewModel: NetworkViewModel? = null
 
     /** Public API for recording requests/responses from interceptors. */
-    public val recorder: NetworkRecorder = NetworkRecorder(store)
+    public val recorder: NetworkRecorder = NetworkRecorder(storage)
 
     override fun onAttach(context: PluginContext) {
-        viewModel = NetworkViewModel(store, context.scope)
+        viewModel = NetworkViewModel(storage, context.scope)
         // Badge tracks live entry count
         context.scope.launch {
-            store.entries.collect { entries ->
+            storage.entries.collect { entries ->
                 _badgeCount.value = entries.size
             }
         }
     }
 
     override fun onClear() {
-        store.clear()
+        storage.clear()
     }
 
     override fun export(): String =
-        store.entries.value.joinToString("\n\n") { entry ->
+        storage.entries.value.joinToString("\n\n") { entry ->
             "${entry.method.name} ${entry.url} - ${entry.statusCode ?: "PENDING"}\n" +
                 "Duration: ${entry.durationMs ?: "?"}ms\n" +
                 "Request: ${entry.requestHeaders}\nBody: ${entry.requestBody}\n" +

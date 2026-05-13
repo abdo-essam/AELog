@@ -31,7 +31,7 @@ public final class com/ae/log/LogProxy {
 	public static synthetic fun wtf$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
-public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin, com/ae/log/plugins/log/LogRecordSink {
+public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/plugin/UIPlugin, com/ae/log/plugins/log/LogRecordSink {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/plugins/log/LogPlugin$Companion;
 	public static final field ID Ljava/lang/String;
@@ -50,7 +50,7 @@ public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin, 
 	public fun getName ()Ljava/lang/String;
 	public final fun getPlatformLogSink ()Lcom/ae/log/plugins/log/PlatformLogSink;
 	public final fun getRecorder ()Lcom/ae/log/plugins/log/LogRecorder;
-	public fun onAttach (Lcom/ae/log/core/PluginContext;)V
+	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
 	public fun onClose ()V
 	public fun onDetach ()V
@@ -63,13 +63,13 @@ public final class com/ae/log/plugins/log/LogPlugin : com/ae/log/core/UIPlugin, 
 public final class com/ae/log/plugins/log/LogPlugin$Companion {
 }
 
-public abstract interface class com/ae/log/plugins/log/LogRecordSink : com/ae/log/core/Plugin {
+public abstract interface class com/ae/log/plugins/log/LogRecordSink : com/ae/log/plugin/Plugin {
 	public abstract fun record (Lcom/ae/log/plugins/log/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 }
 
 public final class com/ae/log/plugins/log/LogRecordSink$DefaultImpls {
 	public static fun export (Lcom/ae/log/plugins/log/LogRecordSink;)Ljava/lang/String;
-	public static fun onAttach (Lcom/ae/log/plugins/log/LogRecordSink;Lcom/ae/log/core/PluginContext;)V
+	public static fun onAttach (Lcom/ae/log/plugins/log/LogRecordSink;Lcom/ae/log/plugin/PluginContext;)V
 	public static fun onClear (Lcom/ae/log/plugins/log/LogRecordSink;)V
 	public static fun onClose (Lcom/ae/log/plugins/log/LogRecordSink;)V
 	public static fun onDetach (Lcom/ae/log/plugins/log/LogRecordSink;)V

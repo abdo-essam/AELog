@@ -1,9 +1,9 @@
-package com.ae.log.core
+package com.ae.log.plugin
 
-import com.ae.log.LogConfig
-import com.ae.log.core.bus.Event
-import com.ae.log.core.bus.EventBus
-import com.ae.log.core.bus.subscribe
+import com.ae.log.config.LogConfig
+import com.ae.log.core.event.Event
+import com.ae.log.core.event.EventBus
+import com.ae.log.core.event.subscribe
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

@@ -10,12 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import com.ae.log.LogProvider
-import com.ae.log.UiConfig
 import com.ae.log.sample.ui.features.analytics.AnalyticsScreen
 import com.ae.log.sample.ui.features.log.LogScreen
 import com.ae.log.sample.ui.features.network.NetworkScreen
 import com.ae.log.sample.ui.theme.SampleTheme
+import com.ae.log.ui.LogProvider
+import com.ae.log.ui.UiConfig
 
 @Composable
 fun App(debugMode: Boolean = true) {

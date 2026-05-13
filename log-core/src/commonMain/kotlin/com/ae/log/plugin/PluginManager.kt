@@ -1,8 +1,9 @@
-package com.ae.log
+package com.ae.log.plugin
 
-import com.ae.log.core.Plugin
-import com.ae.log.core.PluginContext
-import com.ae.log.core.bus.EventBus
+import com.ae.log.config.LogConfig
+import com.ae.log.core.event.EventBus
+import com.ae.log.plugin.Plugin
+import com.ae.log.plugin.PluginContext
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope

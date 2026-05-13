@@ -15,7 +15,7 @@ import com.ae.log.ui.components.ListPanel
 /**
  * Main logs panel content — used by [com.ae.log.plugins.log.LogPlugin].
  *
- * Reads all state from [LogViewModel] — no direct dependency on [com.ae.log.plugins.log.store.LogStore].
+ * Reads all state from [LogViewModel] — no direct dependency on [com.ae.log.plugins.log.storage.LogStorage].
  */
 @Composable
 internal fun LogContent(

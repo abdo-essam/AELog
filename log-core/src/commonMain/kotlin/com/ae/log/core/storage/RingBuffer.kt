@@ -1,4 +1,4 @@
-package com.ae.log.core.store
+package com.ae.log.core.storage
 
 internal class RingBuffer<T>(
     val capacity: Int,

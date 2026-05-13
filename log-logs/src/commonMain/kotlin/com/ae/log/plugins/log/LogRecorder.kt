@@ -7,7 +7,7 @@ import com.ae.log.plugins.log.model.LogSeverity
 import kotlin.time.Clock
 
 public class LogRecorder internal constructor(
-    private val store: LogStore,
+    private val storage: LogStorage,
     private val minSeverity: LogSeverity = LogSeverity.VERBOSE,
     private val platformLogSink: PlatformLogSink = PlatformLogSink.Default,
     private val clock: Clock = Clock.System,
@@ -33,7 +33,7 @@ public class LogRecorder internal constructor(
 
         val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
 
-        store.add(
+        storage.add(
             LogEntry(
                 id = idGenerator(),
                 severity = severity,

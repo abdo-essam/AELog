@@ -1,4 +1,4 @@
-package com.ae.log.core.bus
+package com.ae.log.core.event
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

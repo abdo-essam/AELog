@@ -4,14 +4,14 @@ import com.ae.log.AELog
 import com.ae.log.core.utils.IdGenerator
 import com.ae.log.plugins.network.model.NetworkEntry
 import com.ae.log.plugins.network.model.NetworkMethod
-import com.ae.log.plugins.network.store.NetworkStore
+import com.ae.log.plugins.network.storage.NetworkStorage
 import kotlin.time.Clock
 
 /**
  * Low-level write API for [NetworkPlugin].
  */
 public class NetworkRecorder internal constructor(
-    private val store: NetworkStore,
+    private val storage: NetworkStorage,
     private val clock: Clock = Clock.System,
     private val idGenerator: () -> String = {
         IdGenerator.next()
@@ -29,7 +29,7 @@ public class NetworkRecorder internal constructor(
     ) {
         if (!AELog.isEnabled) return
         val id = newId()
-        store.recordOrReplace(
+        storage.recordOrReplace(
             NetworkEntry(
                 id = id,
                 url = url,
@@ -54,7 +54,7 @@ public class NetworkRecorder internal constructor(
         body: String? = null,
     ) {
         if (!AELog.isEnabled) return
-        store.recordOrReplace(
+        storage.recordOrReplace(
             NetworkEntry(
                 id = id,
                 url = url,
@@ -76,7 +76,7 @@ public class NetworkRecorder internal constructor(
         durationMs: Long? = null,
     ) {
         if (!AELog.isEnabled) return
-        store.update(id) { existing ->
+        storage.update(id) { existing ->
             existing.copy(
                 statusCode = statusCode,
                 responseBody = body,
@@ -92,7 +92,7 @@ public class NetworkRecorder internal constructor(
         body: String?,
     ) {
         if (!AELog.isEnabled) return
-        store.update(id) { it.copy(responseBody = body) }
+        storage.update(id) { it.copy(responseBody = body) }
     }
 
     /** Patch the request body after an entry has already been started (e.g. after serialization). */
@@ -101,7 +101,7 @@ public class NetworkRecorder internal constructor(
         body: String?,
     ) {
         if (!AELog.isEnabled) return
-        store.update(id) { it.copy(requestBody = body) }
+        storage.update(id) { it.copy(requestBody = body) }
     }
 
     /** Record a failed request. */
@@ -110,15 +110,15 @@ public class NetworkRecorder internal constructor(
         message: String,
     ) {
         if (!AELog.isEnabled) return
-        store.update(id) { it.copy(error = message) }
+        storage.update(id) { it.copy(error = message) }
     }
 
     internal fun recordOrReplace(entry: NetworkEntry) {
         if (!AELog.isEnabled) return
-        store.recordOrReplace(entry)
+        storage.recordOrReplace(entry)
     }
 
-    public fun clear(): Unit = store.clear()
+    public fun clear(): Unit = storage.clear()
 
     public fun newId(): String = idGenerator()
 }

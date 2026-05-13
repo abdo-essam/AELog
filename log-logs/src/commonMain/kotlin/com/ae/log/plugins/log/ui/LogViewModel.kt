@@ -1,6 +1,6 @@
 package com.ae.log.plugins.log.ui
 
-import com.ae.log.plugins.log.LogStore
+import com.ae.log.plugins.log.LogStorage
 import com.ae.log.plugins.log.model.LogEntry
 import com.ae.log.plugins.log.model.LogSeverityFilter
 import com.ae.log.plugins.log.model.LogSeverityFilters
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 internal class LogViewModel(
-    private val logStore: LogStore,
+    private val logStorage: LogStorage,
     scope: CoroutineScope,
 ) {
     private val _searchQuery = MutableStateFlow("")
@@ -24,7 +24,7 @@ internal class LogViewModel(
 
     val filteredLogs: StateFlow<List<LogEntry>> =
         combine(
-            logStore.dataFlow,
+            logStorage.dataFlow,
             _searchQuery,
             _selectedFilter,
         ) { logs: List<LogEntry>, query: String, filter: LogSeverityFilter ->
@@ -47,7 +47,7 @@ internal class LogViewModel(
     }
 
     fun clearLogs() {
-        logStore.clear()
+        logStorage.clear()
         _searchQuery.value = ""
         _selectedFilter.value = LogSeverityFilters.ALL
     }

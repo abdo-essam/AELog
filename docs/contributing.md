@@ -92,7 +92,7 @@ We use Conventional Commits:
 feat: add network inspection plugin
 fix: resolve theme bleed into host app
 docs: update plugin creation guide
-test: add LogStore unit tests
+test: add LogStorage unit tests
 refactor: extract log filtering to separate class
 chore: update Kotlin to 2.3.0
 perf: cache LogEntry computed properties
@@ -116,6 +116,6 @@ ci: add iOS build to CI pipeline
 │ LogPlugin│ (Your   │  DataPlugin       │  ← Plugin system
 │ (UIPlugin)│  Plugin) │  (headless)       │
 ├──────────┴──────────┴───────────────────┤
-│              LogStore / DataStore        │  ← Storage layer
+│              LogStorage / DataStore        │  ← Storage layer
 └─────────────────────────────────────────┘
 ```

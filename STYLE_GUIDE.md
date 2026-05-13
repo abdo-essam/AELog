@@ -56,4 +56,4 @@ Do not repeat words unnecessarily in class or method names. If the class name pr
 
 Avoid creating deep wrapper classes that add no semantic value.
 
-- If a class simply wraps another with exact parity, use a `typealias` instead of creating a new type (e.g., `typealias LogStore = PluginStore<LogEntry>`). This flattens the hierarchy and reduces cognitive load.
+- If a class simply wraps another with exact parity, use a `typealias` instead of creating a new type (e.g., `typealias LogStorage = PluginStorage<LogEntry>`). This flattens the hierarchy and reduces cognitive load.

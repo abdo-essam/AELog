@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.ae.log.core.LocalLogController
+import com.ae.log.ui.LocalLogController
+import com.ae.log.ui.LogProvider
+import com.ae.log.ui.UiConfig
 import kotlinx.coroutines.flow.first
 
 /**

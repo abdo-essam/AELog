@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.ae.log.UiConfig
+import com.ae.log.ui.UiConfig
 
 /**
  * Presents the AELog panel as a centered [Dialog].

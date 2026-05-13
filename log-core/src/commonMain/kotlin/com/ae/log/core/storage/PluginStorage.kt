@@ -1,4 +1,4 @@
-package com.ae.log.core.store
+package com.ae.log.core.storage
 
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-public class PluginStore<T>(
+public class PluginStorage<T>(
     capacity: Int,
 ) : SynchronizedObject() {
     private val ring = RingBuffer<T>(capacity)

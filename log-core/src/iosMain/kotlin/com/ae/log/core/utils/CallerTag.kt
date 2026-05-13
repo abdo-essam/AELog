@@ -9,7 +9,7 @@ public actual fun callerTag(): String {
             "com.ae.log.plugins.",
             "com.ae.log.AELog",
             "com.ae.log.LogProxy",
-            "com.ae.log.LogProvider",
+            "com.ae.log.ui.LogProvider",
             "AELog.",
             "androidx.compose.",
             "kotlin.",

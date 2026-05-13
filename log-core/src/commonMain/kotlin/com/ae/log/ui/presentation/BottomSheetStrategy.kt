@@ -16,7 +16,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import com.ae.log.UiConfig
+import com.ae.log.ui.UiConfig
 
 /**
  * Presents the AELog panel as a [ModalBottomSheet].

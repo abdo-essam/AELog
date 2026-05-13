@@ -3,16 +3,21 @@ public final class com/ae/log/AELog {
 	public static final field INSTANCE Lcom/ae/log/AELog;
 	public static final fun clearAll ()V
 	public static final fun export ()Ljava/lang/String;
-	public final fun getConfig ()Lcom/ae/log/LogConfig;
+	public final fun getConfig ()Lcom/ae/log/config/LogConfig;
 	public final fun getInstance ()Lcom/ae/log/LogInspector;
 	public final fun getInstanceAtomic ()Lkotlinx/atomicfu/AtomicRef;
-	public static final fun init ([Lcom/ae/log/core/Plugin;Lcom/ae/log/LogConfig;)V
-	public static synthetic fun init$default ([Lcom/ae/log/core/Plugin;Lcom/ae/log/LogConfig;ILjava/lang/Object;)V
+	public static final fun init ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;)V
+	public static synthetic fun init$default ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;ILjava/lang/Object;)V
 	public static final fun isEnabled ()Z
 	public static final fun setEnabled (Z)V
 }
 
-public final class com/ae/log/LogConfig {
+public final class com/ae/log/LogInspector {
+	public static final field $stable I
+	public final fun getPlugins ()Lcom/ae/log/plugin/PluginManager;
+}
+
+public final class com/ae/log/config/LogConfig {
 	public static final field $stable I
 	public fun <init> ()V
 	public fun <init> (ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;)V
@@ -20,8 +25,8 @@ public final class com/ae/log/LogConfig {
 	public final fun component1 ()Z
 	public final fun component2 ()Lkotlinx/coroutines/CoroutineDispatcher;
 	public final fun component3 ()Lkotlin/jvm/functions/Function1;
-	public final fun copy (ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;)Lcom/ae/log/LogConfig;
-	public static synthetic fun copy$default (Lcom/ae/log/LogConfig;ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/ae/log/LogConfig;
+	public final fun copy (ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;)Lcom/ae/log/config/LogConfig;
+	public static synthetic fun copy$default (Lcom/ae/log/config/LogConfig;ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/ae/log/config/LogConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
 	public final fun getEnabled ()Z
@@ -30,173 +35,39 @@ public final class com/ae/log/LogConfig {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/log/LogInspector {
+public final class com/ae/log/core/event/AllDataClearedEvent : com/ae/log/core/event/Event {
 	public static final field $stable I
-	public final fun getPlugins ()Lcom/ae/log/PluginManager;
+	public static final field INSTANCE Lcom/ae/log/core/event/AllDataClearedEvent;
 }
 
-public final class com/ae/log/LogProviderKt {
-	public static final fun LogProvider (Lcom/ae/log/LogInspector;Lcom/ae/log/UiConfig;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
-	public static final fun getUiPlugins (Lcom/ae/log/LogInspector;)Ljava/util/List;
-}
-
-public final class com/ae/log/PluginManager {
+public final class com/ae/log/core/event/AppStartedEvent : com/ae/log/core/event/Event {
 	public static final field $stable I
-	public final fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/core/Plugin;
-	public final fun getPluginById (Ljava/lang/String;)Lcom/ae/log/core/Plugin;
-	public final fun getPlugins ()Lkotlinx/coroutines/flow/StateFlow;
-	public final fun install (Lcom/ae/log/core/Plugin;)Lcom/ae/log/PluginManager;
-	public final fun uninstall (Ljava/lang/String;)Lcom/ae/log/PluginManager;
+	public static final field INSTANCE Lcom/ae/log/core/event/AppStartedEvent;
 }
 
-public final class com/ae/log/PresentationMode : java/lang/Enum {
-	public static final field Adaptive Lcom/ae/log/PresentationMode;
-	public static final field BottomSheet Lcom/ae/log/PresentationMode;
-	public static final field Dialog Lcom/ae/log/PresentationMode;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/PresentationMode;
-	public static fun values ()[Lcom/ae/log/PresentationMode;
-}
-
-public final class com/ae/log/UiConfig {
+public final class com/ae/log/core/event/AppStoppedEvent : com/ae/log/core/event/Event {
 	public static final field $stable I
-	public fun <init> ()V
-	public fun <init> (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;)V
-	public synthetic fun <init> (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Z
-	public final fun component2 ()Landroidx/compose/ui/Alignment;
-	public final fun component3 ()Z
-	public final fun component4 ()Landroidx/compose/material3/ColorScheme;
-	public final fun component5 ()Lcom/ae/log/PresentationMode;
-	public final fun component6 ()F
-	public final fun component7 ()Lkotlin/Pair;
-	public final fun copy (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;)Lcom/ae/log/UiConfig;
-	public static synthetic fun copy$default (Lcom/ae/log/UiConfig;ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/PresentationMode;FLkotlin/Pair;ILjava/lang/Object;)Lcom/ae/log/UiConfig;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBottomSheetHeightFraction ()F
-	public final fun getColorScheme ()Landroidx/compose/material3/ColorScheme;
-	public final fun getDialogSizeFraction ()Lkotlin/Pair;
-	public final fun getEnableLongPress ()Z
-	public final fun getFloatingButtonAlignment ()Landroidx/compose/ui/Alignment;
-	public final fun getPresentationMode ()Lcom/ae/log/PresentationMode;
-	public final fun getShowFloatingButton ()Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
+	public static final field INSTANCE Lcom/ae/log/core/event/AppStoppedEvent;
 }
 
-public abstract interface class com/ae/log/core/DataPlugin : com/ae/log/core/Plugin {
+public abstract interface class com/ae/log/core/event/Event {
 }
 
-public final class com/ae/log/core/DataPlugin$DefaultImpls {
-	public static fun export (Lcom/ae/log/core/DataPlugin;)Ljava/lang/String;
-	public static fun onAttach (Lcom/ae/log/core/DataPlugin;Lcom/ae/log/core/PluginContext;)V
-	public static fun onClear (Lcom/ae/log/core/DataPlugin;)V
-	public static fun onClose (Lcom/ae/log/core/DataPlugin;)V
-	public static fun onDetach (Lcom/ae/log/core/DataPlugin;)V
-	public static fun onOpen (Lcom/ae/log/core/DataPlugin;)V
-	public static fun onStart (Lcom/ae/log/core/DataPlugin;)V
-	public static fun onStop (Lcom/ae/log/core/DataPlugin;)V
-}
-
-public final class com/ae/log/core/LogController {
-	public static final field $stable I
-	public fun <init> ()V
-	public final fun getActiveTabIndex ()Lkotlinx/coroutines/flow/MutableStateFlow;
-	public final fun hide ()V
-	public final fun isVisible ()Lkotlinx/coroutines/flow/StateFlow;
-	public final fun show ()V
-	public final fun toggle ()V
-}
-
-public final class com/ae/log/core/LogControllerKt {
-	public static final fun getLocalLogController ()Landroidx/compose/runtime/ProvidableCompositionLocal;
-}
-
-public abstract interface class com/ae/log/core/Plugin {
-	public fun export ()Ljava/lang/String;
-	public abstract fun getId ()Ljava/lang/String;
-	public abstract fun getName ()Ljava/lang/String;
-	public fun onAttach (Lcom/ae/log/core/PluginContext;)V
-	public fun onClear ()V
-	public fun onClose ()V
-	public fun onDetach ()V
-	public fun onOpen ()V
-	public fun onStart ()V
-	public fun onStop ()V
-}
-
-public final class com/ae/log/core/Plugin$DefaultImpls {
-	public static fun export (Lcom/ae/log/core/Plugin;)Ljava/lang/String;
-	public static fun onAttach (Lcom/ae/log/core/Plugin;Lcom/ae/log/core/PluginContext;)V
-	public static fun onClear (Lcom/ae/log/core/Plugin;)V
-	public static fun onClose (Lcom/ae/log/core/Plugin;)V
-	public static fun onDetach (Lcom/ae/log/core/Plugin;)V
-	public static fun onOpen (Lcom/ae/log/core/Plugin;)V
-	public static fun onStart (Lcom/ae/log/core/Plugin;)V
-	public static fun onStop (Lcom/ae/log/core/Plugin;)V
-}
-
-public abstract interface class com/ae/log/core/PluginContext {
-	public abstract fun getConfig ()Lcom/ae/log/LogConfig;
-	public abstract fun getEventBus ()Lcom/ae/log/core/bus/EventBus;
-	public abstract fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/core/Plugin;
-	public abstract fun getScope ()Lkotlinx/coroutines/CoroutineScope;
-}
-
-public abstract interface class com/ae/log/core/UIPlugin : com/ae/log/core/Plugin {
-	public abstract fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
-	public abstract fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
-	public abstract fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
-}
-
-public final class com/ae/log/core/UIPlugin$DefaultImpls {
-	public static fun HeaderActions (Lcom/ae/log/core/UIPlugin;Landroidx/compose/runtime/Composer;I)V
-	public static fun HeaderContent (Lcom/ae/log/core/UIPlugin;Landroidx/compose/runtime/Composer;I)V
-	public static fun export (Lcom/ae/log/core/UIPlugin;)Ljava/lang/String;
-	public static fun onAttach (Lcom/ae/log/core/UIPlugin;Lcom/ae/log/core/PluginContext;)V
-	public static fun onClear (Lcom/ae/log/core/UIPlugin;)V
-	public static fun onClose (Lcom/ae/log/core/UIPlugin;)V
-	public static fun onDetach (Lcom/ae/log/core/UIPlugin;)V
-	public static fun onOpen (Lcom/ae/log/core/UIPlugin;)V
-	public static fun onStart (Lcom/ae/log/core/UIPlugin;)V
-	public static fun onStop (Lcom/ae/log/core/UIPlugin;)V
-}
-
-public final class com/ae/log/core/bus/AllDataClearedEvent : com/ae/log/core/bus/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/bus/AllDataClearedEvent;
-}
-
-public final class com/ae/log/core/bus/AppStartedEvent : com/ae/log/core/bus/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/bus/AppStartedEvent;
-}
-
-public final class com/ae/log/core/bus/AppStoppedEvent : com/ae/log/core/bus/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/bus/AppStoppedEvent;
-}
-
-public abstract interface class com/ae/log/core/bus/Event {
-}
-
-public final class com/ae/log/core/bus/EventBus {
+public final class com/ae/log/core/event/EventBus {
 	public static final field $stable I
 	public fun <init> ()V
 	public final fun getEvents ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun publish (Lcom/ae/log/core/bus/Event;)V
-	public final fun publishSuspend (Lcom/ae/log/core/bus/Event;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun publish (Lcom/ae/log/core/event/Event;)V
+	public final fun publishSuspend (Lcom/ae/log/core/event/Event;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public final class com/ae/log/core/bus/LogTagRegisteredEvent : com/ae/log/core/bus/Event {
+public final class com/ae/log/core/event/LogTagRegisteredEvent : com/ae/log/core/event/Event {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/ae/log/core/bus/LogTagRegisteredEvent;
-	public static synthetic fun copy$default (Lcom/ae/log/core/bus/LogTagRegisteredEvent;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/ae/log/core/bus/LogTagRegisteredEvent;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/ae/log/core/event/LogTagRegisteredEvent;
+	public static synthetic fun copy$default (Lcom/ae/log/core/event/LogTagRegisteredEvent;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/ae/log/core/event/LogTagRegisteredEvent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBadgeLabel ()Ljava/lang/String;
 	public final fun getTag ()Ljava/lang/String;
@@ -204,17 +75,17 @@ public final class com/ae/log/core/bus/LogTagRegisteredEvent : com/ae/log/core/b
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/log/core/bus/PanelClosedEvent : com/ae/log/core/bus/Event {
+public final class com/ae/log/core/event/PanelClosedEvent : com/ae/log/core/event/Event {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/bus/PanelClosedEvent;
+	public static final field INSTANCE Lcom/ae/log/core/event/PanelClosedEvent;
 }
 
-public final class com/ae/log/core/bus/PanelOpenedEvent : com/ae/log/core/bus/Event {
+public final class com/ae/log/core/event/PanelOpenedEvent : com/ae/log/core/event/Event {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/bus/PanelOpenedEvent;
+	public static final field INSTANCE Lcom/ae/log/core/event/PanelOpenedEvent;
 }
 
-public final class com/ae/log/core/store/PluginStore {
+public final class com/ae/log/core/storage/PluginStorage {
 	public static final field $stable I
 	public fun <init> (I)V
 	public final fun add (Ljava/lang/Object;)V
@@ -241,6 +112,135 @@ public final class com/ae/log/core/utils/TimeUtils {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/core/utils/TimeUtils;
 	public final fun formatTimestamp (J)Ljava/lang/String;
+}
+
+public abstract interface class com/ae/log/plugin/DataPlugin : com/ae/log/plugin/Plugin {
+}
+
+public final class com/ae/log/plugin/DataPlugin$DefaultImpls {
+	public static fun export (Lcom/ae/log/plugin/DataPlugin;)Ljava/lang/String;
+	public static fun onAttach (Lcom/ae/log/plugin/DataPlugin;Lcom/ae/log/plugin/PluginContext;)V
+	public static fun onClear (Lcom/ae/log/plugin/DataPlugin;)V
+	public static fun onClose (Lcom/ae/log/plugin/DataPlugin;)V
+	public static fun onDetach (Lcom/ae/log/plugin/DataPlugin;)V
+	public static fun onOpen (Lcom/ae/log/plugin/DataPlugin;)V
+	public static fun onStart (Lcom/ae/log/plugin/DataPlugin;)V
+	public static fun onStop (Lcom/ae/log/plugin/DataPlugin;)V
+}
+
+public abstract interface class com/ae/log/plugin/Plugin {
+	public fun export ()Ljava/lang/String;
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
+	public fun onClear ()V
+	public fun onClose ()V
+	public fun onDetach ()V
+	public fun onOpen ()V
+	public fun onStart ()V
+	public fun onStop ()V
+}
+
+public final class com/ae/log/plugin/Plugin$DefaultImpls {
+	public static fun export (Lcom/ae/log/plugin/Plugin;)Ljava/lang/String;
+	public static fun onAttach (Lcom/ae/log/plugin/Plugin;Lcom/ae/log/plugin/PluginContext;)V
+	public static fun onClear (Lcom/ae/log/plugin/Plugin;)V
+	public static fun onClose (Lcom/ae/log/plugin/Plugin;)V
+	public static fun onDetach (Lcom/ae/log/plugin/Plugin;)V
+	public static fun onOpen (Lcom/ae/log/plugin/Plugin;)V
+	public static fun onStart (Lcom/ae/log/plugin/Plugin;)V
+	public static fun onStop (Lcom/ae/log/plugin/Plugin;)V
+}
+
+public abstract interface class com/ae/log/plugin/PluginContext {
+	public abstract fun getConfig ()Lcom/ae/log/config/LogConfig;
+	public abstract fun getEventBus ()Lcom/ae/log/core/event/EventBus;
+	public abstract fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/plugin/Plugin;
+	public abstract fun getScope ()Lkotlinx/coroutines/CoroutineScope;
+}
+
+public final class com/ae/log/plugin/PluginManager {
+	public static final field $stable I
+	public final fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/plugin/Plugin;
+	public final fun getPluginById (Ljava/lang/String;)Lcom/ae/log/plugin/Plugin;
+	public final fun getPlugins ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun install (Lcom/ae/log/plugin/Plugin;)Lcom/ae/log/plugin/PluginManager;
+	public final fun uninstall (Ljava/lang/String;)Lcom/ae/log/plugin/PluginManager;
+}
+
+public abstract interface class com/ae/log/plugin/UIPlugin : com/ae/log/plugin/Plugin {
+	public abstract fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
+	public abstract fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class com/ae/log/plugin/UIPlugin$DefaultImpls {
+	public static fun HeaderActions (Lcom/ae/log/plugin/UIPlugin;Landroidx/compose/runtime/Composer;I)V
+	public static fun HeaderContent (Lcom/ae/log/plugin/UIPlugin;Landroidx/compose/runtime/Composer;I)V
+	public static fun export (Lcom/ae/log/plugin/UIPlugin;)Ljava/lang/String;
+	public static fun onAttach (Lcom/ae/log/plugin/UIPlugin;Lcom/ae/log/plugin/PluginContext;)V
+	public static fun onClear (Lcom/ae/log/plugin/UIPlugin;)V
+	public static fun onClose (Lcom/ae/log/plugin/UIPlugin;)V
+	public static fun onDetach (Lcom/ae/log/plugin/UIPlugin;)V
+	public static fun onOpen (Lcom/ae/log/plugin/UIPlugin;)V
+	public static fun onStart (Lcom/ae/log/plugin/UIPlugin;)V
+	public static fun onStop (Lcom/ae/log/plugin/UIPlugin;)V
+}
+
+public final class com/ae/log/ui/LogController {
+	public static final field $stable I
+	public fun <init> ()V
+	public final fun getActiveTabIndex ()Lkotlinx/coroutines/flow/MutableStateFlow;
+	public final fun hide ()V
+	public final fun isVisible ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun show ()V
+	public final fun toggle ()V
+}
+
+public final class com/ae/log/ui/LogControllerKt {
+	public static final fun getLocalLogController ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
+public final class com/ae/log/ui/LogProviderKt {
+	public static final fun LogProvider (Lcom/ae/log/LogInspector;Lcom/ae/log/ui/UiConfig;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun getUiPlugins (Lcom/ae/log/LogInspector;)Ljava/util/List;
+}
+
+public final class com/ae/log/ui/PresentationMode : java/lang/Enum {
+	public static final field Adaptive Lcom/ae/log/ui/PresentationMode;
+	public static final field BottomSheet Lcom/ae/log/ui/PresentationMode;
+	public static final field Dialog Lcom/ae/log/ui/PresentationMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/ui/PresentationMode;
+	public static fun values ()[Lcom/ae/log/ui/PresentationMode;
+}
+
+public final class com/ae/log/ui/UiConfig {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/ui/PresentationMode;FLkotlin/Pair;)V
+	public synthetic fun <init> (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/ui/PresentationMode;FLkotlin/Pair;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Landroidx/compose/ui/Alignment;
+	public final fun component3 ()Z
+	public final fun component4 ()Landroidx/compose/material3/ColorScheme;
+	public final fun component5 ()Lcom/ae/log/ui/PresentationMode;
+	public final fun component6 ()F
+	public final fun component7 ()Lkotlin/Pair;
+	public final fun copy (ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/ui/PresentationMode;FLkotlin/Pair;)Lcom/ae/log/ui/UiConfig;
+	public static synthetic fun copy$default (Lcom/ae/log/ui/UiConfig;ZLandroidx/compose/ui/Alignment;ZLandroidx/compose/material3/ColorScheme;Lcom/ae/log/ui/PresentationMode;FLkotlin/Pair;ILjava/lang/Object;)Lcom/ae/log/ui/UiConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBottomSheetHeightFraction ()F
+	public final fun getColorScheme ()Landroidx/compose/material3/ColorScheme;
+	public final fun getDialogSizeFraction ()Lkotlin/Pair;
+	public final fun getEnableLongPress ()Z
+	public final fun getFloatingButtonAlignment ()Landroidx/compose/ui/Alignment;
+	public final fun getPresentationMode ()Lcom/ae/log/ui/PresentationMode;
+	public final fun getShowFloatingButton ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$ListPanelKt {
@@ -284,17 +284,17 @@ public final class com/ae/log/ui/components/PanelHeaderKt {
 public final class com/ae/log/ui/presentation/BottomSheetStrategy : com/ae/log/ui/presentation/PresentationStrategy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/presentation/BottomSheetStrategy;
-	public fun Present (Lcom/ae/log/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public fun Present (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/ae/log/ui/presentation/DialogStrategy : com/ae/log/ui/presentation/PresentationStrategy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/presentation/DialogStrategy;
-	public fun Present (Lcom/ae/log/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public fun Present (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public abstract interface class com/ae/log/ui/presentation/PresentationStrategy {
-	public abstract fun Present (Lcom/ae/log/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public abstract fun Present (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/ae/log/ui/theme/LogSpacing {
