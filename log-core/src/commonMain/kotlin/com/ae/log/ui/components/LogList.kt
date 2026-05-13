@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.ae.log.ui.theme.LogSpacing
 
 @Composable
-public fun <T> ListPanel(
+public fun <T> LogList(
     items: List<T>,
     itemLabel: String,
     searchQuery: String,
@@ -36,7 +36,7 @@ public fun <T> ListPanel(
     itemContent: @Composable (index: Int, item: T) -> Unit,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        PanelHeader(
+        LogHeader(
             itemCount = items.size,
             itemLabel = itemLabel,
             onClearAll = onClearAll,

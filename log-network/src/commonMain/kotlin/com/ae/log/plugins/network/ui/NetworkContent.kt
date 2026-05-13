@@ -16,7 +16,7 @@ import com.ae.log.plugins.network.model.NetworkEntry
 import com.ae.log.plugins.network.model.NetworkFilters
 import com.ae.log.plugins.network.ui.components.NetworkEntryItem
 import com.ae.log.plugins.network.utils.toClipboardText
-import com.ae.log.ui.components.ListPanel
+import com.ae.log.ui.components.LogList
 
 @Composable
 internal fun NetworkContent(
@@ -60,7 +60,7 @@ internal fun NetworkContent(
             }
         }
 
-    ListPanel(
+    LogList(
         items = entries,
         itemLabel = "requests",
         searchQuery = query,

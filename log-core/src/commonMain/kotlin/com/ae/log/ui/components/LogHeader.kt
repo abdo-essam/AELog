@@ -26,7 +26,7 @@ import com.ae.log.ui.theme.LogSpacing
  * matching the design of `LogViewerHeader`.
  */
 @Composable
-public fun PanelHeader(
+public fun LogHeader(
     itemCount: Int,
     itemLabel: String = "entries",
     onClearAll: () -> Unit,

@@ -1,8 +1,6 @@
 package com.ae.log.plugins.log.ui
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -10,7 +8,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import com.ae.log.plugins.log.model.*
 import com.ae.log.plugins.log.model.LogEntry
-import com.ae.log.ui.components.ListPanel
+import com.ae.log.ui.components.LogList
 
 /**
  * Main logs panel content — used by [com.ae.log.plugins.log.LogPlugin].
@@ -46,7 +44,7 @@ internal fun LogContent(
             }
         }
 
-    ListPanel(
+    LogList(
         items = allLogs,
         itemLabel = "entries",
         searchQuery = searchQuery,
