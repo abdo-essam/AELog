@@ -1,6 +1,6 @@
 package com.ae.log.plugins.network.storage
 
-import com.ae.log.core.storage.PluginStorage
+import com.ae.log.storage.PluginStorage
 import com.ae.log.plugins.network.model.NetworkEntry
 import kotlinx.coroutines.flow.StateFlow
 

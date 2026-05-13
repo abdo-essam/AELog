@@ -1,4 +1,4 @@
-package com.ae.log.core.utils
+package com.ae.log.utils
 
 import platform.Foundation.NSThread
 
@@ -15,9 +15,9 @@ public actual fun callerTag(): String {
             "kotlin.",
         )
     val frame =
-        (NSThread.callStackSymbols as? List<*>)
-            ?.drop(1)
-            ?.firstOrNull { sym ->
+        NSThread.callStackSymbols
+            .drop(1)
+            .firstOrNull { sym ->
                 val symbolStr = sym as? String ?: return@firstOrNull false
                 skip.none { symbolStr.contains(it) }
             } as? String

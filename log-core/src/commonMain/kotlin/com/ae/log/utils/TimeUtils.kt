@@ -1,4 +1,4 @@
-package com.ae.log.core.utils
+package com.ae.log.utils
 
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

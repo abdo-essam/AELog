@@ -1,7 +1,7 @@
 package com.ae.log
 
 import com.ae.log.config.LogConfig
-import com.ae.log.core.event.EventBus
+import com.ae.log.event.EventBus
 import com.ae.log.plugin.Lifecycle
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginManager

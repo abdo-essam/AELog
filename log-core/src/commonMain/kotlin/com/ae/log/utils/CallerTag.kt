@@ -1,3 +1,3 @@
-package com.ae.log.core.utils
+package com.ae.log.utils
 
 public expect fun callerTag(): String

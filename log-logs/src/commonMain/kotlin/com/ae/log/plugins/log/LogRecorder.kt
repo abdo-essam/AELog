@@ -1,7 +1,7 @@
 package com.ae.log.plugins.log
 
 import com.ae.log.AELog
-import com.ae.log.core.utils.IdGenerator
+import com.ae.log.utils.IdGenerator
 import com.ae.log.plugins.log.model.LogEntry
 import com.ae.log.plugins.log.model.LogSeverity
 import kotlin.time.Clock

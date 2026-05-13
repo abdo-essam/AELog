@@ -1,11 +1,11 @@
 package com.ae.log.plugin
 
-import com.ae.log.core.event.AllDataClearedEvent
-import com.ae.log.core.event.AppStartedEvent
-import com.ae.log.core.event.AppStoppedEvent
-import com.ae.log.core.event.EventBus
-import com.ae.log.core.event.PanelClosedEvent
-import com.ae.log.core.event.PanelOpenedEvent
+import com.ae.log.event.AllDataClearedEvent
+import com.ae.log.event.AppStartedEvent
+import com.ae.log.event.AppStoppedEvent
+import com.ae.log.event.EventBus
+import com.ae.log.event.PanelClosedEvent
+import com.ae.log.event.PanelOpenedEvent
 
 internal class Lifecycle(
     private val pluginManager: PluginManager,

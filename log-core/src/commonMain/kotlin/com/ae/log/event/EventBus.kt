@@ -1,5 +1,6 @@
-package com.ae.log.core.event
+package com.ae.log.event
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,5 +19,4 @@ public class EventBus {
     }
 }
 
-public inline fun <reified T : Event> EventBus.subscribe(): kotlinx.coroutines.flow.Flow<T> =
-    events.filterIsInstance<T>()
+public inline fun <reified T : Event> EventBus.subscribe(): Flow<T> = events.filterIsInstance<T>()

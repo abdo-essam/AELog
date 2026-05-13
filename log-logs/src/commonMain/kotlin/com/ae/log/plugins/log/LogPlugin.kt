@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.ae.log.core.storage.PluginStorage
+import com.ae.log.storage.PluginStorage
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import com.ae.log.plugins.log.model.LogEntry

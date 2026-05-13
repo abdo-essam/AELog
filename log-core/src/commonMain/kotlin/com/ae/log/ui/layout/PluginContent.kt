@@ -1,4 +1,4 @@
-package com.ae.log.ui
+package com.ae.log.ui.layout
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

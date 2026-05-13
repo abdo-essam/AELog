@@ -1,4 +1,4 @@
-package com.ae.log.ui
+package com.ae.log.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

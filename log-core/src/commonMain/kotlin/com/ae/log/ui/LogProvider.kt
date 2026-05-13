@@ -13,9 +13,9 @@ import com.ae.log.AELog
 import com.ae.log.LogInspector
 import com.ae.log.plugin.UIPlugin
 import com.ae.log.ui.LocalLogController
-import com.ae.log.ui.LogContainer
 import com.ae.log.ui.LogController
-import com.ae.log.ui.LogFloatingButton
+import com.ae.log.ui.components.LogFloatingButton
+import com.ae.log.ui.layout.LogContainer
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 

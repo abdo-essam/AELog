@@ -1,7 +1,7 @@
 package com.ae.log.plugins.analytics
 
 import com.ae.log.AELog
-import com.ae.log.core.utils.IdGenerator
+import com.ae.log.utils.IdGenerator
 import com.ae.log.plugins.analytics.model.AdapterSource
 import com.ae.log.plugins.analytics.model.AnalyticsEvent
 import com.ae.log.plugins.analytics.storage.AnalyticsStorage

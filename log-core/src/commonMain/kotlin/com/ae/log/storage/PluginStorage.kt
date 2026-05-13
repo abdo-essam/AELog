@@ -1,4 +1,4 @@
-package com.ae.log.core.storage
+package com.ae.log.storage
 
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized

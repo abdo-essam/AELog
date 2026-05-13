@@ -1,6 +1,6 @@
 package com.ae.log.plugins.log.ui
 
-import com.ae.log.core.utils.TimeUtils
+import com.ae.log.utils.TimeUtils
 import com.ae.log.plugins.log.model.LogEntry
 
 internal object LogUtils {

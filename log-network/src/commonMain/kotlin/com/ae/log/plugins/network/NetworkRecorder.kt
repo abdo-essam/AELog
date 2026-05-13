@@ -1,7 +1,7 @@
 package com.ae.log.plugins.network
 
 import com.ae.log.AELog
-import com.ae.log.core.utils.IdGenerator
+import com.ae.log.utils.IdGenerator
 import com.ae.log.plugins.network.model.NetworkEntry
 import com.ae.log.plugins.network.model.NetworkMethod
 import com.ae.log.plugins.network.storage.NetworkStorage

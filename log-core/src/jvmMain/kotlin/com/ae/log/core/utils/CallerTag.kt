@@ -1,4 +1,4 @@
-package com.ae.log.core.utils
+package com.ae.log.utils
 
 public actual fun callerTag(): String {
     val skip = listOf("com.ae.log", "java.", "kotlin.", "androidx.compose.")
