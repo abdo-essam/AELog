@@ -1,7 +1,7 @@
 package com.ae.log.plugins.log.ui
 
-import com.ae.log.utils.TimeUtils
 import com.ae.log.plugins.log.model.LogEntry
+import com.ae.log.utils.TimeUtils
 
 internal object LogUtils {
     fun formatTimestamp(timestamp: Long): String = TimeUtils.formatTimestamp(timestamp)

@@ -35,39 +35,39 @@ public final class com/ae/log/config/LogConfig {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/log/core/event/AllDataClearedEvent : com/ae/log/core/event/Event {
+public final class com/ae/log/event/AllDataClearedEvent : com/ae/log/event/Event {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/event/AllDataClearedEvent;
+	public static final field INSTANCE Lcom/ae/log/event/AllDataClearedEvent;
 }
 
-public final class com/ae/log/core/event/AppStartedEvent : com/ae/log/core/event/Event {
+public final class com/ae/log/event/AppStartedEvent : com/ae/log/event/Event {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/event/AppStartedEvent;
+	public static final field INSTANCE Lcom/ae/log/event/AppStartedEvent;
 }
 
-public final class com/ae/log/core/event/AppStoppedEvent : com/ae/log/core/event/Event {
+public final class com/ae/log/event/AppStoppedEvent : com/ae/log/event/Event {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/event/AppStoppedEvent;
+	public static final field INSTANCE Lcom/ae/log/event/AppStoppedEvent;
 }
 
-public abstract interface class com/ae/log/core/event/Event {
+public abstract interface class com/ae/log/event/Event {
 }
 
-public final class com/ae/log/core/event/EventBus {
+public final class com/ae/log/event/EventBus {
 	public static final field $stable I
 	public fun <init> ()V
 	public final fun getEvents ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun publish (Lcom/ae/log/core/event/Event;)V
-	public final fun publishSuspend (Lcom/ae/log/core/event/Event;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun publish (Lcom/ae/log/event/Event;)V
+	public final fun publishSuspend (Lcom/ae/log/event/Event;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public final class com/ae/log/core/event/LogTagRegisteredEvent : com/ae/log/core/event/Event {
+public final class com/ae/log/event/LogTagRegisteredEvent : com/ae/log/event/Event {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/ae/log/core/event/LogTagRegisteredEvent;
-	public static synthetic fun copy$default (Lcom/ae/log/core/event/LogTagRegisteredEvent;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/ae/log/core/event/LogTagRegisteredEvent;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/ae/log/event/LogTagRegisteredEvent;
+	public static synthetic fun copy$default (Lcom/ae/log/event/LogTagRegisteredEvent;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/ae/log/event/LogTagRegisteredEvent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBadgeLabel ()Ljava/lang/String;
 	public final fun getTag ()Ljava/lang/String;
@@ -75,43 +75,14 @@ public final class com/ae/log/core/event/LogTagRegisteredEvent : com/ae/log/core
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/log/core/event/PanelClosedEvent : com/ae/log/core/event/Event {
+public final class com/ae/log/event/PanelClosedEvent : com/ae/log/event/Event {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/event/PanelClosedEvent;
+	public static final field INSTANCE Lcom/ae/log/event/PanelClosedEvent;
 }
 
-public final class com/ae/log/core/event/PanelOpenedEvent : com/ae/log/core/event/Event {
+public final class com/ae/log/event/PanelOpenedEvent : com/ae/log/event/Event {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/event/PanelOpenedEvent;
-}
-
-public final class com/ae/log/core/storage/PluginStorage {
-	public static final field $stable I
-	public fun <init> (I)V
-	public final fun add (Ljava/lang/Object;)V
-	public final fun addOrReplace (Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)V
-	public final fun clear ()V
-	public final fun getCount ()I
-	public final fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
-	public final fun isEmpty ()Z
-	public final fun replace (ILjava/lang/Object;)V
-	public final fun updateFirst (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-}
-
-public final class com/ae/log/core/utils/CallerTagKt {
-	public static final fun callerTag ()Ljava/lang/String;
-}
-
-public final class com/ae/log/core/utils/IdGenerator {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/utils/IdGenerator;
-	public final fun next ()Ljava/lang/String;
-}
-
-public final class com/ae/log/core/utils/TimeUtils {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/core/utils/TimeUtils;
-	public final fun formatTimestamp (J)Ljava/lang/String;
+	public static final field INSTANCE Lcom/ae/log/event/PanelOpenedEvent;
 }
 
 public abstract interface class com/ae/log/plugin/DataPlugin : com/ae/log/plugin/Plugin {
@@ -154,7 +125,7 @@ public final class com/ae/log/plugin/Plugin$DefaultImpls {
 
 public abstract interface class com/ae/log/plugin/PluginContext {
 	public abstract fun getConfig ()Lcom/ae/log/config/LogConfig;
-	public abstract fun getEventBus ()Lcom/ae/log/core/event/EventBus;
+	public abstract fun getEventBus ()Lcom/ae/log/event/EventBus;
 	public abstract fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/plugin/Plugin;
 	public abstract fun getScope ()Lkotlinx/coroutines/CoroutineScope;
 }
@@ -187,6 +158,19 @@ public final class com/ae/log/plugin/UIPlugin$DefaultImpls {
 	public static fun onOpen (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onStart (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onStop (Lcom/ae/log/plugin/UIPlugin;)V
+}
+
+public final class com/ae/log/storage/PluginStorage {
+	public static final field $stable I
+	public fun <init> (I)V
+	public final fun add (Ljava/lang/Object;)V
+	public final fun addOrReplace (Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)V
+	public final fun clear ()V
+	public final fun getCount ()I
+	public final fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun isEmpty ()Z
+	public final fun replace (ILjava/lang/Object;)V
+	public final fun updateFirst (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class com/ae/log/ui/LogController {
@@ -320,5 +304,21 @@ public final class com/ae/log/ui/theme/NetworkColors {
 	public static final field INSTANCE Lcom/ae/log/ui/theme/NetworkColors;
 	public final fun getMethodColor-vNxB06k (Ljava/lang/String;)J
 	public final fun getStatusCodeColor-vNxB06k (Ljava/lang/Integer;)J
+}
+
+public final class com/ae/log/utils/CallerTagKt {
+	public static final fun callerTag ()Ljava/lang/String;
+}
+
+public final class com/ae/log/utils/IdGenerator {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/utils/IdGenerator;
+	public final fun next ()Ljava/lang/String;
+}
+
+public final class com/ae/log/utils/TimeUtils {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/utils/TimeUtils;
+	public final fun formatTimestamp (J)Ljava/lang/String;
 }
 

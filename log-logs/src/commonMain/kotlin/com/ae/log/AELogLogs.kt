@@ -1,8 +1,8 @@
 package com.ae.log
 
-import com.ae.log.utils.callerTag
 import com.ae.log.plugins.log.LogPlugin
 import com.ae.log.plugins.log.model.LogSeverity
+import com.ae.log.utils.callerTag
 import kotlin.jvm.JvmStatic
 
 /**

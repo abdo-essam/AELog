@@ -1,7 +1,7 @@
 package com.ae.log.plugins.analytics.storage
 
-import com.ae.log.storage.PluginStorage
 import com.ae.log.plugins.analytics.model.AnalyticsEvent
+import com.ae.log.storage.PluginStorage
 import kotlinx.coroutines.flow.StateFlow
 
 /**
