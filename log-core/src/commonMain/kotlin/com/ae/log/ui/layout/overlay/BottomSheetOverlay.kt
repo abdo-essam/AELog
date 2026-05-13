@@ -12,8 +12,8 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
-import androidx.compose.ui.unit.dp
 import com.ae.log.ui.UiConfig
+import com.ae.log.ui.theme.LogSpacing
 
 /**
  * Presents the AELog panel as a [ModalBottomSheet].
@@ -32,7 +32,7 @@ public object BottomSheetOverlay : OverlayStrategy {
             onDismissRequest = onDismiss,
             sheetState = sheetState,
             containerColor = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            shape = RoundedCornerShape(topStart = LogSpacing.x6, topEnd = LogSpacing.x6),
         ) {
             Box(
                 modifier =

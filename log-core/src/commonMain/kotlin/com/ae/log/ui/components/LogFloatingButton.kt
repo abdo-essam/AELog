@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.unit.dp
+import com.ae.log.ui.theme.LogSpacing
 
 /** Floating action button to open AELog. */
 @Composable
@@ -27,8 +27,8 @@ internal fun LogFloatingButton(
     Box(
         modifier =
             modifier
-                .size(48.dp)
-                .shadow(8.dp, CircleShape)
+                .size(LogSpacing.x12)
+                .shadow(LogSpacing.x2, CircleShape)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary)
                 .clickable(

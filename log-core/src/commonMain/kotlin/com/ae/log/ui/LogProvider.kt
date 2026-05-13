@@ -12,8 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.ae.log.AELog
 import com.ae.log.LogInspector
 import com.ae.log.plugin.UIPlugin
-import com.ae.log.ui.LocalLogController
-import com.ae.log.ui.LogController
 import com.ae.log.ui.components.LogFloatingButton
 import com.ae.log.ui.layout.LogContainer
 import com.ae.log.ui.theme.LogSpacing

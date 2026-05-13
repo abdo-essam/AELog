@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ae.log.ui.UiConfig
+import com.ae.log.ui.theme.LogSpacing
 
 /**
  * Presents the AELog panel as a centered [Dialog].
@@ -31,7 +32,7 @@ public object DialogOverlay : OverlayStrategy {
                     androidx.compose.ui.Modifier
                         .fillMaxWidth(uiConfig.dialogSizeFraction.first)
                         .fillMaxHeight(uiConfig.dialogSizeFraction.second),
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(LogSpacing.x6),
                 color = MaterialTheme.colorScheme.surface,
                 tonalElevation = 6.dp,
             ) {

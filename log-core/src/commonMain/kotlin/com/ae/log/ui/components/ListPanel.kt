@@ -150,9 +150,9 @@ public fun ExpandedDetails(
                     imageVector = Icons.Default.ContentCopy,
                     contentDescription = "Copy",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(LogSpacing.x4),
                 )
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(LogSpacing.x1))
                 Text(
                     text = "Copy",
                     style = MaterialTheme.typography.labelSmall,

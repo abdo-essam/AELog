@@ -3,6 +3,7 @@ package com.ae.log.ui.layout
 import androidx.compose.runtime.Composable
 import com.ae.log.plugin.UIPlugin
 import com.ae.log.ui.PresentationMode
+import com.ae.log.ui.UiConfig
 import com.ae.log.ui.layout.overlay.BottomSheetOverlay
 import com.ae.log.ui.layout.overlay.DialogOverlay
 import com.ae.log.ui.layout.overlay.OverlayStrategy
@@ -17,7 +18,7 @@ import com.ae.log.ui.layout.overlay.OverlayStrategy
 @Composable
 internal fun LogContainer(
     plugins: List<UIPlugin>,
-    uiConfig: com.ae.log.ui.UiConfig,
+    uiConfig: UiConfig,
     isLargeScreen: Boolean,
     presentationMode: PresentationMode,
     onDismiss: () -> Unit,
