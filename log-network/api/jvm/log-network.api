@@ -129,3 +129,10 @@ public final class com/ae/log/plugins/network/model/NetworkMethod$Companion {
 	public final fun fromString (Ljava/lang/String;)Lcom/ae/log/plugins/network/model/NetworkMethod;
 }
 
+public final class com/ae/log/plugins/network/ui/theme/NetworkColors {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/plugins/network/ui/theme/NetworkColors;
+	public final fun getMethodColor-vNxB06k (Ljava/lang/String;)J
+	public final fun getStatusCodeColor-vNxB06k (Ljava/lang/Integer;)J
+}
+

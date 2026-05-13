@@ -227,11 +227,17 @@ public final class com/ae/log/ui/UiConfig {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/log/ui/components/ComposableSingletons$ListPanelKt {
-	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$ListPanelKt;
+public final class com/ae/log/ui/components/ComposableSingletons$LogHeaderKt {
+	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogHeaderKt;
 	public fun <init> ()V
-	public final fun getLambda$-1061770584$log_core ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-1786681576$log_core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1493217520$log_core ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/ae/log/ui/components/ComposableSingletons$LogListKt {
+	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogListKt;
+	public fun <init> ()V
+	public final fun getLambda$-1227493028$log_core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-608073688$log_core ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$LogSearchBarKt {
@@ -241,44 +247,38 @@ public final class com/ae/log/ui/components/ComposableSingletons$LogSearchBarKt 
 	public final fun getLambda$93132620$log_core ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/ae/log/ui/components/ComposableSingletons$PanelHeaderKt {
-	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$PanelHeaderKt;
-	public fun <init> ()V
-	public final fun getLambda$-1857340432$log_core ()Lkotlin/jvm/functions/Function3;
-}
-
-public final class com/ae/log/ui/components/ListPanelKt {
-	public static final fun EmptyPlaceholder (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
-	public static final fun ExpandedDetails-KTwxG1Y (JLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
-	public static final fun ListPanel (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/foundation/lazy/LazyListState;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
-}
-
 public final class com/ae/log/ui/components/LogFilterChipsKt {
 	public static final fun LogFilterChips (Ljava/util/List;ILkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/ae/log/ui/components/LogHeaderKt {
+	public static final fun LogHeader (ILjava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/ae/log/ui/components/LogListKt {
+	public static final fun EmptyPlaceholder (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
+	public static final fun ExpandedDetails-KTwxG1Y (JLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun LogList (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/foundation/lazy/LazyListState;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
 }
 
 public final class com/ae/log/ui/components/LogSearchBarKt {
 	public static final fun LogSearchBar (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
-public final class com/ae/log/ui/components/PanelHeaderKt {
-	public static final fun PanelHeader (ILjava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/ae/log/ui/presentation/BottomSheetStrategy : com/ae/log/ui/presentation/PresentationStrategy {
+public final class com/ae/log/ui/layout/overlay/BottomSheetOverlay : com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/ui/presentation/BottomSheetStrategy;
-	public fun Present (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public static final field INSTANCE Lcom/ae/log/ui/layout/overlay/BottomSheetOverlay;
+	public fun Overlay (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
-public final class com/ae/log/ui/presentation/DialogStrategy : com/ae/log/ui/presentation/PresentationStrategy {
+public final class com/ae/log/ui/layout/overlay/DialogOverlay : com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/ui/presentation/DialogStrategy;
-	public fun Present (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public static final field INSTANCE Lcom/ae/log/ui/layout/overlay/DialogOverlay;
+	public fun Overlay (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
-public abstract interface class com/ae/log/ui/presentation/PresentationStrategy {
-	public abstract fun Present (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+public abstract interface class com/ae/log/ui/layout/overlay/OverlayStrategy {
+	public abstract fun Overlay (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/ae/log/ui/theme/LogSpacing {
@@ -297,13 +297,6 @@ public final class com/ae/log/ui/theme/LogSpacing {
 
 public final class com/ae/log/ui/theme/LogThemeKt {
 	public static final fun LogTheme (Landroidx/compose/material3/ColorScheme;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/ae/log/ui/theme/NetworkColors {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/ui/theme/NetworkColors;
-	public final fun getMethodColor-vNxB06k (Ljava/lang/String;)J
-	public final fun getStatusCodeColor-vNxB06k (Ljava/lang/Integer;)J
 }
 
 public final class com/ae/log/utils/CallerTagKt {
