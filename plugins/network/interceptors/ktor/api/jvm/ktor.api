@@ -2,6 +2,12 @@ public final class com/ae/log/ktor/AELogKtorInterceptor {
 	public static final field Plugin Lcom/ae/log/ktor/AELogKtorInterceptor$Plugin;
 }
 
+public final class com/ae/log/ktor/AELogKtorInterceptor$Config {
+	public fun <init> ()V
+	public final fun getMaxBodyBytes ()I
+	public final fun setMaxBodyBytes (I)V
+}
+
 public final class com/ae/log/ktor/AELogKtorInterceptor$Plugin : io/ktor/client/plugins/HttpClientPlugin {
 	public final fun getExcludeHeaders ()Ljava/util/Set;
 	public fun getKey ()Lio/ktor/util/AttributeKey;

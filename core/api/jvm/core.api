@@ -9,7 +9,11 @@ public final class com/ae/log/AELog {
 	public static final fun init ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;)V
 	public static synthetic fun init$default ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;ILjava/lang/Object;)V
 	public static final fun isEnabled ()Z
+	public final fun resetForTesting ()V
 	public static final fun setEnabled (Z)V
+}
+
+public abstract interface annotation class com/ae/log/AELogTestApi : java/lang/annotation/Annotation {
 }
 
 public final class com/ae/log/LogInspector {
@@ -287,6 +291,15 @@ public final class com/ae/log/ui/layout/overlay/DialogOverlay : com/ae/log/ui/la
 
 public abstract interface class com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public abstract fun Overlay (Lcom/ae/log/ui/UiConfig;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/ae/log/ui/theme/LogDimens {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/ui/theme/LogDimens;
+	public final fun getDialogTonalElevation-D9Ej5fM ()F
+	public final fun getLargeScreenBreakpoint-D9Ej5fM ()F
+	public final fun getListDividerThickness-D9Ej5fM ()F
+	public final fun getOverlayCornerRadius-D9Ej5fM ()F
 }
 
 public final class com/ae/log/ui/theme/LogSpacing {
