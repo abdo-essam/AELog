@@ -1,10 +1,10 @@
 package com.ae.log.sample
 
 import com.ae.log.AELog
+import com.ae.log.ktor.KtorInterceptor
 import com.ae.log.plugins.analytics.AnalyticsPlugin
 import com.ae.log.plugins.log.LogPlugin
 import com.ae.log.plugins.network.NetworkPlugin
-import com.ae.log.ktor.KtorInterceptor
 import io.ktor.client.HttpClient
 
 /**
