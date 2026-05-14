@@ -65,7 +65,7 @@ class AELogInitTest {
     }
 
     @Test
-    fun `init - is idempotent, second call is a no-op`() {
+    fun `init - is idempotent and second call is a no-op`() {
         AELog.init()
         val first = AELog.instance
         AELog.init()
