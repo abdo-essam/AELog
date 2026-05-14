@@ -3,9 +3,6 @@ import com.vanniktech.maven.publish.SonatypeHost
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
-    alias(libs.plugins.composeMultiplatform)
-    alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.vanniktechPublish)
     `maven-publish`
     signing
@@ -20,13 +17,12 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-opt-in=kotlin.time.ExperimentalTime",
-            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
             "-Xexpect-actual-classes",
         )
     }
 
     androidLibrary {
-        namespace = "com.ae.log.network"
+        namespace = "com.ae.log.network.ktor"
         compileSdk =
             libs.versions.android.compileSdk
                 .get()
@@ -47,19 +43,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.aeCore)
-            implementation(libs.runtime)
-            implementation(libs.foundation)
-            implementation(libs.material3)
-            implementation(libs.ui)
-            implementation(libs.material.icons.extended)
-            implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
+            // Brings in logs-network (and transitively logs core)
+            api(projects.plugins.network)
+            // Ktor is a required dep here — consumers of this module need it
+            api(libs.ktor.client.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.ktor.client.cio)
         }
     }
 }
@@ -69,8 +60,8 @@ mavenPublishing {
     signAllPublications()
 
     pom {
-        name.set("AELog Network")
-        description.set("Network monitoring plugin for AELog SDK")
+        name.set("AELog Network Ktor")
+        description.set("Ktor interceptor plugin for AELog SDK")
         url.set("https://github.com/abdo-essam/AELog")
         inceptionYear.set("2026")
 
@@ -101,8 +92,4 @@ mavenPublishing {
             url.set("https://github.com/abdo-essam/AELog/issues")
         }
     }
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    classpath = files()
 }

@@ -3,6 +3,8 @@ import com.vanniktech.maven.publish.SonatypeHost
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.vanniktechPublish)
     `maven-publish`
     signing
@@ -14,10 +16,15 @@ version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 kotlin {
     jvmToolchain(21)
     explicitApi()
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=kotlin.time.ExperimentalTime",
+            "-Xexpect-actual-classes",
+        )
+    }
 
-    // OkHttp is JVM-only — no iOS targets
     androidLibrary {
-        namespace = "com.ae.log.network.okhttp"
+        namespace = "com.ae.log.analytics"
         compileSdk =
             libs.versions.android.compileSdk
                 .get()
@@ -28,17 +35,28 @@ kotlin {
                 .toInt()
     }
 
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64(),
+    )
+
     jvm()
 
     sourceSets {
         commonMain.dependencies {
-            // Brings in logs-network (and transitively logs core)
-            api(projects.aePlugins.network)
-            // OkHttp is a required dep here — consumers only pull this in if they use OkHttp
-            api(libs.okhttp)
+            api(projects.core)
+            implementation(libs.runtime)
+            implementation(libs.foundation)
+            implementation(libs.material3)
+            implementation(libs.ui)
+            implementation(libs.material.icons.extended)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
@@ -48,8 +66,8 @@ mavenPublishing {
     signAllPublications()
 
     pom {
-        name.set("AELog Network OkHttp")
-        description.set("OkHttp interceptor plugin for AELog SDK")
+        name.set("AELog Analytics")
+        description.set("Analytics tracking plugin for AELog SDK")
         url.set("https://github.com/abdo-essam/AELog")
         inceptionYear.set("2026")
 
@@ -80,4 +98,8 @@ mavenPublishing {
             url.set("https://github.com/abdo-essam/AELog/issues")
         }
     }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    classpath = files()
 }

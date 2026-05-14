@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.vanniktechPublish)
     `maven-publish`
     signing
@@ -19,12 +20,13 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.addAll(
             "-opt-in=kotlin.time.ExperimentalTime",
+            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
             "-Xexpect-actual-classes",
         )
     }
 
     androidLibrary {
-        namespace = "com.ae.log.analytics"
+        namespace = "com.ae.log.network"
         compileSdk =
             libs.versions.android.compileSdk
                 .get()
@@ -45,7 +47,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.aeCore)
+            api(projects.core)
             implementation(libs.runtime)
             implementation(libs.foundation)
             implementation(libs.material3)
@@ -53,6 +55,7 @@ kotlin {
             implementation(libs.material.icons.extended)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -66,8 +69,8 @@ mavenPublishing {
     signAllPublications()
 
     pom {
-        name.set("AELog Analytics")
-        description.set("Analytics tracking plugin for AELog SDK")
+        name.set("AELog Network")
+        description.set("Network monitoring plugin for AELog SDK")
         url.set("https://github.com/abdo-essam/AELog")
         inceptionYear.set("2026")
 

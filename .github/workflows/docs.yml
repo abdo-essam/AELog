@@ -6,7 +6,7 @@ on:
     paths:
       - 'docs/**'
       - 'mkdocs.yml'
-      - 'log-core/src/**/**.kt'
+      - 'core/src/**/**.kt'
 
 permissions:
   pages: write
@@ -38,10 +38,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
 
       - name: Generate API Docs (Dokka)
-        run: ./gradlew :log-core:dokkaGeneratePublicationHtml
+        run: ./gradlew :core:dokkaGeneratePublicationHtml
 
       - name: Copy Dokka output
-        run: cp -r log-core/build/dokka/html docs/api
+        run: cp -r core/build/dokka/html docs/api
 
       - name: Build MkDocs site
         run: mkdocs build
