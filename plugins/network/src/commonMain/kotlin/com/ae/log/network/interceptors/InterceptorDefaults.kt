@@ -1,4 +1,4 @@
-﻿package com.ae.log.network.interceptors
+package com.ae.log.network.interceptors
 
 /**
  * Shared defaults for AELog network interceptors (Ktor + OkHttp).
@@ -7,6 +7,14 @@
  * stay in sync without copy-pasting.
  */
 public object InterceptorDefaults {
+    /**
+     * Default maximum body size captured by interceptors, in bytes.
+     *
+     * Matches OkHttp's default. Bodies larger than this are truncated with a `… [truncated]` suffix.
+     * Override per-interceptor when instantiating.
+     */
+    public const val DEFAULT_MAX_BODY_BYTES: Long = 250_000L
+
     /**
      * Headers excluded from the UI by default.
      *

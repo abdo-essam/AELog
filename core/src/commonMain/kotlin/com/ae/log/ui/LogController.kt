@@ -32,7 +32,7 @@ public class LogController {
     }
 
     public fun selectTab(index: Int) {
-        _activeTabIndex.value = index
+        _activeTabIndex.value = index.coerceAtLeast(0)
     }
 }
 

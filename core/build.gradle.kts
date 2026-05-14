@@ -65,6 +65,7 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
         }
 
         androidMain.dependencies {
@@ -78,7 +79,7 @@ dokka {
     dokkaSourceSets.configureEach {
         sourceLink {
             localDirectory.set(projectDir.resolve("src"))
-            remoteUrl("https://github.com/abdo-essam/AELog/tree/main/log-core/src")
+            remoteUrl("https://github.com/abdo-essam/AELog/tree/main/core/src")
             remoteLineSuffix.set("#L")
         }
         perPackageOption {

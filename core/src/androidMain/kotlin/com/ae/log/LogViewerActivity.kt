@@ -85,8 +85,7 @@ public fun AELog.launchViewer(context: android.content.Context) {
                         val controller = LocalLogController.current
 
                         LaunchedEffect(Unit) {
-                            // Small delay to ensure the layout is fully measured before animating the bottom sheet
-                            kotlinx.coroutines.delay(100)
+                            kotlinx.coroutines.delay(PANEL_SHOW_DELAY_MS)
                             controller.show()
 
                             // Wait until the state actually reflects that it is visible
@@ -119,3 +118,11 @@ public fun AELog.launchViewer(context: android.content.Context) {
 }
 
 private val VIEWER_ID by lazy { View.generateViewId() }
+
+/**
+ * Delay before showing the panel overlay, in milliseconds.
+ *
+ * Ensures the ComposeView is fully measured and laid out before the
+ * bottom-sheet animation begins, preventing a brief layout flicker.
+ */
+private const val PANEL_SHOW_DELAY_MS = 100L

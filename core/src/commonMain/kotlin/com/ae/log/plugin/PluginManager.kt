@@ -44,6 +44,24 @@ public class PluginManager internal constructor(
         return this
     }
 
+    /**
+     * Uninstalls all plugins and cancels their coroutine scopes.
+     *
+     * Called by [com.ae.log.AELog.resetForTesting] to achieve clean state
+     * between unit tests. Not intended for production use.
+     */
+    internal fun uninstallAll() {
+        synchronized(installLock) {
+            val snapshot = _plugins.value
+            _plugins.value = emptyList()
+            snapshot.forEach { plugin ->
+                scopes.remove(plugin.id)?.cancel()
+                safeCall { plugin.onDetach() }
+            }
+            scopes.clear()
+        }
+    }
+
     @Suppress("UNCHECKED_CAST")
     public fun <T : Plugin> getPlugin(type: KClass<T>): T? = _plugins.value.firstOrNull { type.isInstance(it) } as? T
 

@@ -16,3 +16,18 @@ public object LogSpacing {
     public val x10: Dp = 40.dp
     public val x12: Dp = 48.dp
 }
+
+/** Named dimension constants used throughout the AELog UI. */
+public object LogDimens {
+    /** Width threshold above which the panel switches from bottom-sheet to dialog. */
+    public val largeScreenBreakpoint: Dp = 600.dp
+
+    /** Corner radius used on dialog and bottom-sheet overlays. */
+    public val overlayCornerRadius: Dp = LogSpacing.x6
+
+    /** Tonal elevation for the dialog overlay surface. */
+    public val dialogTonalElevation: Dp = 6.dp
+
+    /** Thickness of the divider between list items. */
+    public val listDividerThickness: Dp = 1.dp
+}

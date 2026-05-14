@@ -1,4 +1,4 @@
-﻿package com.ae.log.okhttp
+package com.ae.log.okhttp
 
 import com.ae.log.AELog
 import com.ae.log.network.NetworkPlugin
@@ -17,8 +17,8 @@ import okio.Buffer
  *   Matching is case-insensitive. Defaults to [InterceptorDefaults.DEFAULT_EXCLUDED].
  */
 public class OkHttpInterceptor(
-    public val maxRequestBodyBytes: Long = 250_000L,
-    public val maxResponseBodyBytes: Long = 250_000L,
+    public val maxRequestBodyBytes: Long = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES,
+    public val maxResponseBodyBytes: Long = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES,
     public val excludeHeaders: Set<String> = DEFAULT_EXCLUDED,
 ) : Interceptor {
     public companion object {

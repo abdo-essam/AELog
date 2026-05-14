@@ -14,6 +14,7 @@ import com.ae.log.LogInspector
 import com.ae.log.plugin.UIPlugin
 import com.ae.log.ui.components.LogFloatingButton
 import com.ae.log.ui.layout.LogContainer
+import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 
@@ -97,7 +98,7 @@ public fun LogProvider(
                     LogContainer(
                         plugins = uiPlugins,
                         uiConfig = uiConfig,
-                        isLargeScreen = maxWidth > 600.dp,
+                        isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint,
                         presentationMode = uiConfig.presentationMode,
                         onDismiss = { controller.hide() },
                     )

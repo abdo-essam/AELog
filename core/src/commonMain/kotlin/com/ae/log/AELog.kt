@@ -48,6 +48,24 @@ public object AELog {
         }
 
     public inline fun <reified T : Plugin> getPlugin(): T? = instance?.plugins?.getPlugin(T::class)
+
+    /**
+     * Resets the singleton to an uninitialised state.
+     *
+     * **For use in unit tests only.** On Android, the process lifecycle handles
+     * cleanup — this method is not needed in production code.
+     *
+     * Cancels all active plugin coroutine scopes before clearing the reference,
+     * ensuring no coroutines leak between tests.
+     */
+    @AELogTestApi
+    public fun resetForTesting() {
+        val current = instanceAtomic.value ?: return
+        current.lifecycle.notifyStop()
+        current.plugins.uninstallAll()
+        instanceAtomic.value = null
+        enabledAtomic.value = true
+    }
 }
 
 public class LogInspector internal constructor(

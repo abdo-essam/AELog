@@ -3,32 +3,17 @@ package com.ae.log.utils
 import platform.Foundation.NSThread
 
 public actual fun callerTag(): String {
-    val skip =
-        listOf(
-            "com.ae.log.AELog",
-            "com.ae.log.LogProxy",
-            "com.ae.log.LogInspector",
-            "com.ae.log.AELogLogsKt",
-            "com.ae.log.config.",
-            "com.ae.log.event.",
-            "com.ae.log.storage.",
-            "com.ae.log.utils.",
-            "com.ae.log.plugin.",
-            "com.ae.log.ui.",
-            "com.ae.log.plugins.",
-            "AELog.",
-            "androidx.compose.",
-            "kotlin.",
-        )
     val frame =
         NSThread.callStackSymbols
             .drop(1)
             .firstOrNull { sym ->
                 val symbolStr = sym as? String ?: return@firstOrNull false
-                skip.none { symbolStr.contains(it) }
-            } as? String
+                CALLER_TAG_SKIP_PREFIXES.none { symbolStr.contains(it) } &&
+                    !symbolStr.contains("AELog.") &&
+                    !symbolStr.contains("dalvik.")
+            } as? String ?: return "AELog"
 
-    val functionCall = frame?.split(Regex("\\s+"))?.getOrNull(3) ?: return "AELog"
+    val functionCall = frame.split(Regex("\\s+")).getOrNull(3) ?: return "AELog"
     val clean =
         functionCall
             .removePrefix("kfun:")
@@ -37,18 +22,10 @@ public actual fun callerTag(): String {
             .substringBefore('(')
 
     val parts = clean.split('.')
-    val className =
+    val rawClassName =
         parts.findLast { it.firstOrNull()?.isUpperCase() == true }
             ?: parts.getOrNull(parts.size - 2)
             ?: return "AELog"
 
-    val firstPart = className.substringBefore('$')
-    val tag =
-        if (firstPart == "ComposableSingletons") {
-            className.substringAfter('$').substringBefore('$')
-        } else {
-            firstPart
-        }.removeSuffix("Kt")
-
-    return tag.ifBlank { null } ?: "AELog"
+    return normaliseClassName(rawClassName)
 }
