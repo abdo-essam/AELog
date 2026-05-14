@@ -47,25 +47,26 @@ public class OkHttpInterceptor(
         val startNs = System.nanoTime()
 
         val body = request.body
-        val requestBody = when {
-            body != null && !body.isOneShot() -> {
-                if (InterceptorDefaults.shouldCaptureBody(body.contentType()?.toString(), captureUnknown = true)) {
-                    runCatching {
-                        val buffer = Buffer()
-                        body.writeTo(buffer)
-                        if (buffer.size > maxRequestBodyBytes) {
-                            buffer.readUtf8(maxRequestBodyBytes) + "\n… [truncated]"
-                        } else {
-                            buffer.readUtf8()
-                        }
-                    }.getOrElse { "<body read error: ${it.message}>" }
-                } else {
-                    "<binary or unsupported, ${body.contentLength()} bytes>"
+        val requestBody =
+            when {
+                body != null && !body.isOneShot() -> {
+                    if (InterceptorDefaults.shouldCaptureBody(body.contentType()?.toString(), captureUnknown = true)) {
+                        runCatching {
+                            val buffer = Buffer()
+                            body.writeTo(buffer)
+                            if (buffer.size > maxRequestBodyBytes) {
+                                buffer.readUtf8(maxRequestBodyBytes) + "\n… [truncated]"
+                            } else {
+                                buffer.readUtf8()
+                            }
+                        }.getOrElse { "<body read error: ${it.message}>" }
+                    } else {
+                        "<binary or unsupported, ${body.contentLength()} bytes>"
+                    }
                 }
+                body != null -> "<one-shot body>"
+                else -> null
             }
-            body != null -> "<one-shot body>"
-            else -> null
-        }
 
         recorder.startRequest(
             id = id,
@@ -80,7 +81,11 @@ public class OkHttpInterceptor(
             val durationMs = (System.nanoTime() - startNs) / 1_000_000
 
             val responseBody =
-                if (InterceptorDefaults.shouldCaptureBody(response.body?.contentType()?.toString(), captureUnknown = true)) {
+                if (InterceptorDefaults.shouldCaptureBody(
+                        response.body?.contentType()?.toString(),
+                        captureUnknown = true,
+                    )
+                ) {
                     runCatching {
                         val bodyString = response.peekBody(maxResponseBodyBytes).string()
                         val contentLength = response.body?.contentLength() ?: -1L

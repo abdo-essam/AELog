@@ -19,9 +19,10 @@ public object LogSeverityFilters {
     public val DEBUG: LogSeverityFilter = LogSeverityFilter("Debug") { it.severity == LogSeverity.DEBUG }
     public val INFO: LogSeverityFilter = LogSeverityFilter("Info") { it.severity == LogSeverity.INFO }
     public val WARN: LogSeverityFilter = LogSeverityFilter("Warn") { it.severity == LogSeverity.WARN }
-    public val ERROR: LogSeverityFilter = LogSeverityFilter("Error") {
-        it.severity == LogSeverity.ERROR || it.severity == LogSeverity.ASSERT
-    }
+    public val ERROR: LogSeverityFilter =
+        LogSeverityFilter("Error") {
+            it.severity == LogSeverity.ERROR || it.severity == LogSeverity.ASSERT
+        }
 
     public val defaultFilters: List<LogSeverityFilter> = listOf(ALL, VERBOSE, DEBUG, INFO, WARN, ERROR)
 }

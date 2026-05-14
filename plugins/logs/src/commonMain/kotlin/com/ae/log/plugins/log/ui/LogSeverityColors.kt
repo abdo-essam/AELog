@@ -18,12 +18,13 @@ internal object LogSeverityColors {
     val ASSERT_BG = Color(0xFF7B1FA2)
     val ON_SEVERITY = Color.White
 
-    fun backgroundFor(severity: LogSeverity): Color = when (severity) {
-        LogSeverity.VERBOSE -> VERBOSE_BG
-        LogSeverity.DEBUG -> DEBUG_BG
-        LogSeverity.INFO -> INFO_BG
-        LogSeverity.WARN -> WARN_BG
-        LogSeverity.ERROR -> ERROR_BG
-        LogSeverity.ASSERT -> ASSERT_BG
-    }
+    fun backgroundFor(severity: LogSeverity): Color =
+        when (severity) {
+            LogSeverity.VERBOSE -> VERBOSE_BG
+            LogSeverity.DEBUG -> DEBUG_BG
+            LogSeverity.INFO -> INFO_BG
+            LogSeverity.WARN -> WARN_BG
+            LogSeverity.ERROR -> ERROR_BG
+            LogSeverity.ASSERT -> ASSERT_BG
+        }
 }

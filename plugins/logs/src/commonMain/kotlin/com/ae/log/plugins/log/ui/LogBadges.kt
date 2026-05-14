@@ -17,10 +17,11 @@ import com.ae.log.ui.theme.LogSpacing
 internal fun SeverityBadge(severity: LogSeverity) {
     val bg = LogSeverityColors.backgroundFor(severity)
     Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(LogSpacing.x1_5))
-            .background(bg)
-            .padding(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(LogSpacing.x1_5))
+                .background(bg)
+                .padding(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
     ) {
         Text(
             text = severity.label,

@@ -55,12 +55,13 @@ internal fun NetworkBodySection(
             }
         }
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(LogSpacing.x2))
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(LogSpacing.x2)
-                .horizontalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(LogSpacing.x2))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(LogSpacing.x2)
+                    .horizontalScroll(rememberScrollState()),
         ) {
             SelectionContainer {
                 Text(

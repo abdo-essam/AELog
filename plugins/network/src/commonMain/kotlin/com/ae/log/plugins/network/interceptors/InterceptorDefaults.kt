@@ -7,7 +7,6 @@ package com.ae.log.plugins.network.interceptors
  * stay in sync without copy-pasting.
  */
 public object InterceptorDefaults {
-
     /**
      * Headers excluded from the UI by default.
      *
@@ -16,42 +15,41 @@ public object InterceptorDefaults {
      *
      * Pass an empty set to show all headers, or override with your own list.
      */
-    public val DEFAULT_EXCLUDED: Set<String> = setOf(
-        // Security — never log raw tokens/cookies
-        "Authorization",
-        "Cookie",
-        "Set-Cookie",
-        "Proxy-Authorization",
-        "X-Api-Key",
-        // Auto-injected request headers — noise, set by the HTTP client
-        "Accept",
-        "Accept-Encoding",
-        "Accept-Language",
-        "Connection",
-        "Content-Type",
-        "Host",
-        "User-Agent",
-        // Noisy system response headers
-        "Cache-Control",
-        "Date",
-        "Expires",
-        "Pragma",
-        "Server",
-        "Strict-Transport-Security",
-        "Transfer-Encoding",
-        "Vary",
-        "X-Content-Type-Options",
-        "X-Frame-Options",
-        "X-Powered-By",
-        "X-XSS-Protection",
-    )
+    public val DEFAULT_EXCLUDED: Set<String> =
+        setOf(
+            // Security — never log raw tokens/cookies
+            "Authorization",
+            "Cookie",
+            "Set-Cookie",
+            "Proxy-Authorization",
+            "X-Api-Key",
+            // Auto-injected request headers — noise, set by the HTTP client
+            "Accept",
+            "Accept-Encoding",
+            "Accept-Language",
+            "Connection",
+            "Content-Type",
+            "Host",
+            "User-Agent",
+            // Noisy system response headers
+            "Cache-Control",
+            "Date",
+            "Expires",
+            "Pragma",
+            "Server",
+            "Strict-Transport-Security",
+            "Transfer-Encoding",
+            "Vary",
+            "X-Content-Type-Options",
+            "X-Frame-Options",
+            "X-Powered-By",
+            "X-XSS-Protection",
+        )
 
     /**
      * Returns a new map with all [excludeHeaders] entries removed (case-insensitive).
      */
-    public fun Map<String, String>.exclude(
-        excludeHeaders: Set<String> = DEFAULT_EXCLUDED,
-    ): Map<String, String> {
+    public fun Map<String, String>.exclude(excludeHeaders: Set<String> = DEFAULT_EXCLUDED): Map<String, String> {
         if (excludeHeaders.isEmpty()) return this
         return filter { (key, _) -> excludeHeaders.none { it.equals(key, ignoreCase = true) } }
     }

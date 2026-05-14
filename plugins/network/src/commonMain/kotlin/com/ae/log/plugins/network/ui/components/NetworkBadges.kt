@@ -21,18 +21,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.unit.dp
 import com.ae.log.plugins.network.model.NetworkEntry
 import com.ae.log.plugins.network.ui.theme.NetworkColors
 import com.ae.log.ui.theme.LogSpacing
-import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun MethodBadge(label: String) {
     val color = NetworkColors.getMethodColor(label)
     Box(
-        modifier = Modifier
-            .background(color.copy(alpha = 0.15f), RoundedCornerShape(LogSpacing.x1))
-            .padding(horizontal = LogSpacing.x1_5, vertical = 2.dp),
+        modifier =
+            Modifier
+                .background(color.copy(alpha = 0.15f), RoundedCornerShape(LogSpacing.x1))
+                .padding(horizontal = LogSpacing.x1_5, vertical = 2.dp),
     ) {
         Text(label, style = MaterialTheme.typography.labelSmall, color = color)
     }
@@ -45,10 +46,11 @@ internal fun StatusBadge(entry: NetworkEntry) {
         val alpha by infiniteTransition.animateFloat(
             initialValue = 0.3f,
             targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(600, easing = FastOutSlowInEasing),
-                repeatMode = RepeatMode.Reverse,
-            ),
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(600, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse,
+                ),
             label = "pending_alpha",
         )
         Row(
@@ -56,10 +58,11 @@ internal fun StatusBadge(entry: NetworkEntry) {
             horizontalArrangement = Arrangement.spacedBy(LogSpacing.x1),
         ) {
             Box(
-                modifier = Modifier
-                    .size(LogSpacing.x1_5)
-                    .alpha(alpha)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+                modifier =
+                    Modifier
+                        .size(LogSpacing.x1_5)
+                        .alpha(alpha)
+                        .background(MaterialTheme.colorScheme.primary, CircleShape),
             )
             Text(
                 text = "Waiting…",
@@ -69,10 +72,11 @@ internal fun StatusBadge(entry: NetworkEntry) {
         }
     } else {
         val text = entry.statusLabel
-        val color = when {
-            entry.isError -> MaterialTheme.colorScheme.error
-            else -> NetworkColors.getStatusCodeColor(entry.statusCode)
-        }
+        val color =
+            when {
+                entry.isError -> MaterialTheme.colorScheme.error
+                else -> NetworkColors.getStatusCodeColor(entry.statusCode)
+            }
         Text(text = text, style = MaterialTheme.typography.labelSmall, color = color)
     }
 }

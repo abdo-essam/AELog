@@ -28,17 +28,17 @@ internal fun NetworkEntryDetails(
     entry: NetworkEntry,
     onCopy: () -> Unit,
 ) {
-    val bgColor = when {
-        entry.isError -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-        entry.isSuccess -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f)
-        else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    }
+    val bgColor =
+        when {
+            entry.isError -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+            entry.isSuccess -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f)
+            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        }
 
     val clipboard = LocalClipboardManager.current
 
     ExpandedDetails(bgColor = bgColor, onCopy = onCopy) {
         Column(modifier = Modifier.padding(LogSpacing.x3)) {
-
             // ── Overview ─────────────────────────────────────────────────
             NetworkDetailSection("URL", entry.url)
             entry.statusCode?.let { NetworkDetailSection("Status", it.toString()) }
@@ -104,18 +104,20 @@ internal fun NetworkEntryDetails(
                 NetworkSectionDivider("Error")
                 Spacer(Modifier.height(LogSpacing.x1))
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(LogSpacing.x2))
-                        .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
-                        .padding(LogSpacing.x2),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(LogSpacing.x2))
+                            .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
+                            .padding(LogSpacing.x2),
                 ) {
                     SelectionContainer {
                         Text(
                             text = error,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                fontFamily = FontFamily.Monospace,
-                            ),
+                            style =
+                                MaterialTheme.typography.bodySmall.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                ),
                             color = MaterialTheme.colorScheme.onErrorContainer,
                         )
                     }

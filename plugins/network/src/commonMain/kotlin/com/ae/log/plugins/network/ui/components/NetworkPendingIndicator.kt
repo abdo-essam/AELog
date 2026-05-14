@@ -34,10 +34,11 @@ internal fun NetworkPendingIndicator() {
         val alpha by infiniteTransition.animateFloat(
             initialValue = 0.2f,
             targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(500, delayMillis = delayMs, easing = FastOutSlowInEasing),
-                repeatMode = RepeatMode.Reverse,
-            ),
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(500, delayMillis = delayMs, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse,
+                ),
             label = "dot_$delayMs",
         )
         return alpha
@@ -51,10 +52,11 @@ internal fun NetworkPendingIndicator() {
     ) {
         alphas.forEach { alpha ->
             Box(
-                modifier = Modifier
-                    .size(7.dp)
-                    .alpha(alpha)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape),
+                modifier =
+                    Modifier
+                        .size(7.dp)
+                        .alpha(alpha)
+                        .background(MaterialTheme.colorScheme.primary, CircleShape),
             )
         }
         Spacer(Modifier.width(LogSpacing.x1))

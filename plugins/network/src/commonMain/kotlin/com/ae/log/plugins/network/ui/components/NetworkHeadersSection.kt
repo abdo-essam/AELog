@@ -36,9 +36,10 @@ internal fun NetworkHeadersSection(
                         )
                         Text(
                             text = value,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                fontFamily = FontFamily.Monospace,
-                            ),
+                            style =
+                                MaterialTheme.typography.bodySmall.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                ),
                             color = MaterialTheme.colorScheme.onSurface,
                         )
                     }
