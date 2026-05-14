@@ -52,7 +52,10 @@ public class AELogKtorInterceptor internal constructor(
                 maxBodyBytes = Config().apply(block).maxBodyBytes,
             )
 
-        override fun install(plugin: AELogKtorInterceptor, scope: HttpClient) {
+        override fun install(
+            plugin: AELogKtorInterceptor,
+            scope: HttpClient,
+        ) {
             val clock = Clock.System
             val maxBodyBytes = plugin.maxBodyBytes
             installOutgoingRequestPhase(scope, clock)
@@ -63,7 +66,10 @@ public class AELogKtorInterceptor internal constructor(
 
         // ── Phase 1: Outgoing requests ────────────────────────────────────
 
-        private fun installOutgoingRequestPhase(scope: HttpClient, clock: Clock) {
+        private fun installOutgoingRequestPhase(
+            scope: HttpClient,
+            clock: Clock,
+        ) {
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 if (!AELog.isEnabled) return@intercept
                 val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder ?: return@intercept
@@ -72,8 +78,11 @@ public class AELogKtorInterceptor internal constructor(
                 context.attributes.put(RequestIdKey, id)
                 context.attributes.put(StartTimeKey, clock.now().toEpochMilliseconds())
 
-                val headersMap = context.headers.build().entries()
-                    .associate { it.key to it.value.joinToString(", ") }
+                val headersMap =
+                    context.headers
+                        .build()
+                        .entries()
+                        .associate { it.key to it.value.joinToString(", ") }
 
                 recorder.startRequest(
                     id = id,
@@ -87,11 +96,12 @@ public class AELogKtorInterceptor internal constructor(
                 try {
                     proceed()
                 } catch (cause: Throwable) {
-                    val isHttpError = cause::class.simpleName?.let {
-                        it.contains("ResponseException") ||
-                            it.contains("ClientRequestException") ||
-                            it.contains("ServerResponseException")
-                    } ?: false
+                    val isHttpError =
+                        cause::class.simpleName?.let {
+                            it.contains("ResponseException") ||
+                                it.contains("ClientRequestException") ||
+                                it.contains("ServerResponseException")
+                        } ?: false
                     if (!isHttpError) {
                         val raw = cause.message ?: cause::class.simpleName ?: "Unknown error"
                         recorder.logError(id, "${cause::class.simpleName}: ${raw.substringBefore(". Text:").trim()}")
@@ -116,22 +126,37 @@ public class AELogKtorInterceptor internal constructor(
 
         // ── Phase 2a: Response metadata (status, headers, duration) ───────
 
-        private fun installResponseMetadataPhase(scope: HttpClient, clock: Clock) {
+        private fun installResponseMetadataPhase(
+            scope: HttpClient,
+            clock: Clock,
+        ) {
             scope.receivePipeline.intercept(HttpReceivePipeline.State) { response ->
-                if (!AELog.isEnabled) { proceed(); return@intercept }
-                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder
-                    ?: run { proceed(); return@intercept }
-                val id = response.call.attributes.getOrNull(RequestIdKey)
-                    ?: run { proceed(); return@intercept }
-                val start = response.call.attributes.getOrNull(StartTimeKey)
-                    ?: clock.now().toEpochMilliseconds()
+                if (!AELog.isEnabled) {
+                    proceed()
+                    return@intercept
+                }
+                val recorder =
+                    AELog.getPlugin<NetworkPlugin>()?.recorder ?: run {
+                        proceed()
+                        return@intercept
+                    }
+                val id =
+                    response.call.attributes.getOrNull(RequestIdKey) ?: run {
+                        proceed()
+                        return@intercept
+                    }
+                val start =
+                    response.call.attributes.getOrNull(StartTimeKey)
+                        ?: clock.now().toEpochMilliseconds()
 
                 recorder.logResponse(
                     id = id,
                     statusCode = response.status.value,
-                    headers = response.headers.entries()
-                        .associate { it.key to it.value.joinToString(", ") }
-                        .exclude(excludeHeaders),
+                    headers =
+                        response.headers
+                            .entries()
+                            .associate { it.key to it.value.joinToString(", ") }
+                            .exclude(excludeHeaders),
                     body = null,
                     durationMs = clock.now().toEpochMilliseconds() - start,
                 )
@@ -141,13 +166,25 @@ public class AELogKtorInterceptor internal constructor(
 
         // ── Phase 2b: Response body — tapped when the app reads it ────────
 
-        private fun installResponseBodyPhase(scope: HttpClient, maxBodyBytes: Int) {
+        private fun installResponseBodyPhase(
+            scope: HttpClient,
+            maxBodyBytes: Int,
+        ) {
             scope.responsePipeline.intercept(HttpResponsePipeline.Receive) { (info, body) ->
-                if (!AELog.isEnabled || body !is ByteReadChannel) { proceed(); return@intercept }
-                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder
-                    ?: run { proceed(); return@intercept }
-                val id = context.attributes.getOrNull(RequestIdKey)
-                    ?: run { proceed(); return@intercept }
+                if (!AELog.isEnabled || body !is ByteReadChannel) {
+                    proceed()
+                    return@intercept
+                }
+                val recorder =
+                    AELog.getPlugin<NetworkPlugin>()?.recorder ?: run {
+                        proceed()
+                        return@intercept
+                    }
+                val id =
+                    context.attributes.getOrNull(RequestIdKey) ?: run {
+                        proceed()
+                        return@intercept
+                    }
 
                 val contentType = context.response.headers["Content-Type"]
                 if (!InterceptorDefaults.shouldCaptureBody(contentType, captureUnknown = false)) {
@@ -157,11 +194,12 @@ public class AELogKtorInterceptor internal constructor(
 
                 runCatching {
                     val bytes = body.readBuffer().readByteArray()
-                    val bodyText = if (bytes.size > maxBodyBytes) {
-                        bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
-                    } else {
-                        bytes.decodeToString().trim().ifBlank { null }
-                    }
+                    val bodyText =
+                        if (bytes.size > maxBodyBytes) {
+                            bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
+                        } else {
+                            bytes.decodeToString().trim().ifBlank { null }
+                        }
                     recorder.updateResponseBody(id, bodyText)
                     proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
                 }.onFailure { cause ->

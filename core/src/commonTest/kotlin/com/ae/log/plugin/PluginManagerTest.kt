@@ -13,7 +13,6 @@ import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class PluginManagerTest {
-
     private val config = LogConfig()
     private val eventBus = EventBus()
     private val manager = PluginManager(config, eventBus)
@@ -34,14 +33,28 @@ class PluginManagerTest {
         var clearCount = 0
         var lastContext: PluginContext? = null
 
-        override fun onAttach(context: PluginContext) { attachCount++; lastContext = context }
-        override fun onStart()  {}
-        override fun onStop()   {}
-        override fun onDetach() { detachCount++ }
-        override fun onClear()  { clearCount++ }
-        override fun onOpen()   {}
-        override fun onClose()  {}
-        override fun export()   = ""
+        override fun onAttach(context: PluginContext) {
+            attachCount++
+            lastContext = context
+        }
+
+        override fun onStart() {}
+
+        override fun onStop() {}
+
+        override fun onDetach() {
+            detachCount++
+        }
+
+        override fun onClear() {
+            clearCount++
+        }
+
+        override fun onOpen() {}
+
+        override fun onClose() {}
+
+        override fun export() = ""
     }
 
     // ── install ───────────────────────────────────────────────────────────
@@ -51,7 +64,12 @@ class PluginManagerTest {
         val plugin = FakePlugin("p1")
         manager.install(plugin)
         assertEquals(1, manager.plugins.value.size)
-        assertEquals("p1", manager.plugins.value.first().id)
+        assertEquals(
+            "p1",
+            manager.plugins.value
+                .first()
+                .id,
+        )
     }
 
     @Test

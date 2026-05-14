@@ -6,7 +6,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class InterceptorDefaultsTest {
-
     // ── Header exclusion ──────────────────────────────────────────────────
 
     @Test
@@ -20,9 +19,10 @@ class InterceptorDefaultsTest {
     @Test
     fun `exclude - is case-insensitive`() {
         val headers = mapOf("authorization" to "Bearer abc", "X-Api-Key" to "secret")
-        val result = with(InterceptorDefaults) {
-            headers.exclude(setOf("Authorization", "x-api-key"))
-        }
+        val result =
+            with(InterceptorDefaults) {
+                headers.exclude(setOf("Authorization", "x-api-key"))
+            }
         assertTrue(result.isEmpty())
     }
 

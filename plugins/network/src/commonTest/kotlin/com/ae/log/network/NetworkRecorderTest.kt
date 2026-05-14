@@ -8,13 +8,11 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class NetworkRecorderTest {
-
     private lateinit var storage: NetworkStorage
     private lateinit var recorder: NetworkRecorder
 
@@ -34,14 +32,29 @@ class NetworkRecorderTest {
     fun `logRequest - stores entry in storage`() {
         recorder.logRequest(method = "GET", url = "https://example.com")
         assertEquals(1, storage.entries.value.size)
-        assertEquals("https://example.com", storage.entries.value.first().url)
-        assertEquals(NetworkMethod.GET, storage.entries.value.first().method)
+        assertEquals(
+            "https://example.com",
+            storage.entries.value
+                .first()
+                .url,
+        )
+        assertEquals(
+            NetworkMethod.GET,
+            storage.entries.value
+                .first()
+                .method,
+        )
     }
 
     @Test
     fun `logRequest - records status code when provided`() {
         recorder.logRequest(method = "POST", url = "https://api.example.com", statusCode = 201)
-        assertEquals(201, storage.entries.value.first().statusCode)
+        assertEquals(
+            201,
+            storage.entries.value
+                .first()
+                .statusCode,
+        )
     }
 
     @Test
@@ -80,7 +93,12 @@ class NetworkRecorderTest {
         recorder.logResponse(id = id, statusCode = 200)
         recorder.updateResponseBody(id = id, body = "{\"ok\":true}")
 
-        assertEquals("{\"ok\":true}", storage.entries.value.first().responseBody)
+        assertEquals(
+            "{\"ok\":true}",
+            storage.entries.value
+                .first()
+                .responseBody,
+        )
     }
 
     @Test
@@ -89,7 +107,12 @@ class NetworkRecorderTest {
         recorder.startRequest(id = id, url = "https://example.com", method = NetworkMethod.POST)
         recorder.updateRequestBody(id = id, body = "{\"name\":\"test\"}")
 
-        assertEquals("{\"name\":\"test\"}", storage.entries.value.first().requestBody)
+        assertEquals(
+            "{\"name\":\"test\"}",
+            storage.entries.value
+                .first()
+                .requestBody,
+        )
     }
 
     @Test

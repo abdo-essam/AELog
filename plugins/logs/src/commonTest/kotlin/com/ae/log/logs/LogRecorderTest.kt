@@ -7,12 +7,10 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class LogRecorderTest {
-
     private lateinit var storage: LogStorage
     private lateinit var recorder: LogRecorder
 
@@ -20,10 +18,11 @@ class LogRecorderTest {
     fun setUp() {
         AELog.init(LogPlugin())
         storage = LogStorage(capacity = 100)
-        recorder = LogRecorder(
-            storage = storage,
-            platformLogSink = PlatformLogSink.None,
-        )
+        recorder =
+            LogRecorder(
+                storage = storage,
+                platformLogSink = PlatformLogSink.None,
+            )
     }
 
     @AfterTest
@@ -46,13 +45,22 @@ class LogRecorderTest {
     @Test
     fun `log - assigns non-blank id`() {
         recorder.log(LogSeverity.INFO, "Tag", "msg")
-        assertTrue(storage.dataFlow.value.first().id.isNotBlank())
+        assertTrue(
+            storage.dataFlow.value
+                .first()
+                .id
+                .isNotBlank(),
+        )
     }
 
     @Test
     fun `log - assigns positive timestamp`() {
         recorder.log(LogSeverity.INFO, "Tag", "msg")
-        assertTrue(storage.dataFlow.value.first().timestamp > 0)
+        assertTrue(
+            storage.dataFlow.value
+                .first()
+                .timestamp > 0,
+        )
     }
 
     // ── Throwable handling ─────────────────────────────────────────────────
@@ -61,7 +69,10 @@ class LogRecorderTest {
     fun `log - appends stack trace when throwable is provided`() {
         val ex = RuntimeException("boom")
         recorder.log(LogSeverity.ERROR, "Tag", "Crashed", ex)
-        val message = storage.dataFlow.value.first().message
+        val message =
+            storage.dataFlow.value
+                .first()
+                .message
         assertTrue(message.contains("boom"))
         assertTrue(message.contains("RuntimeException"))
     }
@@ -69,7 +80,10 @@ class LogRecorderTest {
     @Test
     fun `log - does not append newline when throwable is null`() {
         recorder.log(LogSeverity.INFO, "Tag", "Clean message", null)
-        val message = storage.dataFlow.value.first().message
+        val message =
+            storage.dataFlow.value
+                .first()
+                .message
         assertEquals("Clean message", message)
     }
 
@@ -77,11 +91,12 @@ class LogRecorderTest {
 
     @Test
     fun `log - respects minSeverity filter`() {
-        val warnRecorder = LogRecorder(
-            storage = storage,
-            minSeverity = LogSeverity.WARN,
-            platformLogSink = PlatformLogSink.None,
-        )
+        val warnRecorder =
+            LogRecorder(
+                storage = storage,
+                minSeverity = LogSeverity.WARN,
+                platformLogSink = PlatformLogSink.None,
+            )
         warnRecorder.log(LogSeverity.DEBUG, "Tag", "filtered out")
         warnRecorder.log(LogSeverity.INFO, "Tag", "also filtered")
         warnRecorder.log(LogSeverity.WARN, "Tag", "this gets through")
@@ -103,36 +118,66 @@ class LogRecorderTest {
     @Test
     fun `v - logs VERBOSE severity`() {
         recorder.v("Tag", "verbose")
-        assertEquals(LogSeverity.VERBOSE, storage.dataFlow.value.first().severity)
+        assertEquals(
+            LogSeverity.VERBOSE,
+            storage.dataFlow.value
+                .first()
+                .severity,
+        )
     }
 
     @Test
     fun `d - logs DEBUG severity`() {
         recorder.d("Tag", "debug")
-        assertEquals(LogSeverity.DEBUG, storage.dataFlow.value.first().severity)
+        assertEquals(
+            LogSeverity.DEBUG,
+            storage.dataFlow.value
+                .first()
+                .severity,
+        )
     }
 
     @Test
     fun `i - logs INFO severity`() {
         recorder.i("Tag", "info")
-        assertEquals(LogSeverity.INFO, storage.dataFlow.value.first().severity)
+        assertEquals(
+            LogSeverity.INFO,
+            storage.dataFlow.value
+                .first()
+                .severity,
+        )
     }
 
     @Test
     fun `w - logs WARN severity`() {
         recorder.w("Tag", "warn")
-        assertEquals(LogSeverity.WARN, storage.dataFlow.value.first().severity)
+        assertEquals(
+            LogSeverity.WARN,
+            storage.dataFlow.value
+                .first()
+                .severity,
+        )
     }
 
     @Test
     fun `e - logs ERROR severity`() {
         recorder.e("Tag", "error")
-        assertEquals(LogSeverity.ERROR, storage.dataFlow.value.first().severity)
+        assertEquals(
+            LogSeverity.ERROR,
+            storage.dataFlow.value
+                .first()
+                .severity,
+        )
     }
 
     @Test
     fun `wtf - logs ASSERT severity`() {
         recorder.wtf("Tag", "assert")
-        assertEquals(LogSeverity.ASSERT, storage.dataFlow.value.first().severity)
+        assertEquals(
+            LogSeverity.ASSERT,
+            storage.dataFlow.value
+                .first()
+                .severity,
+        )
     }
 }

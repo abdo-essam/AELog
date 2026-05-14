@@ -17,9 +17,15 @@ public interface PlatformLogSink {
          * A no-op sink that discards all log output.
          * Use this in unit tests to avoid platform-specific side-effects (Logcat, println).
          */
-        public val None: PlatformLogSink = object : PlatformLogSink {
-            override fun log(severity: LogSeverity, tag: String, message: String, throwable: Throwable?) = Unit
-        }
+        public val None: PlatformLogSink =
+            object : PlatformLogSink {
+                override fun log(
+                    severity: LogSeverity,
+                    tag: String,
+                    message: String,
+                    throwable: Throwable?,
+                ) = Unit
+            }
     }
 }
 

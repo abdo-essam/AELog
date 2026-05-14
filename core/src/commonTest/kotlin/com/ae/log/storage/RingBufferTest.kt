@@ -10,7 +10,6 @@ import kotlin.test.assertTrue
  * module (commonTest) so they have access to the internal class directly.
  */
 class RingBufferTest {
-
     @Test
     fun `add - fills buffer in order`() {
         val buffer = RingBuffer<Int>(capacity = 3)
@@ -84,7 +83,10 @@ class RingBufferTest {
     @Test
     fun `replace - works correctly after overflow`() {
         val buffer = RingBuffer<Int>(capacity = 3)
-        buffer.add(1); buffer.add(2); buffer.add(3); buffer.add(4) // list is [2,3,4]
+        buffer.add(1)
+        buffer.add(2)
+        buffer.add(3)
+        buffer.add(4) // list is [2,3,4]
         buffer.replace(index = 0, item = 99)
         assertEquals(listOf(99, 3, 4), buffer.toList())
     }

@@ -11,7 +11,6 @@ import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class AELogInitTest {
-
     @AfterTest
     fun tearDown() {
         AELog.resetForTesting()
@@ -30,14 +29,31 @@ class AELogInitTest {
         var cleared = false
         var exportValue = ""
 
-        override fun onAttach(context: PluginContext) { attached = true }
-        override fun onStart()  { started = true }
-        override fun onStop()   { stopped = true }
-        override fun onDetach() { detached = true }
-        override fun onClear()  { cleared = true }
-        override fun onOpen()   {}
-        override fun onClose()  {}
-        override fun export()   = exportValue
+        override fun onAttach(context: PluginContext) {
+            attached = true
+        }
+
+        override fun onStart() {
+            started = true
+        }
+
+        override fun onStop() {
+            stopped = true
+        }
+
+        override fun onDetach() {
+            detached = true
+        }
+
+        override fun onClear() {
+            cleared = true
+        }
+
+        override fun onOpen() {}
+
+        override fun onClose() {}
+
+        override fun export() = exportValue
     }
 
     // ── init / isEnabled ───────────────────────────────────────────────────
@@ -99,7 +115,14 @@ class AELogInitTest {
         val second = FakePlugin(id = "dupe", name = "Second")
         AELog.init(first, second)
         // Only the first should be registered
-        assertEquals(1, AELog.instance?.plugins?.plugins?.value?.count { it.id == "dupe" })
+        assertEquals(
+            1,
+            AELog.instance
+                ?.plugins
+                ?.plugins
+                ?.value
+                ?.count { it.id == "dupe" },
+        )
         assertTrue(first.attached)
         assertEquals(false, second.attached)
     }

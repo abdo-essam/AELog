@@ -6,22 +6,23 @@ package com.ae.log.utils
  * Shared across all platform [callerTag] actuals so the skip list stays in
  * a single place and doesn't drift between Android, JVM, and iOS.
  */
-internal val CALLER_TAG_SKIP_PREFIXES: List<String> = listOf(
-    "com.ae.log.AELog",
-    "com.ae.log.LogProxy",
-    "com.ae.log.LogInspector",
-    "com.ae.log.AELogLogsKt",
-    "com.ae.log.config.",
-    "com.ae.log.event.",
-    "com.ae.log.storage.",
-    "com.ae.log.utils.",
-    "com.ae.log.plugin.",
-    "com.ae.log.ui.",
-    "com.ae.log.plugins.",
-    "java.",
-    "kotlin.",
-    "androidx.compose.",
-)
+internal val CALLER_TAG_SKIP_PREFIXES: List<String> =
+    listOf(
+        "com.ae.log.AELog",
+        "com.ae.log.LogProxy",
+        "com.ae.log.LogInspector",
+        "com.ae.log.AELogLogsKt",
+        "com.ae.log.config.",
+        "com.ae.log.event.",
+        "com.ae.log.storage.",
+        "com.ae.log.utils.",
+        "com.ae.log.plugin.",
+        "com.ae.log.ui.",
+        "com.ae.log.plugins.",
+        "java.",
+        "kotlin.",
+        "androidx.compose.",
+    )
 
 /**
  * Strips compiler-generated suffixes and normalises a raw class name into a
@@ -35,10 +36,11 @@ internal val CALLER_TAG_SKIP_PREFIXES: List<String> = listOf(
 internal fun normaliseClassName(rawClassName: String): String {
     val simple = rawClassName.substringAfterLast('.')
     val firstPart = simple.substringBefore('$')
-    val tag = if (firstPart == "ComposableSingletons") {
-        simple.substringAfter('$').substringBefore('$')
-    } else {
-        firstPart
-    }.removeSuffix("Kt")
+    val tag =
+        if (firstPart == "ComposableSingletons") {
+            simple.substringAfter('$').substringBefore('$')
+        } else {
+            firstPart
+        }.removeSuffix("Kt")
     return tag.ifBlank { null } ?: "AELog"
 }

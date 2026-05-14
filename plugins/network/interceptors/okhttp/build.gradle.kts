@@ -35,9 +35,6 @@ kotlin {
             // OkHttp — consumers only pull this in if they use the OkHttp interceptor
             api(libs.okhttp)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
     }
 }
 

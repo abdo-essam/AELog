@@ -8,12 +8,10 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class AnalyticsTrackerTest {
-
     private lateinit var storage: AnalyticsStorage
     private lateinit var tracker: AnalyticsTracker
 
@@ -33,7 +31,12 @@ class AnalyticsTrackerTest {
     fun `track - stores event in storage`() {
         tracker.track("button_tap")
         assertEquals(1, storage.events.value.size)
-        assertEquals("button_tap", storage.events.value.first().name)
+        assertEquals(
+            "button_tap",
+            storage.events.value
+                .first()
+                .name,
+        )
     }
 
     @Test
@@ -54,13 +57,22 @@ class AnalyticsTrackerTest {
     @Test
     fun `track - assigns a non-blank id`() {
         tracker.track("test_event")
-        assertTrue(storage.events.value.first().id.isNotBlank())
+        assertTrue(
+            storage.events.value
+                .first()
+                .id
+                .isNotBlank(),
+        )
     }
 
     @Test
     fun `track - assigns a positive timestamp`() {
         tracker.track("test_event")
-        assertTrue(storage.events.value.first().timestamp > 0)
+        assertTrue(
+            storage.events.value
+                .first()
+                .timestamp > 0,
+        )
     }
 
     @Test

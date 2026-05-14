@@ -33,7 +33,11 @@ public object BottomSheetOverlay : OverlayStrategy {
             onDismissRequest = onDismiss,
             sheetState = sheetState,
             containerColor = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(topStart = LogDimens.overlayCornerRadius, topEnd = LogDimens.overlayCornerRadius),
+            shape =
+                RoundedCornerShape(
+                    topStart = LogDimens.overlayCornerRadius,
+                    topEnd = LogDimens.overlayCornerRadius,
+                ),
         ) {
             Box(
                 modifier =
