@@ -74,7 +74,7 @@ internal fun LogContent(
                     val count = badgeCount
                     Tab(
                         selected = index == safeIndex,
-                        onClick = { controller.activeTabIndex.value = index },
+                        onClick = { controller.selectTab(index) },
                         text = {
                             Text(plugin.name, style = MaterialTheme.typography.labelMedium)
                         },

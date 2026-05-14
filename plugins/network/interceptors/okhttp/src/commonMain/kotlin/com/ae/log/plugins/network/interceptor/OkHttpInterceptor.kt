@@ -2,6 +2,8 @@ package com.ae.log.plugins.network.interceptor
 
 import com.ae.log.AELog
 import com.ae.log.plugins.network.NetworkPlugin
+import com.ae.log.plugins.network.interceptors.InterceptorDefaults
+import com.ae.log.plugins.network.interceptors.InterceptorDefaults.exclude
 import com.ae.log.plugins.network.model.NetworkMethod
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -12,7 +14,7 @@ import okio.Buffer
  * into the [NetworkPlugin] viewer — zero boilerplate, no ID management.
  *
  * @param excludeHeaders Headers that will be **completely removed** from the UI.
- *   Matching is case-insensitive. Defaults to [DEFAULT_EXCLUDED].
+ *   Matching is case-insensitive. Defaults to [InterceptorDefaults.DEFAULT_EXCLUDED].
  */
 public class OkHttpInterceptor(
     public val maxRequestBodyBytes: Long = 250_000L,
@@ -23,80 +25,31 @@ public class OkHttpInterceptor(
         /**
          * Headers excluded from the UI by default.
          *
-         * Includes security-sensitive headers (Authorization, Cookie, Set-Cookie)
-         * and verbose system headers that add noise without debugging value
-         * (cache-control, date, strict-transport-security, etc.).
+         * Delegates to [InterceptorDefaults.DEFAULT_EXCLUDED] — both interceptors
+         * stay in sync automatically.
          *
          * Pass an empty set to show all headers, or override with your own list.
          */
-        public val DEFAULT_EXCLUDED: Set<String> =
-            setOf(
-                // Security — never log raw tokens/cookies
-                "Authorization",
-                "Cookie",
-                "Set-Cookie",
-                "Proxy-Authorization",
-                "X-Api-Key",
-                // Auto-injected request headers — noise, set by the HTTP client
-                "Accept",
-                "Accept-Encoding",
-                "Accept-Language",
-                "Connection",
-                "Content-Type",
-                "Host",
-                "User-Agent",
-                // Noisy system response headers
-                "Cache-Control",
-                "Date",
-                "Expires",
-                "Pragma",
-                "Server",
-                "Strict-Transport-Security",
-                "Transfer-Encoding",
-                "Vary",
-                "X-Content-Type-Options",
-                "X-Frame-Options",
-                "X-Powered-By",
-                "X-XSS-Protection",
-            )
-    }
-
-    /** Returns a new map with all [excludeHeaders] entries removed (case-insensitive). */
-    private fun Map<String, String>.exclude(): Map<String, String> {
-        if (excludeHeaders.isEmpty()) return this
-        return filter { (key, _) ->
-            excludeHeaders.none { it.equals(key, ignoreCase = true) }
-        }
+        public val DEFAULT_EXCLUDED: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED
     }
 
     private fun okhttp3.Headers.toMultiMap(): Map<String, String> =
         names().associateWith { name -> values(name).joinToString(", ") }
-
-    private fun shouldCaptureBody(contentType: String?): Boolean {
-        // null content-type: try to read it anyway — it's almost always text/JSON in practice
-        if (contentType == null) return true
-        return contentType.startsWith("text/", ignoreCase = true) ||
-            contentType.contains("json", ignoreCase = true) ||
-            contentType.contains("xml", ignoreCase = true) ||
-            contentType.contains("form-urlencoded", ignoreCase = true)
-    }
 
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!AELog.isEnabled) return chain.proceed(chain.request())
         val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder
         val request = chain.request()
 
-        // Fast path — plugin not installed, stay completely out of the way
         if (recorder == null) return chain.proceed(request)
 
         val id = recorder.newId()
         val startNs = System.nanoTime()
 
-        // Read request body without consuming it
         val body = request.body
-        val requestBody =
-            if (body != null && !body.isOneShot()) {
-                if (shouldCaptureBody(body.contentType()?.toString())) {
+        val requestBody = when {
+            body != null && !body.isOneShot() -> {
+                if (InterceptorDefaults.shouldCaptureBody(body.contentType()?.toString(), captureUnknown = true)) {
                     runCatching {
                         val buffer = Buffer()
                         body.writeTo(buffer)
@@ -109,17 +62,16 @@ public class OkHttpInterceptor(
                 } else {
                     "<binary or unsupported, ${body.contentLength()} bytes>"
                 }
-            } else if (body != null) {
-                "<one-shot body>"
-            } else {
-                null
             }
+            body != null -> "<one-shot body>"
+            else -> null
+        }
 
         recorder.startRequest(
             id = id,
             url = request.url.toString(),
             method = NetworkMethod.fromString(request.method),
-            headers = request.headers.toMultiMap().exclude(),
+            headers = request.headers.toMultiMap().exclude(excludeHeaders),
             body = requestBody,
         )
 
@@ -128,7 +80,7 @@ public class OkHttpInterceptor(
             val durationMs = (System.nanoTime() - startNs) / 1_000_000
 
             val responseBody =
-                if (shouldCaptureBody(response.body?.contentType()?.toString())) {
+                if (InterceptorDefaults.shouldCaptureBody(response.body?.contentType()?.toString(), captureUnknown = true)) {
                     runCatching {
                         val bodyString = response.peekBody(maxResponseBodyBytes).string()
                         val contentLength = response.body?.contentLength() ?: -1L
@@ -148,7 +100,7 @@ public class OkHttpInterceptor(
             recorder.logResponse(
                 id = id,
                 statusCode = response.code,
-                headers = response.headers.toMultiMap().exclude(),
+                headers = response.headers.toMultiMap().exclude(excludeHeaders),
                 body = responseBody,
                 durationMs = durationMs,
             )

@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.dp
 /** Common spacing scale used throughout the AELog UI. */
 public object LogSpacing {
     public val x1: Dp = 4.dp
+    public val x1_5: Dp = 6.dp
     public val x2: Dp = 8.dp
     public val x3: Dp = 12.dp
     public val x4: Dp = 16.dp

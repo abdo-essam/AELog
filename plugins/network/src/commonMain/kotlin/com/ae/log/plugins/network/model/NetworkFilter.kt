@@ -1,12 +1,17 @@
 package com.ae.log.plugins.network.model
 
-/** Filter options for the network panel. */
+import com.ae.log.plugin.PluginFilter
+
+/**
+ * Filter options for the network panel.
+ *
+ * Extends [PluginFilter] so the label/matches contract is shared across
+ * all plugin filter hierarchies.
+ */
 public open class NetworkFilter(
-    public val label: String,
-    private val predicate: (NetworkEntry) -> Boolean,
-) {
-    public open fun matches(entry: NetworkEntry): Boolean = predicate(entry)
-}
+    label: String,
+    predicate: (NetworkEntry) -> Boolean,
+) : PluginFilter<NetworkEntry>(label, predicate)
 
 public object NetworkFilters {
     public val ALL: NetworkFilter = NetworkFilter("All") { true }

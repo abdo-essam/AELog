@@ -1,12 +1,17 @@
 package com.ae.log.plugins.analytics.model
 
-/** Filter options for the analytics panel. */
+import com.ae.log.plugin.PluginFilter
+
+/**
+ * Filter options for the analytics panel.
+ *
+ * Extends [PluginFilter] so the label/matches contract is shared across
+ * all plugin filter hierarchies.
+ */
 public open class AnalyticsFilter(
-    public val label: String,
-    private val predicate: (AnalyticsEvent) -> Boolean,
-) {
-    public open fun matches(event: AnalyticsEvent): Boolean = predicate(event)
-}
+    label: String,
+    predicate: (AnalyticsEvent) -> Boolean,
+) : PluginFilter<AnalyticsEvent>(label, predicate)
 
 public object AnalyticsFilters {
     public val ALL: AnalyticsFilter = AnalyticsFilter("All") { true }

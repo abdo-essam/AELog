@@ -39,6 +39,7 @@ secret_key.txt
 secret.properties
 /.vscode/settings.json
 /Engineering Standards.md
+/Mobile Engineering Standards.md
 
 # iOS / Xcode
 # Commit: sample/iosApp/iosApp.xcodeproj/project.pbxproj

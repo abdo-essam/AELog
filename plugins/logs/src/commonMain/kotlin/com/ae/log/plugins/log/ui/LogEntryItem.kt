@@ -14,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.ae.log.plugins.log.model.LogEntry
 import com.ae.log.ui.components.ExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
@@ -77,7 +77,7 @@ private fun LogEntryHeader(
                 Text(
                     text = log.tag,
                     style = MaterialTheme.typography.bodySmall,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -90,7 +90,7 @@ private fun LogEntryHeader(
                 )
             }
 
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(LogSpacing.x1))
 
             // Show first line of message as preview
             val preview =
@@ -114,7 +114,7 @@ private fun LogEntryHeader(
         Icon(
             imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
             contentDescription = null,
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(LogSpacing.x6),
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }

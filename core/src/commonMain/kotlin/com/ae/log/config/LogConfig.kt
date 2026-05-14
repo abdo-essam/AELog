@@ -9,5 +9,6 @@ import kotlinx.coroutines.Dispatchers
 public data class LogConfig(
     val enabled: Boolean = true,
     val dispatcher: CoroutineDispatcher = Dispatchers.Default,
-    val errorHandler: (Throwable) -> Unit = {},
+    /** Invoked whenever an internal SDK error occurs. Defaults to stderr output. */
+    val errorHandler: (Throwable) -> Unit = { t -> println("[AELog] Internal error: ${t.message}") },
 )
