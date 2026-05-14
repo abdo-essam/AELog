@@ -5,12 +5,12 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.ae.log.plugin.PluginContext
-import com.ae.log.plugin.UIPlugin
 import com.ae.log.logs.model.LogEntry
 import com.ae.log.logs.model.LogSeverity
 import com.ae.log.logs.ui.LogContent
 import com.ae.log.logs.ui.LogViewModel
+import com.ae.log.plugin.PluginContext
+import com.ae.log.plugin.UIPlugin
 import com.ae.log.storage.PluginStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
