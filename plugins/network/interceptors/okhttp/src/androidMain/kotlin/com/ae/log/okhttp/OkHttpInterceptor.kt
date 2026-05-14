@@ -82,13 +82,13 @@ public class OkHttpInterceptor(
 
             val responseBody =
                 if (InterceptorDefaults.shouldCaptureBody(
-                        response.body?.contentType()?.toString(),
+                        response.body.contentType()?.toString(),
                         captureUnknown = true,
                     )
                 ) {
                     runCatching {
                         val bodyString = response.peekBody(maxResponseBodyBytes).string()
-                        val contentLength = response.body?.contentLength() ?: -1L
+                        val contentLength = response.body.contentLength()
                         if (contentLength > maxResponseBodyBytes ||
                             (contentLength == -1L && bodyString.length.toLong() >= maxResponseBodyBytes)
                         ) {
@@ -98,7 +98,7 @@ public class OkHttpInterceptor(
                         }
                     }.getOrNull()
                 } else {
-                    val len = response.body?.contentLength() ?: -1
+                    val len = response.body.contentLength()
                     if (len > 0) "<binary or unsupported, $len bytes>" else "<binary or unsupported>"
                 }
 
