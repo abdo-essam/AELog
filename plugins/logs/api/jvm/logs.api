@@ -143,11 +143,9 @@ public final class com/ae/log/plugins/log/model/LogSeverity : java/lang/Enum {
 	public static fun values ()[Lcom/ae/log/plugins/log/model/LogSeverity;
 }
 
-public class com/ae/log/plugins/log/model/LogSeverityFilter {
+public class com/ae/log/plugins/log/model/LogSeverityFilter : com/ae/log/plugin/PluginFilter {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public final fun getLabel ()Ljava/lang/String;
-	public fun matches (Lcom/ae/log/plugins/log/model/LogEntry;)Z
 }
 
 public final class com/ae/log/plugins/log/model/LogSeverityFilters {

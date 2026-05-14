@@ -74,11 +74,9 @@ public final class com/ae/log/plugins/analytics/model/AnalyticsEvent {
 	public fun toString ()Ljava/lang/String;
 }
 
-public class com/ae/log/plugins/analytics/model/AnalyticsFilter {
+public class com/ae/log/plugins/analytics/model/AnalyticsFilter : com/ae/log/plugin/PluginFilter {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public final fun getLabel ()Ljava/lang/String;
-	public fun matches (Lcom/ae/log/plugins/analytics/model/AnalyticsEvent;)Z
 }
 
 public final class com/ae/log/plugins/analytics/model/AnalyticsFilters {

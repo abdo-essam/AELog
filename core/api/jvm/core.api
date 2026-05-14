@@ -130,6 +130,13 @@ public abstract interface class com/ae/log/plugin/PluginContext {
 	public abstract fun getScope ()Lkotlinx/coroutines/CoroutineScope;
 }
 
+public class com/ae/log/plugin/PluginFilter {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun getLabel ()Ljava/lang/String;
+	public fun matches (Ljava/lang/Object;)Z
+}
+
 public final class com/ae/log/plugin/PluginManager {
 	public static final field $stable I
 	public final fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/plugin/Plugin;
@@ -176,9 +183,10 @@ public final class com/ae/log/storage/PluginStorage {
 public final class com/ae/log/ui/LogController {
 	public static final field $stable I
 	public fun <init> ()V
-	public final fun getActiveTabIndex ()Lkotlinx/coroutines/flow/MutableStateFlow;
+	public final fun getActiveTabIndex ()Lkotlinx/coroutines/flow/StateFlow;
 	public final fun hide ()V
 	public final fun isVisible ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun selectTab (I)V
 	public final fun show ()V
 	public final fun toggle ()V
 }
@@ -287,6 +295,7 @@ public final class com/ae/log/ui/theme/LogSpacing {
 	public final fun getX1-D9Ej5fM ()F
 	public final fun getX10-D9Ej5fM ()F
 	public final fun getX12-D9Ej5fM ()F
+	public final fun getX1_5-D9Ej5fM ()F
 	public final fun getX2-D9Ej5fM ()F
 	public final fun getX3-D9Ej5fM ()F
 	public final fun getX4-D9Ej5fM ()F

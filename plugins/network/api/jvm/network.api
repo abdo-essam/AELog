@@ -53,6 +53,16 @@ public final class com/ae/log/plugins/network/NetworkRecorder {
 	public final fun updateResponseBody (Ljava/lang/String;Ljava/lang/String;)V
 }
 
+public final class com/ae/log/plugins/network/interceptors/InterceptorDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/plugins/network/interceptors/InterceptorDefaults;
+	public final fun exclude (Ljava/util/Map;Ljava/util/Set;)Ljava/util/Map;
+	public static synthetic fun exclude$default (Lcom/ae/log/plugins/network/interceptors/InterceptorDefaults;Ljava/util/Map;Ljava/util/Set;ILjava/lang/Object;)Ljava/util/Map;
+	public final fun getDEFAULT_EXCLUDED ()Ljava/util/Set;
+	public final fun shouldCaptureBody (Ljava/lang/String;Z)Z
+	public static synthetic fun shouldCaptureBody$default (Lcom/ae/log/plugins/network/interceptors/InterceptorDefaults;Ljava/lang/String;ZILjava/lang/Object;)Z
+}
+
 public final class com/ae/log/plugins/network/model/NetworkEntry {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/plugins/network/model/NetworkMethod;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Ljava/lang/Long;JLjava/lang/String;)V
@@ -92,11 +102,9 @@ public final class com/ae/log/plugins/network/model/NetworkEntry {
 	public fun toString ()Ljava/lang/String;
 }
 
-public class com/ae/log/plugins/network/model/NetworkFilter {
+public class com/ae/log/plugins/network/model/NetworkFilter : com/ae/log/plugin/PluginFilter {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
-	public final fun getLabel ()Ljava/lang/String;
-	public fun matches (Lcom/ae/log/plugins/network/model/NetworkEntry;)Z
 }
 
 public final class com/ae/log/plugins/network/model/NetworkFilters {
