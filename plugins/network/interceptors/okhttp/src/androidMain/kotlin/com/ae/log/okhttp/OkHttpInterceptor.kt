@@ -1,4 +1,4 @@
-package com.ae.log.plugins.network.interceptor
+package com.ae.log.okhttp
 
 import com.ae.log.AELog
 import com.ae.log.plugins.network.NetworkPlugin

@@ -15,7 +15,7 @@ kotlin {
     jvmToolchain(21)
     explicitApi()
 
-    // OkHttp is JVM-only — no iOS targets
+    // OkHttp is Android-only — no JVM desktop or iOS targets
     androidLibrary {
         namespace = "com.ae.log.network.okhttp"
         compileSdk =
@@ -28,13 +28,11 @@ kotlin {
                 .toInt()
     }
 
-    jvm()
-
     sourceSets {
-        commonMain.dependencies {
-            // Brings in logs-network (and transitively logs core)
+        androidMain.dependencies {
+            // Brings in network plugin (and transitively core)
             api(projects.plugins.network)
-            // OkHttp is a required dep here — consumers only pull this in if they use OkHttp
+            // OkHttp — consumers only pull this in if they use the OkHttp interceptor
             api(libs.okhttp)
         }
         commonTest.dependencies {
