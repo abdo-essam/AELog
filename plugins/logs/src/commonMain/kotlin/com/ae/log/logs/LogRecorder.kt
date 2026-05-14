@@ -1,0 +1,82 @@
+﻿package com.ae.log.logs
+
+import com.ae.log.AELog
+import com.ae.log.logs.model.LogEntry
+import com.ae.log.logs.model.LogSeverity
+import com.ae.log.utils.IdGenerator
+import kotlin.time.Clock
+
+public class LogRecorder internal constructor(
+    private val storage: LogStorage,
+    private val minSeverity: LogSeverity = LogSeverity.VERBOSE,
+    private val platformLogSink: PlatformLogSink = PlatformLogSink.Default,
+    private val clock: Clock = Clock.System,
+    private val idGenerator: () -> String = { IdGenerator.next() },
+) {
+    /**
+     * Record a log entry.
+     *
+     * If [throwable] is non-null its stack trace is appended to [message]
+     * automatically. Safe to call from any thread.
+     */
+    public fun log(
+        severity: LogSeverity,
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ) {
+        if (!AELog.isEnabled) return
+
+        if (severity.ordinal < minSeverity.ordinal) return
+
+        platformLogSink.log(severity, tag, message, throwable)
+
+        val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
+
+        storage.add(
+            LogEntry(
+                id = idGenerator(),
+                severity = severity,
+                tag = tag,
+                message = fullMessage,
+                timestamp = clock.now().toEpochMilliseconds(),
+            ),
+        )
+    }
+
+    public fun v(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.VERBOSE, tag, message, throwable)
+
+    public fun d(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.DEBUG, tag, message, throwable)
+
+    public fun i(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.INFO, tag, message, throwable)
+
+    public fun w(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.WARN, tag, message, throwable)
+
+    public fun e(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.ERROR, tag, message, throwable)
+
+    public fun wtf(
+        tag: String,
+        message: String,
+        throwable: Throwable? = null,
+    ): Unit = log(LogSeverity.ASSERT, tag, message, throwable)
+}

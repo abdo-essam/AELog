@@ -1,4 +1,4 @@
-package com.ae.log.sample.ui.features.network
+﻿package com.ae.log.sample.ui.features.network
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ae.log.AELog
-import com.ae.log.plugins.network.network
+import com.ae.log.network.network
 import com.ae.log.sample.SampleState
 import com.ae.log.sample.ui.components.ActionButton
 import com.ae.log.sample.ui.components.ActionCard

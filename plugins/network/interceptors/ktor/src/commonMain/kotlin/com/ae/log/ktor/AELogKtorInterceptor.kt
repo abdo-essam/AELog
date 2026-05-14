@@ -1,10 +1,10 @@
-package com.ae.log.ktor
+﻿package com.ae.log.ktor
 
 import com.ae.log.AELog
-import com.ae.log.plugins.network.NetworkPlugin
-import com.ae.log.plugins.network.interceptors.InterceptorDefaults
-import com.ae.log.plugins.network.interceptors.InterceptorDefaults.exclude
-import com.ae.log.plugins.network.model.NetworkMethod
+import com.ae.log.network.NetworkPlugin
+import com.ae.log.network.interceptors.InterceptorDefaults
+import com.ae.log.network.interceptors.InterceptorDefaults.exclude
+import com.ae.log.network.model.NetworkMethod
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
