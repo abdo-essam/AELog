@@ -15,9 +15,9 @@ When you call `AELog.init(...)`, you pass a list of plugins. The library:
 
 | Plugin | Module | Type | Description |
 |--------|--------|------|-------------|
-| `LogPlugin` | `:log` | `UIPlugin` | Real-time log viewer with level filtering (VERBOSE / DEBUG / INFO / WARN / ERROR) |
-| `NetworkPlugin` | `:log-network` | `UIPlugin` | HTTP traffic inspector with method badges, status filtering, and full body view |
-| `AnalyticsPlugin` | `:log-analytics` | `UIPlugin` | Tracks analytics events and screen views with expandable custom properties |
+| `LogPlugin` | `:ae-log-logs` | `UIPlugin` | Real-time log viewer with level filtering (VERBOSE / DEBUG / INFO / WARN / ERROR) |
+| `NetworkPlugin` | `:ae-log-network` | `UIPlugin` | HTTP traffic inspector with method badges, status filtering, and full body view |
+| `AnalyticsPlugin` | `:ae-log-analytics` | `UIPlugin` | Tracks analytics events and screen views with expandable custom properties |
 
 ## Plugin Types
 

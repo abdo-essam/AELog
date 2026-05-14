@@ -28,11 +28,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":log-core")) // infrastructure + ui shell
-            implementation(project(":log-logs")) // LogPlugin
-            implementation(project(":log-network")) // NetworkPlugin
-            implementation(project(":log-network-ktor")) // Ktor auto-interceptor
-            implementation(project(":log-analytics")) // AnalyticsPlugin
+            implementation(project(":ae-core")) // infrastructure + ui shell
+            implementation(project(":ae-plugins:logs")) // LogPlugin
+            implementation(project(":ae-plugins:network")) // NetworkPlugin
+            implementation(project(":ae-plugins:network:interceptors:ktor")) // Ktor auto-interceptor
+            implementation(project(":ae-plugins:analytics")) // AnalyticsPlugin
             implementation(libs.ktor.client.core) // HttpClient DSL in commonMain
             implementation(libs.runtime)
             implementation(libs.foundation)

@@ -3,6 +3,9 @@ import com.vanniktech.maven.publish.SonatypeHost
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.vanniktechPublish)
     `maven-publish`
     signing
@@ -22,7 +25,7 @@ kotlin {
     }
 
     androidLibrary {
-        namespace = "com.ae.log.network.ktor"
+        namespace = "com.ae.log.plugins.log"
         compileSdk =
             libs.versions.android.compileSdk
                 .get()
@@ -43,14 +46,18 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // Brings in logs-network (and transitively logs core)
-            api(projects.logNetwork)
-            // Ktor is a required dep here — consumers of this module need it
-            api(libs.ktor.client.core)
+            api(projects.aeCore)
+            implementation(libs.runtime)
+            implementation(libs.foundation)
+            implementation(libs.material3)
+            implementation(libs.ui)
+            implementation(libs.material.icons.extended)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.coroutines.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.ktor.client.cio)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
@@ -60,8 +67,8 @@ mavenPublishing {
     signAllPublications()
 
     pom {
-        name.set("AELog Network Ktor")
-        description.set("Ktor interceptor plugin for AELog SDK")
+        name.set("AELog Logs")
+        description.set("Standard log viewer plugin for AELog SDK")
         url.set("https://github.com/abdo-essam/AELog")
         inceptionYear.set("2026")
 
@@ -92,4 +99,8 @@ mavenPublishing {
             url.set("https://github.com/abdo-essam/AELog/issues")
         }
     }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    classpath = files()
 }

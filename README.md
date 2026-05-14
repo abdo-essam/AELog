@@ -7,8 +7,8 @@
 </p>
 
 <p align="center">
-  <a href="https://central.sonatype.com/artifact/io.github.abdo-essam/logs">
-    <img src="https://img.shields.io/maven-central/v/io.github.abdo-essam/logs?style=flat-square&color=BF3547" alt="Maven Central" />
+  <a href="https://central.sonatype.com/artifact/io.github.abdo-essam/ae-log-logs">
+    <img src="https://img.shields.io/maven-central/v/io.github.abdo-essam/ae-log-logs?style=flat-square&color=BF3547" alt="Maven Central" />
   </a>
   <a href="https://github.com/abdo-essam/AELog/actions/workflows/ci.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/abdo-essam/AELog/ci.yml?branch=main&style=flat-square" alt="CI" />
@@ -69,29 +69,29 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Core: infrastructure + inspector UI shell
-            implementation("io.github.abdo-essam:log-core:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-core:1.0.3")
 
             // Log: standard log viewer plugin
-            implementation("io.github.abdo-essam:log-logs:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-logs:1.0.3")
 
             // Optional: Network inspector panel
-            implementation("io.github.abdo-essam:log-network:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-network:1.0.3")
 
             // Optional: Ktor auto-interceptor (KMP — Android / iOS / JVM)
-            implementation("io.github.abdo-essam:log-network-ktor:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.3")
 
             // Optional: Analytics inspector panel
-            implementation("io.github.abdo-essam:log-analytics:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.0.3")
         }
         androidMain.dependencies {
             // Optional: OkHttp auto-interceptor (Android + JVM only)
-            implementation("io.github.abdo-essam:log-network-okhttp:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.3")
         }
     }
 }
 ```
 
-> **🔥 True Modularity**: You can depend on any plugin module independently! For example, if you only need network inspection, import `log-network:1.0.3` directly — it transitively brings in `log-core`. Your app stays lightweight by only including what it needs.
+> **🔥 True Modularity**: You can depend on any plugin module independently! For example, if you only need network inspection, import `ae-log-network-ktor:1.0.3` directly — it transitively brings in both `ae-log-network` and `ae-log-core`. Your build file stays clean by only including the specific client you use.
 
 ### Version Catalog
 
@@ -100,12 +100,12 @@ kotlin {
 logs = "1.0.3"
 
 [libraries]
-logs-core              = { module = "io.github.abdo-essam:log-core",           version.ref = "logs" }
-logs-logs              = { module = "io.github.abdo-essam:log-logs",           version.ref = "logs" }
-logs-network           = { module = "io.github.abdo-essam:log-network",        version.ref = "logs" }
-logs-network-ktor      = { module = "io.github.abdo-essam:log-network-ktor",   version.ref = "logs" }
-logs-network-okhttp    = { module = "io.github.abdo-essam:log-network-okhttp", version.ref = "logs" }
-logs-analytics         = { module = "io.github.abdo-essam:log-analytics",      version.ref = "logs" }
+logs-core              = { module = "io.github.abdo-essam:ae-log-core",           version.ref = "logs" }
+logs-logs              = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "logs" }
+logs-network           = { module = "io.github.abdo-essam:ae-log-network",        version.ref = "logs" }
+logs-network-ktor      = { module = "io.github.abdo-essam:ae-log-network-ktor",   version.ref = "logs" }
+logs-network-okhttp    = { module = "io.github.abdo-essam:ae-log-network-okhttp", version.ref = "logs" }
+logs-analytics         = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "logs" }
 ```
 
 ## 🚀 Quick Start
@@ -242,10 +242,10 @@ Three ways to open the inspector:
 
 | Module / Plugin | Class | Description |
 |--------|------|-------------|
-| `:log-core` | - | Infrastructure, EventBus, and UI Shell |
-| `:log-logs` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
-| `:log-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
-| `:log-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
+| `:ae-log-core` | - | Infrastructure, EventBus, and UI Shell |
+| `:ae-log-logs` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
+| `:ae-log-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
+| `:ae-log-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
 
 ## 🔨 Custom Plugins
 

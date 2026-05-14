@@ -18,9 +18,9 @@
     aelog = "1.0.0"
 
     [libraries]
-    aelog-core      = { module = "com.ae.log:log-core", version.ref = "aelog" }
-    aelog-network   = { module = "com.ae.log:log-network", version.ref = "aelog" }
-    aelog-analytics = { module = "com.ae.log:log-analytics", version.ref = "aelog" }
+    aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
+    aelog-network   = { module = "io.github.abdo-essam:ae-log-network", version.ref = "aelog" }
+    aelog-analytics = { module = "io.github.abdo-essam:ae-log-analytics", version.ref = "aelog" }
     ```
 
     ```kotlin title="shared/build.gradle.kts"
@@ -41,13 +41,19 @@
     kotlin {
         sourceSets {
             commonMain.dependencies {
-                implementation("com.ae.log:log-core:1.0.0")
-                implementation("com.ae.log:log-network:1.0.0")
-                implementation("com.ae.log:log-analytics:1.0.0")
+                implementation("io.github.abdo-essam:ae-log-core:1.0.0")
+                implementation("io.github.abdo-essam:ae-log-network:1.0.0")
+                implementation("io.github.abdo-essam:ae-log-analytics:1.0.0")
             }
         }
     }
     ```
+
+!!! info "Transitive Dependencies"
+    AELog uses `api` dependencies to keep your build file clean. 
+    
+    * If you use `ae-log-network-ktor`, it **automatically** includes `ae-log-network` and `ae-log-core`.
+    * You do **not** need to manually add the core library if you are already using a plugin.
 
 ## Verify Installation
 

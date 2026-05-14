@@ -31,12 +31,12 @@ dependencyResolutionManagement {
 
 rootProject.name = "AELog"
 
-include(":log-network")
-include(":log-network-ktor")
-include(":log-network-okhttp")
-include(":log-analytics")
-include(":log-logs")
-include(":log-core")
+include(":ae-core")
+include(":ae-plugins:logs")
+include(":ae-plugins:network")
+include(":ae-plugins:network:interceptors:ktor")
+include(":ae-plugins:network:interceptors:okhttp")
+include(":ae-plugins:analytics")
 include(":sample:composeApp")
 
 // Build cache

@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - 🎉 Initial stable release `v1.0.0`
-- Extracted features into specialized independent plugins (`:log-network`, `:log-analytics`)
+- Extracted features into specialized independent plugins (`:ae-log-network`, `:ae-log-analytics`)
 - Built-in `LogPlugin` with search, severity filtering, and copy features
 - Material3 themed UI with light/dark mode support and `AELogUiConfig` overrides
 - Shared standard UI components (`PanelHeader`, `LogSearchBar`, `LogFilterChips`)
