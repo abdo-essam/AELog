@@ -1,34 +1,5 @@
-public final class com/ae/log/AELogLogsKt {
-	public static final fun getLog (Lcom/ae/log/AELog;)Lcom/ae/log/LogProxy;
-}
-
-public final class com/ae/log/LogProxy {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/LogProxy;
-	public static final fun d (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static final fun d (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun d$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static synthetic fun d$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun i (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun v (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun v$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static synthetic fun v$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun w (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static final fun wtf (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static final fun wtf (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public static synthetic fun wtf$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public static synthetic fun wtf$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+public final class com/ae/log/logs/AELogLogsKt {
+	public static final fun getLog (Lcom/ae/log/AELog;)Lcom/ae/log/logs/LogProxy;
 }
 
 public final class com/ae/log/logs/LogPlugin : com/ae/log/logs/LogRecordSink, com/ae/log/plugin/UIPlugin {
@@ -61,6 +32,35 @@ public final class com/ae/log/logs/LogPlugin : com/ae/log/logs/LogRecordSink, co
 }
 
 public final class com/ae/log/logs/LogPlugin$Companion {
+}
+
+public final class com/ae/log/logs/LogProxy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/logs/LogProxy;
+	public static final fun d (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun d (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun d$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun d$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun e (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun e (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun e$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun i (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun i (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun i$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun v (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun v (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun v$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun v$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun w (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun w (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun w$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static final fun wtf (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static final fun wtf (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public static synthetic fun wtf$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public static synthetic fun wtf$default (Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)V
 }
 
 public abstract interface class com/ae/log/logs/LogRecordSink : com/ae/log/plugin/Plugin {
