@@ -18,7 +18,3 @@ public final class com/ae/log/ktor/AELogKtorInterceptor$Plugin : io/ktor/client/
 	public synthetic fun prepare (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
-public final class com/ae/log/ktor/AELogKtorInterceptorKt {
-	public static final fun getKtorInterceptor ()Lcom/ae/log/ktor/AELogKtorInterceptor$Plugin;
-}
-
