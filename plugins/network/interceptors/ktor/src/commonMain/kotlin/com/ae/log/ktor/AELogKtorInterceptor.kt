@@ -36,6 +36,7 @@ import kotlin.time.Clock
  */
 public class AELogKtorInterceptor internal constructor(
     private val maxBodyBytes: Int,
+    private val excludeHeaders: Set<String>,
 ) {
     public companion object Plugin : HttpClientPlugin<Config, AELogKtorInterceptor> {
         override val key: AttributeKey<AELogKtorInterceptor> = AttributeKey("AELogKtorInterceptor")
@@ -43,33 +44,29 @@ public class AELogKtorInterceptor internal constructor(
         private val RequestIdKey = AttributeKey<String>("AELogRequestId")
         private val StartTimeKey = AttributeKey<Long>("AELogStartTime")
 
-        /** Headers excluded from the UI by default. Delegates to [InterceptorDefaults.DEFAULT_EXCLUDED]. */
-        public var excludeHeaders: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED
-
-        override fun prepare(block: Config.() -> Unit): AELogKtorInterceptor =
-            AELogKtorInterceptor(maxBodyBytes = Config().apply(block).maxBodyBytes)
+        override fun prepare(block: Config.() -> Unit): AELogKtorInterceptor {
+            val config = Config().apply(block)
+            return AELogKtorInterceptor(config.maxBodyBytes, config.excludeHeaders)
+        }
 
         override fun install(
             plugin: AELogKtorInterceptor,
             scope: HttpClient,
         ) {
             val clock = Clock.System
-            val maxBytes = plugin.maxBodyBytes
-            installOutgoingRequestPhase(scope, clock)
-            installRequestBodyPhase(scope)
-            installResponseMetadataPhase(scope, clock)
-            installResponseBodyPhase(scope, maxBytes)
+            installRequestLoggers(scope, clock, plugin.excludeHeaders)
+            installResponseLoggers(scope, clock, plugin.excludeHeaders, plugin.maxBodyBytes)
         }
 
         /** Resolves the recorder from the installed [NetworkPlugin], or `null`. */
         private fun recorder(): NetworkRecorder? = AELog.getPlugin<NetworkPlugin>()?.recorder
 
-        // ── Phase 1: Outgoing request ─────────────────────────────────────
-
-        private fun installOutgoingRequestPhase(
+        private fun installRequestLoggers(
             scope: HttpClient,
             clock: Clock,
+            excludeHeaders: Set<String>,
         ) {
+            // 1. Record metadata (URL, Method, Headers) early in the pipeline
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 if (!AELog.isEnabled) return@intercept
                 val recorder = recorder() ?: return@intercept
@@ -88,7 +85,7 @@ public class AELogKtorInterceptor internal constructor(
                             .entries()
                             .associate { it.key to it.value.joinToString(", ") }
                             .exclude(excludeHeaders),
-                    body = extractBodyPreview(context.body),
+                    body = null, // Body is captured after serialization
                 )
 
                 try {
@@ -96,31 +93,32 @@ public class AELogKtorInterceptor internal constructor(
                 } catch (cause: Throwable) {
                     if (!isHttpResponseException(cause)) {
                         val msg = cause.message ?: cause::class.simpleName ?: "Unknown error"
-                        recorder.logError(id, "${cause::class.simpleName}: ${msg.substringBefore(". Text:").trim()}")
+                        recorder.logError(id, "${cause::class.simpleName}: $msg")
                     }
                     throw cause
                 }
             }
-        }
 
-        // ── Phase 1b: Request body (after serialization) ──────────────────
-
-        private fun installRequestBodyPhase(scope: HttpClient) {
+            // 2. Capture the actual serialized body after Ktor formats it
             scope.requestPipeline.intercept(HttpRequestPipeline.Render) { content ->
+                if (!AELog.isEnabled) {
+                    proceedWith(content)
+                    return@intercept
+                }
                 proceedWith(content)
-                if (!AELog.isEnabled) return@intercept
                 val recorder = recorder() ?: return@intercept
                 val id = context.attributes.getOrNull(RequestIdKey) ?: return@intercept
                 extractBodyPreview(context.body)?.let { recorder.updateRequestBody(id, it) }
             }
         }
 
-        // ── Phase 2a: Response metadata ───────────────────────────────────
-
-        private fun installResponseMetadataPhase(
+        private fun installResponseLoggers(
             scope: HttpClient,
             clock: Clock,
+            excludeHeaders: Set<String>,
+            maxBodyBytes: Int,
         ) {
+            // 1. Record metadata (Status Code, Duration, Headers)
             scope.receivePipeline.intercept(HttpReceivePipeline.State) { response ->
                 val recorder = recorder()
                 val id = response.call.attributes.getOrNull(RequestIdKey)
@@ -145,14 +143,8 @@ public class AELogKtorInterceptor internal constructor(
                 )
                 proceed()
             }
-        }
 
-        // ── Phase 2b: Response body ───────────────────────────────────────
-
-        private fun installResponseBodyPhase(
-            scope: HttpClient,
-            maxBodyBytes: Int,
-        ) {
+            // 2. Read and duplicate the response body stream for logging
             scope.responsePipeline.intercept(HttpResponsePipeline.Receive) { (info, body) ->
                 val recorder = recorder()
                 val id = context.attributes.getOrNull(RequestIdKey)
@@ -168,7 +160,7 @@ public class AELogKtorInterceptor internal constructor(
                 }
 
                 runCatching {
-                    val bytes = body.readBuffer().readByteArray()
+                    val bytes = body.toByteArray()
                     val bodyText =
                         if (bytes.size > maxBodyBytes) {
                             bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
@@ -178,7 +170,7 @@ public class AELogKtorInterceptor internal constructor(
                     recorder.updateResponseBody(id, bodyText)
                     proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
                 }.onFailure { cause ->
-                    recorder.logError(id, "body capture failed: ${cause.message}")
+                    recorder.logError(id, "Could not decode response body (possibly binary): ${cause.message}")
                     proceed()
                 }
             }
@@ -197,13 +189,22 @@ public class AELogKtorInterceptor internal constructor(
             } ?: false
 
         private fun extractBodyPreview(body: Any): String? {
-            if (body is TextContent) return body.text
-            val name = body::class.simpleName ?: ""
-            if ("MultiPart" in name || "FormData" in name) {
-                val size = (body as? OutgoingContent)?.contentLength?.let { "$it bytes" } ?: "unknown size"
-                return "<multipart/form-data: $size>"
+            if (body !is OutgoingContent) return null
+
+            val contentType = body.contentType?.toString() ?: ""
+            if (contentType.contains("multipart", ignoreCase = true) ||
+                contentType.contains("form-data", ignoreCase = true)
+            ) {
+                val size = body.contentLength?.let { "$it bytes" } ?: "unknown size"
+                return "<$contentType: $size>"
             }
-            return null
+
+            return when (body) {
+                is OutgoingContent.ByteArrayContent -> runCatching { body.bytes().decodeToString() }.getOrNull()
+                is OutgoingContent.ReadChannelContent,
+                is OutgoingContent.WriteChannelContent -> "<stream: ${body.contentLength ?: "unknown"} bytes>"
+                else -> null
+            }
         }
     }
 
@@ -216,6 +217,9 @@ public class AELogKtorInterceptor internal constructor(
          * Defaults to [InterceptorDefaults.DEFAULT_MAX_BODY_BYTES] (250 KB).
          */
         public var maxBodyBytes: Int = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES.toInt()
+
+        /** Headers excluded from the UI by default. Delegates to [InterceptorDefaults.DEFAULT_EXCLUDED]. */
+        public var excludeHeaders: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED
     }
 }
 
