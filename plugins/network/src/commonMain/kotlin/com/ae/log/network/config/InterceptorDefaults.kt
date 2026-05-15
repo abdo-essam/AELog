@@ -1,4 +1,4 @@
-package com.ae.log.network.interceptors
+package com.ae.log.network.config
 
 /**
  * Shared defaults for AELog network interceptors (Ktor + OkHttp).

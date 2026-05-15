@@ -1,4 +1,4 @@
-package com.ae.log.network.interceptors
+package com.ae.log.network.config
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -2,8 +2,8 @@ package com.ae.log.okhttp
 
 import com.ae.log.AELog
 import com.ae.log.network.NetworkPlugin
-import com.ae.log.network.interceptors.InterceptorDefaults
-import com.ae.log.network.interceptors.InterceptorDefaults.exclude
+import com.ae.log.network.config.InterceptorDefaults
+import com.ae.log.network.config.InterceptorDefaults.exclude
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response

@@ -1,5 +1,6 @@
-﻿package com.ae.log
+package com.ae.log.logs
 
+import com.ae.log.AELog
 import com.ae.log.logs.LogPlugin
 import com.ae.log.logs.model.LogSeverity
 import com.ae.log.utils.callerTag

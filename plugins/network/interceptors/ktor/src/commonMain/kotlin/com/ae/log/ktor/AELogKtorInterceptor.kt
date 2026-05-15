@@ -3,8 +3,8 @@ package com.ae.log.ktor
 import com.ae.log.AELog
 import com.ae.log.network.NetworkPlugin
 import com.ae.log.network.NetworkRecorder
-import com.ae.log.network.interceptors.InterceptorDefaults
-import com.ae.log.network.interceptors.InterceptorDefaults.exclude
+import com.ae.log.network.config.InterceptorDefaults
+import com.ae.log.network.config.InterceptorDefaults.exclude
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*

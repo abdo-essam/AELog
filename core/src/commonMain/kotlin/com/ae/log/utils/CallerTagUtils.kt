@@ -9,9 +9,9 @@ package com.ae.log.utils
 internal val CALLER_TAG_SKIP_PREFIXES: List<String> =
     listOf(
         "com.ae.log.AELog",
-        "com.ae.log.LogProxy",
+        "com.ae.log.logs.LogProxy",
         "com.ae.log.LogInspector",
-        "com.ae.log.AELogLogsKt",
+        "com.ae.log.logs.AELogLogsKt",
         "com.ae.log.config.",
         "com.ae.log.event.",
         "com.ae.log.storage.",

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.ae.log.AELog
-import com.ae.log.log
+import com.ae.log.logs.log
 import com.ae.log.sample.ui.components.ActionButton
 import com.ae.log.sample.ui.components.ActionCard
 import com.ae.log.sample.ui.components.SectionHeader
