@@ -59,53 +59,106 @@
 
 ## 📦 Installation
 
-AELog is fully modularized. Include only the plugins you need to keep your app light!
+AELog is fully modularized. **You only add the artifact for the feature you need.**
+Every plugin module carries its dependencies transitively, so you never need to add
+`ae-log-core` or intermediate modules manually.
 
-### Kotlin Multiplatform
+> **Pick your scenario below — copy only that block.**
+
+---
+
+### 🔵 Scenario A — Logs only
+
+```kotlin
+// build.gradle.kts
+commonMain.dependencies {
+    implementation("io.github.abdo-essam:ae-log-logs:1.0.3")
+    // ↳ transitively includes ae-log-core
+}
+```
+
+---
+
+### 🌐 Scenario B — Network inspection with Ktor
+
+```kotlin
+// build.gradle.kts
+commonMain.dependencies {
+    implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.3")
+    // ↳ transitively includes ae-log-network and ae-log-core
+}
+```
+
+---
+
+### 🟢 Scenario C — Network inspection with OkHttp (Android only)
+
+```kotlin
+// build.gradle.kts
+androidMain.dependencies {
+    implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.3")
+    // ↳ transitively includes ae-log-network and ae-log-core
+}
+```
+
+---
+
+### 📊 Scenario D — Analytics inspection
+
+```kotlin
+// build.gradle.kts
+commonMain.dependencies {
+    implementation("io.github.abdo-essam:ae-log-analytics:1.0.3")
+    // ↳ transitively includes ae-log-core
+}
+```
+
+---
+
+### 🚀 Scenario E — Full stack (Logs + Network + Analytics)
+
+For a KMP project with Ktor on all platforms and OkHttp on Android:
 
 ```kotlin
 // build.gradle.kts (shared module)
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // Core: infrastructure + inspector UI shell
-            implementation("io.github.abdo-essam:ae-log-core:1.0.3")
-
-            // Log: standard log viewer plugin
             implementation("io.github.abdo-essam:ae-log-logs:1.0.3")
-
-            // Optional: Network inspector panel
-            implementation("io.github.abdo-essam:ae-log-network:1.0.3")
-
-            // Optional: Ktor auto-interceptor (KMP — Android / iOS / JVM)
             implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.3")
-
-            // Optional: Analytics inspector panel
             implementation("io.github.abdo-essam:ae-log-analytics:1.0.3")
         }
         androidMain.dependencies {
-            // Optional: OkHttp auto-interceptor (Android + JVM only)
+            // Add this only if your Android target also uses OkHttp
             implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.3")
         }
     }
 }
 ```
 
-> **🔥 True Modularity**: You can depend on any plugin module independently! For example, if you only need network inspection, import `ae-log-network-ktor:1.0.3` directly — it transitively brings in both `ae-log-network` and `ae-log-core`. Your build file stays clean by only including the specific client you use.
+---
+
+### 📖 Dependency map (full reference)
+
+| Artifact | Transitively includes | Platform |
+|---|---|---|
+| `ae-log-logs` | `ae-log-core` | KMP |
+| `ae-log-network` | `ae-log-core` | KMP |
+| `ae-log-network-ktor` | `ae-log-network`, `ae-log-core` | KMP |
+| `ae-log-network-okhttp` | `ae-log-network`, `ae-log-core` | Android |
+| `ae-log-analytics` | `ae-log-core` | KMP |
 
 ### Version Catalog
 
 ```toml
 [versions]
-logs = "1.0.3"
+aelog = "1.0.3"
 
 [libraries]
-logs-core              = { module = "io.github.abdo-essam:ae-log-core",           version.ref = "logs" }
-logs-logs              = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "logs" }
-logs-network           = { module = "io.github.abdo-essam:ae-log-network",        version.ref = "logs" }
-logs-network-ktor      = { module = "io.github.abdo-essam:ae-log-network-ktor",   version.ref = "logs" }
-logs-network-okhttp    = { module = "io.github.abdo-essam:ae-log-network-okhttp", version.ref = "logs" }
-logs-analytics         = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "logs" }
+aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
+aelog-network-ktor     = { module = "io.github.abdo-essam:ae-log-network-ktor",   version.ref = "aelog" }
+aelog-network-okhttp   = { module = "io.github.abdo-essam:ae-log-network-okhttp", version.ref = "aelog" }
+aelog-analytics        = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "aelog" }
 ```
 
 ## 🚀 Quick Start
@@ -301,21 +354,47 @@ AELog.log(
 
 The SDK follows an encapsulated `Model-Store-API-UI` pattern, making plugins 100% reactive, modular, and thread-safe.
 
-```text
-┌─────────────────────────────────────────────────┐
-│              LogProvider                   │  Compose wrapper
-│  ┌───────────────────────────────────────────┐  │
-│  │            AELog (Core)               │  │  Plugin engine
-│  │  ┌─────────┐ ┌─────────┐ ┌────────────┐  │  │
-│  │  │  Logs   │ │ Network │ │ Analytics  │  │  │  Plugins
-│  │  │ Plugin  │ │ Plugin  │ │  Plugin    │  │  │
-│  │  └────┬────┘ └────┬────┘ └─────┬──────┘  │  │
-│  │       │           │            │          │  │
-│  │  ┌────┴────┐ ┌────┴────┐ ┌────┴──────┐  │  │
-│  │  │LogStorage │ │NetStore │ │AnalyticsStorage│  │ Data layer
-│  │  └─────────┘ └─────────┘ └───────────┘  │  │
-│  └───────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph UI ["UI Layer"]
+        LP["LogProvider\n(Compose wrapper)"]
+    end
+
+    subgraph Core ["Core — ae-log-core"]
+        AE["AELog\n(singleton engine)"]
+        EB["EventBus"]
+    end
+
+    subgraph Plugins ["Plugins (optional, loaded on demand)"]
+        direction LR
+        LP1["LogPlugin\nae-log-logs"]
+        NP["NetworkPlugin\nae-log-network"]
+        AP["AnalyticsPlugin\nae-log-analytics"]
+    end
+
+    subgraph Storage ["Data Layer (StateFlow — thread-safe)"]
+        direction LR
+        LS[("LogStorage")]
+        NS[("NetworkStorage")]
+        AS[("AnalyticsStorage")]
+    end
+
+    subgraph Interceptors ["Auto-interceptors (optional)"]
+        direction LR
+        KI["KtorInterceptor\nae-log-network-ktor"]
+        OI["OkHttpInterceptor\nae-log-network-okhttp"]
+    end
+
+    LP --> AE
+    AE --> EB
+    AE --> LP1
+    AE --> NP
+    AE --> AP
+    LP1 --> LS
+    NP --> NS
+    AP --> AS
+    KI --> NP
+    OI --> NP
 ```
 
 ## 📋 Requirements
