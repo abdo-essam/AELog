@@ -200,7 +200,8 @@ public class AELogKtorInterceptor internal constructor(
             return when (body) {
                 is OutgoingContent.ByteArrayContent -> runCatching { body.bytes().decodeToString() }.getOrNull()
                 is OutgoingContent.ReadChannelContent,
-                is OutgoingContent.WriteChannelContent -> "<stream: ${body.contentLength ?: "unknown"} bytes>"
+                is OutgoingContent.WriteChannelContent,
+                -> "<stream: ${body.contentLength ?: "unknown"} bytes>"
                 else -> null
             }
         }
