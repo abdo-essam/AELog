@@ -34,21 +34,24 @@ public final class com/ae/log/network/NetworkProxy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/network/NetworkProxy;
 	public final fun clear ()V
-	public final fun logRequest (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/util/Map;Ljava/lang/String;)V
-	public static synthetic fun logRequest$default (Lcom/ae/log/network/NetworkProxy;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun log (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/util/Map;Ljava/lang/String;)V
+	public static synthetic fun log$default (Lcom/ae/log/network/NetworkProxy;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun logError (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun logRequest (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun logRequest$default (Lcom/ae/log/network/NetworkProxy;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public final fun logResponse (Ljava/lang/String;ILjava/util/Map;Ljava/lang/String;Ljava/lang/Long;)V
+	public static synthetic fun logResponse$default (Lcom/ae/log/network/NetworkProxy;Ljava/lang/String;ILjava/util/Map;Ljava/lang/String;Ljava/lang/Long;ILjava/lang/Object;)V
 }
 
 public final class com/ae/log/network/NetworkRecorder {
 	public static final field $stable I
 	public final fun clear ()V
 	public final fun logError (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun logRequest (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/util/Map;Ljava/lang/String;)V
-	public static synthetic fun logRequest$default (Lcom/ae/log/network/NetworkRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;Ljava/lang/Integer;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun logRequest (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;)V
+	public static synthetic fun logRequest$default (Lcom/ae/log/network/NetworkRecorder;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
 	public final fun logResponse (Ljava/lang/String;ILjava/lang/String;Ljava/util/Map;Ljava/lang/Long;)V
 	public static synthetic fun logResponse$default (Lcom/ae/log/network/NetworkRecorder;Ljava/lang/String;ILjava/lang/String;Ljava/util/Map;Ljava/lang/Long;ILjava/lang/Object;)V
 	public final fun newId ()Ljava/lang/String;
-	public final fun startRequest (Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/network/model/NetworkMethod;Ljava/util/Map;Ljava/lang/String;)V
-	public static synthetic fun startRequest$default (Lcom/ae/log/network/NetworkRecorder;Ljava/lang/String;Ljava/lang/String;Lcom/ae/log/network/model/NetworkMethod;Ljava/util/Map;Ljava/lang/String;ILjava/lang/Object;)V
 	public final fun updateRequestBody (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun updateResponseBody (Ljava/lang/String;Ljava/lang/String;)V
 }

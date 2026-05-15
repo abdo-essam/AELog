@@ -21,7 +21,6 @@ public class OkHttpInterceptor(
     public val maxResponseBodyBytes: Long = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES,
     public val excludeHeaders: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED,
 ) : Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         if (!AELog.isEnabled) return chain.proceed(request)

@@ -28,7 +28,6 @@ public val AELog.network: NetworkProxy
     get() = NetworkProxy
 
 public object NetworkProxy {
-
     /**
      * Record a complete network call (request + response) in a single call.
      */
@@ -82,7 +81,10 @@ public object NetworkProxy {
     /**
      * Record a connection/timeout error for a previously logged request.
      */
-    public fun logError(id: String, message: String) {
+    public fun logError(
+        id: String,
+        message: String,
+    ) {
         AELog.getPlugin<NetworkPlugin>()?.recorder?.logError(id, message)
     }
 

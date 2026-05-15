@@ -26,8 +26,7 @@ kotlin {
             libs.versions.android.minSdk
                 .get()
                 .toInt()
-        
-        
+
         packaging {
             resources.excludes.add("META-INF/**")
         }
@@ -52,7 +51,6 @@ kotlin {
         }
     }
 }
-
 
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)

@@ -72,19 +72,28 @@ public class NetworkRecorder internal constructor(
     // ── Patch helpers (used by interceptors after initial recording) ──────
 
     /** Patch the response body after an entry has already been recorded. */
-    public fun updateResponseBody(id: String, body: String?) {
+    public fun updateResponseBody(
+        id: String,
+        body: String?,
+    ) {
         if (!AELog.isEnabled) return
         storage.update(id) { it.copy(responseBody = body) }
     }
 
     /** Patch the request body after serialization completes. */
-    public fun updateRequestBody(id: String, body: String?) {
+    public fun updateRequestBody(
+        id: String,
+        body: String?,
+    ) {
         if (!AELog.isEnabled) return
         storage.update(id) { it.copy(requestBody = body) }
     }
 
     /** Record a connection/timeout error for a previously logged request. */
-    public fun logError(id: String, message: String) {
+    public fun logError(
+        id: String,
+        message: String,
+    ) {
         if (!AELog.isEnabled) return
         storage.update(id) { it.copy(error = message) }
     }

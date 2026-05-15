@@ -26,7 +26,6 @@ import kotlin.test.assertTrue
 @RunWith(AndroidJUnit4::class)
 @OptIn(AELogTestApi::class)
 class OkHttpInterceptorTest {
-
     private lateinit var server: MockWebServer
     private lateinit var plugin: NetworkPlugin
 
@@ -54,7 +53,8 @@ class OkHttpInterceptorTest {
         code: Int = 200,
         contentType: String = "application/json",
     ) = server.enqueue(
-        MockResponse.Builder()
+        MockResponse
+            .Builder()
             .code(code)
             .body(body)
             .addHeader("Content-Type", contentType)
@@ -79,7 +79,15 @@ class OkHttpInterceptorTest {
     fun records_POST_request_with_body() {
         enqueue(body = """{"id":"1"}""", code = 201)
         val body = """{"name":"test"}""".toRequestBody("application/json".toMediaType())
-        client().newCall(Request.Builder().url(baseUrl("data")).post(body).build()).execute().close()
+        client()
+            .newCall(
+                Request
+                    .Builder()
+                    .url(baseUrl("data"))
+                    .post(body)
+                    .build(),
+            ).execute()
+            .close()
 
         val export = export()
         assertTrue(export.contains("POST"))
@@ -137,12 +145,13 @@ class OkHttpInterceptorTest {
     @Test
     fun records_error_on_connection_failure() {
         server.close()
-        val threw = try {
-            client().newCall(Request.Builder().url(baseUrl()).build()).execute()
-            false
-        } catch (_: Throwable) {
-            true
-        }
+        val threw =
+            try {
+                client().newCall(Request.Builder().url(baseUrl()).build()).execute()
+                false
+            } catch (_: Throwable) {
+                true
+            }
         assertTrue(threw)
         val export = export()
         assertTrue(export.contains("Error") || export.contains("failed") || export.contains("refused"))
@@ -153,11 +162,13 @@ class OkHttpInterceptorTest {
     @Test
     fun excludes_default_sensitive_headers() {
         enqueue()
-        val request = Request.Builder()
-            .url(baseUrl())
-            .header("Authorization", "Bearer secret-token")
-            .header("X-Custom", "visible-value")
-            .build()
+        val request =
+            Request
+                .Builder()
+                .url(baseUrl())
+                .header("Authorization", "Bearer secret-token")
+                .header("X-Custom", "visible-value")
+                .build()
         client().newCall(request).execute().close()
         assertTrue(!export().contains("secret-token"))
     }
@@ -165,10 +176,12 @@ class OkHttpInterceptorTest {
     @Test
     fun includes_headers_when_exclude_set_is_empty() {
         enqueue()
-        val request = Request.Builder()
-            .url(baseUrl())
-            .header("Authorization", "Bearer visible-token")
-            .build()
+        val request =
+            Request
+                .Builder()
+                .url(baseUrl())
+                .header("Authorization", "Bearer visible-token")
+                .build()
         client(OkHttpInterceptor(excludeHeaders = emptySet())).newCall(request).execute().close()
         assertTrue(export().contains("Bearer visible-token"))
     }
@@ -180,8 +193,14 @@ class OkHttpInterceptorTest {
         enqueue()
         val largeBody = "x".repeat(1000).toRequestBody("text/plain".toMediaType())
         client(OkHttpInterceptor(maxRequestBodyBytes = 100))
-            .newCall(Request.Builder().url(baseUrl()).post(largeBody).build())
-            .execute().close()
+            .newCall(
+                Request
+                    .Builder()
+                    .url(baseUrl())
+                    .post(largeBody)
+                    .build(),
+            ).execute()
+            .close()
         assertTrue(export().contains("[truncated]"))
     }
 
@@ -190,7 +209,8 @@ class OkHttpInterceptorTest {
         enqueue(body = "y".repeat(1000))
         client(OkHttpInterceptor(maxResponseBodyBytes = 100))
             .newCall(Request.Builder().url(baseUrl()).build())
-            .execute().close()
+            .execute()
+            .close()
         assertTrue(export().contains("[truncated]"))
     }
 

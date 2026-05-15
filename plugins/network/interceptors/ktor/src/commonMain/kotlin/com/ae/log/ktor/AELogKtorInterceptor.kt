@@ -49,7 +49,10 @@ public class AELogKtorInterceptor internal constructor(
         override fun prepare(block: Config.() -> Unit): AELogKtorInterceptor =
             AELogKtorInterceptor(maxBodyBytes = Config().apply(block).maxBodyBytes)
 
-        override fun install(plugin: AELogKtorInterceptor, scope: HttpClient) {
+        override fun install(
+            plugin: AELogKtorInterceptor,
+            scope: HttpClient,
+        ) {
             val clock = Clock.System
             val maxBytes = plugin.maxBodyBytes
             installOutgoingRequestPhase(scope, clock)
@@ -59,12 +62,14 @@ public class AELogKtorInterceptor internal constructor(
         }
 
         /** Resolves the recorder from the installed [NetworkPlugin], or `null`. */
-        private fun recorder(): NetworkRecorder? =
-            AELog.getPlugin<NetworkPlugin>()?.recorder
+        private fun recorder(): NetworkRecorder? = AELog.getPlugin<NetworkPlugin>()?.recorder
 
         // ── Phase 1: Outgoing request ─────────────────────────────────────
 
-        private fun installOutgoingRequestPhase(scope: HttpClient, clock: Clock) {
+        private fun installOutgoingRequestPhase(
+            scope: HttpClient,
+            clock: Clock,
+        ) {
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 if (!AELog.isEnabled) return@intercept
                 val recorder = recorder() ?: return@intercept
@@ -77,9 +82,12 @@ public class AELogKtorInterceptor internal constructor(
                     id = id,
                     url = context.url.buildString(),
                     method = context.method.value,
-                    headers = context.headers.build().entries()
-                        .associate { it.key to it.value.joinToString(", ") }
-                        .exclude(excludeHeaders),
+                    headers =
+                        context.headers
+                            .build()
+                            .entries()
+                            .associate { it.key to it.value.joinToString(", ") }
+                            .exclude(excludeHeaders),
                     body = extractBodyPreview(context.body),
                 )
 
@@ -109,7 +117,10 @@ public class AELogKtorInterceptor internal constructor(
 
         // ── Phase 2a: Response metadata ───────────────────────────────────
 
-        private fun installResponseMetadataPhase(scope: HttpClient, clock: Clock) {
+        private fun installResponseMetadataPhase(
+            scope: HttpClient,
+            clock: Clock,
+        ) {
             scope.receivePipeline.intercept(HttpReceivePipeline.State) { response ->
                 val recorder = recorder()
                 val id = response.call.attributes.getOrNull(RequestIdKey)
@@ -118,15 +129,18 @@ public class AELogKtorInterceptor internal constructor(
                     return@intercept
                 }
 
-                val start = response.call.attributes.getOrNull(StartTimeKey)
-                    ?: clock.now().toEpochMilliseconds()
+                val start =
+                    response.call.attributes.getOrNull(StartTimeKey)
+                        ?: clock.now().toEpochMilliseconds()
 
                 recorder.logResponse(
                     id = id,
                     statusCode = response.status.value,
-                    headers = response.headers.entries()
-                        .associate { it.key to it.value.joinToString(", ") }
-                        .exclude(excludeHeaders),
+                    headers =
+                        response.headers
+                            .entries()
+                            .associate { it.key to it.value.joinToString(", ") }
+                            .exclude(excludeHeaders),
                     durationMs = clock.now().toEpochMilliseconds() - start,
                 )
                 proceed()
@@ -135,7 +149,10 @@ public class AELogKtorInterceptor internal constructor(
 
         // ── Phase 2b: Response body ───────────────────────────────────────
 
-        private fun installResponseBodyPhase(scope: HttpClient, maxBodyBytes: Int) {
+        private fun installResponseBodyPhase(
+            scope: HttpClient,
+            maxBodyBytes: Int,
+        ) {
             scope.responsePipeline.intercept(HttpResponsePipeline.Receive) { (info, body) ->
                 val recorder = recorder()
                 val id = context.attributes.getOrNull(RequestIdKey)
@@ -152,11 +169,12 @@ public class AELogKtorInterceptor internal constructor(
 
                 runCatching {
                     val bytes = body.readBuffer().readByteArray()
-                    val bodyText = if (bytes.size > maxBodyBytes) {
-                        bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
-                    } else {
-                        bytes.decodeToString().trim().ifBlank { null }
-                    }
+                    val bodyText =
+                        if (bytes.size > maxBodyBytes) {
+                            bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
+                        } else {
+                            bytes.decodeToString().trim().ifBlank { null }
+                        }
                     recorder.updateResponseBody(id, bodyText)
                     proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
                 }.onFailure { cause ->

@@ -33,8 +33,18 @@ class NetworkRecorderTest {
         val id = recorder.newId()
         recorder.logRequest(id = id, method = "GET", url = "https://example.com")
         assertEquals(1, storage.entries.value.size)
-        assertEquals("https://example.com", storage.entries.value.first().url)
-        assertEquals(NetworkMethod.GET, storage.entries.value.first().method)
+        assertEquals(
+            "https://example.com",
+            storage.entries.value
+                .first()
+                .url,
+        )
+        assertEquals(
+            NetworkMethod.GET,
+            storage.entries.value
+                .first()
+                .method,
+        )
     }
 
     @Test
@@ -60,7 +70,12 @@ class NetworkRecorderTest {
         val id = recorder.newId()
         recorder.logRequest(id = id, method = "POST", url = "https://api.example.com")
         recorder.logResponse(id = id, statusCode = 201)
-        assertEquals(201, storage.entries.value.first().statusCode)
+        assertEquals(
+            201,
+            storage.entries.value
+                .first()
+                .statusCode,
+        )
     }
 
     @Test
@@ -81,7 +96,12 @@ class NetworkRecorderTest {
         recorder.logResponse(id = id, statusCode = 200)
         recorder.updateResponseBody(id = id, body = "{\"ok\":true}")
 
-        assertEquals("{\"ok\":true}", storage.entries.value.first().responseBody)
+        assertEquals(
+            "{\"ok\":true}",
+            storage.entries.value
+                .first()
+                .responseBody,
+        )
     }
 
     @Test
@@ -90,7 +110,12 @@ class NetworkRecorderTest {
         recorder.logRequest(id = id, url = "https://example.com", method = "POST")
         recorder.updateRequestBody(id = id, body = "{\"name\":\"test\"}")
 
-        assertEquals("{\"name\":\"test\"}", storage.entries.value.first().requestBody)
+        assertEquals(
+            "{\"name\":\"test\"}",
+            storage.entries.value
+                .first()
+                .requestBody,
+        )
     }
 
     @Test
