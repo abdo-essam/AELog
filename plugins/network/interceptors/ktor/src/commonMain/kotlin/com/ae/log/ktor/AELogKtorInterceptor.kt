@@ -10,10 +10,8 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.content.OutgoingContent
-import io.ktor.http.content.TextContent
 import io.ktor.util.*
 import io.ktor.utils.io.*
-import kotlinx.io.readByteArray
 import kotlin.time.Clock
 
 /**
@@ -202,7 +200,8 @@ public class AELogKtorInterceptor internal constructor(
             return when (body) {
                 is OutgoingContent.ByteArrayContent -> runCatching { body.bytes().decodeToString() }.getOrNull()
                 is OutgoingContent.ReadChannelContent,
-                is OutgoingContent.WriteChannelContent -> "<stream: ${body.contentLength ?: "unknown"} bytes>"
+                is OutgoingContent.WriteChannelContent,
+                -> "<stream: ${body.contentLength ?: "unknown"} bytes>"
                 else -> null
             }
         }
