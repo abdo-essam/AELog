@@ -38,7 +38,7 @@ class AELogKtorInterceptorTest {
         config: AELogKtorInterceptor.Config.() -> Unit = {},
     ): HttpClient =
         HttpClient(MockEngine) {
-            install(KtorInterceptor, config)
+            install(AELogKtorInterceptor, config)
             engine {
                 addHandler {
                     respond(
@@ -136,7 +136,7 @@ class AELogKtorInterceptorTest {
             // Use a plain Exception — java.io.IOException is not available in KMP common
             val client =
                 HttpClient(MockEngine) {
-                    install(KtorInterceptor)
+                    install(AELogKtorInterceptor)
                     engine {
                         addHandler { throw Exception("Connection refused") }
                     }

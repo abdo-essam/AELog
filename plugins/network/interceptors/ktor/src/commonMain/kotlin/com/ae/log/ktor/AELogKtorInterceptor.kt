@@ -10,10 +10,8 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.content.OutgoingContent
-import io.ktor.http.content.TextContent
 import io.ktor.util.*
 import io.ktor.utils.io.*
-import kotlinx.io.readByteArray
 import kotlin.time.Clock
 
 /**
@@ -28,7 +26,7 @@ import kotlin.time.Clock
  * ## Usage
  * ```kotlin
  * val client = HttpClient(CIO) {
- *     install(KtorInterceptor) {
+ *     install(AELogKtorInterceptor) {
  *         maxBodyBytes = 100_000  // optional — defaults to 250 KB
  *     }
  * }
@@ -223,4 +221,3 @@ public class AELogKtorInterceptor internal constructor(
     }
 }
 
-public val KtorInterceptor: AELogKtorInterceptor.Plugin = AELogKtorInterceptor.Plugin

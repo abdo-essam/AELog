@@ -10,13 +10,16 @@ import okhttp3.Response
 import okio.Buffer
 
 /**
- * OkHttp [Interceptor] that automatically records every request/response pair
- * into the [NetworkPlugin] viewer — zero boilerplate, no ID management.
+ * OkHttp 5.x interceptor that records HTTP traffic to AELog.
  *
- * @param excludeHeaders Headers to redact from the UI (case-insensitive).
- *   Defaults to [InterceptorDefaults.DEFAULT_EXCLUDED].
+ * ## Usage
+ * ```kotlin
+ * val client = OkHttpClient.Builder()
+ *     .addInterceptor(AELogOkHttpInterceptor())
+ *     .build()
+ * ```
  */
-public class OkHttpInterceptor(
+public class AELogOkHttpInterceptor(
     public val maxRequestBodyBytes: Long = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES,
     public val maxResponseBodyBytes: Long = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES,
     public val excludeHeaders: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED,

@@ -1,4 +1,4 @@
-﻿package com.ae.log.network
+package com.ae.log.network
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Wifi
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
  *
  * ```kotlin
  * val client = HttpClient(CIO) {
- *     install(KtorInterceptor)   // ← one line, done
+ *     install(AELogKtorInterceptor)   // ← one line, done
  * }
  * ```
  *
@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
  *
  * ```kotlin
  * val client = OkHttpClient.Builder()
- *     .addInterceptor(OkHttpInterceptor())
+ *     .addInterceptor(AELogOkHttpInterceptor())
  *     .build()
  * ```
  *

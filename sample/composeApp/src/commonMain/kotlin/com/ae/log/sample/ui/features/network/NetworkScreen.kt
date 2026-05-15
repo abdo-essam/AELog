@@ -35,7 +35,7 @@ fun NetworkScreen() {
                 SectionHeader("Live Interception")
                 ActionCard(
                     title = "Real HTTP Requests",
-                    description = "Captured automatically via KtorInterceptor",
+                    description = "Captured automatically via AELogKtorInterceptor",
                 ) {
                     ActionButton("GET /posts/1 (Ktor)", Color(0xFF2196F3)) {
                         scope.launch {

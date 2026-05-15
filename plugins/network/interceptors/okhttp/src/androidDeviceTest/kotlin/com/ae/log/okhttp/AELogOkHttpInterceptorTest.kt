@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 import kotlin.test.assertTrue
 
 /**
- * Instrumented tests for [OkHttpInterceptor].
+ * Instrumented tests for [AELogOkHttpInterceptor].
  *
  * Runs on a real Android device/emulator — all Android framework classes
  * (including android.util.Log used by OkHttp's Platform initializer) are
@@ -25,7 +25,7 @@ import kotlin.test.assertTrue
  */
 @RunWith(AndroidJUnit4::class)
 @OptIn(AELogTestApi::class)
-class OkHttpInterceptorTest {
+class AELogOkHttpInterceptorTest {
     private lateinit var server: MockWebServer
     private lateinit var plugin: NetworkPlugin
 
@@ -43,7 +43,7 @@ class OkHttpInterceptorTest {
         AELog.resetForTesting()
     }
 
-    private fun client(interceptor: OkHttpInterceptor = OkHttpInterceptor()): OkHttpClient =
+    private fun client(interceptor: AELogOkHttpInterceptor = AELogOkHttpInterceptor()): OkHttpClient =
         OkHttpClient.Builder().addInterceptor(interceptor).build()
 
     private fun baseUrl(path: String = ""): String = server.url("/$path").toString()
@@ -182,7 +182,7 @@ class OkHttpInterceptorTest {
                 .url(baseUrl())
                 .header("Authorization", "Bearer visible-token")
                 .build()
-        client(OkHttpInterceptor(excludeHeaders = emptySet())).newCall(request).execute().close()
+        client(AELogOkHttpInterceptor(excludeHeaders = emptySet())).newCall(request).execute().close()
         assertTrue(export().contains("Bearer visible-token"))
     }
 
@@ -192,7 +192,7 @@ class OkHttpInterceptorTest {
     fun truncates_large_request_bodies() {
         enqueue()
         val largeBody = "x".repeat(1000).toRequestBody("text/plain".toMediaType())
-        client(OkHttpInterceptor(maxRequestBodyBytes = 100))
+        client(AELogOkHttpInterceptor(maxRequestBodyBytes = 100))
             .newCall(
                 Request
                     .Builder()
@@ -207,7 +207,7 @@ class OkHttpInterceptorTest {
     @Test
     fun truncates_large_response_bodies() {
         enqueue(body = "y".repeat(1000))
-        client(OkHttpInterceptor(maxResponseBodyBytes = 100))
+        client(AELogOkHttpInterceptor(maxResponseBodyBytes = 100))
             .newCall(Request.Builder().url(baseUrl()).build())
             .execute()
             .close()
