@@ -1,4 +1,4 @@
-﻿package com.ae.log.network
+package com.ae.log.network
 
 import com.ae.log.AELog
 import com.ae.log.network.model.NetworkEntry
@@ -9,26 +9,32 @@ import kotlin.time.Clock
 
 /**
  * Low-level write API for [NetworkPlugin].
+ *
+ * All interceptors and the public proxy use the same two-step flow:
+ *
+ * ```
+ * val id = recorder.newId()
+ * recorder.logRequest(id, url, method, ...)   // pending entry created
+ * // … network call …
+ * recorder.logResponse(id, statusCode, ...)   // entry completed
+ * ```
  */
 public class NetworkRecorder internal constructor(
     private val storage: NetworkStorage,
     private val clock: Clock = Clock.System,
-    private val idGenerator: () -> String = {
-        IdGenerator.next()
-    },
+    private val idGenerator: () -> String = { IdGenerator.next() },
 ) {
-    /** Record a full request + response in a single call. */
+    // ── Record a request (creates a pending entry) ────────────────────────
+
+    /** Record an outgoing request. Call [logResponse] later to complete it. */
     public fun logRequest(
-        method: String,
+        id: String,
         url: String,
+        method: String,
         headers: Map<String, String> = emptyMap(),
         body: String? = null,
-        statusCode: Int? = null,
-        responseHeaders: Map<String, String> = emptyMap(),
-        responseBody: String? = null,
     ) {
         if (!AELog.isEnabled) return
-        val id = newId()
         storage.recordOrReplace(
             NetworkEntry(
                 id = id,
@@ -37,37 +43,14 @@ public class NetworkRecorder internal constructor(
                 rawMethod = method,
                 requestHeaders = headers,
                 requestBody = body,
-                responseHeaders = responseHeaders,
-                responseBody = responseBody,
-                statusCode = statusCode,
                 timestamp = clock.now().toEpochMilliseconds(),
             ),
         )
     }
 
-    /** Start recording a request that will be completed later. */
-    public fun startRequest(
-        id: String,
-        url: String,
-        method: NetworkMethod,
-        headers: Map<String, String> = emptyMap(),
-        body: String? = null,
-    ) {
-        if (!AELog.isEnabled) return
-        storage.recordOrReplace(
-            NetworkEntry(
-                id = id,
-                url = url,
-                method = method,
-                rawMethod = method.name,
-                requestHeaders = headers,
-                requestBody = body,
-                timestamp = clock.now().toEpochMilliseconds(),
-            ),
-        )
-    }
+    // ── Complete a request with response data ─────────────────────────────
 
-    /** Finish a previously started request. */
+    /** Finish a previously logged request with response data. */
     public fun logResponse(
         id: String,
         statusCode: Int,
@@ -86,36 +69,24 @@ public class NetworkRecorder internal constructor(
         }
     }
 
+    // ── Patch helpers (used by interceptors after initial recording) ──────
+
     /** Patch the response body after an entry has already been recorded. */
-    public fun updateResponseBody(
-        id: String,
-        body: String?,
-    ) {
+    public fun updateResponseBody(id: String, body: String?) {
         if (!AELog.isEnabled) return
         storage.update(id) { it.copy(responseBody = body) }
     }
 
-    /** Patch the request body after an entry has already been started (e.g. after serialization). */
-    public fun updateRequestBody(
-        id: String,
-        body: String?,
-    ) {
+    /** Patch the request body after serialization completes. */
+    public fun updateRequestBody(id: String, body: String?) {
         if (!AELog.isEnabled) return
         storage.update(id) { it.copy(requestBody = body) }
     }
 
-    /** Record a failed request. */
-    public fun logError(
-        id: String,
-        message: String,
-    ) {
+    /** Record a connection/timeout error for a previously logged request. */
+    public fun logError(id: String, message: String) {
         if (!AELog.isEnabled) return
         storage.update(id) { it.copy(error = message) }
-    }
-
-    internal fun recordOrReplace(entry: NetworkEntry) {
-        if (!AELog.isEnabled) return
-        storage.recordOrReplace(entry)
     }
 
     public fun clear(): Unit = storage.clear()

@@ -26,6 +26,12 @@ kotlin {
             libs.versions.android.minSdk
                 .get()
                 .toInt()
+        
+        
+        packaging {
+            resources.excludes.add("META-INF/**")
+        }
+        withDeviceTestBuilder {}
     }
 
     sourceSets {
@@ -35,8 +41,18 @@ kotlin {
             // OkHttp — consumers only pull this in if they use the OkHttp interceptor
             api(libs.okhttp)
         }
+        val androidDeviceTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+                implementation(libs.okhttp.mockwebserver)
+                implementation(libs.androidx.test.runner)
+                implementation(libs.androidx.test.core)
+                implementation(libs.androidx.test.ext.junit)
+            }
+        }
     }
 }
+
 
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)

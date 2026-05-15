@@ -30,37 +30,17 @@ class NetworkRecorderTest {
 
     @Test
     fun `logRequest - stores entry in storage`() {
-        recorder.logRequest(method = "GET", url = "https://example.com")
-        assertEquals(1, storage.entries.value.size)
-        assertEquals(
-            "https://example.com",
-            storage.entries.value
-                .first()
-                .url,
-        )
-        assertEquals(
-            NetworkMethod.GET,
-            storage.entries.value
-                .first()
-                .method,
-        )
-    }
-
-    @Test
-    fun `logRequest - records status code when provided`() {
-        recorder.logRequest(method = "POST", url = "https://api.example.com", statusCode = 201)
-        assertEquals(
-            201,
-            storage.entries.value
-                .first()
-                .statusCode,
-        )
-    }
-
-    @Test
-    fun `startRequest and logResponse - pairs correctly by id`() {
         val id = recorder.newId()
-        recorder.startRequest(id = id, url = "https://example.com", method = NetworkMethod.GET)
+        recorder.logRequest(id = id, method = "GET", url = "https://example.com")
+        assertEquals(1, storage.entries.value.size)
+        assertEquals("https://example.com", storage.entries.value.first().url)
+        assertEquals(NetworkMethod.GET, storage.entries.value.first().method)
+    }
+
+    @Test
+    fun `logRequest and logResponse - pairs correctly by id`() {
+        val id = recorder.newId()
+        recorder.logRequest(id = id, url = "https://example.com", method = "GET")
 
         // Entry should be pending initially
         val pending = storage.entries.value.first()
@@ -76,9 +56,17 @@ class NetworkRecorderTest {
     }
 
     @Test
+    fun `logResponse - records status code`() {
+        val id = recorder.newId()
+        recorder.logRequest(id = id, method = "POST", url = "https://api.example.com")
+        recorder.logResponse(id = id, statusCode = 201)
+        assertEquals(201, storage.entries.value.first().statusCode)
+    }
+
+    @Test
     fun `logError - sets error message on entry`() {
         val id = recorder.newId()
-        recorder.startRequest(id = id, url = "https://example.com", method = NetworkMethod.GET)
+        recorder.logRequest(id = id, url = "https://example.com", method = "GET")
         recorder.logError(id = id, message = "Connection refused")
 
         val entry = storage.entries.value.first()
@@ -89,35 +77,26 @@ class NetworkRecorderTest {
     @Test
     fun `updateResponseBody - patches body after logging response`() {
         val id = recorder.newId()
-        recorder.startRequest(id = id, url = "https://example.com", method = NetworkMethod.GET)
+        recorder.logRequest(id = id, url = "https://example.com", method = "GET")
         recorder.logResponse(id = id, statusCode = 200)
         recorder.updateResponseBody(id = id, body = "{\"ok\":true}")
 
-        assertEquals(
-            "{\"ok\":true}",
-            storage.entries.value
-                .first()
-                .responseBody,
-        )
+        assertEquals("{\"ok\":true}", storage.entries.value.first().responseBody)
     }
 
     @Test
     fun `updateRequestBody - patches request body`() {
         val id = recorder.newId()
-        recorder.startRequest(id = id, url = "https://example.com", method = NetworkMethod.POST)
+        recorder.logRequest(id = id, url = "https://example.com", method = "POST")
         recorder.updateRequestBody(id = id, body = "{\"name\":\"test\"}")
 
-        assertEquals(
-            "{\"name\":\"test\"}",
-            storage.entries.value
-                .first()
-                .requestBody,
-        )
+        assertEquals("{\"name\":\"test\"}", storage.entries.value.first().requestBody)
     }
 
     @Test
     fun `clear - empties storage`() {
-        recorder.logRequest(method = "GET", url = "https://example.com")
+        val id = recorder.newId()
+        recorder.logRequest(id = id, method = "GET", url = "https://example.com")
         recorder.clear()
         assertTrue(storage.entries.value.isEmpty())
     }
@@ -131,7 +110,8 @@ class NetworkRecorderTest {
     @Test
     fun `logRequest - is no-op when AELog isEnabled is false`() {
         AELog.isEnabled = false
-        recorder.logRequest(method = "GET", url = "https://example.com")
+        val id = recorder.newId()
+        recorder.logRequest(id = id, method = "GET", url = "https://example.com")
         assertTrue(storage.entries.value.isEmpty())
     }
 }

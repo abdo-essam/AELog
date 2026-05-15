@@ -1,4 +1,4 @@
-﻿package com.ae.log.sample.ui.features.network
+package com.ae.log.sample.ui.features.network
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -52,7 +52,7 @@ fun NetworkScreen() {
                     description = "Using AELog.network.logRequest()",
                 ) {
                     ActionButton("Log 200 OK", Color(0xFF4CAF50)) {
-                        AELog.network.logRequest(
+                        AELog.network.log(
                             method = "GET",
                             url = "https://api.example.com/status",
                             statusCode = 200,
@@ -61,7 +61,7 @@ fun NetworkScreen() {
                     }
                     Spacer(Modifier.height(8.dp))
                     ActionButton("Log 404 Not Found", Color(0xFFFFC107)) {
-                        AELog.network.logRequest(
+                        AELog.network.log(
                             method = "POST",
                             url = "https://api.example.com/v1/auth",
                             statusCode = 404,
@@ -70,7 +70,7 @@ fun NetworkScreen() {
                     }
                     Spacer(Modifier.height(8.dp))
                     ActionButton("Log 500 Server Error", Color(0xFFF44336)) {
-                        AELog.network.logRequest(
+                        AELog.network.log(
                             method = "GET",
                             url = "https://api.example.com/crash",
                             statusCode = 500,

@@ -2,9 +2,9 @@ package com.ae.log.ktor
 
 import com.ae.log.AELog
 import com.ae.log.network.NetworkPlugin
+import com.ae.log.network.NetworkRecorder
 import com.ae.log.network.interceptors.InterceptorDefaults
 import com.ae.log.network.interceptors.InterceptorDefaults.exclude
-import com.ae.log.network.model.NetworkMethod
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -20,11 +20,10 @@ import kotlin.time.Clock
  * Ktor 3.x interceptor that records HTTP traffic to AELog.
  *
  * Uses a two-phase approach:
- *  1. [receivePipeline] – records status, headers, and duration immediately.
- *  2. [responsePipeline] – patches the body once the app reads it, without
- *     consuming it (bytes are re-injected via a fresh [ByteReadChannel]).
- *
- * No Ktor `@InternalAPI` required.
+ *  1. **Request pipeline** – records URL, method, headers, and body.
+ *  2. **Receive pipeline** – records status, response headers, and duration.
+ *  3. **Response pipeline** – patches the body once the app reads it,
+ *     without consuming it (bytes are re-injected via a fresh [ByteReadChannel]).
  *
  * ## Usage
  * ```kotlin
@@ -38,7 +37,7 @@ import kotlin.time.Clock
 public class AELogKtorInterceptor internal constructor(
     private val maxBodyBytes: Int,
 ) {
-    public companion object Plugin : HttpClientPlugin<AELogKtorInterceptor.Config, AELogKtorInterceptor> {
+    public companion object Plugin : HttpClientPlugin<Config, AELogKtorInterceptor> {
         override val key: AttributeKey<AELogKtorInterceptor> = AttributeKey("AELogKtorInterceptor")
 
         private val RequestIdKey = AttributeKey<String>("AELogRequestId")
@@ -48,63 +47,48 @@ public class AELogKtorInterceptor internal constructor(
         public var excludeHeaders: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED
 
         override fun prepare(block: Config.() -> Unit): AELogKtorInterceptor =
-            AELogKtorInterceptor(
-                maxBodyBytes = Config().apply(block).maxBodyBytes,
-            )
+            AELogKtorInterceptor(maxBodyBytes = Config().apply(block).maxBodyBytes)
 
-        override fun install(
-            plugin: AELogKtorInterceptor,
-            scope: HttpClient,
-        ) {
+        override fun install(plugin: AELogKtorInterceptor, scope: HttpClient) {
             val clock = Clock.System
-            val maxBodyBytes = plugin.maxBodyBytes
+            val maxBytes = plugin.maxBodyBytes
             installOutgoingRequestPhase(scope, clock)
             installRequestBodyPhase(scope)
             installResponseMetadataPhase(scope, clock)
-            installResponseBodyPhase(scope, maxBodyBytes)
+            installResponseBodyPhase(scope, maxBytes)
         }
 
-        // ── Phase 1: Outgoing requests ────────────────────────────────────
+        /** Resolves the recorder from the installed [NetworkPlugin], or `null`. */
+        private fun recorder(): NetworkRecorder? =
+            AELog.getPlugin<NetworkPlugin>()?.recorder
 
-        private fun installOutgoingRequestPhase(
-            scope: HttpClient,
-            clock: Clock,
-        ) {
+        // ── Phase 1: Outgoing request ─────────────────────────────────────
+
+        private fun installOutgoingRequestPhase(scope: HttpClient, clock: Clock) {
             scope.requestPipeline.intercept(HttpRequestPipeline.State) {
                 if (!AELog.isEnabled) return@intercept
-                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder ?: return@intercept
+                val recorder = recorder() ?: return@intercept
 
                 val id = recorder.newId()
                 context.attributes.put(RequestIdKey, id)
                 context.attributes.put(StartTimeKey, clock.now().toEpochMilliseconds())
 
-                val headersMap =
-                    context.headers
-                        .build()
-                        .entries()
-                        .associate { it.key to it.value.joinToString(", ") }
-
-                recorder.startRequest(
+                recorder.logRequest(
                     id = id,
                     url = context.url.buildString(),
-                    method = NetworkMethod.fromString(context.method.value),
-                    headers = headersMap.exclude(excludeHeaders),
+                    method = context.method.value,
+                    headers = context.headers.build().entries()
+                        .associate { it.key to it.value.joinToString(", ") }
+                        .exclude(excludeHeaders),
                     body = extractBodyPreview(context.body),
                 )
 
-                // Catch send-level failures (UnknownHostException, timeout, etc.)
                 try {
                     proceed()
                 } catch (cause: Throwable) {
-                    val isHttpError =
-                        cause::class.simpleName?.let {
-                            it.contains("ResponseException") ||
-                                it.contains("ClientRequestException") ||
-                                it.contains("ServerResponseException")
-                        } ?: false
-                    if (!isHttpError) {
-                        val raw = cause.message ?: cause::class.simpleName ?: "Unknown error"
-                        recorder.logError(id, "${cause::class.simpleName}: ${raw.substringBefore(". Text:").trim()}")
+                    if (!isHttpResponseException(cause)) {
+                        val msg = cause.message ?: cause::class.simpleName ?: "Unknown error"
+                        recorder.logError(id, "${cause::class.simpleName}: ${msg.substringBefore(". Text:").trim()}")
                     }
                     throw cause
                 }
@@ -117,74 +101,48 @@ public class AELogKtorInterceptor internal constructor(
             scope.requestPipeline.intercept(HttpRequestPipeline.Render) { content ->
                 proceedWith(content)
                 if (!AELog.isEnabled) return@intercept
-                val recorder = AELog.getPlugin<NetworkPlugin>()?.recorder ?: return@intercept
+                val recorder = recorder() ?: return@intercept
                 val id = context.attributes.getOrNull(RequestIdKey) ?: return@intercept
-                val bodyText = extractBodyPreview(context.body)
-                if (bodyText != null) recorder.updateRequestBody(id, bodyText)
+                extractBodyPreview(context.body)?.let { recorder.updateRequestBody(id, it) }
             }
         }
 
-        // ── Phase 2a: Response metadata (status, headers, duration) ───────
+        // ── Phase 2a: Response metadata ───────────────────────────────────
 
-        private fun installResponseMetadataPhase(
-            scope: HttpClient,
-            clock: Clock,
-        ) {
+        private fun installResponseMetadataPhase(scope: HttpClient, clock: Clock) {
             scope.receivePipeline.intercept(HttpReceivePipeline.State) { response ->
-                if (!AELog.isEnabled) {
+                val recorder = recorder()
+                val id = response.call.attributes.getOrNull(RequestIdKey)
+                if (!AELog.isEnabled || recorder == null || id == null) {
                     proceed()
                     return@intercept
                 }
-                val recorder =
-                    AELog.getPlugin<NetworkPlugin>()?.recorder ?: run {
-                        proceed()
-                        return@intercept
-                    }
-                val id =
-                    response.call.attributes.getOrNull(RequestIdKey) ?: run {
-                        proceed()
-                        return@intercept
-                    }
-                val start =
-                    response.call.attributes.getOrNull(StartTimeKey)
-                        ?: clock.now().toEpochMilliseconds()
+
+                val start = response.call.attributes.getOrNull(StartTimeKey)
+                    ?: clock.now().toEpochMilliseconds()
 
                 recorder.logResponse(
                     id = id,
                     statusCode = response.status.value,
-                    headers =
-                        response.headers
-                            .entries()
-                            .associate { it.key to it.value.joinToString(", ") }
-                            .exclude(excludeHeaders),
-                    body = null,
+                    headers = response.headers.entries()
+                        .associate { it.key to it.value.joinToString(", ") }
+                        .exclude(excludeHeaders),
                     durationMs = clock.now().toEpochMilliseconds() - start,
                 )
                 proceed()
             }
         }
 
-        // ── Phase 2b: Response body — tapped when the app reads it ────────
+        // ── Phase 2b: Response body ───────────────────────────────────────
 
-        private fun installResponseBodyPhase(
-            scope: HttpClient,
-            maxBodyBytes: Int,
-        ) {
+        private fun installResponseBodyPhase(scope: HttpClient, maxBodyBytes: Int) {
             scope.responsePipeline.intercept(HttpResponsePipeline.Receive) { (info, body) ->
-                if (!AELog.isEnabled || body !is ByteReadChannel) {
+                val recorder = recorder()
+                val id = context.attributes.getOrNull(RequestIdKey)
+                if (!AELog.isEnabled || body !is ByteReadChannel || recorder == null || id == null) {
                     proceed()
                     return@intercept
                 }
-                val recorder =
-                    AELog.getPlugin<NetworkPlugin>()?.recorder ?: run {
-                        proceed()
-                        return@intercept
-                    }
-                val id =
-                    context.attributes.getOrNull(RequestIdKey) ?: run {
-                        proceed()
-                        return@intercept
-                    }
 
                 val contentType = context.response.headers["Content-Type"]
                 if (!InterceptorDefaults.shouldCaptureBody(contentType, captureUnknown = false)) {
@@ -194,12 +152,11 @@ public class AELogKtorInterceptor internal constructor(
 
                 runCatching {
                     val bytes = body.readBuffer().readByteArray()
-                    val bodyText =
-                        if (bytes.size > maxBodyBytes) {
-                            bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
-                        } else {
-                            bytes.decodeToString().trim().ifBlank { null }
-                        }
+                    val bodyText = if (bytes.size > maxBodyBytes) {
+                        bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
+                    } else {
+                        bytes.decodeToString().trim().ifBlank { null }
+                    }
                     recorder.updateResponseBody(id, bodyText)
                     proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
                 }.onFailure { cause ->
@@ -209,12 +166,22 @@ public class AELogKtorInterceptor internal constructor(
             }
         }
 
-        // ── Shared utilities ──────────────────────────────────────────────
+        // ── Helpers ───────────────────────────────────────────────────────
+
+        /**
+         * Ktor wraps HTTP errors in ResponseException / ClientRequestException /
+         * ServerResponseException. These are *expected* HTTP responses (4xx/5xx),
+         * not connection failures — we already record them via the receive pipeline.
+         */
+        private fun isHttpResponseException(cause: Throwable): Boolean =
+            cause::class.simpleName?.let {
+                "ResponseException" in it || "ClientRequestException" in it || "ServerResponseException" in it
+            } ?: false
 
         private fun extractBodyPreview(body: Any): String? {
             if (body is TextContent) return body.text
             val name = body::class.simpleName ?: ""
-            if (name.contains("MultiPart", ignoreCase = true) || name.contains("FormData", ignoreCase = true)) {
+            if ("MultiPart" in name || "FormData" in name) {
                 val size = (body as? OutgoingContent)?.contentLength?.let { "$it bytes" } ?: "unknown size"
                 return "<multipart/form-data: $size>"
             }
