@@ -74,7 +74,7 @@ class NetworkRecorderPerformanceTest {
     }
 
     @Test
-    fun `network recorder - 500 logRequest only (pending entries)`() {
+    fun `network recorder - 500 logRequest only pending entries`() {
         val elapsed =
             measureTime {
                 repeat(500) { i ->

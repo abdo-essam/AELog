@@ -110,7 +110,7 @@ class StoragePerformanceTest {
     }
 
     @Test
-    fun `PluginStorage - addOrReplace no-match path (common network case) under 500ms`() {
+    fun `PluginStorage - addOrReplace no-match path common network case under 500ms`() {
         val storage = PluginStorage<String>(capacity = 200)
         val elapsed =
             measureTime {
