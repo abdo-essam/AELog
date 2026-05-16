@@ -1,0 +1,142 @@
+name: Benchmarks
+
+on:
+  # Run manually from Actions tab — choose a branch and optional filter
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'Benchmark class filter (e.g. Storage, LogPipeline, Network). Leave empty for all.'
+        required: false
+        default: ''
+      compare_ref:
+        description: 'Git ref to compare against (branch/tag/SHA). Leave empty to skip diff.'
+        required: false
+        default: ''
+
+  # Also run automatically on every release tag so you get a baseline per version
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: benchmarks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    name: ⚡ JMH Benchmarks
+    # macOS gives more consistent results than the shared ubuntu runners
+    runs-on: macos-latest
+
+    permissions:
+      contents: read
+      pull-requests: write  # needed to post PR comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      # ── Run benchmarks on the current branch ───────────────────────────────
+      - name: Run JMH Benchmarks
+        run: |
+          FILTER="${{ github.event.inputs.filter }}"
+          if [ -n "$FILTER" ]; then
+            ./gradlew :benchmarks:jvmBenchmark --args ".*${FILTER}.*" 2>&1 | tee benchmark-results-current.txt
+          else
+            ./gradlew :benchmarks:jvmBenchmark 2>&1 | tee benchmark-results-current.txt
+          fi
+
+      # ── Optionally compare against another ref ─────────────────────────────
+      - name: Run Benchmarks on Compare Ref
+        if: ${{ github.event.inputs.compare_ref != '' }}
+        run: |
+          COMPARE_REF="${{ github.event.inputs.compare_ref }}"
+          echo "Checking out $COMPARE_REF for baseline..."
+          git stash
+          git checkout "$COMPARE_REF"
+          FILTER="${{ github.event.inputs.filter }}"
+          if [ -n "$FILTER" ]; then
+            ./gradlew :benchmarks:jvmBenchmark --args ".*${FILTER}.*" 2>&1 | tee benchmark-results-baseline.txt
+          else
+            ./gradlew :benchmarks:jvmBenchmark 2>&1 | tee benchmark-results-baseline.txt
+          fi
+          git checkout -
+          git stash pop || true
+
+      # ── Extract and write the Job Summary ─────────────────────────────────
+      - name: Write Job Summary
+        if: always()
+        run: |
+          FILTER="${{ github.event.inputs.filter }}"
+          COMPARE_REF="${{ github.event.inputs.compare_ref }}"
+
+          echo "## ⚡ JMH Benchmark Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Runner:** \`${{ runner.os }} ${{ runner.arch }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Filter:** \`${FILTER:-all}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Extract JMH result table lines
+          echo "### Results" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          grep -E "^[a-zA-Z].*Benchmark\." benchmark-results-current.txt \
+            | awk '{printf "%-70s %12s %-8s\n", $1, $5, $6}' \
+            >> $GITHUB_STEP_SUMMARY || echo "(no results found)" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          # Show diff if baseline exists
+          if [ -f benchmark-results-baseline.txt ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Diff vs \`${COMPARE_REF}\`" >> $GITHUB_STEP_SUMMARY
+            echo '```diff' >> $GITHUB_STEP_SUMMARY
+
+            # Simple line-by-line diff on the benchmark result lines
+            grep -E "^[a-zA-Z].*Benchmark\." benchmark-results-baseline.txt \
+              | awk '{print $1, $5}' > /tmp/baseline.txt
+            grep -E "^[a-zA-Z].*Benchmark\." benchmark-results-current.txt \
+              | awk '{print $1, $5}' > /tmp/current.txt
+
+            while IFS= read -r baseline_line; do
+              name=$(echo "$baseline_line" | awk '{print $1}')
+              before=$(echo "$baseline_line" | awk '{print $2}')
+              after=$(grep "^$name " /tmp/current.txt | awk '{print $2}' || echo "N/A")
+
+              if [ "$before" != "$after" ] && [ "$after" != "N/A" ]; then
+                # Calculate % change
+                pct=$(awk "BEGIN {
+                  b=$before; a=$after
+                  if (b==0) {print \"N/A\"; exit}
+                  printf \"%.1f\", (a-b)/b*100
+                }")
+                if echo "$pct" | grep -q "^-"; then
+                  echo "- $name: $before → $after  ($pct%)" >> $GITHUB_STEP_SUMMARY
+                else
+                  echo "+ $name: $before → $after  (+$pct%)" >> $GITHUB_STEP_SUMMARY
+                fi
+              fi
+            done < /tmp/baseline.txt
+
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "> ℹ️ \`-\` lines = value decreased · \`+\` lines = value increased" >> $GITHUB_STEP_SUMMARY
+            echo "> Whether that's an improvement depends on the metric (ops/us = higher better, ns/op = lower better)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── Upload raw result files ────────────────────────────────────────────
+      - name: Upload Benchmark Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results-${{ github.ref_name }}-${{ github.run_number }}
+          path: |
+            benchmark-results-current.txt
+            benchmark-results-baseline.txt
+          if-no-files-found: ignore
+          retention-days: 90

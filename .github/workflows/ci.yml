@@ -14,7 +14,8 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
 
 jobs:
-  # ── Code Quality ─────────────────────────────────────
+
+  # ── Code Quality ──────────────────────────────────────────────────────────────
   quality:
     name: 🧹 Code Quality
     runs-on: ubuntu-latest
@@ -45,7 +46,7 @@ jobs:
         with:
           commit_message: "chore: auto format and api dump [skip ci]"
 
-  # ── Build & Test (Android + JVM) ─────────────────────
+  # ── Android / JVM Build & Test ────────────────────────────────────────────────
   build-android:
     name: 🤖 Android Build & Test
     runs-on: ubuntu-latest
@@ -61,20 +62,110 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
+      # ── Build ────────────────────────────────────────────────────────────────
       - name: Build
         run: ./gradlew assemble
 
+      # ── Normal Unit Tests ────────────────────────────────────────────────────
       - name: Unit Tests
+        id: unit_tests
         run: ./gradlew jvmTest testDebugUnitTest
 
-      - name: Upload Test Results
+      # ── Performance / Stress Tests ───────────────────────────────────────────
+      # These are the *Performance* commonTest classes — they test correctness
+      # AND enforce time budgets. Run separately so failures are clearly labelled.
+      - name: Performance Tests
+        id: perf_tests
+        if: always()
+        run: |
+          ./gradlew \
+            :core:jvmTest \
+            :plugins:logs:jvmTest \
+            :plugins:network:jvmTest \
+            --tests "*Performance*" \
+            --rerun-tasks
+
+      # ── Job Summary: Normal Tests ────────────────────────────────────────────
+      - name: Report — Unit Test Results
+        if: always()
+        run: |
+          echo "## 🧪 Unit Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          PASS=0; FAIL=0; SKIP=0; TOTAL=0
+
+          # Parse all JUnit XML reports
+          for f in $(find . -path "*/build/test-results/*/TEST-*.xml" \
+                            -o -path "*/build/test-results/jvmTest/TEST-*.xml" \
+                            2>/dev/null); do
+            p=$(grep -o 'tests="[0-9]*"'    "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            fa=$(grep -o 'failures="[0-9]*"' "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            e=$(grep -o 'errors="[0-9]*"'   "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            s=$(grep -o 'skipped="[0-9]*"'  "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            TOTAL=$((TOTAL + p))
+            FAIL=$((FAIL + fa + e))
+            SKIP=$((SKIP + s))
+            PASS=$((PASS + p - fa - e - s))
+          done
+
+          echo "| ✅ Passed | ❌ Failed | ⏭️ Skipped | 📊 Total |"   >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-----------|------------|---------|"      >> $GITHUB_STEP_SUMMARY
+          echo "| $PASS     | $FAIL     | $SKIP      | $TOTAL  |"     >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # List failed test names if any
+          if [ "$FAIL" -gt 0 ]; then
+            echo "### ❌ Failed Tests" >> $GITHUB_STEP_SUMMARY
+            for f in $(find . -path "*/build/test-results/*/TEST-*.xml" \
+                              -o -path "*/build/test-results/jvmTest/TEST-*.xml" \
+                              2>/dev/null); do
+              grep '<testcase' "$f" | grep 'failure\|error' \
+                | sed 's/.*classname="\([^"]*\)".*name="\([^"]*\)".*/- `\1.\2`/' \
+                >> $GITHUB_STEP_SUMMARY || true
+            done
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ── Job Summary: Performance Tests ──────────────────────────────────────
+      - name: Report — Performance Test Timings
+        if: always()
+        run: |
+          echo "## ⚡ Performance Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Extract [Perf] lines from test XML stdout/system-out sections
+          LINES=$(find . -path "*/build/test-results/*/TEST-*.xml" \
+                         -o -path "*/build/test-results/jvmTest/TEST-*.xml" \
+                  2>/dev/null \
+                  | xargs grep -oh '\[Perf\][^<]*' 2>/dev/null \
+                  | sed 's/\[Perf\] //' \
+                  | sort || true)
+
+          if [ -n "$LINES" ]; then
+            echo "| Test | Timing |" >> $GITHUB_STEP_SUMMARY
+            echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "$LINES" | while IFS= read -r line; do
+              name=$(echo "$line" | sed 's/:[ ]*[^ ]*$//')
+              timing=$(echo "$line" | awk -F':[ ]*' '{print $NF}' | awk '{print $1, $2}')
+              echo "| \`$name\` | \`$timing\` |" >> $GITHUB_STEP_SUMMARY
+            done
+          else
+            echo "> ⚠️ No \`[Perf]\` output found. Tests may be cached — check the logs." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All performance tests enforce a time budget. A **failed** performance test means a timing budget was exceeded." >> $GITHUB_STEP_SUMMARY
+
+      # ── Upload HTML Reports (downloadable) ───────────────────────────────────
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-android
+          name: test-reports-android-${{ github.run_number }}
           path: '**/build/reports/tests/'
+          retention-days: 30
 
-  # ── Build & Test (iOS) ──────────────────────────────
+  # ── iOS Build & Test ──────────────────────────────────────────────────────────
   build-ios:
     name: 🍎 iOS Build & Test
     runs-on: macos-latest
@@ -93,17 +184,70 @@ jobs:
       - name: Build iOS Framework
         run: ./gradlew compileKotlinIosArm64
 
-      - name: iOS Tests
+      # Normal tests on iOS simulator
+      - name: iOS Unit Tests
         run: ./gradlew iosSimulatorArm64Test
 
-      - name: Upload Test Results
+      # Performance stress tests also run on iOS — catches platform-specific regressions
+      - name: iOS Performance Tests
+        if: always()
+        run: |
+          ./gradlew \
+            :core:iosSimulatorArm64Test \
+            :plugins:logs:iosSimulatorArm64Test \
+            :plugins:network:iosSimulatorArm64Test \
+            --tests "*Performance*" \
+            --rerun-tasks
+
+      - name: Report — iOS Test Results
+        if: always()
+        run: |
+          echo "## 🍎 iOS Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          PASS=0; FAIL=0; SKIP=0; TOTAL=0
+          for f in $(find . -path "*/build/test-results/iosSimulatorArm64Test/TEST-*.xml" 2>/dev/null); do
+            p=$(grep -o 'tests="[0-9]*"'    "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            fa=$(grep -o 'failures="[0-9]*"' "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            e=$(grep -o 'errors="[0-9]*"'   "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            s=$(grep -o 'skipped="[0-9]*"'  "$f" | head -1 | grep -o '[0-9]*' || echo 0)
+            TOTAL=$((TOTAL + p))
+            FAIL=$((FAIL + fa + e))
+            SKIP=$((SKIP + s))
+            PASS=$((PASS + p - fa - e - s))
+          done
+
+          echo "| ✅ Passed | ❌ Failed | ⏭️ Skipped | 📊 Total |"   >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-----------|------------|---------|"      >> $GITHUB_STEP_SUMMARY
+          echo "| $PASS     | $FAIL     | $SKIP      | $TOTAL  |"     >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # iOS performance timings
+          IOS_PERF=$(find . -path "*/build/test-results/iosSimulatorArm64Test/TEST-*.xml" 2>/dev/null \
+            | xargs grep -oh '\[Perf\][^<]*' 2>/dev/null \
+            | sed 's/\[Perf\] //' || true)
+
+          if [ -n "$IOS_PERF" ]; then
+            echo "### ⚡ iOS Performance Timings" >> $GITHUB_STEP_SUMMARY
+            echo "| Test | Timing |" >> $GITHUB_STEP_SUMMARY
+            echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "$IOS_PERF" | while IFS= read -r line; do
+              name=$(echo "$line" | sed 's/:[ ]*[^ ]*$//')
+              timing=$(echo "$line" | awk -F':[ ]*' '{print $NF}' | awk '{print $1, $2}')
+              echo "| \`$name\` | \`$timing\` |" >> $GITHUB_STEP_SUMMARY
+            done
+          fi
+
+      - name: Upload iOS Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-ios
+          name: test-reports-ios-${{ github.run_number }}
           path: '**/build/reports/tests/'
+          retention-days: 30
 
-  # ── Sample App Build ─────────────────────────────────
+  # ── Sample App Build ──────────────────────────────────────────────────────────
   sample:
     name: 📱 Sample App
     runs-on: ubuntu-latest

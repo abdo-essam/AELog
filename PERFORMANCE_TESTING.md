@@ -208,12 +208,62 @@ Understanding these design decisions helps interpret benchmark results:
 
 ## CI Integration
 
-The Strategy 2 tests run automatically on every PR via the existing `allTests` task. No additional CI configuration is needed.
+### What runs on every PR (`ci.yml`)
 
-For the JMH benchmarks (Strategy 1), they are intentionally **not** part of CI — they require a stable, unloaded machine to produce meaningful numbers. Run them locally before releases:
+The `build-android` job already runs `./gradlew jvmTest` which includes all `*Performance*` tests.
+After each run, a **"Extract Performance Timings"** step parses the XML test reports and posts a table directly into the **GitHub Actions Job Summary** — visible in the PR's Checks tab without downloading anything.
 
-```bash
-./gradlew :benchmarks:jvmBenchmark 2>&1 | tee benchmark-results-$(date +%Y%m%d).txt
+**What you see in the PR:**
+
+```
+⚡ Performance Test Results
+
+| Test                                          | Timing     |
+|-----------------------------------------------|------------|
+| RingBuffer.add ×100k (capacity=500)           | 12.6ms     |
+| PluginStorage.add ×10k [lock+toList+StateFlow]| 22.9ms     |
+| EventBus.publish ×50k                         | 5.8ms      |
+| LogRecorder.log ×5k                           | 25.7ms     |
+| NetworkRecorder req+resp ×1000                | 35.9ms     |
+| AELog.export (500 entries)                    | 4.6ms      |
 ```
 
-Save the output files alongside release notes to track performance trends over time.
+If any test **fails its time budget** (e.g. `25ms > 2s limit`), the `Unit Tests` step fails and the PR is blocked. ✅
+
+---
+
+### JMH Benchmarks on demand (`benchmarks.yml`)
+
+JMH benchmarks are **not** in the regular CI pipeline (they need a quiet, unloaded machine for stable numbers). Instead, trigger them manually:
+
+**How to trigger from GitHub Actions tab:**
+
+1. Go to **Actions → Benchmarks** in your repo
+2. Click **"Run workflow"**
+3. Fill in the inputs:
+   - **Filter** (optional): e.g. `Storage`, `LogPipeline`, `Network` — or leave blank for all
+   - **Compare ref** (optional): a branch, tag, or SHA to diff against
+
+**Result — visible in the Job Summary:**
+
+```
+⚡ JMH Benchmark Results
+Branch: `main`  |  Runner: macOS arm64  |  Filter: all
+
+### Results
+StorageBenchmark.addSingle             thrpt   10     312.4 ±  4.2  ops/us
+LogPipelineBenchmark.logWithExplicitTag  avgt   10     8.21 ±  0.1  us/op
+NetworkPipelineBenchmark.fullRequest    avgt   10    18.45 ±  0.3  us/op
+
+### Diff vs `develop`
+- StorageBenchmark.addSingle: 271.3 → 312.4   (-13.2%)   ← faster ✓
++ LogPipelineBenchmark.logWithExplicitTag: 7.1 → 8.2  (+15.4%)  ← slower ⚠
+```
+
+> Lines starting with `-` = value decreased · `+` = value increased  
+> Whether that's good depends on the metric: `ops/us` higher is better, `ns/op`/`us/op` lower is better.
+
+**Raw result files** are also uploaded as artifacts (90-day retention) so you can download them and run `./scripts/benchmark-diff.sh` locally.
+
+**Auto-runs on release tags** (`v*`) so every published version has a benchmark baseline saved as an artifact.
+
