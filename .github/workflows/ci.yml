@@ -42,7 +42,7 @@ jobs:
         run: ./gradlew apiDump
 
       - name: Auto Commit Changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: auto format and api dump [skip ci]"
 
