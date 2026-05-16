@@ -21,18 +21,18 @@ import kotlin.time.measureTime
  *   - Concurrent publishers from multiple coroutines: no exceptions, no deadlock
  */
 class EventBusPerformanceTest {
-
     @Test
     fun `EventBus - 50k publish calls complete under 200ms`() {
         val bus = EventBus()
         var calls = 0
 
-        val elapsed = measureTime {
-            repeat(50_000) {
-                bus.publish(AppStartedEvent)
-                calls++
+        val elapsed =
+            measureTime {
+                repeat(50_000) {
+                    bus.publish(AppStartedEvent)
+                    calls++
+                }
             }
-        }
 
         println("[Perf] EventBus.publish ×50k: $elapsed  calls=$calls")
         assertTrue(

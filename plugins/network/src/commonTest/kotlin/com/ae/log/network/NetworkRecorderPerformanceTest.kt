@@ -28,7 +28,6 @@ import kotlin.time.measureTime
  */
 @OptIn(AELogTestApi::class)
 class NetworkRecorderPerformanceTest {
-
     private lateinit var storage: NetworkStorage
     private lateinit var recorder: NetworkRecorder
 
@@ -48,24 +47,25 @@ class NetworkRecorderPerformanceTest {
 
     @Test
     fun `network recorder - 1000 request-response pairs complete under 5s`() {
-        val elapsed = measureTime {
-            repeat(1_000) { i ->
-                val id = recorder.newId()
-                recorder.logRequest(
-                    id = id,
-                    url = "https://api.example.com/items/$i",
-                    method = "GET",
-                    headers = mapOf("Authorization" to "Bearer token123"),
-                )
-                recorder.logResponse(
-                    id = id,
-                    statusCode = 200,
-                    body = """{"id":$i,"status":"ok"}""",
-                    headers = mapOf("Content-Type" to "application/json"),
-                    durationMs = (10L + i % 200),
-                )
+        val elapsed =
+            measureTime {
+                repeat(1_000) { i ->
+                    val id = recorder.newId()
+                    recorder.logRequest(
+                        id = id,
+                        url = "https://api.example.com/items/$i",
+                        method = "GET",
+                        headers = mapOf("Authorization" to "Bearer token123"),
+                    )
+                    recorder.logResponse(
+                        id = id,
+                        statusCode = 200,
+                        body = """{"id":$i,"status":"ok"}""",
+                        headers = mapOf("Content-Type" to "application/json"),
+                        durationMs = (10L + i % 200),
+                    )
+                }
             }
-        }
         println("[Perf] NetworkRecorder req+resp ×1000: $elapsed")
         assertTrue(
             elapsed < 5.seconds,
@@ -75,17 +75,18 @@ class NetworkRecorderPerformanceTest {
 
     @Test
     fun `network recorder - 500 logRequest only (pending entries)`() {
-        val elapsed = measureTime {
-            repeat(500) { i ->
-                val id = recorder.newId()
-                recorder.logRequest(
-                    id = id,
-                    url = "https://api.example.com/stream/$i",
-                    method = "POST",
-                    body = """{"item":$i}""",
-                )
+        val elapsed =
+            measureTime {
+                repeat(500) { i ->
+                    val id = recorder.newId()
+                    recorder.logRequest(
+                        id = id,
+                        url = "https://api.example.com/stream/$i",
+                        method = "POST",
+                        body = """{"item":$i}""",
+                    )
+                }
             }
-        }
         println("[Perf] NetworkRecorder.logRequest ×500: $elapsed")
         assertTrue(
             elapsed < 3.seconds,
@@ -100,11 +101,12 @@ class NetworkRecorderPerformanceTest {
         recorder.logRequest(id, "https://api.example.com/data", "GET")
         recorder.logResponse(id, 200)
 
-        val elapsed = measureTime {
-            repeat(1_000) { i ->
-                recorder.updateResponseBody(id, """{"patch":$i}""")
+        val elapsed =
+            measureTime {
+                repeat(1_000) { i ->
+                    recorder.updateResponseBody(id, """{"patch":$i}""")
+                }
             }
-        }
         println("[Perf] NetworkRecorder.updateResponseBody ×1000: $elapsed")
         assertTrue(
             elapsed < 5.seconds,
@@ -133,10 +135,11 @@ class NetworkRecorderPerformanceTest {
 
     @Test
     fun `newId - 10000 unique IDs generated quickly`() {
-        val elapsed = measureTime {
-            val ids = (1..10_000).map { recorder.newId() }.toSet()
-            assertEquals(10_000, ids.size, "All generated IDs must be unique")
-        }
+        val elapsed =
+            measureTime {
+                val ids = (1..10_000).map { recorder.newId() }.toSet()
+                assertEquals(10_000, ids.size, "All generated IDs must be unique")
+            }
         println("[Perf] NetworkRecorder.newId ×10k (UUID): $elapsed")
         assertTrue(
             elapsed < 5.seconds,

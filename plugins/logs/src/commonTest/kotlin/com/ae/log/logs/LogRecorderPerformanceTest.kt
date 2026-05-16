@@ -28,7 +28,6 @@ import kotlin.time.measureTime
  */
 @OptIn(AELogTestApi::class)
 class LogRecorderPerformanceTest {
-
     private lateinit var storage: LogStorage
     private lateinit var recorder: LogRecorder
 
@@ -36,10 +35,11 @@ class LogRecorderPerformanceTest {
     fun setUp() {
         AELog.init(LogPlugin())
         storage = LogStorage(capacity = 500)
-        recorder = LogRecorder(
-            storage = storage,
-            platformLogSink = PlatformLogSink.None, // suppress stdout during tests
-        )
+        recorder =
+            LogRecorder(
+                storage = storage,
+                platformLogSink = PlatformLogSink.None, // suppress stdout during tests
+            )
     }
 
     @AfterTest
@@ -51,11 +51,12 @@ class LogRecorderPerformanceTest {
 
     @Test
     fun `log - 5000 entries via recorder complete under 2s`() {
-        val elapsed = measureTime {
-            repeat(5_000) { i ->
-                recorder.log(LogSeverity.DEBUG, "PerfTag", "Benchmark log entry #$i")
+        val elapsed =
+            measureTime {
+                repeat(5_000) { i ->
+                    recorder.log(LogSeverity.DEBUG, "PerfTag", "Benchmark log entry #$i")
+                }
             }
-        }
         println("[Perf] LogRecorder.log ×5k: $elapsed")
         assertTrue(
             elapsed < 2.seconds,
@@ -65,18 +66,20 @@ class LogRecorderPerformanceTest {
 
     @Test
     fun `log - severity filter skips entries with near-zero overhead`() {
-        val errorOnlyRecorder = LogRecorder(
-            storage = storage,
-            minSeverity = LogSeverity.ERROR,
-            platformLogSink = PlatformLogSink.None,
-        )
+        val errorOnlyRecorder =
+            LogRecorder(
+                storage = storage,
+                minSeverity = LogSeverity.ERROR,
+                platformLogSink = PlatformLogSink.None,
+            )
 
-        val elapsed = measureTime {
-            repeat(10_000) { i ->
-                // These are all below ERROR — should be filtered before touching storage
-                errorOnlyRecorder.log(LogSeverity.DEBUG, "Tag", "Filtered entry #$i")
+        val elapsed =
+            measureTime {
+                repeat(10_000) { i ->
+                    // These are all below ERROR — should be filtered before touching storage
+                    errorOnlyRecorder.log(LogSeverity.DEBUG, "Tag", "Filtered entry #$i")
+                }
             }
-        }
 
         println("[Perf] LogRecorder filtered (10k DEBUG below ERROR threshold): $elapsed")
         assertTrue(storage.dataFlow.value.isEmpty(), "Filtered entries must NOT reach storage")
@@ -100,7 +103,11 @@ class LogRecorderPerformanceTest {
         val stored = storage.dataFlow.value
         assertEquals(capacity, stored.size, "Storage must cap at $capacity entries")
         // With 600 total entries and cap=500, the oldest surviving entry is #100 (totalLogs - capacity)
-        assertEquals("msg-${totalLogs - capacity}", stored.first().message, "Oldest entry should be msg-${totalLogs - capacity}")
+        assertEquals(
+            "msg-${totalLogs - capacity}",
+            stored.first().message,
+            "Oldest entry should be msg-${totalLogs - capacity}",
+        )
         assertEquals("msg-${totalLogs - 1}", stored.last().message, "Newest entry should be last")
     }
 
@@ -114,10 +121,11 @@ class LogRecorderPerformanceTest {
             pluginRecorder.log(LogSeverity.INFO, "ExportTag", "Export test entry $i")
         }
 
-        val elapsed = measureTime {
-            val exported = AELog.export()
-            assertTrue(exported.isNotEmpty(), "Export must not be empty after writing 500 entries")
-        }
+        val elapsed =
+            measureTime {
+                val exported = AELog.export()
+                assertTrue(exported.isNotEmpty(), "Export must not be empty after writing 500 entries")
+            }
         println("[Perf] AELog.export (500 entries): $elapsed")
         assertTrue(
             elapsed < 100.milliseconds,

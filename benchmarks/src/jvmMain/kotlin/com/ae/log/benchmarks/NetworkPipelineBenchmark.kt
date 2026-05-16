@@ -41,7 +41,6 @@ import kotlinx.coroutines.Dispatchers
 @Warmup(iterations = 5)
 @Measurement(iterations = 10, time = 1, timeUnit = BenchmarkTimeUnit.SECONDS)
 open class NetworkPipelineBenchmark {
-
     private lateinit var plugin: NetworkPlugin
 
     @Setup

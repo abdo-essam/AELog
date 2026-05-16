@@ -40,7 +40,6 @@ import kotlinx.benchmark.Warmup
 @Warmup(iterations = 5)
 @Measurement(iterations = 10, time = 1, timeUnit = BenchmarkTimeUnit.SECONDS)
 open class StorageBenchmark {
-
     @Param("100", "500", "1000")
     var capacity: Int = 0
 

@@ -26,7 +26,9 @@ kotlin {
                 implementation(project(":plugins:logs"))
                 implementation(project(":plugins:network"))
                 implementation(libs.kotlinx.coroutines.core)
-                implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:${libs.versions.kotlinx.benchmark.get()}")
+                implementation(
+                    "org.jetbrains.kotlinx:kotlinx-benchmark-runtime:${libs.versions.kotlinx.benchmark.get()}",
+                )
             }
         }
     }
@@ -39,9 +41,9 @@ benchmark {
 
     configurations {
         named("main") {
-            warmups = 5           // JVM warm-up iterations (JIT stabilisation)
-            iterations = 10       // Measurement iterations
-            iterationTime = 1     // Seconds per iteration
+            warmups = 5 // JVM warm-up iterations (JIT stabilisation)
+            iterations = 10 // Measurement iterations
+            iterationTime = 1 // Seconds per iteration
             iterationTimeUnit = "s"
             // Run specific benchmarks with: ./gradlew :benchmarks:jvmBenchmark --args ".*RingBuffer.*"
         }

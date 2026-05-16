@@ -44,7 +44,6 @@ import kotlinx.coroutines.Dispatchers
 @Warmup(iterations = 5)
 @Measurement(iterations = 10, time = 1, timeUnit = BenchmarkTimeUnit.SECONDS)
 open class LogPipelineBenchmark {
-
     @Setup
     fun setup() {
         AELog.init(
