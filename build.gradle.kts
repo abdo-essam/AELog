@@ -20,10 +20,12 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.vanniktechPublish) apply false
+    alias(libs.plugins.kotlinxBenchmark) apply false
+    alias(libs.plugins.kotlinAllopen) apply false
 }
 
 apiValidation {
-    ignoredProjects.addAll(listOf("sample", "composeApp"))
+    ignoredProjects.addAll(listOf("sample", "composeApp", "benchmarks"))
 }
 
 spotless {

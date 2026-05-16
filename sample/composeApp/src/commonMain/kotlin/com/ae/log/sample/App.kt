@@ -4,15 +4,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.Wifi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.sample.ui.features.analytics.AnalyticsScreen
 import com.ae.log.sample.ui.features.log.LogScreen
 import com.ae.log.sample.ui.features.network.NetworkScreen
+import com.ae.log.sample.ui.features.perf.PerfScreen
 import com.ae.log.sample.ui.theme.SampleTheme
 import com.ae.log.ui.LogProvider
 import com.ae.log.ui.UiConfig
@@ -43,12 +58,19 @@ fun App(debugMode: Boolean = true) {
                         0 -> LogScreen()
                         1 -> NetworkScreen()
                         2 -> AnalyticsScreen()
+                        3 -> PerfScreen()
                     }
                 }
             }
         }
     }
 }
+
+private data class NavItem(
+    val label: String,
+    val filledIcon: ImageVector,
+    val outlinedIcon: ImageVector,
+)
 
 @Composable
 private fun SampleNavBar(
@@ -57,21 +79,22 @@ private fun SampleNavBar(
 ) {
     val items =
         listOf(
-            "Logs" to (Icons.Filled.List to Icons.Outlined.List),
-            "Network" to (Icons.Filled.Wifi to Icons.Outlined.Wifi),
-            "Analytics" to (Icons.Filled.Analytics to Icons.Outlined.Analytics),
+            NavItem("Logs", Icons.Filled.List, Icons.Outlined.List),
+            NavItem("Network", Icons.Filled.Wifi, Icons.Outlined.Wifi),
+            NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
+            NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
         )
 
     NavigationBar {
-        items.forEachIndexed { index, (label, icons) ->
+        items.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = selectedTab == index,
                 onClick = { onTabSelected(index) },
-                label = { Text(label) },
+                label = { Text(item.label) },
                 icon = {
                     Icon(
-                        imageVector = if (selectedTab == index) icons.first else icons.second,
-                        contentDescription = label,
+                        imageVector = if (selectedTab == index) item.filledIcon else item.outlinedIcon,
+                        contentDescription = item.label,
                     )
                 },
             )

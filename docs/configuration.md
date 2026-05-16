@@ -30,7 +30,7 @@ LogProvider(
         showFloatingButton = true,
         enableLongPress = true,
         floatingButtonOffset = 100.dp,
-        presentationMode = PresentationMode.BottomSheet
+        overlayMode = OverlayMode.BottomSheet
     )
 ) {
     MyApp()

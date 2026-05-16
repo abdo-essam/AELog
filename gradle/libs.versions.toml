@@ -22,6 +22,7 @@ kover = "0.9.8"
 ui = "1.7.3"
 androidx-test = "1.6.1"
 vanniktechPublish = "0.30.0"
+kotlinx-benchmark = "0.4.12"
 
 [libraries]
 components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "componentsResources" }
@@ -62,3 +63,5 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 binaryCompatibilityValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 vanniktechPublish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktechPublish" }
+kotlinxBenchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
+kotlinAllopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }

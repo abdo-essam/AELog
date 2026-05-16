@@ -38,6 +38,7 @@ include(":plugins:network:interceptors:ktor")
 include(":plugins:network:interceptors:okhttp")
 include(":plugins:analytics")
 include(":sample:composeApp")
+include(":benchmarks")
 
 // Build cache
 buildCache {
