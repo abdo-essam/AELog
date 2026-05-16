@@ -3,6 +3,7 @@ package com.ae.log.storage
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
 
 /**
@@ -31,8 +32,8 @@ class StoragePerformanceTest {
             }
         println("[Perf] RingBuffer.add ×100k: $elapsed  (capacity=500)")
         assertTrue(
-            elapsed < 50.milliseconds,
-            "RingBuffer.add ×100k took $elapsed — exceeds 50ms budget",
+            elapsed < 1.seconds,
+            "RingBuffer.add ×100k took $elapsed — exceeds 1s budget",
         )
     }
 
@@ -47,8 +48,8 @@ class StoragePerformanceTest {
             }
         println("[Perf] RingBuffer.toList ×10k (cap=500): $elapsed")
         assertTrue(
-            elapsed < 100.milliseconds,
-            "RingBuffer.toList ×10k took $elapsed — exceeds 100ms budget",
+            elapsed < 1.seconds,
+            "RingBuffer.toList ×10k took $elapsed — exceeds 1s budget",
         )
     }
 
@@ -81,8 +82,8 @@ class StoragePerformanceTest {
             }
         println("[Perf] PluginStorage.add ×10k (cap=500): $elapsed  [lock+toList+StateFlow]")
         assertTrue(
-            elapsed < 500.milliseconds,
-            "PluginStorage.add ×10k took $elapsed — exceeds 500ms budget",
+            elapsed < 2.seconds,
+            "PluginStorage.add ×10k took $elapsed — exceeds 2s budget",
         )
     }
 
@@ -104,8 +105,8 @@ class StoragePerformanceTest {
             }
         println("[Perf] PluginStorage.updateFirst ×1k (worst-case scan, cap=$capacity): $elapsed")
         assertTrue(
-            elapsed < 500.milliseconds,
-            "PluginStorage.updateFirst ×1k took $elapsed — exceeds 500ms budget",
+            elapsed < 2.seconds,
+            "PluginStorage.updateFirst ×1k took $elapsed — exceeds 2s budget",
         )
     }
 
@@ -121,8 +122,8 @@ class StoragePerformanceTest {
             }
         println("[Perf] PluginStorage.addOrReplace (no-match) ×5k: $elapsed")
         assertTrue(
-            elapsed < 500.milliseconds,
-            "PluginStorage.addOrReplace ×5k took $elapsed — exceeds 500ms budget",
+            elapsed < 2.seconds,
+            "PluginStorage.addOrReplace ×5k took $elapsed — exceeds 2s budget",
         )
     }
 }

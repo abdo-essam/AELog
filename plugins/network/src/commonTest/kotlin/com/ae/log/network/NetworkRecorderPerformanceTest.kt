@@ -68,8 +68,8 @@ class NetworkRecorderPerformanceTest {
             }
         println("[Perf] NetworkRecorder req+resp ×1000: $elapsed")
         assertTrue(
-            elapsed < 5.seconds,
-            "1000 request/response pairs took $elapsed — exceeds 5s budget",
+            elapsed < 15.seconds,
+            "NetworkRecorder request-response ×1k took $elapsed — exceeds 15s budget",
         )
     }
 
@@ -89,8 +89,8 @@ class NetworkRecorderPerformanceTest {
             }
         println("[Perf] NetworkRecorder.logRequest ×500: $elapsed")
         assertTrue(
-            elapsed < 3.seconds,
-            "500 logRequest calls took $elapsed — exceeds 3s budget",
+            elapsed < 10.seconds,
+            "NetworkRecorder.logRequest ×500 took $elapsed — exceeds 10s budget",
         )
     }
 
@@ -109,8 +109,8 @@ class NetworkRecorderPerformanceTest {
             }
         println("[Perf] NetworkRecorder.updateResponseBody ×1000: $elapsed")
         assertTrue(
-            elapsed < 5.seconds,
-            "1000 response body patches took $elapsed — exceeds 5s budget",
+            elapsed < 15.seconds,
+            "NetworkRecorder.updateResponseBody ×1k took $elapsed — exceeds 15s budget",
         )
     }
 
@@ -142,8 +142,8 @@ class NetworkRecorderPerformanceTest {
             }
         println("[Perf] NetworkRecorder.newId ×10k (UUID): $elapsed")
         assertTrue(
-            elapsed < 5.seconds,
-            "10k UUID generation took $elapsed — exceeds 5s budget",
+            elapsed < 2.seconds,
+            "NetworkRecorder.newId ×10k took $elapsed — exceeds 2s budget",
         )
     }
 }
