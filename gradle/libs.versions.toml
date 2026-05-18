@@ -22,7 +22,7 @@ kover = "0.9.8"
 ui = "1.7.3"
 androidx-test = "1.6.1"
 vanniktechPublish = "0.30.0"
-kotlinx-benchmark = "0.4.12"
+kotlinx-benchmark = "0.4.17"
 
 [libraries]
 components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "componentsResources" }
