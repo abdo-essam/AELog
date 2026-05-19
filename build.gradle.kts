@@ -35,9 +35,9 @@ spotless {
             "core/**/*.kt",
             "plugins/**/*.kt",
             "sample/composeApp/**/*.kt",
-            "benchmarks/**/*.kt"
+            "benchmarks/**/*.kt",
         )
-        targetExclude("**/build/**")
+        targetExclude("**/build/**", "**/.gradle/**")
         ktlint("1.5.0")
             .setEditorConfigPath("$rootDir/.editorconfig")
     }
@@ -47,8 +47,9 @@ spotless {
             "core/**/*.gradle.kts",
             "plugins/**/*.gradle.kts",
             "sample/composeApp/**/*.gradle.kts",
-            "benchmarks/**/*.gradle.kts"
+            "benchmarks/**/*.gradle.kts",
         )
+        targetExclude("**/build/**", "**/.gradle/**")
         ktlint("1.5.0")
     }
 }
