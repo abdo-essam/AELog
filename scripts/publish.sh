@@ -35,8 +35,8 @@ rm -f gradle.properties.bak
 
 # 5. Run full check
 echo "🧪 Running tests..."
-# Clean iOS build dir manually to avoid Gradle symlink/configuration cache issues
-# This must happen BEFORE gradlew starts because Gradle scans the project during configuration
+# Clean iOS build dir manually to avoid Gradle symlink/configuration cache issues.
+# This must happen BEFORE gradlew starts.
 rm -rf sample/iosApp/build
 ./gradlew clean check allTests
 
