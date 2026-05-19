@@ -32,10 +32,10 @@ spotless {
     lineEndings = com.diffplug.spotless.LineEnding.UNIX
     kotlin {
         target(
-            "core/**/*.kt",
-            "plugins/**/*.kt",
-            "sample/composeApp/**/*.kt",
-            "benchmarks/**/*.kt",
+            "core/src/**/*.kt",
+            "plugins/**/src/**/*.kt",
+            "sample/composeApp/src/**/*.kt",
+            "benchmarks/src/**/*.kt",
         )
         targetExclude("**/build/**", "**/.gradle/**")
         ktlint("1.5.0")
@@ -44,10 +44,11 @@ spotless {
     kotlinGradle {
         target(
             "*.gradle.kts",
-            "core/**/*.gradle.kts",
-            "plugins/**/*.gradle.kts",
-            "sample/composeApp/**/*.gradle.kts",
-            "benchmarks/**/*.gradle.kts",
+            "core/*.gradle.kts",
+            "plugins/*/*.gradle.kts",
+            "plugins/*/*/*.gradle.kts",
+            "sample/composeApp/*.gradle.kts",
+            "benchmarks/*.gradle.kts",
         )
         targetExclude("**/build/**", "**/.gradle/**")
         ktlint("1.5.0")
