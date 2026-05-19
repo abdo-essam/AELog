@@ -31,7 +31,7 @@ apiValidation {
 spotless {
     kotlin {
         target("**/*.kt")
-        targetExclude("**/build/**")
+        targetExclude("**/build/**", "sample/iosApp/**")
         ktlint("1.5.0")
             .setEditorConfigPath("$rootDir/.editorconfig")
     }
