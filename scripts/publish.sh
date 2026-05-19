@@ -35,6 +35,8 @@ rm -f gradle.properties.bak
 
 # 5. Run full check
 echo "🧪 Running tests..."
+# Clean iOS build dir manually to avoid Gradle symlink/configuration cache issues
+rm -rf sample/iosApp/build
 ./gradlew clean check allTests
 
 # 6. Verify API compatibility
