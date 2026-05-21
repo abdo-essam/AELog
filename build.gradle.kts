@@ -1,10 +1,10 @@
 buildscript {
     dependencies {
-        classpath("org.ow2.asm:asm:9.9.1")
-        classpath("org.ow2.asm:asm-tree:9.9.1")
-        classpath("org.ow2.asm:asm-analysis:9.9.1")
-        classpath("org.ow2.asm:asm-commons:9.9.1")
-        classpath("org.ow2.asm:asm-util:9.9.1")
+        classpath("org.ow2.asm:asm:9.10")
+        classpath("org.ow2.asm:asm-tree:9.10")
+        classpath("org.ow2.asm:asm-analysis:9.10")
+        classpath("org.ow2.asm:asm-commons:9.10")
+        classpath("org.ow2.asm:asm-util:9.10")
     }
 }
 
@@ -29,20 +29,32 @@ apiValidation {
 }
 
 spotless {
+    lineEndings = com.diffplug.spotless.LineEnding.UNIX
     kotlin {
-        // Target specific directories to avoid scanning sample/iosApp which contains problematic symlinks
         target(
-            "core/**/*.kt",
-            "plugins/**/*.kt",
-            "sample/composeApp/**/*.kt",
-            "benchmarks/**/*.kt",
+            "core/src/**/*.kt",
+            "plugins/**/src/**/*.kt",
+            "sample/composeApp/src/**/*.kt",
+            "benchmarks/src/**/*.kt",
         )
-        targetExclude("**/build/**")
+        targetExclude("**/build/**", "**/.gradle/**")
         ktlint("1.5.0")
             .setEditorConfigPath("$rootDir/.editorconfig")
     }
     kotlinGradle {
-        target("**/*.gradle.kts")
+        target(
+            "*.gradle.kts",
+            "core/*.gradle.kts",
+            "plugins/*/*.gradle.kts",
+            "plugins/*/*/*.gradle.kts",
+            "sample/composeApp/*.gradle.kts",
+            "benchmarks/*.gradle.kts",
+        )
+        targetExclude("**/build/**", "**/.gradle/**")
         ktlint("1.5.0")
     }
+}
+
+tasks.clean {
+    delete("sample/iosApp/build")
 }

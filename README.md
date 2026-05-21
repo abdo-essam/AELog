@@ -72,7 +72,7 @@ Every plugin module carries its dependencies transitively, so you never need to 
 ```kotlin
 // build.gradle.kts
 commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-logs:1.0.3")
+    implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
     // ↳ transitively includes ae-log-core
 }
 ```
@@ -84,7 +84,7 @@ commonMain.dependencies {
 ```kotlin
 // build.gradle.kts
 commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.3")
+    implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.5")
     // ↳ transitively includes ae-log-network and ae-log-core
 }
 ```
@@ -96,7 +96,7 @@ commonMain.dependencies {
 ```kotlin
 // build.gradle.kts
 androidMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.3")
+    implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.5")
     // ↳ transitively includes ae-log-network and ae-log-core
 }
 ```
@@ -108,7 +108,7 @@ androidMain.dependencies {
 ```kotlin
 // build.gradle.kts
 commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-analytics:1.0.3")
+    implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
     // ↳ transitively includes ae-log-core
 }
 ```
@@ -124,13 +124,13 @@ For a KMP project with Ktor on all platforms and OkHttp on Android:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.0.3")
-            implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.3")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
+            implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.5")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
         }
         androidMain.dependencies {
             // Add this only if your Android target also uses OkHttp
-            implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.3")
+            implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.5")
         }
     }
 }
@@ -152,7 +152,7 @@ kotlin {
 
 ```toml
 [versions]
-aelog = "1.0.3"
+aelog = "1.0.5"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
