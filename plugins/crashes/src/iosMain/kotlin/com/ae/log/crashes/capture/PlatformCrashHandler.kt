@@ -2,7 +2,7 @@
 
 package com.ae.log.crashes.capture
 
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.atomics.AtomicReference
 
 /**
  * iOS/Native actual: installs a [kotlin.native.setUnhandledExceptionHook] handler.

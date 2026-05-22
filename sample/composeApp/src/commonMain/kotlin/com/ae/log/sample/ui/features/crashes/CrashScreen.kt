@@ -61,10 +61,10 @@ fun CrashScreen() {
                     title = "Exception with Cause",
                     description = "Records the full chain — root cause is visible in the stack trace.",
                 ) {
-                    ActionButton("Record chained IOException", Color(0xFFE91E63)) {
+                    ActionButton("Record chained Exception", Color(0xFFE91E63)) {
                         val root = Exception("SSL handshake failed")
                         AELog.crashes.recordNonFatal(
-                            java.io.IOException("Network request failed", root),
+                            Exception("Network request failed", root),
                         )
                     }
                 }
