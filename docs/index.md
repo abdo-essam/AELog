@@ -42,6 +42,7 @@ You can write your own plugins for anything else (database inspector, feature fl
 - 📋 **Log Viewer** — Real-time log inspection with severity filtering
 - 🌐 **Network Inspector** — Detailed view of HTTP traffic and JSON payloads
 - 📈 **Analytics Tracker** — Monitor properties across app flow
+- 💥 **Crash Reporter** — Capture and persist fatal and non-fatal exceptions on device
 - 🔌 **Plugin System** — Easily extend with custom decoupled `UIPlugin` or `DataPlugin`
 - 🎨 **Compose UI** — Material 3 themed overlay with dark/light mode support
 - 📱 **Multiplatform** — Works seamlessly across Android, iOS, and Desktop
