@@ -8,6 +8,7 @@ import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
 import platform.Foundation.stringByAppendingPathComponent
+import platform.Foundation.timeIntervalSince1970
 import platform.Foundation.writeToFile
 
 internal actual class FileOperations actual constructor(
@@ -35,15 +36,12 @@ internal actual class FileOperations actual constructor(
     }
 
     actual fun readAllFiles(): List<String> {
-        val contents =
-            fileManager.contentsOfDirectoryAtPath(directoryPath, error = null)
-                ?: emptyList()
-
         @Suppress("UNCHECKED_CAST")
         val files =
-            (contents as List<String>)
-                .filter { it.endsWith(".json") }
-                .sorted()
+            (fileManager.contentsOfDirectoryAtPath(directoryPath, error = null) as? List<String>)
+                ?.filter { it.endsWith(".json") }
+                ?.sorted()
+                ?: emptyList()
 
         return files.mapNotNull { fileName ->
             @Suppress("CAST_NEVER_SUCCEEDS")
@@ -53,18 +51,17 @@ internal actual class FileOperations actual constructor(
     }
 
     actual fun deleteAllFiles() {
-        val contents =
-            fileManager.contentsOfDirectoryAtPath(directoryPath, error = null)
+        @Suppress("UNCHECKED_CAST")
+        val files =
+            (fileManager.contentsOfDirectoryAtPath(directoryPath, error = null) as? List<String>)
+                ?.filter { it.endsWith(".json") }
                 ?: return
 
-        @Suppress("UNCHECKED_CAST")
-        (contents as List<String>)
-            .filter { it.endsWith(".json") }
-            .forEach { fileName ->
-                @Suppress("CAST_NEVER_SUCCEEDS")
-                val filePath = (directoryPath as NSString).stringByAppendingPathComponent(fileName)
-                fileManager.removeItemAtPath(filePath, error = null)
-            }
+        files.forEach { fileName ->
+            @Suppress("CAST_NEVER_SUCCEEDS")
+            val filePath = (directoryPath as NSString).stringByAppendingPathComponent(fileName)
+            fileManager.removeItemAtPath(filePath, error = null)
+        }
     }
 
     private fun currentTimeMillis(): Long = (NSDate().timeIntervalSince1970 * 1000).toLong()
