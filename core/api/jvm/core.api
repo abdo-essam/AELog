@@ -171,17 +171,28 @@ public final class com/ae/log/plugin/UIPlugin$DefaultImpls {
 	public static fun onStop (Lcom/ae/log/plugin/UIPlugin;)V
 }
 
-public final class com/ae/log/storage/PluginStorage {
+public final class com/ae/log/storage/InMemoryPluginStorage : com/ae/log/storage/PluginStorage {
 	public static final field $stable I
 	public fun <init> (I)V
-	public final fun add (Ljava/lang/Object;)V
+	public fun add (Ljava/lang/Object;)V
 	public final fun addOrReplace (Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)V
-	public final fun clear ()V
-	public final fun getCount ()I
-	public final fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
-	public final fun isEmpty ()Z
-	public final fun replace (ILjava/lang/Object;)V
+	public fun clear ()V
+	public fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
 	public final fun updateFirst (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/ae/log/storage/PersistentPluginStorage : com/ae/log/storage/PluginStorage {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;)V
+	public fun add (Ljava/lang/Object;)V
+	public fun clear ()V
+	public fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
+}
+
+public abstract interface class com/ae/log/storage/PluginStorage {
+	public abstract fun add (Ljava/lang/Object;)V
+	public abstract fun clear ()V
+	public abstract fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public final class com/ae/log/ui/LogController {
