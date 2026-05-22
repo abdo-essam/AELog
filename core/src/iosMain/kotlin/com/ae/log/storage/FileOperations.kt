@@ -1,5 +1,8 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+
 package com.ae.log.storage
 
+import platform.Foundation.NSDate
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
@@ -34,7 +37,7 @@ internal actual class FileOperations actual constructor(
     actual fun readAllFiles(): List<String> {
         val contents =
             fileManager.contentsOfDirectoryAtPath(directoryPath, error = null)
-                ?: return emptyList()
+                ?: emptyList()
 
         @Suppress("UNCHECKED_CAST")
         val files =
@@ -64,7 +67,7 @@ internal actual class FileOperations actual constructor(
             }
     }
 
-    private fun currentTimeMillis(): Long = (platform.Foundation.NSDate().timeIntervalSince1970 * 1000).toLong()
+    private fun currentTimeMillis(): Long = (NSDate().timeIntervalSince1970 * 1000).toLong()
 
     private companion object {
         var counter = 0
