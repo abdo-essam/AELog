@@ -43,14 +43,18 @@ AELog.init(
 
 ## Plugin Lifecycle
 
-```text
-install() → onAttach(context)
-                  ↓
-           ┌→ onOpen()  ←┐
-           │      ↓       │   (user opens/closes AELog panel)
-           └─ onClose() ──┘
-                  ↓
-             onDetach()  ← uninstall()
+```mermaid
+flowchart TD
+    Install(["install()"]) --> Attach["onAttach(context)"]
+    Attach --> Open
+    
+    subgraph Panel ["Panel Lifecycle (user opens/closes AELog panel)"]
+        Open["onOpen()"] --> Close["onClose()"]
+        Close --> Open
+    end
+    
+    Close --> Detach["onDetach()"]
+    Uninstall(["uninstall()"]) --> Detach
 ```
 
 Each hook has a clear responsibility:

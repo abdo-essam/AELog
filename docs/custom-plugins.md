@@ -127,14 +127,18 @@ perfPlugin?.recordMetric("api_call", 250L)
 
 ## Plugin Lifecycle
 
-```text
-install() → onAttach()
-                ↓
-         ┌→ onOpen()  ←┐
-         │      ↓       │   (user opens/closes AELog)
-         └─ onClose() ──┘
-                ↓
-           onDetach()  ← uninstall()
+```mermaid
+flowchart TD
+    Install(["install()"]) --> Attach["onAttach(context)"]
+    Attach --> Open
+    
+    subgraph Panel ["Panel Lifecycle (user opens/closes AELog panel)"]
+        Open["onOpen()"] --> Close["onClose()"]
+        Close --> Open
+    end
+    
+    Close --> Detach["onDetach()"]
+    Uninstall(["uninstall()"]) --> Detach
 ```
 
 !!! warning "Important"
