@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.Wifi
@@ -25,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.sample.ui.features.analytics.AnalyticsScreen
+import com.ae.log.sample.ui.features.crashes.CrashScreen
 import com.ae.log.sample.ui.features.log.LogScreen
 import com.ae.log.sample.ui.features.network.NetworkScreen
 import com.ae.log.sample.ui.features.perf.PerfScreen
@@ -38,10 +41,7 @@ fun App(debugMode: Boolean = true) {
 
     SampleTheme {
         LogProvider(
-            uiConfig =
-                UiConfig(
-                    showFloatingButton = true,
-                ),
+            uiConfig = UiConfig(showFloatingButton = true),
             enabled = debugMode,
         ) {
             Scaffold(
@@ -58,7 +58,8 @@ fun App(debugMode: Boolean = true) {
                         0 -> LogScreen()
                         1 -> NetworkScreen()
                         2 -> AnalyticsScreen()
-                        3 -> PerfScreen()
+                        3 -> CrashScreen()
+                        4 -> PerfScreen()
                     }
                 }
             }
@@ -77,13 +78,13 @@ private fun SampleNavBar(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
 ) {
-    val items =
-        listOf(
-            NavItem("Logs", Icons.Filled.List, Icons.Outlined.List),
-            NavItem("Network", Icons.Filled.Wifi, Icons.Outlined.Wifi),
-            NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
-            NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
-        )
+    val items = listOf(
+        NavItem("Logs", Icons.Filled.List, Icons.Outlined.List),
+        NavItem("Network", Icons.Filled.Wifi, Icons.Outlined.Wifi),
+        NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
+        NavItem("Crashes", Icons.Filled.BugReport, Icons.Outlined.BugReport),
+        NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
+    )
 
     NavigationBar {
         items.forEachIndexed { index, item ->

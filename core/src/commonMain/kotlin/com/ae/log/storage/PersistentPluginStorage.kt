@@ -36,7 +36,7 @@ public class PersistentPluginStorage<T>(
         synchronized(lock) {
             val content = json.encodeToString(serializer, item)
             fileOps.writeFile(content)
-            _dataFlow.value = _dataFlow.value + item
+            _dataFlow.value += item
         }
     }
 

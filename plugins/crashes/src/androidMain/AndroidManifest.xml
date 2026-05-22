@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!--
+            Auto-initializer: AGP merges this into the host app's manifest.
+            The ContentProvider runs before Application.onCreate(), capturing
+            the Application context so CrashPlugin() needs no explicit Context.
+        -->
+        <provider
+            android:name="com.ae.log.crashes.CrashAppContextProvider"
+            android:authorities="${applicationId}.ae_log_crash_init"
+            android:exported="false" />
+    </application>
+</manifest>
