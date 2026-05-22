@@ -107,15 +107,17 @@ ci: add iOS build to CI pipeline
 * Keep the public API surface minimal
 
 ## Architecture Overview
-```text
-┌─────────────────────────────────────────┐
-│              AELogProvider           │  ← Compose entry point
-├─────────────────────────────────────────┤
-│              AELog                  │  ← Core engine
-├──────────┬──────────┬───────────────────┤
-│ LogPlugin│ (Your   │  DataPlugin       │  ← Plugin system
-│ (UIPlugin)│  Plugin) │  (headless)       │
-├──────────┴──────────┴───────────────────┤
-│              LogStorage / DataStore        │  ← Storage layer
-└─────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    AELogProvider["AELogProvider<br>(Compose Entry Point)"] --> AELog["AELog<br>(Core Engine)"]
+    
+    subgraph Plugins ["Plugin System"]
+        AELog --> LogPlugin["LogPlugin<br>(UIPlugin)"]
+        AELog --> CustomPlugin["Your Plugin<br>(UIPlugin)"]
+        AELog --> DataPlugin["DataPlugin<br>(headless)"]
+    end
+    
+    LogPlugin --> Storage["LogStorage / DataStore<br>(Storage Layer)"]
+    CustomPlugin --> Storage
+    DataPlugin --> Storage
 ```
