@@ -1,0 +1,92 @@
+public final class com/ae/log/crashes/AELogCrashesKt {
+	public static final fun getCrashes (Lcom/ae/log/AELog;)Lcom/ae/log/crashes/CrashProxy;
+}
+
+public final class com/ae/log/crashes/CrashPlugin : com/ae/log/plugin/UIPlugin {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/crashes/CrashPlugin$Companion;
+	public static final field ID Ljava/lang/String;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
+	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
+	public fun export ()Ljava/lang/String;
+	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
+	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public fun getId ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
+	public fun onClear ()V
+	public fun onClose ()V
+	public fun onDetach ()V
+	public fun onOpen ()V
+	public fun onStart ()V
+	public fun onStop ()V
+	public final fun recordNonFatal (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public static synthetic fun recordNonFatal$default (Lcom/ae/log/crashes/CrashPlugin;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class com/ae/log/crashes/CrashPlugin$Companion {
+}
+
+public final class com/ae/log/crashes/CrashProxy {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/crashes/CrashProxy;
+	public static final fun recordNonFatal (Ljava/lang/Throwable;Ljava/lang/String;)V
+	public static synthetic fun recordNonFatal$default (Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class com/ae/log/crashes/model/CrashEvent {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/crashes/model/CrashEvent$Companion;
+	public fun <init> (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Z
+	public final fun copy (Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Lcom/ae/log/crashes/model/CrashEvent;
+	public static synthetic fun copy$default (Lcom/ae/log/crashes/model/CrashEvent;Ljava/lang/String;JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lcom/ae/log/crashes/model/CrashEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExceptionType ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getMessage ()Ljava/lang/String;
+	public final fun getStackTrace ()Ljava/lang/String;
+	public final fun getThreadName ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public final fun isFatal ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/ae/log/crashes/model/CrashEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/crashes/model/CrashEvent$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/ae/log/crashes/model/CrashEvent;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/ae/log/crashes/model/CrashEvent;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/crashes/model/CrashEvent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/crashes/model/CrashFilter : java/lang/Enum {
+	public static final field ALL Lcom/ae/log/crashes/model/CrashFilter;
+	public static final field FATAL Lcom/ae/log/crashes/model/CrashFilter;
+	public static final field NON_FATAL Lcom/ae/log/crashes/model/CrashFilter;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun matches (Lcom/ae/log/crashes/model/CrashEvent;)Z
+	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/crashes/model/CrashFilter;
+	public static fun values ()[Lcom/ae/log/crashes/model/CrashFilter;
+}
+
