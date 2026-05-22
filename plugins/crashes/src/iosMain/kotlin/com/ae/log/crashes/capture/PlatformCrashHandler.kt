@@ -1,7 +1,7 @@
 @file:OptIn(
     kotlinx.cinterop.ExperimentalForeignApi::class,
     kotlin.experimental.ExperimentalNativeApi::class,
-    kotlin.concurrent.atomics.ExperimentalAtomicApi::class
+    kotlin.concurrent.atomics.ExperimentalAtomicApi::class,
 )
 
 package com.ae.log.crashes.capture
