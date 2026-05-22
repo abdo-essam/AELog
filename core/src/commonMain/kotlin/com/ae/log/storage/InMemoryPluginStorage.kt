@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 public class InMemoryPluginStorage<T>(
     private val capacity: Int,
 ) : PluginStorage<T> {
-
     init {
         require(capacity > 0) { "Capacity must be > 0, was $capacity" }
     }
@@ -29,11 +28,12 @@ public class InMemoryPluginStorage<T>(
     override fun add(item: T) {
         synchronized(lock) {
             val current = _dataFlow.value
-            _dataFlow.value = if (current.size >= capacity) {
-                current.drop(1) + item
-            } else {
-                current + item
-            }
+            _dataFlow.value =
+                if (current.size >= capacity) {
+                    current.drop(1) + item
+                } else {
+                    current + item
+                }
         }
     }
 
@@ -46,31 +46,39 @@ public class InMemoryPluginStorage<T>(
     // ── Network-specific (NOT in PluginStorage interface) ─────────────
 
     /** Atomically find and update the first matching element. No-op if not found. */
-    public fun updateFirst(predicate: (T) -> Boolean, transform: (T) -> T) {
+    public fun updateFirst(
+        predicate: (T) -> Boolean,
+        transform: (T) -> T,
+    ) {
         synchronized(lock) {
             val current = _dataFlow.value
             val index = current.indexOfFirst(predicate)
             if (index == -1) return
-            _dataFlow.value = current.toMutableList().apply {
-                this[index] = transform(this[index])
-            }
+            _dataFlow.value =
+                current.toMutableList().apply {
+                    this[index] = transform(this[index])
+                }
         }
     }
 
     /** Add [item], or replace the first match if [predicate] hits. */
-    public fun addOrReplace(predicate: (T) -> Boolean, item: T) {
+    public fun addOrReplace(
+        predicate: (T) -> Boolean,
+        item: T,
+    ) {
         synchronized(lock) {
             val current = _dataFlow.value
             val index = current.indexOfFirst(predicate)
-            _dataFlow.value = if (index == -1) {
-                if (current.size >= capacity) {
-                    current.drop(1) + item
+            _dataFlow.value =
+                if (index == -1) {
+                    if (current.size >= capacity) {
+                        current.drop(1) + item
+                    } else {
+                        current + item
+                    }
                 } else {
-                    current + item
+                    current.toMutableList().apply { this[index] = item }
                 }
-            } else {
-                current.toMutableList().apply { this[index] = item }
-            }
         }
     }
 }

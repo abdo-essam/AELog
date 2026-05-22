@@ -18,7 +18,6 @@ import kotlin.time.measureTime
  *   - [InMemoryPluginStorage.add] × 10k : < 500ms   (includes lock + list copy + StateFlow emit)
  */
 class StoragePerformanceTest {
-
     @Test
     fun `InMemoryPluginStorage - 10k adds with StateFlow emissions under 500ms`() {
         val storage = InMemoryPluginStorage<String>(capacity = 500)

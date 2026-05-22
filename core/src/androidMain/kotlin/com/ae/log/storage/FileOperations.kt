@@ -20,7 +20,8 @@ internal actual class FileOperations actual constructor(
         val dir = File(directoryPath)
         if (!dir.exists() || !dir.isDirectory) return emptyList()
 
-        return dir.listFiles()
+        return dir
+            .listFiles()
             ?.filter { it.isFile && it.extension == "json" }
             ?.sortedBy { it.nameWithoutExtension }
             ?.map { it.readText() }
@@ -29,7 +30,8 @@ internal actual class FileOperations actual constructor(
 
     actual fun deleteAllFiles() {
         val dir = File(directoryPath)
-        dir.listFiles()
+        dir
+            .listFiles()
             ?.filter { it.isFile && it.extension == "json" }
             ?.forEach { it.delete() }
     }

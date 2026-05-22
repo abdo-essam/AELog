@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
  * All mutations atomically emit a new immutable snapshot.
  */
 public interface PluginStorage<T> {
-
     /** Current snapshot of stored items. Emits a new list after every mutation. */
     public val dataFlow: StateFlow<List<T>>
 

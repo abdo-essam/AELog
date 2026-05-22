@@ -21,7 +21,6 @@ public class PersistentPluginStorage<T>(
     private val directoryPath: String,
     private val serializer: KSerializer<T>,
 ) : PluginStorage<T> {
-
     private val lock = SynchronizedObject()
     private val json = Json { ignoreUnknownKeys = true }
     private val fileOps = FileOperations(directoryPath)
@@ -37,7 +36,7 @@ public class PersistentPluginStorage<T>(
         synchronized(lock) {
             val content = json.encodeToString(serializer, item)
             fileOps.writeFile(content)
-            _dataFlow.value += item
+            _dataFlow.value = _dataFlow.value + item
         }
     }
 
