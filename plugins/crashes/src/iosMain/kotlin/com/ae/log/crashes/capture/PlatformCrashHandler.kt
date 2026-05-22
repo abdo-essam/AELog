@@ -1,4 +1,8 @@
-@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class, kotlin.experimental.ExperimentalNativeApi::class)
+@file:OptIn(
+    kotlinx.cinterop.ExperimentalForeignApi::class,
+    kotlin.experimental.ExperimentalNativeApi::class,
+    kotlin.concurrent.atomics.ExperimentalAtomicApi::class
+)
 
 package com.ae.log.crashes.capture
 
@@ -26,14 +30,14 @@ internal actual class PlatformCrashHandler actual constructor(
                         isFatal = true,
                     )
                 }
-                previousHook.value?.invoke(throwable)
+                previousHook.load()?.invoke(throwable)
             }
-        previousHook.value = previous
+        previousHook.store(previous)
     }
 
     actual fun uninstall() {
-        val prev = previousHook.value
+        val prev = previousHook.load()
         setUnhandledExceptionHook(if (prev != null) prev else null)
-        previousHook.value = null
+        previousHook.store(null)
     }
 }
