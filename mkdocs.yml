@@ -74,6 +74,9 @@ nav:
   - Changelog: changelog.md
   - Contributing: contributing.md
 
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+
 extra:
   social:
     - icon: fontawesome/brands/github
