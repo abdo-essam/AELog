@@ -11,14 +11,14 @@ import android.content.Context
  * so a single volatile write is sufficient.
  */
 internal object CrashAppContextHolder {
-    @Volatile private var _context: Context? = null
+    @Volatile private var contextRef: Context? = null
 
     internal val context: Context?
-        get() = _context
+        get() = contextRef
 
     internal fun init(context: Context) {
-        if (_context == null) {
-            _context = context.applicationContext
+        if (contextRef == null) {
+            contextRef = context.applicationContext
         }
     }
 }
