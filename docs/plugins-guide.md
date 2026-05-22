@@ -18,6 +18,7 @@ When you call `AELog.init(...)`, you pass a list of plugins. The library:
 | `LogPlugin` | `:ae-log-logs` | `UIPlugin` | Real-time log viewer with level filtering (VERBOSE / DEBUG / INFO / WARN / ERROR) |
 | `NetworkPlugin` | `:ae-log-network` | `UIPlugin` | HTTP traffic inspector with method badges, status filtering, and full body view |
 | `AnalyticsPlugin` | `:ae-log-analytics` | `UIPlugin` | Tracks analytics events and screen views with expandable custom properties |
+| `CrashPlugin` | `:ae-log-crashes` | `UIPlugin` | Captures, records, and persists fatal crashes and non-fatal exceptions on device |
 
 ## Plugin Types
 
@@ -35,6 +36,7 @@ AELog.init(
     LogPlugin(),
     NetworkPlugin(),
     AnalyticsPlugin(),
+    CrashPlugin(),     // ← Crash reporter
     MyCustomPlugin()   // ← your own plugin
 )
 ```

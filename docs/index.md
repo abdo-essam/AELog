@@ -33,6 +33,7 @@ Three built-in plugins ship with the library:
 | `LogPlugin` | Captures text logs (like Logcat) with severity filtering |
 | `NetworkPlugin` | Captures HTTP traffic — requests, responses, and headers |
 | `AnalyticsPlugin` | Captures analytics events and screen views with custom properties |
+| `CrashPlugin` | Intercepts, records and persists fatal and non-fatal exceptions on device |
 
 You can write your own plugins for anything else (database inspector, feature flag toggler, etc.).
 

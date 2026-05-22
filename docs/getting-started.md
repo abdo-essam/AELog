@@ -15,12 +15,13 @@
 
     ```toml title="gradle/libs.versions.toml"
     [versions]
-    aelog = "1.0.0"
+    aelog = "1.0.5"
 
     [libraries]
     aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
     aelog-network   = { module = "io.github.abdo-essam:ae-log-network", version.ref = "aelog" }
     aelog-analytics = { module = "io.github.abdo-essam:ae-log-analytics", version.ref = "aelog" }
+    aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref = "aelog" }
     ```
 
     ```kotlin title="shared/build.gradle.kts"
@@ -30,6 +31,7 @@
                 implementation(libs.aelog.core)
                 implementation(libs.aelog.network)
                 implementation(libs.aelog.analytics)
+                implementation(libs.aelog.crashes)
             }
         }
     }
@@ -41,9 +43,10 @@
     kotlin {
         sourceSets {
             commonMain.dependencies {
-                implementation("io.github.abdo-essam:ae-log-core:1.0.0")
-                implementation("io.github.abdo-essam:ae-log-network:1.0.0")
-                implementation("io.github.abdo-essam:ae-log-analytics:1.0.0")
+                implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
+                implementation("io.github.abdo-essam:ae-log-network:1.0.5")
+                implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
+                implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
             }
         }
     }

@@ -51,6 +51,7 @@
 | 🔍 **Log Inspector** | Search, filter, and copy logs with syntax-highlighted JSON |
 | 🌐 **Network Viewer** | HTTP request/response inspection with method badges |
 | 📊 **Analytics Tracker** | Monitor analytics events in real-time |
+| 💥 **Crash Reporter** | Capture and persist fatal and non-fatal exceptions on device |
 | 🎨 **Beautiful UI** | Material3 design with light/dark mode support |
 | 🧩 **Plugin System** | Extend with custom debug panels through modular dependencies |
 | 📱 **Adaptive Layout** | Bottom sheet on phones, dialog on tablets |
@@ -115,9 +116,21 @@ commonMain.dependencies {
 
 ---
 
-### 🚀 Scenario E — Full stack (Logs + Network + Analytics)
+### 💥 Scenario F — Crash Reporting only
 
-For a KMP project with Ktor on all platforms and OkHttp on Android:
+```kotlin
+// build.gradle.kts
+commonMain.dependencies {
+    implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
+    // ↳ transitively includes ae-log-core
+}
+```
+
+---
+
+### 🚀 Scenario G — Full stack (Logs + Network + Analytics + Crashes)
+
+For a KMP project with Ktor on all platforms, analytics, and crashes:
 
 ```kotlin
 // build.gradle.kts (shared module)
@@ -127,6 +140,7 @@ kotlin {
             implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
             implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.5")
             implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
         }
         androidMain.dependencies {
             // Add this only if your Android target also uses OkHttp
@@ -147,6 +161,7 @@ kotlin {
 | `ae-log-network-ktor` | `ae-log-network`, `ae-log-core` | KMP |
 | `ae-log-network-okhttp` | `ae-log-network`, `ae-log-core` | Android |
 | `ae-log-analytics` | `ae-log-core` | KMP |
+| `ae-log-crashes` | `ae-log-core` | KMP |
 
 ### Version Catalog
 
@@ -159,6 +174,7 @@ aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",         
 aelog-network-ktor     = { module = "io.github.abdo-essam:ae-log-network-ktor",   version.ref = "aelog" }
 aelog-network-okhttp   = { module = "io.github.abdo-essam:ae-log-network-okhttp", version.ref = "aelog" }
 aelog-analytics        = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "aelog" }
+aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }
 ```
 
 ## 🚀 Quick Start
@@ -169,9 +185,10 @@ Best called early in your platform-specific entry points (e.g. `Application.onCr
 
 ```kotlin
 AELog.init(
-    LogPlugin(),      // Built-in log viewer
+    LogPlugin(),       // Built-in log viewer
     NetworkPlugin(),   // Network inspector
-    AnalyticsPlugin()  // Analytics tracker
+    AnalyticsPlugin(), // Analytics tracker
+    CrashPlugin()      // Crash reporter (zero-config, captures fatals automatically!)
 )
 ```
 
@@ -235,10 +252,17 @@ AELog.log.e("Failed to clear cache", t)  // tag → "Database"
 ```
 
 ```kotlin
-// Network & Analytics APIs
+// Network, Analytics & Crashes APIs
 AELog.network.logRequest(method = "GET", url = "https://api.example.com/users")
 AELog.network.logResponse(url = "https://api.example.com/users", statusCode = 200)
 AELog.analytics.logEvent("item_added_to_cart", properties = mapOf("id" to "123"))
+
+// Capture non-fatal exceptions manually
+try {
+    performDangerousWork()
+} catch (t: Throwable) {
+    AELog.crashes.recordNonFatal(t)
+}
 ```
 
 ### 🌐 Network Interceptors
@@ -299,6 +323,7 @@ Three ways to open the inspector:
 | `:ae-log-logs` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
 | `:ae-log-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
 | `:ae-log-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
+| `:ae-log-crashes` | `CrashPlugin` | Crash reporter on device for fatal and non-fatal exceptions, with persistent storage |
 
 ## 🔨 Custom Plugins
 
@@ -370,6 +395,7 @@ graph TD
         LP1["LogPlugin\nae-log-logs"]
         NP["NetworkPlugin\nae-log-network"]
         AP["AnalyticsPlugin\nae-log-analytics"]
+        CP["CrashPlugin\nae-log-crashes"]
     end
 
     subgraph Storage ["Data Layer (StateFlow — thread-safe)"]
@@ -377,6 +403,7 @@ graph TD
         LS[("LogStorage")]
         NS[("NetworkStorage")]
         AS[("AnalyticsStorage")]
+        CS[("CrashStorage")]
     end
 
     subgraph Interceptors ["Auto-interceptors (optional)"]
@@ -390,9 +417,11 @@ graph TD
     AE --> LP1
     AE --> NP
     AE --> AP
+    AE --> CP
     LP1 --> LS
     NP --> NS
     AP --> AS
+    CP --> CS
     KI --> NP
     OI --> NP
 ```

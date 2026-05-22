@@ -10,7 +10,8 @@ Call this early in your app lifecycle (e.g., `Application.onCreate` on Android o
 AELog.init(
     LogPlugin(),
     NetworkPlugin(),
-    AnalyticsPlugin()
+    AnalyticsPlugin(),
+    CrashPlugin()
 )
 ```
 
@@ -42,6 +43,13 @@ AELog.log.d("Auth", "Token refreshed") // Or specify an explicit tag
 
 // 3. Analytics
 AELog.analytics.logEvent("button_tap")
+
+// 4. Crashes (manually record non-fatal exceptions)
+try {
+    performDangerousTask()
+} catch (t: Throwable) {
+    AELog.crashes.recordNonFatal(t)
+}
 ```
 
 ## Show / Hide the Overlay
