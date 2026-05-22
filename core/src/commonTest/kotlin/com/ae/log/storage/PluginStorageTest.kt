@@ -6,12 +6,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PluginStorageTest {
-    private lateinit var storage: PluginStorage<String>
+class InMemoryPluginStorageTest {
+    private lateinit var storage: InMemoryPluginStorage<String>
 
     @BeforeTest
     fun setUp() {
-        storage = PluginStorage(capacity = 3)
+        storage = InMemoryPluginStorage(capacity = 3)
     }
 
     @Test

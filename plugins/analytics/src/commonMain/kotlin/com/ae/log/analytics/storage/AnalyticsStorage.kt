@@ -1,16 +1,16 @@
-﻿package com.ae.log.analytics.storage
+package com.ae.log.analytics.storage
 
 import com.ae.log.analytics.model.AnalyticsEvent
-import com.ae.log.storage.PluginStorage
+import com.ae.log.storage.InMemoryPluginStorage
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Thread-safe storage for [AnalyticsEvent] items backed by [PluginStorage].
+ * Thread-safe storage for [AnalyticsEvent] items backed by [InMemoryPluginStorage].
  */
 internal class AnalyticsStorage(
     capacity: Int = 500,
 ) {
-    private val storage = PluginStorage<AnalyticsEvent>(capacity)
+    private val storage = InMemoryPluginStorage<AnalyticsEvent>(capacity)
 
     /** Hot stream of all recorded events, oldest first. */
     val events: StateFlow<List<AnalyticsEvent>> = storage.dataFlow

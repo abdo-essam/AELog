@@ -15,25 +15,25 @@ import kotlin.time.measureTime
  * Strategy 4: Integration-level throughput tests for the log pipeline.
  *
  * Tests the full path:
- *   LogRecorder.log() → PluginStorage.add() → RingBuffer (ring eviction) → StateFlow
+ *   LogRecorder.log() → LogStorage.record() → InMemoryPluginStorage.add() → StateFlow
  *
  * These tests exercise [LogPlugin]'s real [LogStorage] instance to catch
  * integration regressions that unit tests cannot.
  *
  * Performance targets:
  *   - 5,000 log calls via recorder: < 2s
- *   - Ring-buffer eviction at 500-entry capacity: correct + fast
+ *   - Eviction at 500-entry capacity: correct + fast
  *   - Severity filter fast-path: near zero overhead for filtered entries
  */
 @OptIn(AELogTestApi::class)
 class LogRecorderPerformanceTest {
-    private lateinit var storage: LogStorage
+    private lateinit var storage: com.ae.log.logs.storage.LogStorage
     private lateinit var recorder: LogRecorder
 
     @BeforeTest
     fun setUp() {
         AELog.init(LogPlugin())
-        storage = LogStorage(capacity = 500)
+        storage = com.ae.log.logs.storage.LogStorage(capacity = 500)
         recorder =
             LogRecorder(
                 storage = storage,
@@ -81,17 +81,17 @@ class LogRecorderPerformanceTest {
             }
 
         println("[Perf] LogRecorder filtered (10k DEBUG below ERROR threshold): $elapsed")
-        assertTrue(storage.dataFlow.value.isEmpty(), "Filtered entries must NOT reach storage")
+        assertTrue(storage.entries.value.isEmpty(), "Filtered entries must NOT reach storage")
         assertTrue(
             elapsed < 2.seconds,
             "Severity filter fast-path took $elapsed — unexpectedly slow",
         )
     }
 
-    // ── Ring buffer capacity / eviction ───────────────────────────────────
+    // ── Storage capacity / eviction ─────────────────────────────────────
 
     @Test
-    fun `log - ring buffer evicts oldest correctly after overflow`() {
+    fun `log - storage evicts oldest correctly after overflow`() {
         val capacity = 500
         val totalLogs = capacity + 100 // 600 logs into a cap-500 buffer
 
@@ -99,7 +99,7 @@ class LogRecorderPerformanceTest {
             recorder.log(LogSeverity.INFO, "Tag", "msg-$i")
         }
 
-        val stored = storage.dataFlow.value
+        val stored = storage.entries.value
         assertEquals(capacity, stored.size, "Storage must cap at $capacity entries")
         // With 600 total entries and cap=500, the oldest surviving entry is #100 (totalLogs - capacity)
         assertEquals(

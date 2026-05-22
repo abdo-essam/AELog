@@ -37,8 +37,7 @@ import com.ae.log.sample.ui.components.SectionHeader
  * 6. Click "Stop" → inspect the flame chart.
  *
  * Look for hot spots in:
- *   - `RingBuffer.toList()`       — O(n) copy inside synchronized block
- *   - `PluginStorage.add()`       — lock + toList + StateFlow emit
+ *   - `InMemoryPluginStorage.add()` — lock + list copy + StateFlow emit
  *   - `callerTag()`               — Throwable creation + stack trace parsing
  *   - `MutableStateFlow.setValue` — equality check + subscriber notification
  */
@@ -130,12 +129,12 @@ fun PerfScreen() {
             // ── Storage eviction ──────────────────────────────────────────
 
             item {
-                SectionHeader("Ring Buffer Eviction")
+                SectionHeader("Storage Eviction")
                 ActionCard(
                     title = "Overflow Scenario",
-                    description = "Exceeds log buffer capacity (default 500) to trigger ring eviction.",
+                    description = "Exceeds log buffer capacity (default 500) to trigger eviction.",
                 ) {
-                    ActionButton("Overflow ring buffer (600 logs)", MaterialTheme.colorScheme.error) {
+                    ActionButton("Overflow storage (600 logs)", MaterialTheme.colorScheme.error) {
                         repeat(600) { i ->
                             AELog.log.d("Overflow", "Entry #$i — should evict oldest")
                         }

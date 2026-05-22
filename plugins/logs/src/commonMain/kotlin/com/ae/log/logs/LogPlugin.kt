@@ -1,22 +1,19 @@
-﻿package com.ae.log.logs
+package com.ae.log.logs
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.ae.log.logs.model.LogEntry
 import com.ae.log.logs.model.LogSeverity
+import com.ae.log.logs.storage.LogStorage
 import com.ae.log.logs.ui.LogContent
 import com.ae.log.logs.ui.LogViewModel
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
-import com.ae.log.storage.PluginStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
-public typealias LogStorage = PluginStorage<LogEntry>
 
 /**
  * Built-in logs plugin for AELog.
@@ -50,7 +47,7 @@ public class LogPlugin(
     override val name: String = "Logs"
     override val icon: ImageVector = Icons.Default.Description
 
-    internal val logStorage = PluginStorage<LogEntry>(capacity = maxEntries)
+    internal val logStorage = LogStorage(capacity = maxEntries)
 
     /** Public write API — use this to send logs directly to the viewer. */
     public val recorder: LogRecorder =
@@ -69,7 +66,7 @@ public class LogPlugin(
         viewModel = LogViewModel(logStorage = logStorage, scope = context.scope)
 
         context.scope.launch {
-            logStorage.dataFlow.collect { logs ->
+            logStorage.entries.collect { logs ->
                 _badgeCount.value = logs.size
             }
         }
@@ -100,7 +97,7 @@ public class LogPlugin(
     }
 
     override fun export(): String =
-        logStorage.dataFlow.value.joinToString("\n") { log ->
+        logStorage.entries.value.joinToString("\n") { log ->
             "[${log.severity.label}] ${log.tag}: ${log.message}"
         }
 

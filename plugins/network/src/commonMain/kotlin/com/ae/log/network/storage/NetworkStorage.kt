@@ -1,19 +1,19 @@
-﻿package com.ae.log.network.storage
+package com.ae.log.network.storage
 
 import com.ae.log.network.model.NetworkEntry
-import com.ae.log.storage.PluginStorage
+import com.ae.log.storage.InMemoryPluginStorage
 import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Thread-safe storage for [NetworkEntry] items backed by [PluginStorage].
+ * Thread-safe storage for [NetworkEntry] items backed by [InMemoryPluginStorage].
  *
- * Uses [PluginStorage]'s [StateFlow] so the UI stays reactive
+ * Uses [InMemoryPluginStorage]'s [StateFlow] so the UI stays reactive
  * without needing direct Flow subscriptions in the plugin.
  */
 internal class NetworkStorage(
     capacity: Int = 200,
 ) {
-    private val storage = PluginStorage<NetworkEntry>(capacity)
+    private val storage = InMemoryPluginStorage<NetworkEntry>(capacity)
 
     /** Hot stream of all recorded entries, newest first. */
     val entries: StateFlow<List<NetworkEntry>> = storage.dataFlow

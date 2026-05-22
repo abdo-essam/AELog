@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
  *       → AELog.getPlugin<LogPlugin>()    (list scan + isInstance)
  *         → LogPlugin.record()
  *           → LogRecorder.log()           (severity filter + clock + id)
- *             → PluginStorage.add()       (lock + RingBuffer + StateFlow)
+ *             → InMemoryPluginStorage.add()  (lock + list copy + StateFlow)
  *
  * [logWithExplicitTag] shows the cost of the entire chain WITHOUT stack capture.
  * [logWithCallerTag]   adds the cost of [callerTag()], which captures a stack trace.
