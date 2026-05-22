@@ -3,7 +3,9 @@ package com.ae.log.crashes.model
 /**
  * Controls which crash events are visible based on severity.
  */
-public enum class CrashFilter(public val label: String) {
+public enum class CrashFilter(
+    public val label: String,
+) {
     ALL("All"),
     FATAL("Fatal"),
     NON_FATAL("Non-Fatal"),

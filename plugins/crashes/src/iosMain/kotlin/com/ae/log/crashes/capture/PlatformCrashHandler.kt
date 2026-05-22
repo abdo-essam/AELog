@@ -17,16 +17,17 @@ internal actual class PlatformCrashHandler actual constructor(
     private val previousHook = AtomicReference<ReportUnhandledExceptionHook?>(null)
 
     actual fun install() {
-        val previous = setUnhandledExceptionHook { throwable ->
-            runCatching {
-                recorder.record(
-                    throwable = throwable,
-                    threadName = "main",
-                    isFatal = true,
-                )
+        val previous =
+            setUnhandledExceptionHook { throwable ->
+                runCatching {
+                    recorder.record(
+                        throwable = throwable,
+                        threadName = "main",
+                        isFatal = true,
+                    )
+                }
+                previousHook.value?.invoke(throwable)
             }
-            previousHook.value?.invoke(throwable)
-        }
         previousHook.value = previous
     }
 

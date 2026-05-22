@@ -22,11 +22,12 @@ object SampleState {
             LogPlugin(),
             NetworkPlugin(),
             AnalyticsPlugin(),
-            CrashPlugin(),         // ← zero-config: path resolved automatically
+            CrashPlugin(), // ← zero-config: path resolved automatically
         )
 
-        httpClient = HttpClient {
-            install(AELogKtorInterceptor)
-        }
+        httpClient =
+            HttpClient {
+                install(AELogKtorInterceptor)
+            }
     }
 }

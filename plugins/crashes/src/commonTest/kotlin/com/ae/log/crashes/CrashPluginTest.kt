@@ -11,15 +11,16 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 class CrashFilterTest {
-    private fun fatalEvent() = CrashEvent(
-        id = "1",
-        timestamp = Clock.System.now().toEpochMilliseconds(),
-        exceptionType = "NullPointerException",
-        message = "null ref",
-        stackTrace = "at Foo.bar(Foo.kt:1)",
-        threadName = "main",
-        isFatal = true,
-    )
+    private fun fatalEvent() =
+        CrashEvent(
+            id = "1",
+            timestamp = Clock.System.now().toEpochMilliseconds(),
+            exceptionType = "NullPointerException",
+            message = "null ref",
+            stackTrace = "at Foo.bar(Foo.kt:1)",
+            threadName = "main",
+            isFatal = true,
+        )
 
     private fun nonFatalEvent() = fatalEvent().copy(id = "2", isFatal = false)
 
@@ -43,15 +44,16 @@ class CrashFilterTest {
 }
 
 class CrashUtilsTest {
-    private val event = CrashEvent(
-        id = "x",
-        timestamp = 0L,
-        exceptionType = "IllegalStateException",
-        message = "bad state",
-        stackTrace = "at Bar.baz(Bar.kt:42)",
-        threadName = "worker-1",
-        isFatal = false,
-    )
+    private val event =
+        CrashEvent(
+            id = "x",
+            timestamp = 0L,
+            exceptionType = "IllegalStateException",
+            message = "bad state",
+            stackTrace = "at Bar.baz(Bar.kt:42)",
+            threadName = "worker-1",
+            isFatal = false,
+        )
 
     @Test
     fun formatEventForCopyContainsKeyFields() {

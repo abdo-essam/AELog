@@ -13,21 +13,24 @@ import kotlin.time.ExperimentalTime
  * and delegating to storage. No platform-specific handler registration here.
  */
 @OptIn(ExperimentalTime::class)
-internal class CrashRecorder(private val storage: CrashStorage) {
+internal class CrashRecorder(
+    private val storage: CrashStorage,
+) {
     fun record(
         throwable: Throwable,
         threadName: String,
         isFatal: Boolean,
     ) {
-        val event = CrashEvent(
-            id = IdGenerator.next(),
-            timestamp = Clock.System.now().toEpochMilliseconds(),
-            exceptionType = throwable::class.simpleName ?: "UnknownException",
-            message = throwable.message ?: "",
-            stackTrace = throwable.stackTraceToString(),
-            threadName = threadName,
-            isFatal = isFatal,
-        )
+        val event =
+            CrashEvent(
+                id = IdGenerator.next(),
+                timestamp = Clock.System.now().toEpochMilliseconds(),
+                exceptionType = throwable::class.simpleName ?: "UnknownException",
+                message = throwable.message ?: "",
+                stackTrace = throwable.stackTraceToString(),
+                threadName = threadName,
+                isFatal = isFatal,
+            )
         storage.record(event)
     }
 }

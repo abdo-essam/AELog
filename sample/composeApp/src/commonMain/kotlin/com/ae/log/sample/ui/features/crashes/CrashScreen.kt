@@ -24,14 +24,14 @@ fun CrashScreen() {
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-
             // ── Non-Fatal Exceptions ──────────────────────────────────
             item {
                 SectionHeader("Non-Fatal Exceptions")
                 ActionCard(
                     title = "Recorded Non-Fatal",
-                    description = "AELog.crashes.recordNonFatal(e) — captured and persisted, " +
-                        "app keeps running. Check the AELog overlay → Crashes tab.",
+                    description =
+                        "AELog.crashes.recordNonFatal(e) — captured and persisted, " +
+                            "app keeps running. Check the AELog overlay → Crashes tab.",
                 ) {
                     ActionButton("Record NullPointerException", Color(0xFFFB8C00)) {
                         AELog.crashes.recordNonFatal(
@@ -93,8 +93,9 @@ fun CrashScreen() {
                 SectionHeader("Fatal Crash (⚠ Terminates App)")
                 ActionCard(
                     title = "Trigger Fatal Crash",
-                    description = "Throws an uncaught exception. AELog captures it before the " +
-                        "process dies. Reopen the app and check the Crashes tab.",
+                    description =
+                        "Throws an uncaught exception. AELog captures it before the " +
+                            "process dies. Reopen the app and check the Crashes tab.",
                 ) {
                     ActionButton(
                         label = "CRASH the app now",

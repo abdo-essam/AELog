@@ -21,9 +21,31 @@ internal class CrashAppContextProvider : ContentProvider() {
         return true
     }
 
-    override fun query(uri: Uri, p: Array<String>?, s: String?, sArgs: Array<String>?, sort: String?): Cursor? = null
+    override fun query(
+        uri: Uri,
+        p: Array<String>?,
+        s: String?,
+        sArgs: Array<String>?,
+        sort: String?,
+    ): Cursor? = null
+
     override fun getType(uri: Uri): String? = null
-    override fun insert(uri: Uri, values: ContentValues?): Uri? = null
-    override fun delete(uri: Uri, s: String?, sArgs: Array<String>?): Int = 0
-    override fun update(uri: Uri, values: ContentValues?, s: String?, sArgs: Array<String>?): Int = 0
+
+    override fun insert(
+        uri: Uri,
+        values: ContentValues?,
+    ): Uri? = null
+
+    override fun delete(
+        uri: Uri,
+        s: String?,
+        sArgs: Array<String>?,
+    ): Int = 0
+
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        s: String?,
+        sArgs: Array<String>?,
+    ): Int = 0
 }

@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 public class CrashPlugin(
     private val storageDir: String = defaultCrashStorageDir(),
 ) : UIPlugin {
-
     override val id: String = ID
     override val name: String = "Crashes"
     override val icon: ImageVector = Icons.Default.BugReport
@@ -79,6 +78,7 @@ public class CrashPlugin(
     // onStart/onStop are tied to the UI overlay lifecycle in this framework,
     // not to the app lifecycle. The crash handler must be independent of the UI.
     override fun onStart(): Unit = Unit
+
     override fun onStop(): Unit = Unit
 
     override fun onClear() {
@@ -96,7 +96,10 @@ public class CrashPlugin(
      * Call this anywhere you catch a recoverable error that you still want
      * to track in the crash viewer.
      */
-    public fun recordNonFatal(throwable: Throwable, threadName: String = "main") {
+    public fun recordNonFatal(
+        throwable: Throwable,
+        threadName: String = "main",
+    ) {
         recorder.record(
             throwable = throwable,
             threadName = threadName,

@@ -78,13 +78,14 @@ private fun SampleNavBar(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
 ) {
-    val items = listOf(
-        NavItem("Logs", Icons.Filled.List, Icons.Outlined.List),
-        NavItem("Network", Icons.Filled.Wifi, Icons.Outlined.Wifi),
-        NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
-        NavItem("Crashes", Icons.Filled.BugReport, Icons.Outlined.BugReport),
-        NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
-    )
+    val items =
+        listOf(
+            NavItem("Logs", Icons.Filled.List, Icons.Outlined.List),
+            NavItem("Network", Icons.Filled.Wifi, Icons.Outlined.Wifi),
+            NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
+            NavItem("Crashes", Icons.Filled.BugReport, Icons.Outlined.BugReport),
+            NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
+        )
 
     NavigationBar {
         items.forEachIndexed { index, item ->

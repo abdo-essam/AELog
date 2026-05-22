@@ -4,8 +4,7 @@ import com.ae.log.crashes.model.CrashEvent
 import com.ae.log.utils.TimeUtils
 
 internal object CrashUtils {
-    fun formatTimestamp(epochMillis: Long): String =
-        TimeUtils.formatTimestamp(epochMillis)
+    fun formatTimestamp(epochMillis: Long): String = TimeUtils.formatTimestamp(epochMillis)
 
     fun formatEventForCopy(event: CrashEvent): String =
         buildString {

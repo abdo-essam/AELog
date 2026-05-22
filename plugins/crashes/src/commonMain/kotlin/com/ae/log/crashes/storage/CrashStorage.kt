@@ -13,11 +13,14 @@ import kotlinx.serialization.serializer
  *
  * Delegates all mutation and I/O to [PersistentPluginStorage].
  */
-internal class CrashStorage(directoryPath: String) {
-    private val storage = PersistentPluginStorage(
-        directoryPath = directoryPath,
-        serializer = serializer<CrashEvent>(),
-    )
+internal class CrashStorage(
+    directoryPath: String,
+) {
+    private val storage =
+        PersistentPluginStorage(
+            directoryPath = directoryPath,
+            serializer = serializer<CrashEvent>(),
+        )
 
     val events: StateFlow<List<CrashEvent>> = storage.dataFlow
 

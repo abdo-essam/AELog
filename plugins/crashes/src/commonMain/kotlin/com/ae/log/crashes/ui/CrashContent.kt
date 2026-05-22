@@ -33,15 +33,17 @@ internal fun CrashContent(
     val filters = CrashFilter.entries
     val filterLabels = remember { filters.map { it.label } }
 
-    val onToggleExpand = remember {
-        { id: String -> expandedEventId = if (expandedEventId == id) null else id }
-    }
-
-    val onCopyEvent = remember(clipboardManager) {
-        { event: CrashEvent ->
-            clipboardManager.setText(AnnotatedString(CrashUtils.formatEventForCopy(event)))
+    val onToggleExpand =
+        remember {
+            { id: String -> expandedEventId = if (expandedEventId == id) null else id }
         }
-    }
+
+    val onCopyEvent =
+        remember(clipboardManager) {
+            { event: CrashEvent ->
+                clipboardManager.setText(AnnotatedString(CrashUtils.formatEventForCopy(event)))
+            }
+        }
 
     LogList(
         items = events,

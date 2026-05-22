@@ -32,14 +32,15 @@ internal fun CrashEventItem(
     onCopy: (CrashEvent) -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClickLabel = if (isExpanded) "Collapse crash details" else "Expand crash details",
-            ) { onToggleExpand(event.id) }
-            .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClickLabel = if (isExpanded) "Collapse crash details" else "Expand crash details",
+                ) { onToggleExpand(event.id) }
+                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
     ) {
         CrashEventHeader(event = event, isExpanded = isExpanded)
 
@@ -95,11 +96,15 @@ private fun CrashEventHeader(
 
             Spacer(modifier = Modifier.height(LogSpacing.x1))
 
-            val preview = remember(event.id) {
-                event.message.ifBlank {
-                    event.stackTrace.lines().firstOrNull()?.trim() ?: ""
+            val preview =
+                remember(event.id) {
+                    event.message.ifBlank {
+                        event.stackTrace
+                            .lines()
+                            .firstOrNull()
+                            ?.trim() ?: ""
+                    }
                 }
-            }
             Text(
                 text = preview,
                 style = MaterialTheme.typography.labelSmall,
