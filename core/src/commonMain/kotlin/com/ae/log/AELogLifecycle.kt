@@ -1,4 +1,4 @@
-package com.ae.log.plugin
+package com.ae.log
 
 import com.ae.log.event.AllDataClearedEvent
 import com.ae.log.event.AppStartedEvent
@@ -6,8 +6,16 @@ import com.ae.log.event.AppStoppedEvent
 import com.ae.log.event.EventBus
 import com.ae.log.event.PanelClosedEvent
 import com.ae.log.event.PanelOpenedEvent
+import com.ae.log.plugin.PluginManager
 
-internal class Lifecycle(
+/**
+ * Orchestrates and propagates library-wide lifecycle events to all installed plugins
+ * and publishes corresponding event signals to the central [EventBus].
+ *
+ * This keeps the plugin manager and event bus synchronized whenever high-level operations
+ * occur (such as starting/stopping the SDK, opening/closing the UI overlay, or clearing all data).
+ */
+internal class AELogLifecycle(
     private val pluginManager: PluginManager,
     private val eventBus: EventBus,
 ) {

@@ -37,7 +37,7 @@ internal actual class PlatformCrashHandler actual constructor(
 
     actual fun uninstall() {
         val prev = previousHook.load()
-        setUnhandledExceptionHook(if (prev != null) prev else null)
+        setUnhandledExceptionHook(prev)
         previousHook.store(null)
     }
 }

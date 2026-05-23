@@ -1,6 +1,6 @@
 @file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
 
-package com.ae.log.storage
+package com.ae.log.utils
 
 import platform.Foundation.NSDate
 import platform.Foundation.NSFileManager
@@ -11,12 +11,12 @@ import platform.Foundation.stringByAppendingPathComponent
 import platform.Foundation.timeIntervalSince1970
 import platform.Foundation.writeToFile
 
-internal actual class FileOperations actual constructor(
+internal class IosFileOperations(
     private val directoryPath: String,
-) {
+) : FileOperations {
     private val fileManager = NSFileManager.defaultManager
 
-    actual fun ensureDirectoryExists() {
+    override fun ensureDirectoryExists() {
         if (!fileManager.fileExistsAtPath(directoryPath)) {
             fileManager.createDirectoryAtPath(
                 directoryPath,
@@ -27,7 +27,7 @@ internal actual class FileOperations actual constructor(
         }
     }
 
-    actual fun writeFile(content: String) {
+    override fun writeFile(content: String) {
         val fileName = "${currentTimeMillis()}_${counter++}.json"
 
         @Suppress("CAST_NEVER_SUCCEEDS")
@@ -35,7 +35,7 @@ internal actual class FileOperations actual constructor(
         (content as NSString).writeToFile(filePath, atomically = true, encoding = NSUTF8StringEncoding, error = null)
     }
 
-    actual fun readAllFiles(): List<String> {
+    override fun readAllFiles(): List<String> {
         @Suppress("UNCHECKED_CAST")
         val files =
             (fileManager.contentsOfDirectoryAtPath(directoryPath, error = null) as? List<String>)
@@ -50,7 +50,7 @@ internal actual class FileOperations actual constructor(
         }
     }
 
-    actual fun deleteAllFiles() {
+    override fun deleteAllFiles() {
         @Suppress("UNCHECKED_CAST")
         val files =
             (fileManager.contentsOfDirectoryAtPath(directoryPath, error = null) as? List<String>)
@@ -70,3 +70,6 @@ internal actual class FileOperations actual constructor(
         var counter = 0
     }
 }
+
+public actual fun createFileOperations(directoryPath: String): FileOperations =
+    IosFileOperations(directoryPath)

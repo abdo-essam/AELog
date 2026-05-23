@@ -1,5 +1,7 @@
 package com.ae.log.storage
 
+import com.ae.log.utils.FileOperations
+import com.ae.log.utils.createFileOperations
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,10 +22,10 @@ import kotlinx.serialization.json.Json
 public class PersistentPluginStorage<T>(
     private val directoryPath: String,
     private val serializer: KSerializer<T>,
+    private val fileOps: FileOperations = createFileOperations(directoryPath),
 ) : PluginStorage<T> {
     private val lock = SynchronizedObject()
     private val json = Json { ignoreUnknownKeys = true }
-    private val fileOps = FileOperations(directoryPath)
     private val _dataFlow = MutableStateFlow<List<T>>(emptyList())
     override val dataFlow: StateFlow<List<T>> = _dataFlow.asStateFlow()
 

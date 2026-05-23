@@ -1,22 +1,22 @@
-package com.ae.log.storage
+package com.ae.log.utils
 
 import java.io.File
 
-internal actual class FileOperations actual constructor(
+internal class AndroidFileOperations(
     private val directoryPath: String,
-) {
-    actual fun ensureDirectoryExists() {
+) : FileOperations {
+    override fun ensureDirectoryExists() {
         val dir = File(directoryPath)
         if (!dir.exists()) dir.mkdirs()
     }
 
-    actual fun writeFile(content: String) {
+    override fun writeFile(content: String) {
         val dir = File(directoryPath)
         val fileName = "${System.currentTimeMillis()}_${counter++}.json"
         File(dir, fileName).writeText(content)
     }
 
-    actual fun readAllFiles(): List<String> {
+    override fun readAllFiles(): List<String> {
         val dir = File(directoryPath)
         if (!dir.exists() || !dir.isDirectory) return emptyList()
 
@@ -28,7 +28,7 @@ internal actual class FileOperations actual constructor(
             ?: emptyList()
     }
 
-    actual fun deleteAllFiles() {
+    override fun deleteAllFiles() {
         val dir = File(directoryPath)
         dir
             .listFiles()
@@ -40,3 +40,6 @@ internal actual class FileOperations actual constructor(
         var counter = 0
     }
 }
+
+public actual fun createFileOperations(directoryPath: String): FileOperations =
+    AndroidFileOperations(directoryPath)

@@ -6,6 +6,12 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.filterIsInstance
 
+/**
+ * A central, reactive, thread-safe message bus for internal communication within the AELog SDK.
+ *
+ * Allows decoupled plugins and core components to publish lifecycle and UI-related signals
+ * and collect them asynchronously via [SharedFlow].
+ */
 public class EventBus {
     private val _events = MutableSharedFlow<Event>(extraBufferCapacity = BUFFER_CAPACITY)
     public val events: SharedFlow<Event> = _events.asSharedFlow()

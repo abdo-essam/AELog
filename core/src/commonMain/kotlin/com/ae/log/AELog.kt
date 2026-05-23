@@ -2,7 +2,6 @@ package com.ae.log
 
 import com.ae.log.config.LogConfig
 import com.ae.log.event.EventBus
-import com.ae.log.plugin.Lifecycle
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginManager
 import kotlinx.atomicfu.AtomicRef
@@ -11,7 +10,7 @@ import kotlin.jvm.JvmStatic
 
 public object AELog {
     @PublishedApi
-    internal val instanceAtomic: AtomicRef<LogInspector?> = atomic<LogInspector?>(null)
+    internal val instanceAtomic: AtomicRef<LogInspector?> = atomic(null)
 
     @PublishedApi
     internal val instance: LogInspector? get() = instanceAtomic.value
@@ -75,7 +74,7 @@ public class LogInspector internal constructor(
 
     @PublishedApi
     internal val plugins: PluginManager = PluginManager(config, eventBus)
-    internal val lifecycle: Lifecycle = Lifecycle(plugins, eventBus)
+    internal val lifecycle: AELogLifecycle = AELogLifecycle(plugins, eventBus)
 
     internal fun export(): String {
         val sb = StringBuilder()
