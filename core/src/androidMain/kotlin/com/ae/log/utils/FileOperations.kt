@@ -41,5 +41,4 @@ internal class AndroidFileOperations(
     }
 }
 
-public actual fun createFileOperations(directoryPath: String): FileOperations =
-    AndroidFileOperations(directoryPath)
+public actual fun createFileOperations(directoryPath: String): FileOperations = AndroidFileOperations(directoryPath)

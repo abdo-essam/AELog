@@ -7,7 +7,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class PersistentPluginStorageTest {
-
     private class MockFileOperations : FileOperations {
         var directoryCreated = false
         val files = mutableMapOf<String, String>()
@@ -21,9 +20,7 @@ class PersistentPluginStorageTest {
             files["file_${counter++}.json"] = content
         }
 
-        override fun readAllFiles(): List<String> {
-            return files.keys.sorted().mapNotNull { files[it] }
-        }
+        override fun readAllFiles(): List<String> = files.keys.sorted().mapNotNull { files[it] }
 
         override fun deleteAllFiles() {
             files.clear()
@@ -36,11 +33,12 @@ class PersistentPluginStorageTest {
         mockFileOps.writeFile("\"first\"")
         mockFileOps.writeFile("\"second\"")
 
-        val storage = PersistentPluginStorage(
-            directoryPath = "/test",
-            serializer = String.serializer(),
-            fileOps = mockFileOps
-        )
+        val storage =
+            PersistentPluginStorage(
+                directoryPath = "/test",
+                serializer = String.serializer(),
+                fileOps = mockFileOps,
+            )
 
         assertTrue(mockFileOps.directoryCreated)
         assertEquals(listOf("first", "second"), storage.dataFlow.value)
@@ -49,11 +47,12 @@ class PersistentPluginStorageTest {
     @Test
     fun testAddItemPersistsToDiskAndUpdatesState() {
         val mockFileOps = MockFileOperations()
-        val storage = PersistentPluginStorage(
-            directoryPath = "/test",
-            serializer = String.serializer(),
-            fileOps = mockFileOps
-        )
+        val storage =
+            PersistentPluginStorage(
+                directoryPath = "/test",
+                serializer = String.serializer(),
+                fileOps = mockFileOps,
+            )
 
         storage.add("hello")
         storage.add("world")
@@ -66,11 +65,12 @@ class PersistentPluginStorageTest {
     @Test
     fun testClearRemovesAllData() {
         val mockFileOps = MockFileOperations()
-        val storage = PersistentPluginStorage(
-            directoryPath = "/test",
-            serializer = String.serializer(),
-            fileOps = mockFileOps
-        )
+        val storage =
+            PersistentPluginStorage(
+                directoryPath = "/test",
+                serializer = String.serializer(),
+                fileOps = mockFileOps,
+            )
 
         storage.add("one")
         storage.add("two")

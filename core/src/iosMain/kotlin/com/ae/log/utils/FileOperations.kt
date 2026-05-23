@@ -71,5 +71,4 @@ internal class IosFileOperations(
     }
 }
 
-public actual fun createFileOperations(directoryPath: String): FileOperations =
-    IosFileOperations(directoryPath)
+public actual fun createFileOperations(directoryPath: String): FileOperations = IosFileOperations(directoryPath)

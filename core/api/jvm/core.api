@@ -183,7 +183,8 @@ public final class com/ae/log/storage/InMemoryPluginStorage : com/ae/log/storage
 
 public final class com/ae/log/storage/PersistentPluginStorage : com/ae/log/storage/PluginStorage {
 	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;)V
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;Lcom/ae/log/utils/FileOperations;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;Lcom/ae/log/utils/FileOperations;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun add (Ljava/lang/Object;)V
 	public fun clear ()V
 	public fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
@@ -334,6 +335,17 @@ public final class com/ae/log/ui/theme/LogThemeKt {
 
 public final class com/ae/log/utils/CallerTagKt {
 	public static final fun callerTag ()Ljava/lang/String;
+}
+
+public abstract interface class com/ae/log/utils/FileOperations {
+	public abstract fun deleteAllFiles ()V
+	public abstract fun ensureDirectoryExists ()V
+	public abstract fun readAllFiles ()Ljava/util/List;
+	public abstract fun writeFile (Ljava/lang/String;)V
+}
+
+public final class com/ae/log/utils/FileOperationsKt {
+	public static final fun createFileOperations (Ljava/lang/String;)Lcom/ae/log/utils/FileOperations;
 }
 
 public final class com/ae/log/utils/IdGenerator {

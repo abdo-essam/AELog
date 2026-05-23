@@ -41,5 +41,4 @@ internal class JvmFileOperations(
     }
 }
 
-public actual fun createFileOperations(directoryPath: String): FileOperations =
-    JvmFileOperations(directoryPath)
+public actual fun createFileOperations(directoryPath: String): FileOperations = JvmFileOperations(directoryPath)
