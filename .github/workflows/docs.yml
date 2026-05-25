@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'docs/**'
-      - 'mkdocs.yml'
+      - 'website/**'
       - 'core/src/**/**.kt'
+      - '.github/workflows/docs.yml'
 
 permissions:
   pages: write
@@ -28,27 +28,17 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install MkDocs
-        run: pip install mkdocs-material mkdocs-minify-plugin
-
       - uses: gradle/actions/setup-gradle@v6
 
       - name: Generate API Docs (Dokka)
         run: ./gradlew :core:dokkaGeneratePublicationHtml
 
       - name: Copy Dokka output
-        run: cp -r core/build/dokka/html docs/api
-
-      - name: Build MkDocs site
-        run: mkdocs build
+        run: cp -r core/build/dokka/html website/api
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: site
+          path: website
 
       - name: Deploy to GitHub Pages
         id: deployment
