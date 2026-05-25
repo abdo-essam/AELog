@@ -1,0 +1,887 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AELog | Documentation</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Styles: modular CSS architecture -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/docs.css">
+
+    <!-- Syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+</head>
+</head>
+<body class="dark-theme">
+    <div class="background-grid"></div>
+    <div class="glow-orb orb-primary" style="opacity: 0.2"></div>
+
+    <nav class="navbar glass">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">â–²</span>
+                <span class="logo-text">AELog</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#integration" class="nav-link">Integration</a>
+                <a href="index.html#architecture" class="nav-link">Architecture</a>
+                <a href="docs.html" class="nav-link" style="color: white; font-weight: 600;">Documentation</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://github.com/abdo-essam/AELog" target="_blank" class="github-stars glass-subtle">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="docs-container">
+        <aside class="docs-sidebar glass-panel card-xl">
+            <h3>Reference Manual</h3>
+            <a class="docs-nav-link active" onclick="showSection('introduction', this)">Introduction</a>
+<a class="docs-nav-link " onclick="showSection('installation', this)">Installation</a>
+<a class="docs-nav-link " onclick="showSection('quick-start', this)">Quick Start</a>
+<a class="docs-nav-link " onclick="showSection('configuration', this)">Configuration</a>
+<a class="docs-nav-link " onclick="showSection('plugins-overview', this)">Plugins Overview</a>
+<a class="docs-nav-link " onclick="showSection('custom-plugins', this)">Custom Plugins</a>
+<a class="docs-nav-link " onclick="showSection('integrations', this)">Integrations</a>
+<a class="docs-nav-link " onclick="showSection('changelog', this)">Changelog</a>
+<a class="docs-nav-link " onclick="showSection('contributing', this)">Contributing</a>
+
+        </aside>
+
+        <main class="docs-content fade-up visible">
+            <div id="introduction" class="docs-section active">
+<h1>AELog</h1>
+<p><strong>Extensible on-device dev tools for Kotlin Multiplatform.</strong></p>
+<p>AELog is a lightweight, plugin-based developer tools library for KMP apps. It provides a beautiful Compose UI overlay for inspecting logs, network traffic, and more â€” all without leaving the app.</p>
+<h2>What Is AELog?</h2>
+<h3>The Big Picture</h3>
+<p>AELog is an <strong>in-app debugging overlay</strong> for Kotlin Multiplatform apps. Imagine you&#39;re developing a mobile app and you want to see, while the app is running:</p>
+<ul>
+<li>All log messages your code emits</li>
+<li>Every HTTP request your app makes</li>
+<li>Every analytics event being tracked</li>
+</ul>
+<p>Today, developers attach a laptop, hook up Logcat (Android) or Console.app (iOS), and read logs externally. That&#39;s painful â€” especially on iOS, or when testing on someone else&#39;s device.</p>
+<p><strong>AELog solves this by drawing a debug panel directly on top of your app&#39;s UI.</strong> Tap a floating bug button â†’ a panel slides up showing tabs for Logs, Network, Analytics. No external tools needed.</p>
+<h3>The Core Idea: Plugins</h3>
+<p>Everything in AELog is a <strong>plugin</strong>. The library itself is just a host that:</p>
+<ul>
+<li>Manages a list of installed plugins</li>
+<li>Renders them as tabs in an overlay panel</li>
+<li>Provides each plugin with a coroutine scope, an event bus, and a way to find sibling plugins</li>
+</ul>
+<p>Three built-in plugins ship with the library:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>LogPlugin</code></td>
+<td>Captures text logs (like Logcat) with severity filtering</td>
+</tr>
+<tr>
+<td><code>NetworkPlugin</code></td>
+<td>Captures HTTP traffic â€” requests, responses, and headers</td>
+</tr>
+<tr>
+<td><code>AnalyticsPlugin</code></td>
+<td>Captures analytics events and screen views with custom properties</td>
+</tr>
+<tr>
+<td><code>CrashPlugin</code></td>
+<td>Intercepts, records and persists fatal and non-fatal exceptions on device</td>
+</tr>
+</tbody></table>
+<p>You can write your own plugins for anything else (database inspector, feature flag toggler, etc.).</p>
+<h2>Features</h2>
+<ul>
+<li>ðŸ“‹ <strong>Log Viewer</strong> â€” Real-time log inspection with severity filtering</li>
+<li>ðŸŒ <strong>Network Inspector</strong> â€” Detailed view of HTTP traffic and JSON payloads</li>
+<li>ðŸ“ˆ <strong>Analytics Tracker</strong> â€” Monitor properties across app flow</li>
+<li>ðŸ’¥ <strong>Crash Reporter</strong> â€” Capture and persist fatal and non-fatal exceptions on device</li>
+<li>ðŸ”Œ <strong>Plugin System</strong> â€” Easily extend with custom decoupled <code>UIPlugin</code> or <code>DataPlugin</code></li>
+<li>ðŸŽ¨ <strong>Compose UI</strong> â€” Material 3 themed overlay with dark/light mode support</li>
+<li>ðŸ“± <strong>Multiplatform</strong> â€” Works seamlessly across Android, iOS, and Desktop</li>
+</ul>
+<h2>Quick Links</h2>
+<ul>
+<li><a href="getting-started.md">Getting Started</a></li>
+<li><a href="plugins-guide.md">Plugins Overview</a></li>
+<li><a href="custom-plugins.md">Custom Plugins</a></li>
+<li><a href="changelog.md">Changelog</a></li>
+</ul>
+
+</div>
+<div id="installation" class="docs-section ">
+<h1>Getting Started</h1>
+<h2>Requirements</h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Minimum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android</td>
+<td>API 24 (7.0)</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>15.0</td>
+</tr>
+<tr>
+<td>Kotlin</td>
+<td>2.3.0</td>
+</tr>
+<tr>
+<td>Compose Multiplatform</td>
+<td>1.9.3</td>
+</tr>
+</tbody></table>
+<h2>Installation</h2>
+<p>=== &quot;Version Catalog (Recommended)&quot;</p>
+<pre><code>```toml title=&quot;gradle/libs.versions.toml&quot;
+[versions]
+aelog = &quot;1.0.5&quot;
+
+[libraries]
+aelog-core      = { module = &quot;io.github.abdo-essam:ae-log-core&quot;, version.ref = &quot;aelog&quot; }
+aelog-network   = { module = &quot;io.github.abdo-essam:ae-log-network&quot;, version.ref = &quot;aelog&quot; }
+aelog-analytics = { module = &quot;io.github.abdo-essam:ae-log-analytics&quot;, version.ref = &quot;aelog&quot; }
+aelog-crashes   = { module = &quot;io.github.abdo-essam:ae-log-crashes&quot;, version.ref = &quot;aelog&quot; }
+```
+
+```kotlin title=&quot;shared/build.gradle.kts&quot;
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.aelog.core)
+            implementation(libs.aelog.network)
+            implementation(libs.aelog.analytics)
+            implementation(libs.aelog.crashes)
+        }
+    }
+}
+```
+</code></pre>
+<p>=== &quot;Direct Dependency&quot;</p>
+<pre><code>```kotlin title=&quot;shared/build.gradle.kts&quot;
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(&quot;io.github.abdo-essam:ae-log-logs:1.0.5&quot;)
+            implementation(&quot;io.github.abdo-essam:ae-log-network:1.0.5&quot;)
+            implementation(&quot;io.github.abdo-essam:ae-log-analytics:1.0.5&quot;)
+            implementation(&quot;io.github.abdo-essam:ae-log-crashes:1.0.5&quot;)
+        }
+    }
+}
+```
+</code></pre>
+<p>!!! info &quot;Transitive Dependencies&quot;
+    AELog uses <code>api</code> dependencies to keep your build file clean. </p>
+<pre><code>* If you use `ae-log-network-ktor`, it **automatically** includes `ae-log-network` and `ae-log-core`.
+* You do **not** need to manually add the core library if you are already using a plugin.
+</code></pre>
+<h2>Verify Installation</h2>
+<pre><code class="language-kotlin">import com.ae.log.AELog
+
+fun main() {
+    // Simply check if AELog is accessible
+    AELog.isEnabled = true
+    println(&quot;AELog is accessible and enabled: ${AELog.isEnabled}&quot;)
+}
+</code></pre>
+<p>!!! success &quot;Expected output&quot;
+    <code>text     AELog is accessible and enabled: true     </code></p>
+<h2>Next Steps</h2>
+<ul>
+<li><a href="quick-start.md">Quick Start Guide</a> â€” Integrate into your app in 5 minutes</li>
+<li><a href="configuration.md">Configuration</a> â€” Customize behavior and appearance</li>
+<li><a href="plugins-guide.md">Custom Plugins</a> â€” Build your own debug panels</li>
+</ul>
+
+</div>
+<div id="quick-start" class="docs-section ">
+<h1>Quick Start</h1>
+<p>Add AELog to your project and initialize it in just a few lines.</p>
+<h2>1. Initialize</h2>
+<p>Call this early in your app lifecycle (e.g., <code>Application.onCreate</code> on Android or <code>Main</code> on iOS):</p>
+<pre><code class="language-kotlin">AELog.init(
+    LogPlugin(),
+    NetworkPlugin(),
+    AnalyticsPlugin(),
+    CrashPlugin()
+)
+</code></pre>
+<h2>2. Wrap your App</h2>
+<p>Wrap your root Composable with <code>LogProvider</code>. This enables the floating debug button and the overlay panel.</p>
+<pre><code class="language-kotlin">// In your App composable (commonMain)
+LogProvider(
+    enabled = true // Tie this to your build variant (e.g., debug=true, release=false)
+) {
+    // Your app content
+    MyApp()
+}
+</code></pre>
+<h2>3. Start Logging</h2>
+<p>Use the discoverable static APIs. AELog handles everything else behind the scenes.</p>
+<pre><code class="language-kotlin">// 1. Logs (with automatic tag derivation from the calling class)
+AELog.log.i(&quot;App launched!&quot;)
+AELog.log.d(&quot;Auth&quot;, &quot;Token refreshed&quot;) // Or specify an explicit tag
+
+// 2. Network (handled automatically via interceptors)
+// val client = HttpClient { install(KtorInterceptor) }
+
+// 3. Analytics
+AELog.analytics.logEvent(&quot;button_tap&quot;)
+
+// 4. Crashes (manually record non-fatal exceptions)
+try {
+    performDangerousTask()
+} catch (t: Throwable) {
+    AELog.crashes.recordNonFatal(t)
+}
+</code></pre>
+<h2>Show / Hide the Overlay</h2>
+<p>The overlay can be triggered by:</p>
+<ul>
+<li><strong>Floating Button</strong> â€” enabled by default</li>
+<li><strong>Long-Press Gesture</strong> â€” enabled by default</li>
+<li><strong>Programmatically</strong> via <code>LocalLogController.current.show()</code> / <code>hide()</code></li>
+</ul>
+
+</div>
+<div id="configuration" class="docs-section ">
+<h1>Configuration</h1>
+<p>AELog is designed to be &quot;zero-config&quot; by default, but provides hooks to customize both data collection and UI behavior.</p>
+<h2>Core Configuration (Data)</h2>
+<p>Pass a <code>LogConfig</code> object to <code>AELog.init()</code> to control background behavior:</p>
+<pre><code class="language-kotlin">AELog.init(
+    LogPlugin(),
+    config = LogConfig(
+        maxLogEntries = 1000,
+        // Custom dispatcher for background processing
+        dispatcher = Dispatchers.Default,
+        // Catch and report internal SDK errors
+        errorHandler = { throwable -&gt; FirebaseCrashlytics.getInstance().recordException(throwable) }
+    )
+)
+</code></pre>
+<h2>UI Configuration</h2>
+<p>Configure the overlay behavior via <code>LogProvider</code>:</p>
+<pre><code class="language-kotlin">LogProvider(
+    enabled = BuildConfig.DEBUG,
+    uiConfig = UiConfig(
+        showFloatingButton = true,
+        enableLongPress = true,
+        floatingButtonOffset = 100.dp,
+        overlayMode = OverlayMode.BottomSheet
+    )
+) {
+    MyApp()
+}
+</code></pre>
+<blockquote>
+<p>[!TIP]
+You no longer need to pass <code>instance = AELog.default</code>. <code>LogProvider</code> picks up the initialized shared instance automatically.</p>
+</blockquote>
+
+</div>
+<div id="plugins-overview" class="docs-section ">
+<h1>Plugins Overview</h1>
+<p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host â€” plugins are what make it useful.</p>
+<h2>How Plugins Work</h2>
+<p>When you call <code>AELog.init(...)</code>, you pass a list of plugins. The library:</p>
+<ol>
+<li><strong>Installs</strong> each plugin and calls its <code>onAttach()</code> lifecycle hook</li>
+<li><strong>Renders</strong> <code>UIPlugin</code> instances as tabs in the overlay panel</li>
+<li><strong>Manages</strong> the lifecycle â€” calling <code>onOpen()</code> / <code>onClose()</code> as the panel opens and closes</li>
+<li><strong>Provides</strong> each plugin with access to a coroutine scope and sibling plugins via <code>PluginContext</code></li>
+</ol>
+<h2>Built-in Plugins</h2>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Module</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>LogPlugin</code></td>
+<td><code>:ae-log-logs</code></td>
+<td><code>UIPlugin</code></td>
+<td>Real-time log viewer with level filtering (VERBOSE / DEBUG / INFO / WARN / ERROR)</td>
+</tr>
+<tr>
+<td><code>NetworkPlugin</code></td>
+<td><code>:ae-log-network</code></td>
+<td><code>UIPlugin</code></td>
+<td>HTTP traffic inspector with method badges, status filtering, and full body view</td>
+</tr>
+<tr>
+<td><code>AnalyticsPlugin</code></td>
+<td><code>:ae-log-analytics</code></td>
+<td><code>UIPlugin</code></td>
+<td>Tracks analytics events and screen views with expandable custom properties</td>
+</tr>
+<tr>
+<td><code>CrashPlugin</code></td>
+<td><code>:ae-log-crashes</code></td>
+<td><code>UIPlugin</code></td>
+<td>Captures, records, and persists fatal crashes and non-fatal exceptions on device</td>
+</tr>
+</tbody></table>
+<h2>Plugin Types</h2>
+<h3>UIPlugin</h3>
+<p>Renders a <strong>tab with header and content areas</strong> inside the AELog panel. Ideal for visually inspecting data (logs, network calls, feature flags, database records, etc.).</p>
+<h3>DataPlugin</h3>
+<p>A <strong>headless background collector</strong> with no UI. It feeds data to a <code>UIPlugin</code> or runs standalone. Use it for crash collectors, performance samplers, or anything that needs to observe data without a dedicated panel.</p>
+<h2>Installing Plugins</h2>
+<pre><code class="language-kotlin">// In your app entry point (Application.onCreate on Android, etc.)
+AELog.init(
+    LogPlugin(),
+    NetworkPlugin(),
+    AnalyticsPlugin(),
+    CrashPlugin(),     // â† Crash reporter
+    MyCustomPlugin()   // â† your own plugin
+)
+</code></pre>
+<h2>Plugin Lifecycle</h2>
+<pre><code class="language-mermaid">flowchart TD
+    Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
+    Attach --&gt; Open
+    
+    subgraph Panel [&quot;Panel Lifecycle (user opens/closes AELog panel)&quot;]
+        Open[&quot;onOpen()&quot;] --&gt; Close[&quot;onClose()&quot;]
+        Close --&gt; Open
+    end
+    
+    Close --&gt; Detach[&quot;onDetach()&quot;]
+    Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
+</code></pre>
+<p>Each hook has a clear responsibility:</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>When Called</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>onAttach(context)</code></td>
+<td>Once, on install</td>
+<td>Store <code>PluginContext</code>, start background work</td>
+</tr>
+<tr>
+<td><code>onOpen()</code></td>
+<td>Every time panel opens</td>
+<td>Resume UI updates, refresh data</td>
+</tr>
+<tr>
+<td><code>onClose()</code></td>
+<td>Every time panel closes</td>
+<td>Pause expensive operations</td>
+</tr>
+<tr>
+<td><code>onClear()</code></td>
+<td>User taps &quot;Clear All&quot;</td>
+<td>Reset stored data</td>
+</tr>
+<tr>
+<td><code>onDetach()</code></td>
+<td>On uninstall</td>
+<td>Cancel coroutines, release resources</td>
+</tr>
+</tbody></table>
+<h2>Creating Custom Plugins</h2>
+<p>See the <a href="custom-plugins.md">Custom Plugins</a> guide for a full walkthrough including code examples, lifecycle details, and best practices.</p>
+
+</div>
+<div id="custom-plugins" class="docs-section ">
+<h1>Creating Custom Plugins</h1>
+<p>AELog is designed to be extended. You can create two types of plugins:</p>
+<h2>Plugin Types</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Interface</th>
+<th>Has UI</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>UI Plugin</strong></td>
+<td><code>UIPlugin</code></td>
+<td>âœ… Tab + Content</td>
+<td>Log viewer, network inspector, DB browser</td>
+</tr>
+<tr>
+<td><strong>Data Plugin</strong></td>
+<td><code>DataPlugin</code></td>
+<td>âŒ Headless</td>
+<td>Crash collector, performance sampler</td>
+</tr>
+</tbody></table>
+<h2>Creating a UI Plugin</h2>
+<h3>Step 1: Implement UIPlugin</h3>
+<pre><code class="language-kotlin">class FeatureFlagsPlugin : UIPlugin {
+    override val id = &quot;feature_flags&quot;
+    override val name = &quot;Flags&quot;
+    override val icon = Icons.Default.Flag
+    
+    // Badge shown on tab (null = no badge)
+    private val _badgeCount = MutableStateFlow&lt;Int?&gt;(null)
+    override val badgeCount: StateFlow&lt;Int?&gt; = _badgeCount
+    
+    private var inspector: AELog? = null
+    
+    // Called once when installed
+    override fun onAttach(inspector: AELog) {
+        this.inspector = inspector
+        _badgeCount.value = getFlags().size
+    }
+    
+    // Called when AELog panel opens
+    override fun onOpen() {
+        refreshFlags()
+    }
+    
+    // Called when AELog panel closes
+    override fun onClose() {
+        // Pause expensive operations
+    }
+    
+    // Called when user taps &quot;Clear All&quot;
+    override fun onClear() {
+        resetFlags()
+        _badgeCount.value = 0
+    }
+    
+    // Called when plugin is uninstalled
+    override fun onDetach() {
+        inspector = null
+    }
+    
+    // Main content rendered in the AELog panel
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val flags = remember { getFlags() }
+        
+        LazyColumn(modifier = modifier.fillMaxSize()) {
+            items(flags) { flag -&gt;
+                FlagRow(
+                    name = flag.name,
+                    enabled = flag.enabled,
+                    onToggle = { toggleFlag(flag.id) }
+                )
+            }
+        }
+    }
+    
+    // Optional: Controls above the main content
+    @Composable
+    override fun HeaderContent() {
+        Text(
+            text = &quot;Toggle feature flags for testing&quot;,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(horizontal = 20.dp)
+        )
+    }
+    
+    // Optional: Action buttons in the header
+    @Composable
+    override fun HeaderActions() {
+        IconButton(onClick = { resetAllFlags() }) {
+            Icon(Icons.Default.Refresh, &quot;Reset all&quot;)
+        }
+    }
+}
+</code></pre>
+<h3>Step 2: Install the Plugin</h3>
+<pre><code class="language-kotlin">AELogSetup.init(plugins = listOf(LogPlugin(), FeatureFlagsPlugin()))
+</code></pre>
+<h3>Step 3: Done!</h3>
+<p>Your plugin now appears as a tab in the AELog panel.</p>
+<h2>Creating a Data Plugin</h2>
+<pre><code class="language-kotlin">class PerformancePlugin : DataPlugin {
+    override val id = &quot;performance&quot;
+    override val name = &quot;Performance&quot;
+    
+    private val _metrics = MutableStateFlow&lt;List&lt;Metric&gt;&gt;(emptyList())
+    val metrics: StateFlow&lt;List&lt;Metric&gt;&gt; = _metrics.asStateFlow()
+    
+    override fun onAttach(inspector: AELog) {
+        startCollecting()
+    }
+    
+    override fun onDetach() {
+        stopCollecting()
+    }
+    
+    fun recordMetric(name: String, durationMs: Long) {
+        _metrics.update { it + Metric(name, durationMs) }
+    }
+}
+
+// Usage
+val perfPlugin = inspector.getPlugin&lt;PerformancePlugin&gt;()
+perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
+</code></pre>
+<h2>Plugin Lifecycle</h2>
+<pre><code class="language-mermaid">flowchart TD
+    Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
+    Attach --&gt; Open
+    
+    subgraph Panel [&quot;Panel Lifecycle (user opens/closes AELog panel)&quot;]
+        Open[&quot;onOpen()&quot;] --&gt; Close[&quot;onClose()&quot;]
+        Close --&gt; Open
+    end
+    
+    Close --&gt; Detach[&quot;onDetach()&quot;]
+    Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
+</code></pre>
+<div class="warning-callout">
+    <strong>âš ï¸ Important Lifecycle Notes</strong>
+    <ul>
+        <li><code>onAttach</code> is called exactly once</li>
+        <li><code>onOpen</code>/<code>onClose</code> may be called many times</li>
+        <li>Always null-check resources in <code>Content()</code> â€” it may render before <code>onAttach</code></li>
+        <li>Handle your own errors inside <code>Content()</code> â€” Compose has no try-catch for composables</li>
+    </ul>
+</div>
+<h2>Best Practices</h2>
+<ul>
+<li><strong>Keep plugins focused</strong> â€” one responsibility per plugin</li>
+<li><strong>Use StateFlow</strong> â€” all reactive data should use <code>StateFlow</code>, not <code>mutableStateOf</code></li>
+<li><strong>Minimize main-thread work</strong> â€” heavy computation goes in <code>Dispatchers.Default</code></li>
+<li><strong>Clean up in onDetach</strong> â€” cancel coroutines, close resources</li>
+<li><strong>Test independently</strong> â€” plugins should be testable without the UI</li>
+</ul>
+
+</div>
+<div id="integrations" class="docs-section ">
+<h1>Logging Integrations</h1>
+<p>AELog works with <strong>any</strong> logging library. Just forward logs to the static <code>AELog.log.entry()</code> method.</p>
+<h2>Kermit</h2>
+<pre><code class="language-kotlin">import co.touchlab.kermit.LogWriter
+import co.touchlab.kermit.Severity
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
+
+class AELogKermitWriter : LogWriter() {
+    override fun log(
+        severity: Severity,
+        message: String,
+        tag: String,
+        throwable: Throwable?
+    ) {
+        AELog.log.entry(
+            severity = severity.toAELogLogSeverity(),
+            tag = tag,
+            message = message,
+            throwable = throwable
+        )
+    }
+}
+
+private fun Severity.toAELogLogSeverity(): LogSeverity = when (this) {
+    Severity.Verbose -&gt; LogSeverity.VERBOSE
+    Severity.Debug -&gt; LogSeverity.DEBUG
+    Severity.Info -&gt; LogSeverity.INFO
+    Severity.Warn -&gt; LogSeverity.WARN
+    Severity.Error -&gt; LogSeverity.ERROR
+    Severity.Assert -&gt; LogSeverity.ASSERT
+}
+
+// Setup
+Logger.addLogWriter(AELogKermitWriter())
+</code></pre>
+<h2>Napier</h2>
+<pre><code class="language-kotlin">import io.github.aakira.napier.Antilog
+import io.github.aakira.napier.LogLevel
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
+
+class AELogNapierAntilog : Antilog() {
+    override fun performLog(
+        priority: LogLevel,
+        tag: String?,
+        throwable: Throwable?,
+        message: String?
+    ) {
+        AELog.log.entry(
+            severity = priority.toAELogLogSeverity(),
+            tag = tag ?: &quot;Napier&quot;,
+            message = message ?: &quot;&quot;,
+            throwable = throwable
+        )
+    }
+}
+
+private fun LogLevel.toAELogLogSeverity(): LogSeverity = when (this) {
+    LogLevel.VERBOSE -&gt; LogSeverity.VERBOSE
+    LogLevel.DEBUG -&gt; LogSeverity.DEBUG
+    LogLevel.INFO -&gt; LogSeverity.INFO
+    LogLevel.WARNING -&gt; LogSeverity.WARN
+    LogLevel.ERROR -&gt; LogSeverity.ERROR
+    LogLevel.ASSERT -&gt; LogSeverity.ASSERT
+}
+
+// Setup
+Napier.base(AELogNapierAntilog())
+</code></pre>
+<h2>Timber (Android)</h2>
+<pre><code class="language-kotlin">import timber.log.Timber
+import com.ae.log.AELog
+import com.ae.log.plugins.log.model.LogSeverity
+
+class AELogTimberTree : Timber.Tree() {
+    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+        AELog.log.entry(
+            severity = priority.toAELogLogSeverity(),
+            tag = tag ?: &quot;Timber&quot;,
+            message = message,
+            throwable = t
+        )
+    }
+}
+
+private fun Int.toAELogLogSeverity(): LogSeverity = when (this) {
+    android.util.Log.VERBOSE -&gt; LogSeverity.VERBOSE
+    android.util.Log.DEBUG -&gt; LogSeverity.DEBUG
+    android.util.Log.INFO -&gt; LogSeverity.INFO
+    android.util.Log.WARN -&gt; LogSeverity.WARN
+    android.util.Log.ERROR -&gt; LogSeverity.ERROR
+    android.util.Log.ASSERT -&gt; LogSeverity.ASSERT
+    else -&gt; LogSeverity.DEBUG
+}
+
+// Setup
+Timber.plant(AELogTimberTree())
+</code></pre>
+<h2>Ktor Client Logging</h2>
+<pre><code class="language-kotlin">import io.ktor.client.*
+import io.ktor.client.plugins.logging.*
+import com.ae.log.AELog
+
+val client = HttpClient {
+    install(Logging) {
+        logger = object : Logger {
+            override fun log(message: String) {
+                // Forward to AELog
+                AELog.log.d(&quot;HTTP&quot;, message)
+            }
+        }
+        level = LogLevel.ALL
+    }
+}
+</code></pre>
+<h2>Direct Usage (No Library)</h2>
+<pre><code class="language-kotlin">// Use the static shorthands
+AELog.log.i(&quot;MyApp&quot;, &quot;App started&quot;)
+AELog.log.e(&quot;Auth&quot;, &quot;Login failed&quot;, error)
+
+// Or the generic log method
+AELog.log.entry(LogSeverity.INFO, &quot;MyApp&quot;, &quot;Direct log call&quot;)
+</code></pre>
+
+</div>
+<div id="changelog" class="docs-section ">
+<h1>Changelog</h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2><a href="https://github.com/abdo-essam/AELog/compare/v1.0.0...HEAD">Unreleased</a></h2>
+<h3>Added</h3>
+<p>- </p>
+<h3>Changed</h3>
+<p>- </p>
+<h3>Fixed</h3>
+<p>- </p>
+<h2><a href="https://github.com/abdo-essam/AELog/releases/tag/v1.0.0">1.0.0</a> - 2025-07-XX</h2>
+<h3>Added</h3>
+<ul>
+<li>ðŸŽ‰ Initial stable release <code>v1.0.0</code></li>
+<li>Extracted features into specialized independent plugins (<code>:ae-log-network</code>, <code>:ae-log-analytics</code>)</li>
+<li>Built-in <code>LogPlugin</code> with search, severity filtering, and copy features</li>
+<li>Material3 themed UI with light/dark mode support and <code>AELogUiConfig</code> overrides</li>
+<li>Shared standard UI components (<code>PanelHeader</code>, <code>LogSearchBar</code>, <code>LogFilterChips</code>)</li>
+<li>Adaptive layout: bottom sheet (phones) / dialog (tablets)</li>
+<li>Configurable floating debug button and multi-finger long-press triggers</li>
+<li>Expanded Request/Response details view with JSON payloads in <code>NetworkPlugin</code></li>
+<li>FlowRow property chips in <code>AnalyticsPlugin</code></li>
+<li>Safe global static APIs (<code>AELog.i</code>, <code>NetworkRecorder</code>, <code>AnalyticsTracker</code>)</li>
+</ul>
+<h3>Architecture</h3>
+<ul>
+<li>fully reactive <code>Model-Store-API-UI</code> pattern</li>
+<li>Idempotent thread-safe plugin mapping via <code>AELogSetup.init()</code></li>
+<li>Replaced global mutable states with strictly managed <code>StateFlow</code> scopes</li>
+<li>Removed <code>reified</code> generic JVM restrictions for better multiplatform compatibility</li>
+<li>Switched default <code>Instant</code> logic to Standard library <code>Clock.System</code> for platform consistency</li>
+</ul>
+
+</div>
+<div id="contributing" class="docs-section ">
+<h1>Contributing to AELog</h1>
+<p>First off, thank you for considering contributing! ðŸŽ‰</p>
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#code-of-conduct">Code of Conduct</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#development-setup">Development Setup</a></li>
+<li><a href="#how-to-contribute">How to Contribute</a></li>
+<li><a href="#pull-request-process">Pull Request Process</a></li>
+<li><a href="#coding-standards">Coding Standards</a></li>
+<li><a href="#architecture-overview">Architecture Overview</a></li>
+</ul>
+<h2>Code of Conduct</h2>
+<p>This project follows our <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>. 
+By participating, you agree to uphold this code.</p>
+<h2>Getting Started</h2>
+<h3>Prerequisites</h3>
+<ul>
+<li>JDK 17+</li>
+<li>Android Studio Ladybug or later / Fleet</li>
+<li>Xcode 15+ (for iOS targets)</li>
+<li>Kotlin 2.3.0+</li>
+</ul>
+<h3>Development Setup</h3>
+<pre><code class="language-bash"># Clone the repository
+git clone https://github.com/abdo-essam/AELog.git
+cd AELog
+
+# Build the project
+./gradlew build
+
+# Run tests
+./gradlew allTests
+
+# Run the sample app (Android)
+./gradlew :sample:composeApp:installDebug
+
+# Check code formatting
+./gradlew spotlessCheck
+
+# Fix code formatting
+./gradlew spotlessApply
+
+# Generate API docs
+./gradlew dokkaGeneratePublicationHtml
+
+# Verify binary compatibility
+./gradlew apiCheck
+</code></pre>
+<h2>How to Contribute</h2>
+<h3>ðŸ› Reporting Bugs</h3>
+<ul>
+<li>Use the Bug Report template</li>
+<li>Include: KMP version, platform, steps to reproduce, expected vs actual behavior</li>
+</ul>
+<h3>ðŸ’¡ Suggesting Features</h3>
+<ul>
+<li>Use the Feature Request template</li>
+<li>Describe the use case, not just the solution</li>
+</ul>
+<h3>ðŸ”§ Submitting Changes</h3>
+<ul>
+<li>Fork the repository</li>
+<li>Create a feature branch: <code>git checkout -b feat/my-feature</code></li>
+<li>Make your changes</li>
+<li>Add/update tests</li>
+<li>Run the full check: <code>./gradlew check</code></li>
+<li>Commit using Conventional Commits</li>
+<li>Push and open a Pull Request</li>
+</ul>
+<h2>Pull Request Process</h2>
+<ul>
+<li>Fill out the PR template completely</li>
+<li>Ensure CI passes â€” all checks must be green</li>
+<li>One approval required from a maintainer</li>
+<li>Squash merge is preferred for clean history</li>
+<li>Update CHANGELOG.md under <code>[Unreleased]</code></li>
+</ul>
+<h2>Coding Standards</h2>
+<h3>Kotlin Style</h3>
+<ul>
+<li>Follow Kotlin Coding Conventions</li>
+<li>Use <code>explicitApi()</code> â€” all public APIs need visibility modifiers</li>
+<li>Mark internal APIs with <code>internal</code> keyword</li>
+<li>KDoc on all public classes, functions, and properties</li>
+</ul>
+<h3>Commit Conventions</h3>
+<p>We use Conventional Commits:</p>
+<pre><code class="language-text">feat: add network inspection plugin
+fix: resolve theme bleed into host app
+docs: update plugin creation guide
+test: add LogStorage unit tests
+refactor: extract log filtering to separate class
+chore: update Kotlin to 2.3.0
+perf: cache LogEntry computed properties
+ci: add iOS build to CI pipeline
+</code></pre>
+<h3>Architecture Rules</h3>
+<ul>
+<li>Plugins must extend the core Plugin lifecycle classes</li>
+<li>No Android-specific imports in <code>commonMain</code></li>
+<li>All state exposed as <code>StateFlow</code> (no LiveData)</li>
+<li>Compose UI uses Material3 exclusively</li>
+<li>Keep the public API surface minimal</li>
+</ul>
+<h2>Architecture Overview</h2>
+<pre><code class="language-mermaid">flowchart TD
+    AELogProvider["AELogProvider<br>(Compose Entry Point)"] --> AELog["AELog<br>(Core Engine)"]
+    
+    subgraph Plugins ["Plugin System"]
+        AELog --> LogPlugin["LogPlugin"]
+        AELog --> CrashPlugin["CrashPlugin"]
+        AELog --> NetworkPlugin["NetworkPlugin"]
+        AELog --> AnalyticsPlugin["AnalyticsPlugin"]
+    end
+    
+    subgraph Storage ["Storage Layer"]
+        Memory["RAM Storage<br>(InMemoryPluginStorage)"]
+        Disk["Disk Storage<br>(PersistentPluginStorage)"]
+    end
+
+    LogPlugin --> Memory
+    NetworkPlugin --> Memory
+    AnalyticsPlugin --> Memory
+    
+    CrashPlugin --> Disk
+</code></pre>
+
+</div>
+
+        </main>
+    </div>
+
+    <script type="module" src="js/docs.js"></script>
+</body>
+</html>

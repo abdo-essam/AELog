@@ -1,0 +1,159 @@
+﻿/**
+ * docs.js
+ *
+ * Single Responsibility: AELog documentation page interactivity.
+ * Handles:
+ *  - Section navigation (show/hide .docs-section panels)
+ *  - Copy-to-clipboard buttons on all code blocks
+ *  - Mermaid diagram conversion (pre > code.language-mermaid -> div.mermaid)
+ *  - Glow orb mouse tracking
+ */
+
+// ── Constants ──────────────────────────────────────────────────────────────
+const DOCS_NAV_LINK_CLASS = ".docs-nav-link";
+const DOCS_SECTION_CLASS  = ".docs-section";
+const COPY_BTN_CLASS      = "copy-btn";
+const COPY_LABEL          = "Copy";
+const COPIED_LABEL        = "Copied!";
+const COPIED_RESET_MS     = 2000;
+
+const MERMAID_CDN = "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+
+const MERMAID_THEME = {
+    theme: "dark",
+    startOnLoad: true,
+    themeVariables: {
+        background:          "#0a0a0c",
+        primaryColor:        "#3b82f6",
+        primaryTextColor:    "#fff",
+        primaryBorderColor:  "#3b82f6",
+        lineColor:           "#8b5cf6",
+        secondaryColor:      "#10b981",
+        tertiaryColor:       "#fca5a5",
+    },
+};
+
+// ── Entry point ─────────────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+    initGlowOrb();
+    initMermaidDiagrams();
+    initCopyButtons();
+});
+
+/**
+ * Expose showSection globally so HTML onclick attributes can call it.
+ * Hides all sections and activates only the selected one.
+ *
+ * @param {string}  id - ID of the docs-section to show
+ * @param {Element} el - The nav link element that was clicked
+ */
+window.showSection = function showSection(id, el) {
+    document.querySelectorAll(DOCS_NAV_LINK_CLASS).forEach(link => {
+        link.classList.remove("active");
+    });
+
+    if (el) el.classList.add("active");
+
+    document.querySelectorAll(DOCS_SECTION_CLASS).forEach(section => {
+        section.classList.remove("active");
+    });
+
+    const target = document.getElementById(id);
+    if (target) target.classList.add("active");
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+/**
+ * Subtle glow orb follows mouse for immersive visual effect.
+ */
+function initGlowOrb() {
+    const orb = document.querySelector(".glow-orb");
+    if (!orb) return;
+
+    document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth  - 0.5) * 50;
+        const y = (e.clientY / window.innerHeight - 0.5) * 50;
+        orb.style.transform = `translate(${x}px, ${y}px)`;
+    });
+}
+
+/**
+ * Converts <pre><code class="language-mermaid"> blocks into
+ * <div class="mermaid"> elements for Mermaid to render.
+ * Decodes HTML entities before passing text content to Mermaid.
+ */
+function initMermaidDiagrams() {
+    const mermaidBlocks = document.querySelectorAll("pre code.language-mermaid");
+    if (!mermaidBlocks.length) return;
+
+    mermaidBlocks.forEach(codeBlock => {
+        const pre = codeBlock.parentNode;
+
+        // Decode HTML entities using a temporary textarea (safe, no innerHTML injection)
+        const decoder = document.createElement("textarea");
+        decoder.innerHTML = codeBlock.innerHTML;
+
+        const mermaidDiv = document.createElement("div");
+        mermaidDiv.className = "mermaid";
+        mermaidDiv.textContent = decoder.value;
+
+        pre.parentNode.replaceChild(mermaidDiv, pre);
+    });
+
+    loadMermaid();
+}
+
+/**
+ * Dynamically loads and initializes the Mermaid ES module.
+ * Isolated to prevent polluting the global scope.
+ */
+async function loadMermaid() {
+    try {
+        const { default: mermaid } = await import(MERMAID_CDN);
+        mermaid.initialize(MERMAID_THEME);
+    } catch (err) {
+        // Fail silently — diagrams degrade to plain text if CDN is unavailable
+        console.warn("[AELog docs] Mermaid failed to load:", err.message);
+    }
+}
+
+/**
+ * Adds a "Copy" button to every non-mermaid code block.
+ * Uses the Clipboard API with graceful error handling.
+ */
+function initCopyButtons() {
+    document.querySelectorAll("pre code:not(.language-mermaid)").forEach(codeBlock => {
+        const pre = codeBlock.parentNode;
+        pre.style.position = "relative";
+
+        const btn = document.createElement("button");
+        btn.className = COPY_BTN_CLASS;
+        btn.textContent = COPY_LABEL;
+        btn.setAttribute("aria-label", "Copy code to clipboard");
+
+        btn.addEventListener("click", () => copyCode(codeBlock.innerText, btn));
+
+        pre.appendChild(btn);
+    });
+}
+
+/**
+ * Copies text to the clipboard and gives visual feedback on the button.
+ *
+ * @param {string}      text - The code text to copy
+ * @param {HTMLElement} btn  - The button element to update
+ */
+function copyCode(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = COPIED_LABEL;
+        btn.classList.add("copied");
+        setTimeout(() => {
+            btn.textContent = COPY_LABEL;
+            btn.classList.remove("copied");
+        }, COPIED_RESET_MS);
+    }).catch(err => {
+        // Fail gracefully — do not crash, do not alert the user
+        console.warn("[AELog docs] Clipboard write failed:", err.message);
+    });
+}

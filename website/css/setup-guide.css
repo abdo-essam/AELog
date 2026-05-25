@@ -1,0 +1,221 @@
+﻿/*
+ * setup-guide.css
+ * Firebase-style step-by-step installation guide:
+ * numbered steps, scenario tabs, code file labels, step notes, UI framework switcher.
+ */
+
+/* ==========================================================================
+   Step Container
+   ========================================================================== */
+.setup-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.step-number {
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 28px;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+.step-content {
+    flex: 1;
+    position: relative;
+    padding: 28px 32px 32px;
+}
+
+.step-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.step-desc {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+/* Inline code inside step descriptions */
+.step-desc code, .step-title code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: rgba(59, 130, 246, 0.1);
+    color: #93c5fd;
+    padding: 2px 6px;
+    border-radius: 5px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* ==========================================================================
+   Scenario Tabs  (Firebase "Android / iOS / Web" style)
+   ========================================================================== */
+.scenario-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 12px;
+}
+
+.scenario-tab {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-sans);
+}
+
+.scenario-tab:hover  { background: rgba(255,255,255,0.05); color: white; }
+
+.scenario-tab.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--accent-blue);
+    color: #93c5fd;
+}
+
+/* ==========================================================================
+   Setup Code Block
+   ========================================================================== */
+.setup-code-block {
+    margin-top: 16px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+
+.code-file-label {
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--color-border);
+    padding: 8px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-mute);
+    letter-spacing: 0.05em;
+}
+
+.setup-code-block pre {
+    margin: 0;
+    padding: 20px;
+    background: rgba(10, 10, 12, 0.8);
+    overflow-x: auto;
+}
+
+.setup-code-block code {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.7;
+    color: #e2e8f0;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* ==========================================================================
+   Version Catalog Hint
+   ========================================================================== */
+.version-catalog-hint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(59, 130, 246, 0.04);
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    border-radius: var(--radius-md);
+}
+
+.hint-label { font-size: 13px; color: var(--color-text-secondary); flex: 1; }
+
+.hint-toggle {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: all 0.2s ease;
+}
+
+.hint-toggle:hover { background: rgba(59, 130, 246, 0.22); }
+
+/* ==========================================================================
+   UI Framework Switcher (Compose / XML)
+   ========================================================================== */
+.tab-pair { display: flex; gap: 8px; margin-bottom: 4px; }
+
+.tab-chip {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-mute);
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: all 0.2s ease;
+}
+
+.tab-chip.active {
+    background: rgba(59, 130, 246, 0.12);
+    border-color: var(--accent-blue);
+    color: #93c5fd;
+}
+
+/* ==========================================================================
+   Step Note / Callout
+   ========================================================================== */
+.step-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+.note-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
+
+.step-note strong { color: #6ee7b7; }
+
+.step-note code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: rgba(16, 185, 129, 0.1);
+    color: #6ee7b7;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 768px) {
+    .setup-step   { flex-direction: column; gap: 12px; }
+    .step-number  { margin-top: 0; }
+}

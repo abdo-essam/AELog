@@ -1,0 +1,63 @@
+﻿/*
+ * animations.css
+ * All motion: scroll-reveal fade-up, glow orbs, SVG pulse keyframes, transition delays.
+ */
+
+/* ==========================================================================
+   Glow Orbs
+   ========================================================================== */
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.orb-primary {
+    top: -10%; left: -5%;
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, var(--accent-blue), transparent 60%);
+}
+
+.orb-secondary {
+    top: 20%; right: -10%;
+    width: 40vw; height: 40vw;
+    background: radial-gradient(circle, var(--accent-purple), transparent 60%);
+}
+
+/* ==========================================================================
+   Scroll Reveal
+   ========================================================================== */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+        opacity   0.8s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+
+/* ==========================================================================
+   SVG Diagram Pulse
+   ========================================================================== */
+@keyframes pulse {
+    0%   { filter: drop-shadow(0 0 5px  rgba(139, 92, 246, 0.5)); }
+    100% { filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.8)); }
+}
+
+.glow-border-svg {
+    stroke: url(#lineGrad);
+    stroke-width: 2;
+    filter: url(#glow);
+    animation: pulse 3s infinite alternate;
+}

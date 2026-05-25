@@ -1,0 +1,287 @@
+﻿/*
+ * components.css
+ * Reusable UI components: buttons, badges, glass surfaces, cards,
+ * mobile mockup, feature cards, and code display blocks.
+ */
+
+/* ==========================================================================
+   Glassmorphism Surfaces
+   ========================================================================== */
+.glass {
+    background: rgba(18, 18, 23, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border);
+}
+
+.glass-subtle {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel {
+    background: linear-gradient(180deg, rgba(30,30,36,0.6) 0%, rgba(18,18,23,0.8) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-border {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+}
+
+/* ==========================================================================
+   Shape Utilities
+   ========================================================================== */
+.pill     { border-radius: var(--radius-pill); }
+.card-xl  { border-radius: var(--radius-xl); }
+.circular { border-radius: var(--radius-full); }
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background: var(--color-text-primary);
+    color: var(--color-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+    background: #e2e2e2;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.btn-large { padding: var(--spacing-md) var(--spacing-xl); font-size: 18px; }
+
+/* ==========================================================================
+   Badges
+   ========================================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: var(--spacing-lg);
+}
+
+.badge-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-emerald);
+    box-shadow: 0 0 10px var(--accent-emerald);
+}
+
+/* ==========================================================================
+   Feature Cards
+   ========================================================================== */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2xl);
+}
+
+.feature-card {
+    padding: var(--spacing-2xl);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover { transform: translateY(-5px); }
+
+.feature-card-content { position: relative; z-index: 1; }
+
+.feature-icon {
+    width: 48px; height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: var(--spacing-lg);
+}
+
+.feature-card h3 { margin-bottom: var(--spacing-sm); }
+
+.feature-span-2 { grid-column: span 2; }
+
+.feature-card-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2xl);
+    align-items: center;
+}
+
+/* Small icon wrapper (arch features list) */
+.feature-item { text-align: center; }
+
+.icon-wrapper {
+    width: 64px; height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   Mobile Frame / Screenshot
+   ========================================================================== */
+.mobile-frame {
+    background: #000;
+    border: 8px solid #2a2a2f;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 0 2px rgba(255,255,255,0.1);
+    position: relative;
+    max-width: 320px;
+    margin: 0 auto;
+    aspect-ratio: 9/19.5;
+}
+
+.mobile-frame::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 24px;
+    background: #2a2a2f;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    z-index: 10;
+}
+
+.mobile-screenshot { width: 100%; height: 100%; object-fit: cover; }
+
+/* ==========================================================================
+   Mockup Log UI (feature card preview)
+   ========================================================================== */
+.mockup-phone {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: #1e1e24;
+}
+
+.mockup-header {
+    background: rgba(255,255,255,0.05);
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.mockup-body { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+
+.mockup-log {
+    background: rgba(255,255,255,0.03);
+    padding: 12px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-left: 2px solid transparent;
+}
+
+.mockup-log.error   { border-left-color: var(--accent-red);     background: rgba(239,68,68,0.05); }
+.mockup-log.net     { border-left-color: var(--accent-blue); }
+.mockup-log.info    { border-left-color: var(--accent-emerald); }
+.mockup-log.warning { border-left-color: var(--accent-yellow); }
+
+.tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.1);
+    font-weight: 600;
+}
+
+.mockup-log.error .tag { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+/* ==========================================================================
+   Code Display (integration tabs — legacy, kept for compatibility)
+   ========================================================================== */
+.code-header {
+    background: rgba(255,255,255,0.03);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.code-title { flex: 1; text-align: center; color: var(--color-text-secondary); }
+
+.code-body {
+    padding: var(--spacing-xl);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.6;
+    color: #e2e8f0;
+    overflow-x: auto;
+    margin: 0;
+    background: transparent;
+}
+
+.window-controls { display: flex; gap: 6px; }
+
+.control {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.control.close    { background: #ff5f57; }
+.control.minimize { background: #febc2e; }
+.control.expand   { background: #28c840; }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 992px) {
+    .feature-card-layout { grid-template-columns: 1fr; }
+    .feature-span-2      { grid-column: span 1; }
+    .features-grid       { grid-template-columns: 1fr; }
+}

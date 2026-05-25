@@ -1,0 +1,245 @@
+﻿/*
+ * layout.css
+ * Page-level structural layout: containers, sections, navbar, hero, footer, responsive grid.
+ */
+
+/* ==========================================================================
+   Container & Section
+   ========================================================================== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.section {
+    padding: var(--spacing-4xl) 0;
+    position: relative;
+}
+
+.dark-band {
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.section-header { margin-bottom: var(--spacing-3xl); }
+
+/* ==========================================================================
+   Background Effects
+   ========================================================================== */
+.background-grid {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    background-size: 50px 50px;
+    background-image:
+        linear-gradient(to right,  rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.logo-icon { color: var(--accent-blue); font-size: 24px; }
+
+.nav-links { display: flex; gap: var(--spacing-xl); }
+
+.nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.nav-link:hover { color: var(--color-text-primary); }
+
+.nav-actions { display: flex; align-items: center; gap: var(--spacing-md); }
+
+.github-stars {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.github-stars:hover { background: rgba(255,255,255,0.1); }
+
+.mobile-menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 24px; height: 24px;
+    position: relative;
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 100%; height: 2px;
+    background: var(--color-text-primary);
+    position: absolute;
+    left: 0;
+    transition: 0.3s;
+}
+
+.mobile-menu-btn span:nth-child(1) { top: 4px; }
+.mobile-menu-btn span:nth-child(2) { top: 11px; }
+.mobile-menu-btn span:nth-child(3) { top: 18px; }
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 100px;
+}
+
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4xl);
+    align-items: center;
+}
+
+.hero-title    { margin-bottom: var(--spacing-md); }
+.hero-subtitle { margin-bottom: var(--spacing-xl); max-width: 90%; }
+
+.hero-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.hero-tech-stack {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: var(--spacing-lg);
+}
+
+.hero-tech-stack p { margin-bottom: var(--spacing-md); }
+
+.tech-logos { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); }
+
+.tech-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   Grid Utilities
+   ========================================================================== */
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2xl);
+}
+
+/* ==========================================================================
+   Open Source Section
+   ========================================================================== */
+.open-source-container { max-width: 800px; }
+
+.github-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: var(--spacing-2xl);
+    margin: var(--spacing-3xl) 0;
+}
+
+.stat-divider { width: 1px; background: rgba(255,255,255,0.1); }
+
+.open-source-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer {
+    background: var(--color-primary);
+    padding: var(--spacing-4xl) 0 var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--spacing-2xl);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.footer-links h4 { margin-bottom: var(--spacing-lg); }
+
+.footer-links ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.footer-bottom {
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 992px) {
+    .hero-container { grid-template-columns: 1fr; }
+    .hero-content   { text-align: center; }
+    .hero-subtitle  { margin: 0 auto var(--spacing-xl); }
+    .hero-actions   { justify-content: center; }
+    .tech-logos     { justify-content: center; }
+    .grid-3         { grid-template-columns: 1fr; }
+    .footer-grid    { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+    .nav-links, .nav-actions .btn { display: none; }
+    .mobile-menu-btn              { display: block; }
+
+    .github-stats  { flex-direction: column; gap: var(--spacing-lg); text-align: center; }
+    .stat-divider  { width: 100%; height: 1px; }
+    .footer-grid   { grid-template-columns: 1fr; }
+}

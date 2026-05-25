@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AELog | Privacy Policy</title>
+    <meta name="description" content="Privacy Policy for AELog, the client-side logging and debugging library for mobile applications.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Styles: modular CSS architecture -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/privacy.css">
+</head>
+<body class="dark-theme">
+    <!-- Animated Background Elements -->
+    <div class="background-grid"></div>
+    <div class="glow-orb orb-primary" style="opacity: 0.15"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">▲</span>
+                <span class="logo-text">AELog</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#architecture" class="nav-link">Architecture</a>
+                <a href="docs.html" class="nav-link">Documentation</a>
+                <a href="index.html#opensource" class="nav-link">Open Source</a>
+            </div>
+            <div class="nav-actions">
+                <a href="https://github.com/abdo-essam/AELog" target="_blank" class="github-stars glass-subtle">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Legal Content -->
+    <main class="legal-container">
+        <article class="legal-card">
+            <h1 class="gradient-text">Privacy Policy</h1>
+            <p class="update-date">Last updated: May 25, 2026</p>
+
+            <p>At AELog, we believe that development tools should respect developer and end-user privacy. Because AELog is an open-source library that runs entirely on your client application, this Privacy Policy explains exactly how data is handled.</p>
+
+            <h2>1. No Data Collection by Us</h2>
+            <p>AELog is a client-side logging and debugging library. We do not host any remote backend servers for this library, and we do not collect, store, or transmit any data logged or tracked by AELog. All data captured by AELog remains local to the device running your software.</p>
+
+            <h2>2. Local Storage and Logging Behavior</h2>
+            <p>AELog gathers logging, network requests, and crash dump information locally. Depending on how the library is configured, this data is stored in one of two ways:</p>
+            <ul>
+                <li><strong>In-Memory (RAM):</strong> Transient log buffers (such as Ktor/OkHttp logs and system traces) are saved in memory and wiped entirely when the application is closed.</li>
+                <li><strong>Persistent Disk Storage:</strong> Specific plugins (such as <code>CrashPlugin</code>) write crash records and diagnostic data directly to the device's local file system or <code>Jetpack DataStore</code>. This ensures reports survive application restarts for debugging purposes.</li>
+            </ul>
+
+            <h2>3. Third-Party Integrations</h2>
+            <p>AELog includes plugins to format, print, or capture data locally. It does not auto-forward log data to any third-party software analytics providers (like Firebase Crashlytics, Sentry, or Datadog) unless you explicitly write custom plugins to send that data to those services.</p>
+
+            <h2>4. Security of Data</h2>
+            <p>Since data is stored on-device, its security depends entirely on the sandbox policies and encryption mechanisms of the host operating system (Android, iOS, or JVM platform). We recommend configuring sensitive data filtering on network interceptors to prevent logging credentials, passwords, or personal identity numbers.</p>
+
+            <h2>5. Open Source Auditing</h2>
+            <p>AELog is fully open-source. Developers are encouraged to audit the source code in our repository to verify our logging, storage, and persistence mechanisms.</p>
+
+            <h2>6. Changes to this Policy</h2>
+            <p>We may update this Privacy Policy from time to time. Any updates will be pushed directly to this website and the GitHub repository.</p>
+
+            <h2>7. Contact</h2>
+            <p>If you have any questions about this Privacy Policy, please open an issue on the <a href="https://github.com/abdo-essam/AELog/issues" target="_blank">AELog GitHub Issue Tracker</a>.</p>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <span class="logo-icon">▲</span>
+                        <span class="logo-text">AELog</span>
+                    </a>
+                    <p class="body-sm mute-text mt-4">The enterprise-grade logging and crash tracking library designed for modern mobile teams.</p>
+                </div>
+                <div class="footer-links">
+                    <h4 class="body-md-strong text-white">Resources</h4>
+                    <ul>
+                        <li><a href="docs.html" class="link-mute">Documentation</a></li>
+                        <li><a href="docs.html" class="link-mute">API Reference</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/tree/main/sample" class="link-mute" target="_blank">Sample Apps</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4 class="body-md-strong text-white">Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/abdo-essam/AELog" class="link-mute" target="_blank">GitHub Repo</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/discussions" class="link-mute" target="_blank">Discussions</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/issues" class="link-mute" target="_blank">Issue Tracker</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4 class="body-md-strong text-white">Legal</h4>
+                    <ul>
+                        <li><a href="https://github.com/abdo-essam/AELog/blob/main/LICENSE" class="link-mute" target="_blank">Apache 2.0 License</a></li>
+                        <li><a href="privacy.html" class="link-mute" style="color: white; font-weight: 600;">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="body-sm mute-text">© 2026 AELog Contributors. Released under the Apache 2.0 License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

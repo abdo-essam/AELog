@@ -1,0 +1,57 @@
+/*
+ * privacy.css
+ *
+ * Single Responsibility: Legal / Privacy Policy page custom layouts.
+ * Separated from main stylesheets to prevent bundle bloat.
+ */
+
+.legal-container {
+    max-width: 800px;
+    margin: 120px auto 80px;
+    padding: 0 var(--spacing-lg);
+}
+
+.legal-card {
+    padding: 40px;
+    background: rgba(10, 10, 12, 0.45);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(12px);
+}
+
+.legal-card h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    letter-spacing: -0.02em;
+}
+
+.legal-card p.update-date {
+    color: var(--color-text-mute);
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+.legal-card h2 {
+    font-size: 22px;
+    margin: 32px 0 16px;
+    color: white;
+    font-weight: 600;
+}
+
+.legal-card p, .legal-card li {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+}
+
+.legal-card ul {
+    padding-left: 20px;
+    margin-bottom: 24px;
+}
+
+.legal-card a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+}
