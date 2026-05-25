@@ -256,21 +256,6 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
             </div>
             
             <div class="architecture-diagram card-xl glass-panel fade-up delay-1">
-                
-                <!-- Hover Info Panel (Static Sidebar) -->
-                <div id="arch-info-panel" class="arch-info-panel glass-subtle">
-                    <div class="arch-panel-badge" id="arch-info-badge">Core Engine</div>
-                    <h4 id="arch-info-title" class="body-lg-strong">AELog Core</h4>
-                    <p id="arch-info-desc" class="body-sm mute-text">The heartbeat of the system. Manages Plugin Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.</p>
-                    <pre><code id="arch-info-code" class="language-kotlin">// Initialize with any plugins
-AELog.init(
-  LogPlugin(),
-  CrashPlugin(),
-  NetworkPlugin(),
-  AnalyticsPlugin()
-)</code></pre>
-                </div>
-
                 <svg class="diagram-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" style="min-height:480px;">
                     <!-- Definitions -->
                     <defs>
@@ -397,6 +382,20 @@ AELog.init(
                         <text x="75" y="44" text-anchor="middle" class="node-subtitle">Ktor / OkHttp</text>
                     </g>
                 </svg>
+                
+                <!-- Hover Info Panel (Static Sidebar) -->
+                <div id="arch-info-panel" class="arch-info-panel glass-subtle">
+                    <div class="arch-panel-badge" id="arch-info-badge">Core Engine</div>
+                    <h4 id="arch-info-title" class="body-lg-strong">AELog Core</h4>
+                    <p id="arch-info-desc" class="body-sm mute-text">The heartbeat of the system. Manages Plugin Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.</p>
+                    <pre><code id="arch-info-code" class="language-kotlin">// Initialize with any plugins
+AELog.init(
+  LogPlugin(),
+  CrashPlugin(),
+  NetworkPlugin(),
+  AnalyticsPlugin()
+)</code></pre>
+                </div>
             </div>
 
 
