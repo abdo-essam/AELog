@@ -1,4 +1,4 @@
-﻿/**
+/**
  * docs.js
  *
  * Single Responsibility: AELog documentation page interactivity.
@@ -35,46 +35,100 @@ const MERMAID_THEME = {
 
 // ── Entry point ─────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
+    initNavigation();
+    initInstallSwitcher();
     initGlowOrb();
     initMermaidDiagrams();
     initCopyButtons();
 });
 
 /**
- * Expose showSection globally so HTML onclick attributes can call it.
- * Hides all sections and activates only the selected one.
- *
- * @param {string}  id - ID of the docs-section to show
- * @param {Element} el - The nav link element that was clicked
+ * Handles toggling between version catalog and direct dependencies in installation docs.
  */
-window.showSection = function showSection(id, el) {
-    document.querySelectorAll(DOCS_NAV_LINK_CLASS).forEach(link => {
-        link.classList.remove("active");
+function initInstallSwitcher() {
+    const chips = document.querySelectorAll("#install-framework-tabs .tab-chip");
+    const catalogBlock = document.getElementById("install-catalog");
+    const directBlock = document.getElementById("install-direct");
+    if (!chips.length || !catalogBlock || !directBlock) return;
+
+    chips.forEach(chip => {
+        chip.addEventListener("click", () => {
+            chips.forEach(c => c.classList.remove("active"));
+            chip.classList.add("active");
+
+            const installType = chip.getAttribute("data-install");
+            if (installType === "catalog") {
+                catalogBlock.classList.remove("is-hidden");
+                directBlock.classList.add("is-hidden");
+            } else {
+                catalogBlock.classList.add("is-hidden");
+                directBlock.classList.remove("is-hidden");
+            }
+        });
     });
+}
 
-    if (el) el.classList.add("active");
-
-    document.querySelectorAll(DOCS_SECTION_CLASS).forEach(section => {
-        section.classList.remove("active");
+/**
+ * Handles documentation sidebar section switching programmatically.
+ * Removes the need for inline HTML onclick attributes (H-1, M-4).
+ */
+function initNavigation() {
+    const navLinks = document.querySelectorAll(DOCS_NAV_LINK_CLASS);
+    
+    navLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute("data-section");
+            
+            // Sync active state across all links pointing to the same section
+            navLinks.forEach(l => {
+                if (l.getAttribute("data-section") === targetId) {
+                    l.classList.add("active");
+                } else {
+                    l.classList.remove("active");
+                }
+            });
+            
+            // 2. Hide all doc sections, then show the target one
+            document.querySelectorAll(DOCS_SECTION_CLASS).forEach(section => {
+                section.classList.remove("active");
+            });
+            
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add("active");
+            }
+            
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
     });
-
-    const target = document.getElementById(id);
-    if (target) target.classList.add("active");
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-};
+}
 
 /**
  * Subtle glow orb follows mouse for immersive visual effect.
+ * Throttled using requestAnimationFrame to prevent high CPU layout thrashing (M-5).
  */
 function initGlowOrb() {
     const orb = document.querySelector(".glow-orb");
     if (!orb) return;
 
+    let mouseX = 0;
+    let mouseY = 0;
+    let ticking = false;
+
     document.addEventListener("mousemove", (e) => {
-        const x = (e.clientX / window.innerWidth  - 0.5) * 50;
-        const y = (e.clientY / window.innerHeight - 0.5) * 50;
-        orb.style.transform = `translate(${x}px, ${y}px)`;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                const x = (mouseX / window.innerWidth  - 0.5) * 50;
+                const y = (mouseY / window.innerHeight - 0.5) * 50;
+                orb.style.transform = `translate(${x}px, ${y}px)`;
+                ticking = false;
+            });
+            ticking = true;
+        }
     });
 }
 

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * base.css
  * Design system foundation: CSS custom properties, reset, typography, and utility classes.
  * Single Source of Truth for all design tokens.
@@ -59,6 +59,20 @@
     --shadow-soft:  0 8px 32px rgba(0, 0, 0, 0.4);
     --glow-subtle:  0 0 20px rgba(139, 92, 246, 0.15);
     --glow-strong:  0 0 40px rgba(139, 92, 246, 0.3);
+
+    /* Semantic color aliases (Single Source of Truth for repeated values) */
+    --color-code-text:          #e2e8f0;
+    --color-code-accent:        #93c5fd;
+    --color-btn-primary-hover:  #e2e2e2;
+    --color-link-primary-hover: #60a5fa;
+    --color-mockup-bg:          #1e1e24;
+
+    /* Accent blue — alpha variants (avoids repeating raw rgba() across CSS files) */
+    --accent-blue-10: rgba(59, 130, 246, 0.10);
+    --accent-blue-12: rgba(59, 130, 246, 0.12);
+    --accent-blue-15: rgba(59, 130, 246, 0.15);
+    --accent-blue-22: rgba(59, 130, 246, 0.22);
+    --accent-blue-25: rgba(59, 130, 246, 0.25);
 }
 
 /* ==========================================================================
@@ -131,4 +145,10 @@ img, svg { display: block; max-width: 100%; }
 .link-mute:hover { color: var(--color-text-primary); }
 
 .link-primary { color: var(--accent-blue); font-weight: 500; }
-.link-primary:hover { color: #60a5fa; }
+.link-primary:hover { color: var(--color-link-primary-hover); }
+
+/* ==========================================================================
+   Visibility Utility
+   ========================================================================== */
+/* Use this class from JS instead of style.display — keeps presentation in CSS */
+.is-hidden { display: none !important; }

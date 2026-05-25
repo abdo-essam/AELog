@@ -1,4 +1,4 @@
-﻿/*
+/*
  * setup-guide.css
  * Firebase-style step-by-step installation guide:
  * numbered steps, scenario tabs, code file labels, step notes, UI framework switcher.
@@ -52,11 +52,11 @@
 .step-desc code, .step-title code {
     font-family: var(--font-mono);
     font-size: 13px;
-    background: rgba(59, 130, 246, 0.1);
-    color: #93c5fd;
+    background: var(--accent-blue-10);
+    color: var(--color-code-accent);
     padding: 2px 6px;
     border-radius: 5px;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    border: 1px solid var(--accent-blue-20);
 }
 
 /* ==========================================================================
@@ -87,9 +87,9 @@
 .scenario-tab:hover  { background: rgba(255,255,255,0.05); color: white; }
 
 .scenario-tab.active {
-    background: rgba(59, 130, 246, 0.15);
+    background: var(--accent-blue-15);
     border-color: var(--accent-blue);
-    color: #93c5fd;
+    color: var(--color-code-accent);
 }
 
 /* ==========================================================================
@@ -123,7 +123,7 @@
     font-family: var(--font-mono);
     font-size: 14px;
     line-height: 1.7;
-    color: #e2e8f0;
+    color: var(--color-code-text);
     background: transparent;
     border: none;
     padding: 0;
@@ -139,16 +139,16 @@
     margin-top: 16px;
     padding: 12px 16px;
     background: rgba(59, 130, 246, 0.04);
-    border: 1px solid rgba(59, 130, 246, 0.12);
+    border: 1px solid var(--accent-blue-12);
     border-radius: var(--radius-md);
 }
 
 .hint-label { font-size: 13px; color: var(--color-text-secondary); flex: 1; }
 
 .hint-toggle {
-    background: rgba(59, 130, 246, 0.12);
-    border: 1px solid rgba(59, 130, 246, 0.25);
-    color: #93c5fd;
+    background: var(--accent-blue-12);
+    border: 1px solid var(--accent-blue-25);
+    color: var(--color-code-accent);
     padding: 4px 12px;
     border-radius: var(--radius-pill);
     font-size: 12px;
@@ -157,7 +157,7 @@
     transition: all 0.2s ease;
 }
 
-.hint-toggle:hover { background: rgba(59, 130, 246, 0.22); }
+.hint-toggle:hover { background: var(--accent-blue-22); }
 
 /* ==========================================================================
    UI Framework Switcher (Compose / XML)
@@ -177,9 +177,9 @@
 }
 
 .tab-chip.active {
-    background: rgba(59, 130, 246, 0.12);
+    background: var(--accent-blue-12);
     border-color: var(--accent-blue);
-    color: #93c5fd;
+    color: var(--color-code-accent);
 }
 
 /* ==========================================================================

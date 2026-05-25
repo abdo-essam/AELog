@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,8 +18,7 @@
 
     <!-- Syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" defer></script>
 </head>
 <body class="dark-theme">
     <div class="background-grid"></div>
@@ -28,7 +27,7 @@
     <nav class="navbar glass">
         <div class="container nav-container">
             <a href="index.html" class="logo">
-                <span class="logo-icon">â–²</span>
+                <span class="logo-icon">▲</span>
                 <span class="logo-text">AELog</span>
             </a>
             <div class="nav-links">
@@ -53,15 +52,15 @@
     <div class="docs-container">
         <aside class="docs-sidebar glass-panel card-xl">
             <h3>Reference Manual</h3>
-            <a class="docs-nav-link active" onclick="showSection('introduction', this)">Introduction</a>
-<a class="docs-nav-link " onclick="showSection('installation', this)">Installation</a>
-<a class="docs-nav-link " onclick="showSection('quick-start', this)">Quick Start</a>
-<a class="docs-nav-link " onclick="showSection('configuration', this)">Configuration</a>
-<a class="docs-nav-link " onclick="showSection('plugins-overview', this)">Plugins Overview</a>
-<a class="docs-nav-link " onclick="showSection('custom-plugins', this)">Custom Plugins</a>
-<a class="docs-nav-link " onclick="showSection('integrations', this)">Integrations</a>
-<a class="docs-nav-link " onclick="showSection('changelog', this)">Changelog</a>
-<a class="docs-nav-link " onclick="showSection('contributing', this)">Contributing</a>
+            <a class="docs-nav-link active" data-section="introduction" href="#introduction">Introduction</a>
+            <a class="docs-nav-link" data-section="installation" href="#installation">Installation</a>
+            <a class="docs-nav-link" data-section="quick-start" href="#quick-start">Quick Start</a>
+            <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
+            <a class="docs-nav-link" data-section="plugins-overview" href="#plugins-overview">Plugins Overview</a>
+            <a class="docs-nav-link" data-section="custom-plugins" href="#custom-plugins">Custom Plugins</a>
+            <a class="docs-nav-link" data-section="integrations" href="#integrations">Integrations</a>
+            <a class="docs-nav-link" data-section="changelog" href="#changelog">Changelog</a>
+            <a class="docs-nav-link" data-section="contributing" href="#contributing">Contributing</a>
 
         </aside>
 
@@ -125,10 +124,10 @@
 </ul>
 <h2>Quick Links</h2>
 <ul>
-<li><a href="getting-started.md">Getting Started</a></li>
-<li><a href="plugins-guide.md">Plugins Overview</a></li>
-<li><a href="custom-plugins.md">Custom Plugins</a></li>
-<li><a href="changelog.md">Changelog</a></li>
+<li><a href="#installation" class="docs-nav-link" data-section="installation">Getting Started</a></li>
+<li><a href="#plugins-overview" class="docs-nav-link" data-section="plugins-overview">Plugins Overview</a></li>
+<li><a href="#custom-plugins" class="docs-nav-link" data-section="custom-plugins">Custom Plugins</a></li>
+<li><a href="#changelog" class="docs-nav-link" data-section="changelog">Changelog</a></li>
 </ul>
 
 </div>
@@ -160,20 +159,25 @@
 </tr>
 </tbody></table>
 <h2>Installation</h2>
-<p>=== &quot;Version Catalog (Recommended)&quot;</p>
-<pre><code>```toml title=&quot;gradle/libs.versions.toml&quot;
-[versions]
-aelog = &quot;1.0.5&quot;
+
+<div class="tab-pair" id="install-framework-tabs" style="margin-bottom: var(--spacing-md);">
+    <button class="tab-chip active" data-install="catalog">Version Catalog (Recommended)</button>
+    <button class="tab-chip" data-install="direct">Direct Dependency</button>
+</div>
+
+<div id="install-catalog" class="setup-code-block">
+    <div class="code-file-label">gradle/libs.versions.toml</div>
+    <pre><code class="language-toml">[versions]
+aelog = "1.0.5"
 
 [libraries]
-aelog-core      = { module = &quot;io.github.abdo-essam:ae-log-core&quot;, version.ref = &quot;aelog&quot; }
-aelog-network   = { module = &quot;io.github.abdo-essam:ae-log-network&quot;, version.ref = &quot;aelog&quot; }
-aelog-analytics = { module = &quot;io.github.abdo-essam:ae-log-analytics&quot;, version.ref = &quot;aelog&quot; }
-aelog-crashes   = { module = &quot;io.github.abdo-essam:ae-log-crashes&quot;, version.ref = &quot;aelog&quot; }
-```
+aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
+aelog-network   = { module = "io.github.abdo-essam:ae-log-network", version.ref = "aelog" }
+aelog-analytics = { module = "io.github.abdo-essam:ae-log-analytics", version.ref = "aelog" }
+aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref = "aelog" }</code></pre>
 
-```kotlin title=&quot;shared/build.gradle.kts&quot;
-kotlin {
+    <div class="code-file-label">shared/build.gradle.kts</div>
+    <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.aelog.core)
@@ -182,28 +186,32 @@ kotlin {
             implementation(libs.aelog.crashes)
         }
     }
-}
-```
-</code></pre>
-<p>=== &quot;Direct Dependency&quot;</p>
-<pre><code>```kotlin title=&quot;shared/build.gradle.kts&quot;
-kotlin {
+}</code></pre>
+</div>
+
+<div id="install-direct" class="setup-code-block is-hidden">
+    <div class="code-file-label">shared/build.gradle.kts</div>
+    <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(&quot;io.github.abdo-essam:ae-log-logs:1.0.5&quot;)
-            implementation(&quot;io.github.abdo-essam:ae-log-network:1.0.5&quot;)
-            implementation(&quot;io.github.abdo-essam:ae-log-analytics:1.0.5&quot;)
-            implementation(&quot;io.github.abdo-essam:ae-log-crashes:1.0.5&quot;)
+            implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
+            implementation("io.github.abdo-essam:ae-log-network:1.0.5")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
         }
     }
-}
-```
-</code></pre>
-<p>!!! info &quot;Transitive Dependencies&quot;
-    AELog uses <code>api</code> dependencies to keep your build file clean. </p>
-<pre><code>* If you use `ae-log-network-ktor`, it **automatically** includes `ae-log-network` and `ae-log-core`.
-* You do **not** need to manually add the core library if you are already using a plugin.
-</code></pre>
+}</code></pre>
+</div>
+
+<div class="warning-callout" style="margin: 28px 0; border-left-color: var(--accent-blue); background: rgba(59, 130, 246, 0.04);">
+    <strong style="color: #93c5fd;">ℹ️ Transitive Dependencies</strong>
+    <p style="margin: 0; font-size: 14px;">AELog uses <code>api</code> dependencies to keep your build file clean.</p>
+    <ul style="margin: 8px 0 0; padding-left: 20px; font-size: 14px; color: var(--color-text-secondary);">
+        <li>If you use <code>ae-log-network-ktor</code>, it <strong>automatically</strong> includes <code>ae-log-network</code> and <code>ae-log-core</code>.</li>
+        <li>You do <strong>not</strong> need to manually add the core library if you are already using a plugin.</li>
+    </ul>
+</div>
+
 <h2>Verify Installation</h2>
 <pre><code class="language-kotlin">import com.ae.log.AELog
 

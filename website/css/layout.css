@@ -53,8 +53,15 @@
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    transition: transform 0.3s ease;
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
     border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Applied via JS classList.toggle — keeps presentation in CSS, not inline styles */
+.navbar.scrolled {
+    background: rgba(10, 10, 12, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
 .nav-container {
@@ -181,12 +188,26 @@
    ========================================================================== */
 .open-source-container { max-width: 800px; }
 
+/* Grid layout — was previously set as an inline style in index.html (H-4 fix) */
 .github-stats {
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-xl);
     padding: var(--spacing-2xl);
     margin: var(--spacing-3xl) 0;
 }
+
+/* Stat card elements — replace per-element inline styles (H-4 fix) */
+.stat-item { text-align: center; }
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    margin: 0 auto var(--spacing-sm);
+}
+
+.stat-heading { margin-bottom: var(--spacing-sm); }
 
 .stat-divider { width: 1px; background: rgba(255,255,255,0.1); }
 
@@ -243,7 +264,7 @@
     .nav-links, .nav-actions .btn { display: none; }
     .mobile-menu-btn              { display: block; }
 
-    .github-stats  { flex-direction: column; gap: var(--spacing-lg); text-align: center; }
+    .github-stats  { grid-template-columns: 1fr; gap: var(--spacing-lg); }
     .stat-divider  { width: 100%; height: 1px; }
     .footer-grid   { grid-template-columns: 1fr; }
 }

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * main.js
  *
  * Main Orchestrator and entry point for AELog Landing Page.
@@ -83,6 +83,8 @@ function initMouseGlowEffect() {
     animate();
 }
 
+const NAVBAR_SCROLL_THRESHOLD = 50;
+
 /**
  * Solidify navbar color as page scrolls down to maintain text contrast.
  */
@@ -90,13 +92,9 @@ function initNavbarScroll() {
     const navbar = document.querySelector(NAVBAR_SELECTOR);
     if (!navbar) return;
 
+    // Separate concerns by toggling a CSS class instead of injecting inline styles directly
     window.addEventListener("scroll", () => {
-        if (window.scrollY > 50) {
-            navbar.style.background = "rgba(10, 10, 12, 0.85)";
-            navbar.style.backdropFilter = "blur(16px)";
-        } else {
-            navbar.style.background = "rgba(18, 18, 23, 0.6)";
-            navbar.style.backdropFilter = "blur(12px)";
-        }
+        navbar.classList.toggle("scrolled", window.scrollY > NAVBAR_SCROLL_THRESHOLD);
     });
 }
+

@@ -61,8 +61,8 @@ function initCatalogToggle() {
     if (!catalogToggle || !catalogSnippet) return;
 
     catalogToggle.addEventListener("click", () => {
-        const isHidden = catalogSnippet.style.display === "none";
-        catalogSnippet.style.display = isHidden ? "block" : "none";
+        const isHidden = catalogSnippet.classList.contains("is-hidden");
+        catalogSnippet.classList.toggle("is-hidden");
         catalogToggle.textContent = isHidden ? "Hide libs.versions.toml" : "Show libs.versions.toml";
         
         if (isHidden && window.hljs) {
@@ -87,11 +87,11 @@ function initUiSwitcher() {
 
             const uiType = chip.getAttribute("data-ui");
             if (uiType === "compose") {
-                composeBlock.style.display = "block";
-                xmlBlock.style.display = "none";
+                composeBlock.classList.remove("is-hidden");
+                xmlBlock.classList.add("is-hidden");
             } else {
-                composeBlock.style.display = "none";
-                xmlBlock.style.display = "block";
+                composeBlock.classList.add("is-hidden");
+                xmlBlock.classList.remove("is-hidden");
             }
         });
     });

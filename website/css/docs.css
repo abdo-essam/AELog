@@ -1,4 +1,4 @@
-﻿/*
+/*
  * docs.css
  * Documentation page layout, sidebar navigation, content typography,
  * code blocks, blockquotes, warning callouts, and copy button.
@@ -121,7 +121,7 @@
     font-family: var(--font-mono);
     font-size: 14px;
     background: rgba(59, 130, 246, 0.08);
-    color: #93c5fd;
+    color: var(--color-code-accent);
     padding: 3px 6px;
     border-radius: 6px;
     border: 1px solid rgba(59, 130, 246, 0.15);
@@ -167,8 +167,8 @@
 .docs-content blockquote p { margin: 0; }
 
 .warning-callout {
-    border-left: 4px solid var(--accent-yellow) !important;
-    background: rgba(245, 158, 11, 0.04) !important;
+    border-left: 4px solid var(--accent-yellow);
+    background: rgba(245, 158, 11, 0.04);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
     padding: 18px 24px;
     margin: 28px 0;
