@@ -1,4 +1,4 @@
-﻿/*
+/*
  * layout.css
  * Page-level structural layout: containers, sections, navbar, hero, footer, responsive grid.
  */
@@ -10,6 +10,10 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--spacing-lg);
+}
+
+.container-wide {
+    max-width: 1400px;
 }
 
 .section {

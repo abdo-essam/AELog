@@ -1,4 +1,4 @@
-﻿/*
+/*
  * architecture.css
  * SVG interactive diagram, info panel, node styles, and layer labels.
  */
@@ -10,7 +10,7 @@
 
 .architecture-diagram {
     display: grid;
-    grid-template-columns: 1fr 360px;
+    grid-template-columns: 1fr 300px;
     gap: var(--spacing-xl);
     padding: var(--spacing-xl);
     align-items: stretch;
@@ -49,13 +49,13 @@
     fill: #fff;
     font-family: var(--font-sans);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .node-subtitle {
     fill: var(--color-text-secondary);
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .sub-node {
