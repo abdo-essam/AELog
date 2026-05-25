@@ -9,6 +9,10 @@
  *  - Glow orb mouse tracking
  */
 
+import { initTimeline } from "./timeline.js";
+import { initScrollProgress } from "./scroll-progress.js";
+import { initMagicCards } from "./magic-card.js";
+
 // ── Constants ──────────────────────────────────────────────────────────────
 const DOCS_NAV_LINK_CLASS = ".docs-nav-link";
 const DOCS_SECTION_CLASS  = ".docs-section";
@@ -40,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initGlowOrb();
     initMermaidDiagrams();
     initCopyButtons();
+    initTimeline();
+    initScrollProgress();
+    initMagicCards();
 });
 
 /**
@@ -100,6 +107,11 @@ function initNavigation() {
             }
             
             window.scrollTo({ top: 0, behavior: "smooth" });
+            
+            // Recalculate timeline layout instantly when the section is revealed
+            setTimeout(() => {
+                window.dispatchEvent(new Event("scroll"));
+            }, 100);
         });
     });
 }

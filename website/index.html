@@ -70,13 +70,23 @@
                 </div>
                 <h1 class="display-xxl hero-title">
                     See more.<br>
-                    <span class="gradient-text">Fix faster.</span>
+                    <span class="aurora-text">Fix faster.</span>
                 </h1>
                 <p class="body-lg hero-subtitle">
-                    The enterprise-grade logging and crash tracking library designed for modern mobile engineering teams. Capture every detail, trace every crash, and ship with confidence.
+                    The enterprise-grade logging and crash tracking library built for 
+                    <span class="text-flip-container">
+                        <span class="text-flip-word active">Kotlin Multiplatform</span>
+                        <span class="text-flip-word">Android Apps</span>
+                        <span class="text-flip-word">iOS Projects</span>
+                        <span class="text-flip-word">Network Tracing</span>
+                        <span class="text-flip-word">Crash Capture</span>
+                    </span>
+                    to help mobile teams debug and ship with confidence.
                 </p>
                 <div class="hero-actions">
-                    <a href="#integration" class="btn btn-primary btn-large pill">Start Integrating</a>
+                    <a href="#integration" class="hover-border-btn">
+                        <span class="hover-border-inner">Start Integrating</span>
+                    </a>
                     <a href="https://github.com/abdo-essam/AELog" target="_blank" class="btn btn-secondary btn-large pill glass-subtle">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                         Star on GitHub
@@ -93,7 +103,7 @@
             </div>
             <div class="hero-visual fade-up delay-1">
                 <div class="mobile-frame glass-panel">
-                    <img src="img/aelog_mobile.png" alt="AELog Mobile In-App Overlay" class="mobile-screenshot">
+                    <img src="img/aelog_mobile.png" alt="AELog Android In-App Overlay" class="mobile-screenshot">
                     <div class="glow-border"></div>
                 </div>
             </div>
@@ -112,7 +122,7 @@
             <!-- Step 1: Choose your scenario -->
             <div class="setup-step fade-up delay-1">
                 <div class="step-number">1</div>
-                <div class="step-content glass-panel card-xl">
+                <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Add your dependency</h3>
                     <p class="step-desc mute-text">Pick the plugins you want. Each artifact carries <code>ae-log-core</code> transitively — no need to add it manually.</p>
 
@@ -155,7 +165,7 @@ aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        
             <!-- Step 2: Initialize -->
             <div class="setup-step fade-up delay-2">
                 <div class="step-number">2</div>
-                <div class="step-content glass-panel card-xl">
+                <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Initialize AELog</h3>
                     <p class="step-desc mute-text">Call this early in your platform entry point — <code>Application.onCreate()</code> for Android, or your KMP main entry.</p>
                     <div class="setup-code-block">
@@ -178,7 +188,7 @@ aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        
             <!-- Step 3: Wrap your UI -->
             <div class="setup-step fade-up delay-2">
                 <div class="step-number">3</div>
-                <div class="step-content glass-panel card-xl">
+                <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Wrap your root Composable</h3>
                     <p class="step-desc mute-text">Wrap your app once with <code>LogProvider</code>. This is the only UI change required. The <code>enabled</code> flag means zero overhead in release builds.</p>
                     <div class="tab-pair" id="ui-framework-tabs">
@@ -217,7 +227,7 @@ AELog.launchViewer(requireContext())</code></pre>
             <!-- Step 4: Use it -->
             <div class="setup-step fade-up delay-2">
                 <div class="step-number">4</div>
-                <div class="step-content glass-panel card-xl">
+                <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Start logging</h3>
                     <p class="step-desc mute-text">Use the static <code>AELog</code> API anywhere in your codebase. Tap the <strong>bug button</strong> to open the inspector.</p>
                     <div class="setup-code-block">

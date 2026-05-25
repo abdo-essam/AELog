@@ -130,26 +130,39 @@
    ========================================================================== */
 .mobile-frame {
     background: #000;
-    border: 8px solid #2a2a2f;
-    border-radius: 40px;
+    border: 10px solid #171717;
+    border-radius: 38px;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 0 2px rgba(255,255,255,0.1);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.08);
     position: relative;
     max-width: 320px;
     margin: 0 auto;
     aspect-ratio: 9/19.5;
 }
 
+/* Android Speaker Grill */
 .mobile-frame::before {
     content: '';
     position: absolute;
-    top: 0; left: 50%;
+    top: 8px; left: 50%;
     transform: translateX(-50%);
-    width: 120px; height: 24px;
-    background: #2a2a2f;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    z-index: 10;
+    width: 64px; height: 4px;
+    background: #262626;
+    border-radius: 4px;
+    z-index: 30;
+}
+
+/* Android Punch-hole Camera */
+.mobile-frame::after {
+    content: '';
+    position: absolute;
+    top: 18px; left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 14px;
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    z-index: 30;
 }
 
 .mobile-screenshot { width: 100%; height: 100%; object-fit: cover; }
@@ -207,4 +220,212 @@
    ========================================================================== */
 @media (max-width: 992px) {
     .feature-span-2      { grid-column: span 1; }
+}
+
+/* ==========================================================================
+   Interactive Hover Button (Magic UI Port)
+   ========================================================================== */
+.interactive-hover-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-pill);
+    background: var(--color-text-primary);
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    z-index: 1;
+}
+
+.interactive-hover-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 24px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+}
+
+.interactive-hover-btn .btn-text-visible {
+    position: relative;
+    padding-left: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-hover-btn .btn-text-hidden {
+    position: absolute;
+    opacity: 0;
+    transform: translate(-10px, 0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+}
+
+.interactive-hover-btn:hover {
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+    border-color: var(--accent-purple);
+}
+
+.interactive-hover-btn:hover::before {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    left: -50px;
+}
+
+.interactive-hover-btn:hover .btn-text-visible {
+    opacity: 0;
+    transform: translate(15px, 0);
+}
+
+.interactive-hover-btn:hover .btn-text-hidden {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* Secondary interactive hover btn */
+.interactive-hover-btn.btn-secondary-hover {
+    background: transparent;
+    color: var(--color-text-primary);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.interactive-hover-btn.btn-secondary-hover::before {
+    background: var(--accent-blue);
+}
+
+.interactive-hover-btn.btn-secondary-hover:hover {
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+    border-color: var(--accent-blue);
+}
+
+
+/* ==========================================================================
+   Magic Card spotlight border (Magic UI Port)
+   ========================================================================== */
+.magic-card {
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+.magic-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px; /* Border thickness */
+    background: radial-gradient(
+        220px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+        rgba(139, 92, 246, 0.45) 0%,
+        rgba(59, 130, 246, 0.25) 50%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Backplate glow effect inside card */
+.magic-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        320px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+        rgba(139, 92, 246, 0.05) 0%,
+        rgba(59, 130, 246, 0.02) 50%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   Hover Border Gradient Button (Magic UI Port)
+   ========================================================================== */
+.hover-border-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5px; /* Border thickness */
+    border-radius: 9999px;
+    background: transparent;
+    overflow: hidden;
+    text-decoration: none;
+    z-index: 1;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Rotating gradient layer */
+.hover-border-btn::before {
+    content: '';
+    position: absolute;
+    inset: -150%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 120deg,
+        var(--accent-blue) 180deg,
+        var(--accent-purple) 240deg,
+        transparent 300deg,
+        transparent 360deg
+    );
+    animation: spin-gradient 4s linear infinite;
+    z-index: -2;
+    transition: opacity 0.3s ease;
+}
+
+/* Inner content background container */
+.hover-border-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: 9999px;
+    background: #08080c; /* Dark background inside */
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 18px;
+    z-index: -1;
+    transition: background 0.3s ease;
+}
+
+.hover-border-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
+}
+
+.hover-border-btn:hover .hover-border-inner {
+    background: #111115;
+}
+
+@keyframes spin-gradient {
+    100% {
+        transform: rotate(360deg);
+    }
 }

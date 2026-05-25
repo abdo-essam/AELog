@@ -1,4 +1,4 @@
-﻿/*
+/*
  * animations.css
  * All motion: scroll-reveal fade-up, glow orbs, SVG pulse keyframes, transition delays.
  */
@@ -61,3 +61,74 @@
     filter: url(#glow);
     animation: pulse 3s infinite alternate;
 }
+
+/* ==========================================================================
+   Layout Text Flip (Aceternity UI FlipWords Port)
+   ========================================================================== */
+.text-flip-container {
+    display: inline-block;
+    position: relative;
+    vertical-align: bottom;
+    height: 1.2em; /* Keeps line height tight and uniform */
+    overflow: hidden;
+    margin: 0 2px;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-flip-word {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    color: var(--accent-purple); /* Solid premium color to bypass Chromium text-clip fading render bugs */
+    font-weight: 700;
+}
+
+.text-flip-word.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.text-flip-word.exit {
+    opacity: 0;
+    transform: translateY(-14px);
+}
+
+/* ==========================================================================
+   Aurora Text Animation (Magic UI Port)
+   ========================================================================== */
+.aurora-text {
+    background: linear-gradient(
+        90deg,
+        #3b82f6 0%,   /* Neon Blue */
+        #a855f7 25%,  /* Electric Purple */
+        #ec4899 50%,  /* Coral Pink */
+        #10b981 75%,  /* Emerald Green */
+        #3b82f6 100%  /* Loop back to Blue */
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    animation: aurora-flow 8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes aurora-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+

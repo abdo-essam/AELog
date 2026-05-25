@@ -720,40 +720,70 @@ AELog.log.entry(LogSeverity.INFO, &quot;MyApp&quot;, &quot;Direct log call&quot;
 </code></pre>
 
 </div>
-<div id="changelog" class="docs-section ">
-<h1>Changelog</h1>
-<p>All notable changes to this project will be documented in this file.</p>
-<p>The format is based on <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>,
-and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h2><a href="https://github.com/abdo-essam/AELog/compare/v1.0.0...HEAD">Unreleased</a></h2>
-<h3>Added</h3>
-<p>- </p>
-<h3>Changed</h3>
-<p>- </p>
-<h3>Fixed</h3>
-<p>- </p>
-<h2><a href="https://github.com/abdo-essam/AELog/releases/tag/v1.0.0">1.0.0</a> - 2025-07-XX</h2>
-<h3>Added</h3>
-<ul>
-<li>ðŸŽ‰ Initial stable release <code>v1.0.0</code></li>
-<li>Extracted features into specialized independent plugins (<code>:ae-log-network</code>, <code>:ae-log-analytics</code>)</li>
-<li>Built-in <code>LogPlugin</code> with search, severity filtering, and copy features</li>
-<li>Material3 themed UI with light/dark mode support and <code>AELogUiConfig</code> overrides</li>
-<li>Shared standard UI components (<code>PanelHeader</code>, <code>LogSearchBar</code>, <code>LogFilterChips</code>)</li>
-<li>Adaptive layout: bottom sheet (phones) / dialog (tablets)</li>
-<li>Configurable floating debug button and multi-finger long-press triggers</li>
-<li>Expanded Request/Response details view with JSON payloads in <code>NetworkPlugin</code></li>
-<li>FlowRow property chips in <code>AnalyticsPlugin</code></li>
-<li>Safe global static APIs (<code>AELog.i</code>, <code>NetworkRecorder</code>, <code>AnalyticsTracker</code>)</li>
-</ul>
-<h3>Architecture</h3>
-<ul>
-<li>fully reactive <code>Model-Store-API-UI</code> pattern</li>
-<li>Idempotent thread-safe plugin mapping via <code>AELogSetup.init()</code></li>
-<li>Replaced global mutable states with strictly managed <code>StateFlow</code> scopes</li>
-<li>Removed <code>reified</code> generic JVM restrictions for better multiplatform compatibility</li>
-<li>Switched default <code>Instant</code> logic to Standard library <code>Clock.System</code> for platform consistency</li>
-</ul>
+<div id="changelog" class="docs-section">
+            <h1>Changelog</h1>
+            <p class="mute-text">All notable changes and releases of AELog are detailed below in our interactive project roadmap.</p>
+            
+            <div class="timeline-container" id="journey-timeline">
+                <!-- Timeline progress bar line -->
+                <div class="timeline-progress-line">
+                    <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone 1: Unreleased -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">Unreleased <span class="timeline-date">— Current</span></h3>
+                        <p class="body-md mute-text">
+                            Preparing for the next feature release. Current tasks focus on adding file-based storage layer persistence for crashes, stabilizing Compose Multiplatform 1.9.3 compatibility, and building custom analytics integrations.
+                        </p>
+                        <div class="timeline-media">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="Unreleased updates" class="timeline-img">
+                        </div>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 2: v1.0.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.0 <span class="timeline-date">— July 2025</span></h3>
+                        <p class="body-md mute-text font-semibold">Initial stable production-grade release of AELog.</p>
+                        <ul class="body-sm mute-text" style="list-style-type: disc; padding-left: 20px; margin-top: 8px;">
+                            <li><strong>Decoupled Plugins:</strong> Extracted core capabilities into specialized sub-modules (<code>:ae-log-network</code>, <code>:ae-log-analytics</code>).</li>
+                            <li><strong>Compose Overlay:</strong> Adaptive overlay with bottom sheet layouts for mobile screens and dialogs for tablets.</li>
+                            <li><strong>Network & Logs:</strong> Real-time request/response JSON viewer and searchable logs panel.</li>
+                        </ul>
+                        <div class="timeline-media">
+                            <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=600&q=80" alt="v1.0 Release" class="timeline-img">
+                        </div>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 3: v0.8.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v0.8.0 <span class="timeline-date">— Late 2024</span></h3>
+                        <p class="body-md mute-text">
+                            Transitioned from a single monolithic debugger to a modular plugin architecture. Switched all state layers to strictly scoped, thread-safe Kotlin <code>StateFlow</code> streams.
+                        </p>
+                        <div class="timeline-media">
+                            <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80" alt="Beta Release" class="timeline-img">
+                        </div>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+            </div>
 
 </div>
 <div id="contributing" class="docs-section ">

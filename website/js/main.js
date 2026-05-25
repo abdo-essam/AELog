@@ -8,6 +8,9 @@
 
 import { initArchDiagram } from "./arch-diagram.js";
 import { initSetupGuide } from "./setup-guide.js";
+import { initScrollProgress } from "./scroll-progress.js";
+import { initMagicCards } from "./magic-card.js";
+import { initTextFlip } from "./text-flip.js";
 
 // DOM Selector Constants to prevent hardcoding strings in methods
 const FADE_UP_SELECTOR = ".fade-up";
@@ -19,6 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initScrollAnimations();
     initMouseGlowEffect();
     initNavbarScroll();
+    initScrollProgress();
+    initMagicCards();
+    initTextFlip();
 
     // 2. Initialize interactive architecture diagram interactions
     initArchDiagram();
