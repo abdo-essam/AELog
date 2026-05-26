@@ -107,4 +107,3 @@ open class LogPipelineBenchmark {
     @Benchmark
     fun export(): String = AELog.export()
 }
-

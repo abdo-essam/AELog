@@ -112,4 +112,3 @@ public class LogPlugin(
         public const val ID: String = "ae_logs_logs"
     }
 }
-

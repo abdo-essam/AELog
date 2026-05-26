@@ -222,4 +222,3 @@ class AELogKtorInterceptorTest {
             assertTrue(export.contains("third"))
         }
 }
-

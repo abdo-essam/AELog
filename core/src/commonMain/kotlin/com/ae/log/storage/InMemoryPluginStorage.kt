@@ -47,11 +47,12 @@ public class InMemoryPluginStorage<T>(
     public fun import(items: List<T>) {
         synchronized(lock) {
             val combined = _dataFlow.value + items
-            _dataFlow.value = if (combined.size > capacity) {
-                combined.takeLast(capacity)
-            } else {
-                combined
-            }
+            _dataFlow.value =
+                if (combined.size > capacity) {
+                    combined.takeLast(capacity)
+                } else {
+                    combined
+                }
         }
     }
 

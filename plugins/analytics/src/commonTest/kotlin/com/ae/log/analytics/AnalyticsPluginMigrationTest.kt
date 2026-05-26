@@ -12,7 +12,6 @@ import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class AnalyticsPluginMigrationTest {
-
     @AfterTest
     fun tearDown() {
         AELog.resetForTesting()
@@ -20,7 +19,10 @@ class AnalyticsPluginMigrationTest {
 
     // ── Helpers ────────────────────────────────────────────────────────────
 
-    private fun track(plugin: AnalyticsPlugin, name: String) {
+    private fun track(
+        plugin: AnalyticsPlugin,
+        name: String,
+    ) {
         plugin.tracker.track(name)
     }
 
@@ -51,7 +53,9 @@ class AnalyticsPluginMigrationTest {
         val customPlugin = AnalyticsPlugin(maxEntries = 2000)
         AELog.configure(customPlugin)
 
-        val migrated = customPlugin.storage.events.value.first()
+        val migrated =
+            customPlugin.storage.events.value
+                .first()
         assertEquals("purchase", migrated.name)
         assertEquals("premium", migrated.properties["item"])
         assertEquals("9.99", migrated.properties["price"])
@@ -66,7 +70,9 @@ class AnalyticsPluginMigrationTest {
         val customPlugin = AnalyticsPlugin(maxEntries = 2000)
         AELog.configure(customPlugin)
 
-        val migrated = customPlugin.storage.events.value.first()
+        val migrated =
+            customPlugin.storage.events.value
+                .first()
         assertEquals("Firebase", migrated.source?.sourceName)
     }
 
@@ -91,7 +97,10 @@ class AnalyticsPluginMigrationTest {
         val customPlugin = AnalyticsPlugin(maxEntries = 2000)
         AELog.configure(customPlugin)
 
-        assertTrue(customPlugin.storage.events.value.isEmpty())
+        assertTrue(
+            customPlugin.storage.events.value
+                .isEmpty(),
+        )
     }
 
     @Test
@@ -99,13 +108,21 @@ class AnalyticsPluginMigrationTest {
         class ImposterPlugin : Plugin {
             override val id = AnalyticsPlugin.ID
             override val name = "Imposter"
+
             override fun onAttach(context: PluginContext) {}
+
             override fun onStart() {}
+
             override fun onStop() {}
+
             override fun onDetach() {}
+
             override fun onClear() {}
+
             override fun onOpen() {}
+
             override fun onClose() {}
+
             override fun export() = ""
         }
 
@@ -114,7 +131,10 @@ class AnalyticsPluginMigrationTest {
         val customPlugin = AnalyticsPlugin()
         AELog.configure(customPlugin)
 
-        assertTrue(customPlugin.storage.events.value.isEmpty())
+        assertTrue(
+            customPlugin.storage.events.value
+                .isEmpty(),
+        )
     }
 
     @Test
@@ -129,8 +149,16 @@ class AnalyticsPluginMigrationTest {
         track(customPlugin, "post_migration_event")
 
         assertEquals(2, customPlugin.storage.events.value.size)
-        assertEquals("pre_migration_event", customPlugin.storage.events.value[0].name)
-        assertEquals("post_migration_event", customPlugin.storage.events.value[1].name)
+        assertEquals(
+            "pre_migration_event",
+            customPlugin.storage.events.value[0]
+                .name,
+        )
+        assertEquals(
+            "post_migration_event",
+            customPlugin.storage.events.value[1]
+                .name,
+        )
     }
 
     @Test
@@ -142,10 +170,11 @@ class AnalyticsPluginMigrationTest {
         val customPlugin = AnalyticsPlugin(maxEntries = 500)
         AELog.configure(customPlugin)
 
-        val migrated = customPlugin.storage.events.value.first()
+        val migrated =
+            customPlugin.storage.events.value
+                .first()
         assertEquals("screen_view", migrated.name)
         assertEquals("HomeScreen", migrated.properties["screen"])
         assertEquals("deeplink", migrated.properties["source"])
     }
 }
-

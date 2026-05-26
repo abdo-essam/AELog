@@ -28,4 +28,3 @@ public object CrashProxy {
         AELog.getPlugin<CrashPlugin>()?.recordNonFatal(throwable, threadName)
     }
 }
-

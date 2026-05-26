@@ -12,7 +12,6 @@ import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class LogPluginMigrationTest {
-
     @AfterTest
     fun tearDown() {
         AELog.resetForTesting()
@@ -21,7 +20,10 @@ class LogPluginMigrationTest {
     // ── Helpers ────────────────────────────────────────────────────────────
 
     /** Writes [count] DEBUG entries into [plugin]. */
-    private fun populate(plugin: LogPlugin, count: Int) {
+    private fun populate(
+        plugin: LogPlugin,
+        count: Int,
+    ) {
         repeat(count) { i ->
             plugin.recorder.log(LogSeverity.DEBUG, "Tag", "Message $i")
         }
@@ -55,7 +57,9 @@ class LogPluginMigrationTest {
         val customPlugin = LogPlugin(maxEntries = 2000)
         AELog.configure(customPlugin)
 
-        val migrated = customPlugin.logStorage.entries.value.first()
+        val migrated =
+            customPlugin.logStorage.entries.value
+                .first()
         assertEquals(LogSeverity.WARN, migrated.severity)
         assertEquals("AuthTag", migrated.tag)
         assertEquals("Token expired", migrated.message)
@@ -86,7 +90,10 @@ class LogPluginMigrationTest {
         val customPlugin = LogPlugin(maxEntries = 2000)
         AELog.configure(customPlugin)
 
-        assertTrue(customPlugin.logStorage.entries.value.isEmpty())
+        assertTrue(
+            customPlugin.logStorage.entries.value
+                .isEmpty(),
+        )
     }
 
     @Test
@@ -96,13 +103,21 @@ class LogPluginMigrationTest {
         class ImposterPlugin : Plugin {
             override val id = LogPlugin.ID
             override val name = "Imposter"
+
             override fun onAttach(context: PluginContext) {}
+
             override fun onStart() {}
+
             override fun onStop() {}
+
             override fun onDetach() {}
+
             override fun onClear() {}
+
             override fun onOpen() {}
+
             override fun onClose() {}
+
             override fun export() = ""
         }
 
@@ -113,7 +128,10 @@ class LogPluginMigrationTest {
         AELog.configure(customPlugin)
 
         // No crash and storage starts empty (migration silently skipped for wrong type)
-        assertTrue(customPlugin.logStorage.entries.value.isEmpty())
+        assertTrue(
+            customPlugin.logStorage.entries.value
+                .isEmpty(),
+        )
     }
 
     @Test
@@ -131,4 +149,3 @@ class LogPluginMigrationTest {
         assertEquals(3, customPlugin.logStorage.entries.value.size)
     }
 }
-

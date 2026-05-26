@@ -22,6 +22,7 @@ public final class com/ae/log/network/NetworkPlugin : com/ae/log/plugin/UIPlugin
 	public fun onClear ()V
 	public fun onClose ()V
 	public fun onDetach ()V
+	public fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;)V
 	public fun onOpen ()V
 	public fun onStart ()V
 	public fun onStop ()V

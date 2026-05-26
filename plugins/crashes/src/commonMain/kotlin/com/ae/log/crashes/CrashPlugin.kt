@@ -122,4 +122,3 @@ public class CrashPlugin(
         public const val ID: String = "ae_crashes"
     }
 }
-

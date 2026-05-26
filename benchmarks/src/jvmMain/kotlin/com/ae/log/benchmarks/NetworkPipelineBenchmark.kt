@@ -117,4 +117,3 @@ open class NetworkPipelineBenchmark {
         plugin.recorder.updateResponseBody(id, """{"streamed":true,"data":[1,2,3]}""")
     }
 }
-

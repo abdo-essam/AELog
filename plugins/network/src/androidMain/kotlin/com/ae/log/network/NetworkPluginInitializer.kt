@@ -50,10 +50,21 @@ internal class NetworkPluginInitializer : ContentProvider() {
 
     override fun getType(uri: Uri): String? = null
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? = null
+    override fun insert(
+        uri: Uri,
+        values: ContentValues?,
+    ): Uri? = null
 
-    override fun delete(uri: Uri, s: String?, sArgs: Array<String>?): Int = 0
+    override fun delete(
+        uri: Uri,
+        s: String?,
+        sArgs: Array<String>?,
+    ): Int = 0
 
-    override fun update(uri: Uri, values: ContentValues?, s: String?, sArgs: Array<String>?): Int = 0
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        s: String?,
+        sArgs: Array<String>?,
+    ): Int = 0
 }
-

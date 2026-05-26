@@ -20,4 +20,3 @@ public fun CrashPlugin(
     context: Context,
     storageDir: String = context.filesDir.resolve("ae_crashes").absolutePath,
 ): CrashPlugin = CrashPlugin(storageDir = storageDir)
-

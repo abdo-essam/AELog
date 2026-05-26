@@ -108,4 +108,3 @@ class AnalyticsTrackerTest {
         assertEquals(listOf("first", "second", "third"), names)
     }
 }
-

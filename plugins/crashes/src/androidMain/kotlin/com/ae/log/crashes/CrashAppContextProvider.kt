@@ -74,4 +74,3 @@ internal class CrashAppContextProvider : ContentProvider() {
         sArgs: Array<String>?,
     ): Int = 0
 }
-

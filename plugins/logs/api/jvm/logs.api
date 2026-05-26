@@ -25,6 +25,7 @@ public final class com/ae/log/logs/LogPlugin : com/ae/log/logs/LogRecordSink, co
 	public fun onClear ()V
 	public fun onClose ()V
 	public fun onDetach ()V
+	public fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;)V
 	public fun onOpen ()V
 	public fun onStart ()V
 	public fun onStop ()V
@@ -73,6 +74,7 @@ public final class com/ae/log/logs/LogRecordSink$DefaultImpls {
 	public static fun onClear (Lcom/ae/log/logs/LogRecordSink;)V
 	public static fun onClose (Lcom/ae/log/logs/LogRecordSink;)V
 	public static fun onDetach (Lcom/ae/log/logs/LogRecordSink;)V
+	public static fun onMigrateFrom (Lcom/ae/log/logs/LogRecordSink;Lcom/ae/log/plugin/Plugin;)V
 	public static fun onOpen (Lcom/ae/log/logs/LogRecordSink;)V
 	public static fun onStart (Lcom/ae/log/logs/LogRecordSink;)V
 	public static fun onStop (Lcom/ae/log/logs/LogRecordSink;)V

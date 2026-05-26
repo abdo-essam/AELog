@@ -206,7 +206,14 @@ class AELogConfigureTest {
         val network = FakePlugin(id = "network", name = "Network")
         AELog.registerPlugin(log)
         AELog.registerPlugin(network)
-        assertEquals(2, AELog.instance?.plugins?.plugins?.value?.size)
+        assertEquals(
+            2,
+            AELog.instance
+                ?.plugins
+                ?.plugins
+                ?.value
+                ?.size,
+        )
         assertTrue(log.attached)
         assertTrue(network.attached)
     }
@@ -217,7 +224,14 @@ class AELogConfigureTest {
         val second = FakePlugin(id = "log", name = "Second")
         AELog.registerPlugin(first)
         AELog.registerPlugin(second)
-        assertEquals(1, AELog.instance?.plugins?.plugins?.value?.count { it.id == "log" })
+        assertEquals(
+            1,
+            AELog.instance
+                ?.plugins
+                ?.plugins
+                ?.value
+                ?.count { it.id == "log" },
+        )
         assertTrue(first.attached)
         assertEquals(false, second.attached)
     }
@@ -248,7 +262,14 @@ class AELogConfigureTest {
 
         // The auto plugin must be detached and removed
         assertTrue(autoPlugin.detached)
-        assertEquals(1, AELog.instance?.plugins?.plugins?.value?.count { it.id == "log" })
+        assertEquals(
+            1,
+            AELog.instance
+                ?.plugins
+                ?.plugins
+                ?.value
+                ?.count { it.id == "log" },
+        )
     }
 
     @Test
@@ -288,7 +309,14 @@ class AELogConfigureTest {
 
         // Network plugin must still be registered and not detached
         assertEquals(false, networkPlugin.detached)
-        assertEquals(2, AELog.instance?.plugins?.plugins?.value?.size)
+        assertEquals(
+            2,
+            AELog.instance
+                ?.plugins
+                ?.plugins
+                ?.value
+                ?.size,
+        )
     }
 
     @Test
@@ -318,4 +346,3 @@ class AELogConfigureTest {
         assertNull(first.migratedFrom)
     }
 }
-

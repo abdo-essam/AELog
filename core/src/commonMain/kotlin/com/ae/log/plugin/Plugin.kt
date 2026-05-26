@@ -26,4 +26,3 @@ public interface Plugin {
 
     public fun export(): String = ""
 }
-

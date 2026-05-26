@@ -140,4 +140,3 @@ class NetworkRecorderTest {
         assertTrue(storage.entries.value.isEmpty())
     }
 }
-

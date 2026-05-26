@@ -11,7 +11,6 @@ import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class NetworkPluginMigrationTest {
-
     @AfterTest
     fun tearDown() {
         AELog.resetForTesting()
@@ -20,7 +19,10 @@ class NetworkPluginMigrationTest {
     // ── Helpers ────────────────────────────────────────────────────────────
 
     /** Records a complete GET request + 200 response into [plugin]. */
-    private fun recordRequest(plugin: NetworkPlugin, url: String) {
+    private fun recordRequest(
+        plugin: NetworkPlugin,
+        url: String,
+    ) {
         val id = plugin.recorder.newId()
         plugin.recorder.logRequest(id = id, method = "GET", url = url)
         plugin.recorder.logResponse(id = id, statusCode = 200)
@@ -52,7 +54,9 @@ class NetworkPluginMigrationTest {
         val customPlugin = NetworkPlugin(maxEntries = 1000)
         AELog.configure(customPlugin)
 
-        val migrated = customPlugin.storage.entries.value.first()
+        val migrated =
+            customPlugin.storage.entries.value
+                .first()
         assertEquals("https://api.example.com/users", migrated.url)
         assertEquals(200, migrated.statusCode)
     }
@@ -80,7 +84,10 @@ class NetworkPluginMigrationTest {
         val customPlugin = NetworkPlugin(maxEntries = 1000)
         AELog.configure(customPlugin)
 
-        assertTrue(customPlugin.storage.entries.value.isEmpty())
+        assertTrue(
+            customPlugin.storage.entries.value
+                .isEmpty(),
+        )
     }
 
     @Test
@@ -88,13 +95,21 @@ class NetworkPluginMigrationTest {
         class ImposterPlugin : Plugin {
             override val id = NetworkPlugin.ID
             override val name = "Imposter"
+
             override fun onAttach(context: PluginContext) {}
+
             override fun onStart() {}
+
             override fun onStop() {}
+
             override fun onDetach() {}
+
             override fun onClear() {}
+
             override fun onOpen() {}
+
             override fun onClose() {}
+
             override fun export() = ""
         }
 
@@ -104,7 +119,10 @@ class NetworkPluginMigrationTest {
         AELog.configure(customPlugin)
 
         // No crash; storage stays empty
-        assertTrue(customPlugin.storage.entries.value.isEmpty())
+        assertTrue(
+            customPlugin.storage.entries.value
+                .isEmpty(),
+        )
     }
 
     @Test
@@ -133,9 +151,10 @@ class NetworkPluginMigrationTest {
         val customPlugin = NetworkPlugin(maxEntries = 500)
         AELog.configure(customPlugin)
 
-        val migrated = customPlugin.storage.entries.value.first()
+        val migrated =
+            customPlugin.storage.entries.value
+                .first()
         assertTrue(migrated.isPending)
         assertEquals("https://api.example.com/upload", migrated.url)
     }
 }
-

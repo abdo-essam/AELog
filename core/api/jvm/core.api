@@ -2,13 +2,14 @@ public final class com/ae/log/AELog {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/AELog;
 	public static final fun clearAll ()V
+	public static final fun configure ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;)V
+	public static synthetic fun configure$default ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;ILjava/lang/Object;)V
 	public static final fun export ()Ljava/lang/String;
 	public final fun getConfig ()Lcom/ae/log/config/LogConfig;
 	public final fun getInstance ()Lcom/ae/log/LogInspector;
 	public final fun getInstanceAtomic ()Lkotlinx/atomicfu/AtomicRef;
-	public static final fun init ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;)V
-	public static synthetic fun init$default ([Lcom/ae/log/plugin/Plugin;Lcom/ae/log/config/LogConfig;ILjava/lang/Object;)V
 	public static final fun isEnabled ()Z
+	public static final fun registerPlugin (Lcom/ae/log/plugin/Plugin;)V
 	public final fun resetForTesting ()V
 	public static final fun setEnabled (Z)V
 }
@@ -98,6 +99,7 @@ public final class com/ae/log/plugin/DataPlugin$DefaultImpls {
 	public static fun onClear (Lcom/ae/log/plugin/DataPlugin;)V
 	public static fun onClose (Lcom/ae/log/plugin/DataPlugin;)V
 	public static fun onDetach (Lcom/ae/log/plugin/DataPlugin;)V
+	public static fun onMigrateFrom (Lcom/ae/log/plugin/DataPlugin;Lcom/ae/log/plugin/Plugin;)V
 	public static fun onOpen (Lcom/ae/log/plugin/DataPlugin;)V
 	public static fun onStart (Lcom/ae/log/plugin/DataPlugin;)V
 	public static fun onStop (Lcom/ae/log/plugin/DataPlugin;)V
@@ -111,6 +113,7 @@ public abstract interface class com/ae/log/plugin/Plugin {
 	public fun onClear ()V
 	public fun onClose ()V
 	public fun onDetach ()V
+	public fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;)V
 	public fun onOpen ()V
 	public fun onStart ()V
 	public fun onStop ()V
@@ -122,6 +125,7 @@ public final class com/ae/log/plugin/Plugin$DefaultImpls {
 	public static fun onClear (Lcom/ae/log/plugin/Plugin;)V
 	public static fun onClose (Lcom/ae/log/plugin/Plugin;)V
 	public static fun onDetach (Lcom/ae/log/plugin/Plugin;)V
+	public static fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;Lcom/ae/log/plugin/Plugin;)V
 	public static fun onOpen (Lcom/ae/log/plugin/Plugin;)V
 	public static fun onStart (Lcom/ae/log/plugin/Plugin;)V
 	public static fun onStop (Lcom/ae/log/plugin/Plugin;)V
@@ -166,6 +170,7 @@ public final class com/ae/log/plugin/UIPlugin$DefaultImpls {
 	public static fun onClear (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onClose (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onDetach (Lcom/ae/log/plugin/UIPlugin;)V
+	public static fun onMigrateFrom (Lcom/ae/log/plugin/UIPlugin;Lcom/ae/log/plugin/Plugin;)V
 	public static fun onOpen (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onStart (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onStop (Lcom/ae/log/plugin/UIPlugin;)V
@@ -178,6 +183,7 @@ public final class com/ae/log/storage/InMemoryPluginStorage : com/ae/log/storage
 	public final fun addOrReplace (Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)V
 	public fun clear ()V
 	public fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun import (Ljava/util/List;)V
 	public final fun updateFirst (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
 }
 
