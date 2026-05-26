@@ -32,14 +32,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **High:** Ktor interceptor response body read wrapped in `runCatching` — pipeline no longer breaks on read failure; error is recorded instead
 - **High:** `AnalyticsEvent` changed from `@Immutable` to `@Stable` — `Map<String, Any>` cannot guarantee immutability; `properties` type changed to `Map<String, String>`
 - **Medium:** `AnalyticsTracker` uses proper imports instead of fully-qualified names throughout
-- **Medium:** `AELog.init()` — `LogInspector` constructed before CAS is now immediately GC-eligible on CAS loss (no live scopes)
+- **Medium:** `AELog.configure()` — `LogInspector` constructed before CAS is now immediately GC-eligible on CAS loss (no live scopes)
 - **Medium:** `NetworkMethod.valueOf()` crash on unknown HTTP verbs (CONNECT, TRACE, custom) in `NetworkRecorder` and `KtorInterceptor` — replaced with safe `fromString()`
 - **Medium:** Race condition in `PluginManager.install()` — replaced TOCTOU check with `SynchronizedObject` lock ensuring `onAttach()` is never called twice
 - **Network:** `NetworkEntry.statusLabel` prioritises HTTP status code over error flag — a 403 with a Ktor exception now shows `403`, not `ERR`
 - **Network:** Ktor 4xx/5xx `ClientRequestException` / `ServerResponseException` no longer recorded as `error` — status code already captures the failure; `error` field is reserved for connection-level failures only
 - **Network:** Ktor error messages strip the embedded `. Text: "..."` suffix that duplicated the response body
 - `LogController.toggle()` non-atomic read-write — replaced with `MutableStateFlow.update { !it }`
-- `LogConfig` KDoc referenced non-existent `AELog.create()` — corrected to `AELog.init()`
+- `LogConfig` KDoc referenced non-existent `AELog.create()` — corrected to `AELog.configure()`
 - `AnalyticsTracker` KDoc referenced non-existent `AELog.default` — corrected to `AELog.analytics` proxy
 - README: version references updated from `1.0.0` to `1.0.2`
 - README: `AELog.v()` direct calls corrected to `AELog.log.v()` to match actual API
@@ -99,3 +99,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/abdo-essam/AELog/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/abdo-essam/AELog/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/abdo-essam/AELog/releases/tag/v1.0.0
+

@@ -179,16 +179,17 @@ aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",      
 
 ## 🚀 Quick Start
 
-### 1. Initialize & Install Plugins
+### 1. Zero-Config (Automatic Setup)
+AELog features **zero-config auto-initialisation** on Android! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with default settings when your app launches. **No setup or initialization code is required.**
 
-Best called early in your platform-specific entry points (e.g. `Application.onCreate` for Android, or main `ViewController` for iOS):
+### 2. Custom Configuration (Optional)
+If you want to configure custom settings (such as changing capacity limits or customizing error handlers), call `AELog.configure()` in your platform entry point (e.g. `Application.onCreate()` for Android, or your main `ViewController` for iOS):
 
 ```kotlin
-AELog.init(
-    LogPlugin(),       // Built-in log viewer
-    NetworkPlugin(),   // Network inspector
-    AnalyticsPlugin(), // Analytics tracker
-    CrashPlugin()      // Crash reporter (zero-config, captures fatals automatically!)
+// Reconfigure only what you need — all other auto-registered plugins keep their defaults!
+AELog.configure(
+    LogPlugin(maxEntries = 2_000), // Custom capacity limit
+    NetworkPlugin(maxEntries = 1_000)
 )
 ```
 
@@ -239,7 +240,7 @@ AELog.log.e("Database", "Failed to clear cache", exception) // stack trace auto-
 AELog.log.wtf("Auth", "Unexpected state")
 ```
 
-> All calls are **silent no-ops** if `AELog.init()` has not been called yet — safe in shared modules that run before app startup.
+> All calls are **silent no-ops** if `AELog.configure()` has not been called yet — safe in shared modules that run before app startup.
 
 #### Auto-tag — no tag required (recommended)
 
@@ -354,7 +355,7 @@ class FeatureFlagsPlugin : UIPlugin {
 }
 
 // Install it
-AELog.init(LogPlugin(), FeatureFlagsPlugin())
+AELog.configure(LogPlugin(), FeatureFlagsPlugin())
 ```
 
 📖 See the [Custom Plugins Guide](https://abdo-essam.github.io/AELog/custom-plugins) for the full API reference.
@@ -462,3 +463,4 @@ You may obtain a copy of the License at
 
 - Jetpack Compose — UI toolkit
 - Kotlin Multiplatform — Cross-platform framework
+

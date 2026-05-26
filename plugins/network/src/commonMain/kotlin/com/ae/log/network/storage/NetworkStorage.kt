@@ -32,4 +32,6 @@ internal class NetworkStorage(
     }
 
     fun clear(): Unit = storage.clear()
+
+    fun import(items: List<NetworkEntry>): Unit = storage.import(items)
 }

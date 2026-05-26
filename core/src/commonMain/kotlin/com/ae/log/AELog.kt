@@ -17,20 +17,81 @@ public object AELog {
 
     public val config: LogConfig? get() = instance?.config
 
+    /**
+     * Configures AELog with the given plugins and optional [LogConfig].
+     *
+     * ## Zero-config (auto-init)
+     * If every plugin dependency is on the classpath, each plugin's
+     * `ContentProvider` auto-registers itself before `Application.onCreate()`.
+     * You never need to call this method unless you want **custom configuration**.
+     *
+     * ## Custom configuration — no manifest changes needed
+     * Call this from `Application.onCreate()` with only the plugins you want to
+     * reconfigure. Each plugin provided here **replaces** the auto-registered
+     * default; plugins not mentioned are left untouched.
+     *
+     * ```kotlin
+     * // Replace only LogPlugin's config — Network/Analytics/Crash keep defaults
+     * AELog.configure(LogPlugin(maxEntries = 2_000))
+     *
+     * // Replace all four
+     * AELog.configure(
+     *     LogPlugin(maxEntries = 2_000),
+     *     NetworkPlugin(maxEntries = 500),
+     *     AnalyticsPlugin(maxEntries = 1_000),
+     *     CrashPlugin(this),
+     * )
+     * ```
+     *
+     * The [config] parameter (dispatcher, errorHandler, etc.) is applied only
+     * when AELog has not yet been initialised; if auto-init already ran it is
+     * ignored in favour of the existing instance.
+     */
     @JvmStatic
-    public fun init(
+    public fun configure(
         vararg plugins: Plugin,
         config: LogConfig = LogConfig(),
     ) {
-        // Fast-path: already initialized
-        if (instanceAtomic.value != null) return
-        // Construct and install only if we win the CAS
-        val newInstance = LogInspector(config)
-        if (instanceAtomic.compareAndSet(null, newInstance)) {
-            plugins.forEach { newInstance.plugins.install(it) }
+        // Ensure the core singleton exists. If auto-init (ContentProviders) already
+        // created it, we reuse that instance; otherwise we create it now with
+        // the provided config.
+        if (instanceAtomic.value == null) {
+            val newInstance = LogInspector(config)
+            instanceAtomic.compareAndSet(null, newInstance)
+            // If CAS lost, newInstance is abandoned — no children yet, GC-eligible.
         }
-        // If CAS lost, newInstance is abandoned — its SupervisorJob
-        // has no children yet, so it is immediately eligible for GC.
+        val inspector = instanceAtomic.value!!
+        // Replace each explicitly provided plugin: uninstall the auto-registered
+        // default (if any) and install the consumer-configured version in its place.
+        // Plugins not mentioned here are left as-is.
+        plugins.distinctBy { it.id }.forEach { plugin ->
+            val oldPlugin = inspector.plugins.getPluginById(plugin.id)
+            if (oldPlugin != null) {
+                plugin.onMigrateFrom(oldPlugin)
+            }
+            inspector.plugins.uninstall(plugin.id)
+            inspector.plugins.install(plugin)
+        }
+    }
+
+    /**
+     * Registers a single plugin, lazily initialising the AELog core if needed.
+     *
+     * **Intended for plugin auto-initializers only.** Each plugin's `ContentProvider`
+     * calls this before `Application.onCreate()` so consumers need zero setup code.
+     * Application code should prefer [init] when custom configuration is required.
+     *
+     * Safe to call from multiple ContentProviders concurrently — the first call
+     * creates the [LogInspector] singleton (with default [LogConfig]); subsequent
+     * calls reuse the same instance.
+     */
+    @JvmStatic
+    public fun registerPlugin(plugin: Plugin) {
+        if (instanceAtomic.value == null) {
+            val newInstance = LogInspector(LogConfig())
+            instanceAtomic.compareAndSet(null, newInstance)
+        }
+        instanceAtomic.value?.plugins?.install(plugin)
     }
 
     @JvmStatic public fun export(): String = instance?.export() ?: ""

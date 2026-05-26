@@ -16,7 +16,7 @@ class NetworkProxyTest {
     @BeforeTest
     fun setUp() {
         plugin = NetworkPlugin()
-        AELog.init(plugin)
+        AELog.configure(plugin)
     }
 
     @AfterTest
@@ -88,7 +88,7 @@ class NetworkProxyTest {
     @Test
     fun `logRequest - returns null when plugin is not installed`() {
         AELog.resetForTesting()
-        AELog.init() // no plugins
+        AELog.configure() // no plugins
         val id = AELog.network.logRequest(method = "GET", url = "https://api.example.com")
         assertNull(id)
     }
@@ -172,3 +172,4 @@ class NetworkProxyTest {
         assertTrue(export.contains("/c"))
     }
 }
+

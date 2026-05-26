@@ -18,4 +18,6 @@ internal class LogStorage(
     fun record(entry: LogEntry): Unit = storage.add(entry)
 
     fun clear(): Unit = storage.clear()
+
+    fun import(items: List<LogEntry>): Unit = storage.import(items)
 }

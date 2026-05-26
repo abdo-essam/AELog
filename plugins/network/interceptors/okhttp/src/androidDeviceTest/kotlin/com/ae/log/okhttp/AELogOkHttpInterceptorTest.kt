@@ -32,7 +32,7 @@ class AELogOkHttpInterceptorTest {
     @Before
     fun setUp() {
         plugin = NetworkPlugin()
-        AELog.init(plugin)
+        AELog.configure(plugin)
         server = MockWebServer()
         server.start()
     }
@@ -240,3 +240,4 @@ class AELogOkHttpInterceptorTest {
         assertTrue(export.contains("third"))
     }
 }
+

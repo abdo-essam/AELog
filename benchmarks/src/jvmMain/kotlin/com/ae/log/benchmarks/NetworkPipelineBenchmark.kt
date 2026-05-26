@@ -45,7 +45,7 @@ open class NetworkPipelineBenchmark {
 
     @Setup
     fun setup() {
-        AELog.init(
+        AELog.configure(
             NetworkPlugin(maxEntries = 200),
             config = LogConfig(dispatcher = Dispatchers.Unconfined),
         )
@@ -117,3 +117,4 @@ open class NetworkPipelineBenchmark {
         plugin.recorder.updateResponseBody(id, """{"streamed":true,"data":[1,2,3]}""")
     }
 }
+

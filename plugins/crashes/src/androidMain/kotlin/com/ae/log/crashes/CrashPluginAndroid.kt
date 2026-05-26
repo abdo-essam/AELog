@@ -10,7 +10,7 @@ import android.content.Context
  *
  * ```kotlin
  * // In Application.onCreate:
- * AELog.init(CrashPlugin(this))
+ * AELog.configure(CrashPlugin(this))
  * ```
  *
  * @param context Application or Activity context.
@@ -20,3 +20,4 @@ public fun CrashPlugin(
     context: Context,
     storageDir: String = context.filesDir.resolve("ae_crashes").absolutePath,
 ): CrashPlugin = CrashPlugin(storageDir = storageDir)
+

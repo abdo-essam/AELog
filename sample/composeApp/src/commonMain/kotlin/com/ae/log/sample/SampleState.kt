@@ -18,13 +18,6 @@ object SampleState {
     fun initialize() {
         if (httpClient != null) return
 
-        AELog.init(
-            LogPlugin(),
-            NetworkPlugin(),
-            AnalyticsPlugin(),
-            CrashPlugin(), // ← zero-config: path resolved automatically
-        )
-
         httpClient =
             HttpClient {
                 install(AELogKtorInterceptor)

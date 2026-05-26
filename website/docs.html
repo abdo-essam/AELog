@@ -233,14 +233,15 @@ fun main() {
 </div>
 <div id="quick-start" class="docs-section ">
 <h1>Quick Start</h1>
-<p>Add AELog to your project and initialize it in just a few lines.</p>
-<h2>1. Initialize</h2>
-<p>Call this early in your app lifecycle (e.g., <code>Application.onCreate</code> on Android or <code>Main</code> on iOS):</p>
-<pre><code class="language-kotlin">AELog.init(
-    LogPlugin(),
-    NetworkPlugin(),
-    AnalyticsPlugin(),
-    CrashPlugin()
+<p>Get up and running in just a few seconds.</p>
+<h2>1. Zero-Config (Automatic Setup)</h2>
+<p>AELog features <strong>zero-config auto-initialisation</strong> on Android. Just add the Gradle dependencies for the plugins you want, and they automatically register themselves. <strong>No initialization code is required in your Application class!</strong></p>
+<h2>2. Custom Configuration (Optional)</h2>
+<p>If you want to configure custom settings (such as changing capacity limits or customizing error handlers), call <code>AELog.configure()</code> in your platform entry point (e.g. <code>Application.onCreate()</code> for Android, or your main <code>ViewController</code> for iOS):</p>
+<pre><code class="language-kotlin">// Reconfigure only what you need — all other auto-registered plugins keep their defaults!
+AELog.configure(
+    LogPlugin(maxEntries = 2_000), // Custom capacity limit
+    NetworkPlugin(maxEntries = 1_000)
 )
 </code></pre>
 <h2>2. Wrap your App</h2>
@@ -285,8 +286,8 @@ try {
 <h1>Configuration</h1>
 <p>AELog is designed to be &quot;zero-config&quot; by default, but provides hooks to customize both data collection and UI behavior.</p>
 <h2>Core Configuration (Data)</h2>
-<p>Pass a <code>LogConfig</code> object to <code>AELog.init()</code> to control background behavior:</p>
-<pre><code class="language-kotlin">AELog.init(
+<p>Pass a <code>LogConfig</code> object to <code>AELog.configure()</code> to control background behavior:</p>
+<pre><code class="language-kotlin">AELog.configure(
     LogPlugin(),
     config = LogConfig(
         maxLogEntries = 1000,
@@ -321,7 +322,7 @@ You no longer need to pass <code>instance = AELog.default</code>. <code>LogProvi
 <h1>Plugins Overview</h1>
 <p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host â€” plugins are what make it useful.</p>
 <h2>How Plugins Work</h2>
-<p>When you call <code>AELog.init(...)</code>, you pass a list of plugins. The library:</p>
+<p>When you call <code>AELog.configure(...)</code>, you pass a list of plugins. The library:</p>
 <ol>
 <li><strong>Installs</strong> each plugin and calls its <code>onAttach()</code> lifecycle hook</li>
 <li><strong>Renders</strong> <code>UIPlugin</code> instances as tabs in the overlay panel</li>
@@ -370,7 +371,7 @@ You no longer need to pass <code>instance = AELog.default</code>. <code>LogProvi
 <p>A <strong>headless background collector</strong> with no UI. It feeds data to a <code>UIPlugin</code> or runs standalone. Use it for crash collectors, performance samplers, or anything that needs to observe data without a dedicated panel.</p>
 <h2>Installing Plugins</h2>
 <pre><code class="language-kotlin">// In your app entry point (Application.onCreate on Android, etc.)
-AELog.init(
+AELog.configure(
     LogPlugin(),
     NetworkPlugin(),
     AnalyticsPlugin(),
@@ -923,3 +924,4 @@ ci: add iOS build to CI pipeline
     <script type="module" src="js/docs.js"></script>
 </body>
 </html>
+

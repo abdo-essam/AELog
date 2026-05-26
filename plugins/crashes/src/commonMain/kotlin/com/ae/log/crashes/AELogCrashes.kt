@@ -18,7 +18,7 @@ public object CrashProxy {
     /**
      * Records a non-fatal exception into the crash viewer.
      *
-     * Silent no-op if [AELog.init] has not been called or [CrashPlugin] is not installed.
+     * Silent no-op if [AELog.configure] has not been called or [CrashPlugin] is not installed.
      */
     @JvmStatic
     public fun recordNonFatal(
@@ -28,3 +28,4 @@ public object CrashProxy {
         AELog.getPlugin<CrashPlugin>()?.recordNonFatal(throwable, threadName)
     }
 }
+

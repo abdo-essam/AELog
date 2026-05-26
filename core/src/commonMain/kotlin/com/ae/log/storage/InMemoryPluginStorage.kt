@@ -43,6 +43,18 @@ public class InMemoryPluginStorage<T>(
         }
     }
 
+    /** Imports a list of items into this storage, keeping only up to [capacity] newest items. */
+    public fun import(items: List<T>) {
+        synchronized(lock) {
+            val combined = _dataFlow.value + items
+            _dataFlow.value = if (combined.size > capacity) {
+                combined.takeLast(capacity)
+            } else {
+                combined
+            }
+        }
+    }
+
     // ── Network-specific (NOT in PluginStorage interface) ─────────────
 
     /** Atomically find and update the first matching element. No-op if not found. */

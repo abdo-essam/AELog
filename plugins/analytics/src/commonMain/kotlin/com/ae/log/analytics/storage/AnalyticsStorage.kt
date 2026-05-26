@@ -18,4 +18,6 @@ internal class AnalyticsStorage(
     fun record(event: AnalyticsEvent): Unit = storage.add(event)
 
     fun clear(): Unit = storage.clear()
+
+    fun import(items: List<AnalyticsEvent>): Unit = storage.import(items)
 }

@@ -46,7 +46,7 @@ import kotlinx.coroutines.Dispatchers
 open class LogPipelineBenchmark {
     @Setup
     fun setup() {
-        AELog.init(
+        AELog.configure(
             // PlatformLogSink.None avoids Logcat/println side-effects in the benchmark
             LogPlugin(platformLogSink = PlatformLogSink.None),
             NetworkPlugin(),
@@ -107,3 +107,4 @@ open class LogPipelineBenchmark {
     @Benchmark
     fun export(): String = AELog.export()
 }
+

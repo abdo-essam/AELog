@@ -21,7 +21,7 @@ class AELogKtorInterceptorTest {
     @BeforeTest
     fun setUp() {
         networkPlugin = NetworkPlugin()
-        AELog.init(networkPlugin)
+        AELog.configure(networkPlugin)
     }
 
     @AfterTest
@@ -222,3 +222,4 @@ class AELogKtorInterceptorTest {
             assertTrue(export.contains("third"))
         }
 }
+

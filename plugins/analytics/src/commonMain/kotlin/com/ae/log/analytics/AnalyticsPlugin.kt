@@ -1,4 +1,4 @@
-﻿package com.ae.log.analytics
+package com.ae.log.analytics
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.analytics.storage.AnalyticsStorage
 import com.ae.log.analytics.ui.AnalyticsContent
 import com.ae.log.analytics.ui.AnalyticsViewModel
+import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELog.init(AnalyticsPlugin())
+ * AELog.configure(AnalyticsPlugin())
  * ```
  *
  * ## Recording events:
@@ -39,7 +40,7 @@ public class AnalyticsPlugin(
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    private val storage = AnalyticsStorage(capacity = maxEntries)
+    internal val storage = AnalyticsStorage(capacity = maxEntries)
 
     @kotlin.concurrent.Volatile private var viewModel: AnalyticsViewModel? = null
 
@@ -61,6 +62,12 @@ public class AnalyticsPlugin(
         storage.clear()
     }
 
+    override fun onMigrateFrom(oldPlugin: Plugin) {
+        if (oldPlugin is AnalyticsPlugin) {
+            storage.import(oldPlugin.storage.events.value)
+        }
+    }
+
     override fun export(): String =
         storage.events.value.joinToString("\n") { event ->
             "Event: ${event.name} | Source: ${event.source?.sourceName} | Time: ${event.timestamp}\nProperties: ${event.properties}"
@@ -76,3 +83,4 @@ public class AnalyticsPlugin(
         public const val ID: String = "ae_logs_analytics"
     }
 }
+

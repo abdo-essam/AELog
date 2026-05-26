@@ -18,5 +18,12 @@ public interface Plugin {
 
     public fun onClear() {}
 
+    /**
+     * Called when this plugin is replacing a pre-existing plugin instance (e.g. during custom
+     * configuration in `AELog.configure`). Use this to copy accumulated state or data.
+     */
+    public fun onMigrateFrom(oldPlugin: Plugin) {}
+
     public fun export(): String = ""
 }
+

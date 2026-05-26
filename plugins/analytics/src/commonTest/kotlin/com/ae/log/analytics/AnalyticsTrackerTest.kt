@@ -17,7 +17,7 @@ class AnalyticsTrackerTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.init(AnalyticsPlugin())
+        AELog.configure(AnalyticsPlugin())
         storage = AnalyticsStorage()
         tracker = AnalyticsTracker(storage)
     }
@@ -108,3 +108,4 @@ class AnalyticsTrackerTest {
         assertEquals(listOf("first", "second", "third"), names)
     }
 }
+

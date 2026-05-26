@@ -18,7 +18,7 @@ class NetworkRecorderTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.init(NetworkPlugin())
+        AELog.configure(NetworkPlugin())
         storage = NetworkStorage()
         recorder = NetworkRecorder(storage)
     }
@@ -140,3 +140,4 @@ class NetworkRecorderTest {
         assertTrue(storage.entries.value.isEmpty())
     }
 }
+

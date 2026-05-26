@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!--
+            Auto-initializer: AGP merges this into the host app's manifest.
+            The ContentProvider runs before Application.onCreate(), registering
+            NetworkPlugin with AELog so consumers need zero setup code.
+
+            To opt out and use a custom NetworkPlugin config, remove this provider
+            via manifest merger (tools:node="remove") and call AELog.configure() yourself.
+        -->
+        <provider
+            android:name="com.ae.log.network.NetworkPluginInitializer"
+            android:authorities="${applicationId}.ae_log_network_init"
+            android:exported="false" />
+    </application>
+</manifest>
+

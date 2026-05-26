@@ -4,20 +4,45 @@ import android.content.ContentProvider
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
+import com.ae.log.AELog
 
 /**
  * Auto-initializer for the AELog Crashes plugin on Android.
  *
  * AGP merges the accompanying `AndroidManifest.xml` into the host app,
  * so this [ContentProvider] runs before [android.app.Application.onCreate],
- * capturing the application [android.content.Context] automatically.
+ * capturing the application [android.content.Context] automatically and
+ * registering [CrashPlugin] with AELog.
  *
- * Consumers need zero setup — `CrashPlugin()` resolves the correct path
- * without any explicit Context parameter.
+ * ## Zero-config usage
+ * Just add the dependency — no `AELog.configure()` call required:
+ * ```kotlin
+ * // build.gradle.kts
+ * implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
+ * ```
+ *
+ * ## Opt-out / custom config
+ * Remove the auto-initializer via manifest merger and call `AELog.configure()` yourself:
+ * ```xml
+ * <!-- AndroidManifest.xml -->
+ * <provider
+ *     android:name="com.ae.log.crashes.CrashAppContextProvider"
+ *     android:authorities="${applicationId}.ae_log_crash_init"
+ *     tools:node="remove" />
+ * ```
+ * ```kotlin
+ * // Application.onCreate()
+ * AELog.configure(CrashPlugin(this))
+ * ```
  */
 internal class CrashAppContextProvider : ContentProvider() {
     override fun onCreate(): Boolean {
-        CrashAppContextHolder.init(context ?: return false)
+        val ctx = context ?: return false
+        // 1. Capture the Application context first so defaultCrashStorageDir()
+        //    resolves correctly when CrashPlugin() is constructed below.
+        CrashAppContextHolder.init(ctx)
+        // 2. Auto-register the plugin — same as LogPlugin/NetworkPlugin/AnalyticsPlugin.
+        AELog.registerPlugin(CrashPlugin())
         return true
     }
 
@@ -49,3 +74,4 @@ internal class CrashAppContextProvider : ContentProvider() {
         sArgs: Array<String>?,
     ): Int = 0
 }
+

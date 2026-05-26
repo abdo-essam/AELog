@@ -9,6 +9,7 @@ import com.ae.log.logs.model.LogSeverity
 import com.ae.log.logs.storage.LogStorage
 import com.ae.log.logs.ui.LogContent
 import com.ae.log.logs.ui.LogViewModel
+import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELog.init(LogPlugin())
+ * AELog.configure(LogPlugin())
  * ```
  *
  * ## Logging
@@ -35,7 +36,7 @@ import kotlinx.coroutines.launch
  * AELog.log.wtf("MyTag", "Should never happen", throwable)
  * ```
  *
- * All calls are **silent no-ops** if [AELog.init] has not been called yet.
+ * All calls are **silent no-ops** if [AELog.configure] has not been called yet.
  */
 public class LogPlugin(
     public val maxEntries: Int = 500,
@@ -90,6 +91,12 @@ public class LogPlugin(
         viewModel = null
     }
 
+    override fun onMigrateFrom(oldPlugin: Plugin) {
+        if (oldPlugin is LogPlugin) {
+            logStorage.import(oldPlugin.logStorage.entries.value)
+        }
+    }
+
     @Composable
     override fun Content(modifier: Modifier) {
         val vm = viewModel ?: return
@@ -105,3 +112,4 @@ public class LogPlugin(
         public const val ID: String = "ae_logs_logs"
     }
 }
+

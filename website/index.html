@@ -162,24 +162,23 @@ aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        
                 </div>
             </div>
 
-            <!-- Step 2: Initialize -->
+            <!-- Step 2: Customise (Optional) -->
             <div class="setup-step fade-up delay-2">
                 <div class="step-number">2</div>
                 <div class="step-content glass-panel card-xl magic-card">
-                    <h3 class="step-title">Initialize AELog</h3>
-                    <p class="step-desc mute-text">Call this early in your platform entry point — <code>Application.onCreate()</code> for Android, or your KMP main entry.</p>
+                    <h3 class="step-title">Custom Configuration (Optional)</h3>
+                    <p class="step-desc mute-text">AELog <strong>automatically initialises</strong> on app startup! If you want to supply custom settings (like capacity limits), call <code>AELog.configure()</code> in your platform entry point (e.g. <code>Application.onCreate()</code>):</p>
                     <div class="setup-code-block">
                         <div class="code-file-label">Application.kt / main.kt</div>
-                        <pre><code class="language-kotlin">AELog.init(
-    LogPlugin(),       // Logcat-style viewer
-    NetworkPlugin(),   // HTTP request inspector
-    AnalyticsPlugin(), // Event tracker
-    CrashPlugin()      // Crash reporter — captures fatals automatically!
+                        <pre><code class="language-kotlin">// Only configure what you need — other auto-registered plugins keep their defaults!
+AELog.configure(
+    LogPlugin(maxEntries = 2_000), // Custom capacity limit
+    NetworkPlugin(maxEntries = 1_000)
 )</code></pre>
                     </div>
                     <div class="step-note">
                         <span class="note-icon">ℹ️</span>
-                        All calls are <strong>silent no-ops</strong> if <code>init()</code> hasn't been called — safe in shared modules.
+                        If you don't need custom limits or handlers, you can <strong>completely skip this step!</strong>
                     </div>
                     <div class="glow-border"></div>
                 </div>
@@ -398,12 +397,9 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
                     <div class="arch-panel-badge" id="arch-info-badge">Core Engine</div>
                     <h4 id="arch-info-title" class="body-lg-strong">AELog Core</h4>
                     <p id="arch-info-desc" class="body-sm mute-text">The heartbeat of the system. Manages Plugin Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.</p>
-                    <pre><code id="arch-info-code" class="language-kotlin">// Initialize with any plugins
-AELog.init(
-  LogPlugin(),
-  CrashPlugin(),
-  NetworkPlugin(),
-  AnalyticsPlugin()
+                    <pre><code id="arch-info-code" class="language-kotlin">// Configure custom plugins/settings if needed
+AELog.configure(
+  LogPlugin(maxEntries = 2000)
 )</code></pre>
                 </div>
             </div>
@@ -511,3 +507,4 @@ AELog.init(
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
+

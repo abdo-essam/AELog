@@ -4,7 +4,11 @@
         <!--
             Auto-initializer: AGP merges this into the host app's manifest.
             The ContentProvider runs before Application.onCreate(), capturing
-            the Application context so CrashPlugin() needs no explicit Context.
+            the Application context and registering CrashPlugin with AELog
+            so consumers need zero setup code.
+
+            To opt out and use a custom CrashPlugin config, remove this provider
+            via manifest merger (tools:node="remove") and call AELog.configure() yourself.
         -->
         <provider
             android:name="com.ae.log.crashes.CrashAppContextProvider"
@@ -12,3 +16,4 @@
             android:exported="false" />
     </application>
 </manifest>
+
