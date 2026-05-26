@@ -49,7 +49,7 @@ class LogPluginMigrationTest {
     }
 
     @Test
-    fun `onMigrateFrom - preserves entry content (severity, tag, message)`() {
+    fun `onMigrateFrom - preserves entry content severity tag and message`() {
         val autoPlugin = LogPlugin()
         AELog.registerPlugin(autoPlugin)
         autoPlugin.recorder.log(LogSeverity.WARN, "AuthTag", "Token expired")

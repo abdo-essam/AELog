@@ -46,7 +46,7 @@ class NetworkPluginMigrationTest {
     }
 
     @Test
-    fun `onMigrateFrom - preserves entry content (url, statusCode)`() {
+    fun `onMigrateFrom - preserves entry content url and statusCode`() {
         val autoPlugin = NetworkPlugin()
         AELog.registerPlugin(autoPlugin)
         recordRequest(autoPlugin, "https://api.example.com/users")
