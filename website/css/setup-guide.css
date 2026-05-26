@@ -219,3 +219,43 @@
     .setup-step   { flex-direction: column; gap: 12px; }
     .step-number  { margin-top: 0; }
 }
+
+/* ==========================================================================
+   Light Mode Setup-Guide Overrides
+   ========================================================================== */
+
+[data-theme="light"] .step-title {
+    color: var(--color-text-primary);
+}
+
+[data-theme="light"] .scenario-tab:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--color-text-primary);
+}
+
+[data-theme="light"] .code-file-label {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .setup-code-block pre {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .setup-code-block code {
+    color: var(--color-code-text);
+}
+
+[data-theme="light"] .version-catalog-hint {
+    background: rgba(59, 130, 246, 0.04);
+}
+
+[data-theme="light"] .step-note {
+    background: rgba(16, 185, 129, 0.05);
+}
+
+[data-theme="light"] .step-note strong { color: #059669; }
+
+[data-theme="light"] .step-note code {
+    background: rgba(16, 185, 129, 0.1);
+    color: #047857;
+}

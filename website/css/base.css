@@ -76,6 +76,44 @@
 }
 
 /* ==========================================================================
+   Light Mode Tokens  (data-theme="light")
+   Only the values that differ from the dark defaults need to be listed here.
+   ========================================================================== */
+[data-theme="light"] {
+    /* Surfaces */
+    --color-primary:         #f0f2f7;
+    --color-surface:         #e8ebf2;
+    --color-surface-raised:  #ffffff;
+
+    /* Text */
+    --color-text-primary:    #0f1117;
+    --color-text-secondary:  #4a4a6a;
+    --color-text-mute:       #8888a8;
+
+    /* Borders */
+    --color-border:          rgba(0, 0, 0, 0.08);
+
+    /* Elevation */
+    --shadow-soft:   0 8px 32px rgba(0, 0, 0, 0.12);
+    --glow-subtle:   0 0 20px rgba(139, 92, 246, 0.08);
+    --glow-strong:   0 0 40px rgba(139, 92, 246, 0.15);
+
+    /* Semantic aliases */
+    --color-code-text:          #1e2233;
+    --color-code-accent:        #2563eb;
+    --color-btn-primary-hover:  #1a1a2e;
+    --color-link-primary-hover: #1d4ed8;
+    --color-mockup-bg:          #f0f2f7;
+
+    /* Accent blue — alpha variants */
+    --accent-blue-10: rgba(59, 130, 246, 0.08);
+    --accent-blue-12: rgba(59, 130, 246, 0.10);
+    --accent-blue-15: rgba(59, 130, 246, 0.13);
+    --accent-blue-22: rgba(59, 130, 246, 0.20);
+    --accent-blue-25: rgba(59, 130, 246, 0.23);
+}
+
+/* ==========================================================================
    Reset
    ========================================================================== */
 *, *::before, *::after {
@@ -152,3 +190,46 @@ img, svg { display: block; max-width: 100%; }
    ========================================================================== */
 /* Use this class from JS instead of style.display — keeps presentation in CSS */
 .is-hidden { display: none !important; }
+
+/* ==========================================================================
+   Theme Toggle Button
+   ========================================================================== */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+    transform: rotate(15deg);
+}
+
+/* ==========================================================================
+   Light Mode — Global Overrides for hard-coded rgba() dark values
+   ========================================================================== */
+
+/* Noise texture: invisible in light mode */
+[data-theme="light"] body::before { opacity: 0.015; }
+
+/* Background grid lines */
+[data-theme="light"] .background-grid {
+    background-image:
+        linear-gradient(to right,  rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
+}
+
+/* Glow orbs — soften significantly in light mode */
+[data-theme="light"] .glow-orb { opacity: 0.12; }
+

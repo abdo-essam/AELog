@@ -55,3 +55,16 @@
     color: var(--accent-blue);
     text-decoration: underline;
 }
+
+/* ==========================================================================
+   Light Mode Privacy Overrides
+   ========================================================================== */
+
+[data-theme="light"] .legal-card {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+[data-theme="light"] .legal-card h2 {
+    color: var(--color-text-primary);
+}
+

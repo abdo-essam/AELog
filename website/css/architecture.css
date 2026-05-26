@@ -137,3 +137,43 @@
 .architecture-features {
     margin-top: var(--spacing-3xl);
 }
+
+/* ==========================================================================
+   Light Mode Architecture Overrides
+   ========================================================================== */
+
+[data-theme="light"] .node-bg {
+    fill: rgba(255, 255, 255, 0.85);
+    stroke: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .node-border {
+    stroke: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .node-title {
+    fill: #0f1117;
+}
+
+[data-theme="light"] .node-subtitle {
+    fill: #4a4a6a;
+}
+
+[data-theme="light"] .sub-node {
+    fill: rgba(0, 0, 0, 0.04);
+    stroke: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .layer-label {
+    fill: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] .arch-info-panel {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .arch-info-panel pre {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-code-text);
+}

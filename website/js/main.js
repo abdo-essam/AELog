@@ -11,6 +11,7 @@ import { initSetupGuide } from "./setup-guide.js";
 import { initScrollProgress } from "./scroll-progress.js";
 import { initMagicCards } from "./magic-card.js";
 import { initTextFlip } from "./text-flip.js";
+import { initTheme } from "./theme.js";
 
 // DOM Selector Constants to prevent hardcoding strings in methods
 const FADE_UP_SELECTOR = ".fade-up";
@@ -18,6 +19,9 @@ const GLOW_ORB_SELECTOR = ".glow-orb";
 const NAVBAR_SELECTOR = ".navbar";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // 0. Theme toggle — must run first to sync button icon state
+    initTheme();
+
     // 1. Initialize UI enhancement features
     initScrollAnimations();
     initMouseGlowEffect();

@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AELog | Documentation</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+
     <!-- Styles: modular CSS architecture -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -19,8 +19,18 @@
     <!-- Syntax highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" defer></script>
+
+    <!-- Inline theme init: prevent flash of wrong theme -->
+    <script>
+        (function() {
+            var stored = localStorage.getItem('aelog-theme');
+            var theme = (stored === 'light' || stored === 'dark') ? stored
+                : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
-<body class="dark-theme">
+<body>
     <div class="background-grid"></div>
     <div class="glow-orb orb-primary" style="opacity: 0.2"></div>
 
@@ -37,12 +47,13 @@
                 <a href="docs.html" class="nav-link" style="color: white; font-weight: 600;">Documentation</a>
             </div>
             <div class="nav-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode"></button>
                 <a href="https://github.com/abdo-essam/AELog" target="_blank" class="github-stars glass-subtle">
                     <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
                     <span>GitHub</span>
                 </a>
             </div>
-            
+
             <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </button>
@@ -383,12 +394,12 @@ AELog.configure(
 <pre><code class="language-mermaid">flowchart TD
     Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
     Attach --&gt; Open
-    
+
     subgraph Panel [&quot;Panel Lifecycle (user opens/closes AELog panel)&quot;]
         Open[&quot;onOpen()&quot;] --&gt; Close[&quot;onClose()&quot;]
         Close --&gt; Open
     end
-    
+
     Close --&gt; Detach[&quot;onDetach()&quot;]
     Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
 </code></pre>
@@ -463,45 +474,45 @@ AELog.configure(
     override val id = &quot;feature_flags&quot;
     override val name = &quot;Flags&quot;
     override val icon = Icons.Default.Flag
-    
+
     // Badge shown on tab (null = no badge)
     private val _badgeCount = MutableStateFlow&lt;Int?&gt;(null)
     override val badgeCount: StateFlow&lt;Int?&gt; = _badgeCount
-    
+
     private var inspector: AELog? = null
-    
+
     // Called once when installed
     override fun onAttach(inspector: AELog) {
         this.inspector = inspector
         _badgeCount.value = getFlags().size
     }
-    
+
     // Called when AELog panel opens
     override fun onOpen() {
         refreshFlags()
     }
-    
+
     // Called when AELog panel closes
     override fun onClose() {
         // Pause expensive operations
     }
-    
+
     // Called when user taps &quot;Clear All&quot;
     override fun onClear() {
         resetFlags()
         _badgeCount.value = 0
     }
-    
+
     // Called when plugin is uninstalled
     override fun onDetach() {
         inspector = null
     }
-    
+
     // Main content rendered in the AELog panel
     @Composable
     override fun Content(modifier: Modifier) {
         val flags = remember { getFlags() }
-        
+
         LazyColumn(modifier = modifier.fillMaxSize()) {
             items(flags) { flag -&gt;
                 FlagRow(
@@ -512,7 +523,7 @@ AELog.configure(
             }
         }
     }
-    
+
     // Optional: Controls above the main content
     @Composable
     override fun HeaderContent() {
@@ -522,7 +533,7 @@ AELog.configure(
             modifier = Modifier.padding(horizontal = 20.dp)
         )
     }
-    
+
     // Optional: Action buttons in the header
     @Composable
     override fun HeaderActions() {
@@ -541,18 +552,18 @@ AELog.configure(
 <pre><code class="language-kotlin">class PerformancePlugin : DataPlugin {
     override val id = &quot;performance&quot;
     override val name = &quot;Performance&quot;
-    
+
     private val _metrics = MutableStateFlow&lt;List&lt;Metric&gt;&gt;(emptyList())
     val metrics: StateFlow&lt;List&lt;Metric&gt;&gt; = _metrics.asStateFlow()
-    
+
     override fun onAttach(inspector: AELog) {
         startCollecting()
     }
-    
+
     override fun onDetach() {
         stopCollecting()
     }
-    
+
     fun recordMetric(name: String, durationMs: Long) {
         _metrics.update { it + Metric(name, durationMs) }
     }
@@ -566,12 +577,12 @@ perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
 <pre><code class="language-mermaid">flowchart TD
     Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
     Attach --&gt; Open
-    
+
     subgraph Panel [&quot;Panel Lifecycle (user opens/closes AELog panel)&quot;]
         Open[&quot;onOpen()&quot;] --&gt; Close[&quot;onClose()&quot;]
         Close --&gt; Open
     end
-    
+
     Close --&gt; Detach[&quot;onDetach()&quot;]
     Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
 </code></pre>
@@ -724,7 +735,7 @@ AELog.log.entry(LogSeverity.INFO, &quot;MyApp&quot;, &quot;Direct log call&quot;
 <div id="changelog" class="docs-section">
             <h1>Changelog</h1>
             <p class="mute-text">All notable changes and releases of AELog are detailed below in our interactive project roadmap.</p>
-            
+
             <div class="timeline-container" id="journey-timeline">
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
@@ -801,7 +812,7 @@ AELog.log.entry(LogSeverity.INFO, &quot;MyApp&quot;, &quot;Direct log call&quot;
 <li><a href="#architecture-overview">Architecture Overview</a></li>
 </ul>
 <h2>Code of Conduct</h2>
-<p>This project follows our <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>. 
+<p>This project follows our <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>.
 By participating, you agree to uphold this code.</p>
 <h2>Getting Started</h2>
 <h3>Prerequisites</h3>
@@ -896,14 +907,14 @@ ci: add iOS build to CI pipeline
 <h2>Architecture Overview</h2>
 <pre><code class="language-mermaid">flowchart TD
     AELogProvider["AELogProvider<br>(Compose Entry Point)"] --> AELog["AELog<br>(Core Engine)"]
-    
+
     subgraph Plugins ["Plugin System"]
         AELog --> LogPlugin["LogPlugin"]
         AELog --> CrashPlugin["CrashPlugin"]
         AELog --> NetworkPlugin["NetworkPlugin"]
         AELog --> AnalyticsPlugin["AnalyticsPlugin"]
     end
-    
+
     subgraph Storage ["Storage Layer"]
         Memory["RAM Storage<br>(InMemoryPluginStorage)"]
         Disk["Disk Storage<br>(PersistentPluginStorage)"]
@@ -912,7 +923,7 @@ ci: add iOS build to CI pipeline
     LogPlugin --> Memory
     NetworkPlugin --> Memory
     AnalyticsPlugin --> Memory
-    
+
     CrashPlugin --> Disk
 </code></pre>
 
@@ -921,6 +932,7 @@ ci: add iOS build to CI pipeline
         </main>
     </div>
 
+    <script type="module" src="js/theme.js"></script>
     <script type="module" src="js/docs.js"></script>
 </body>
 </html>

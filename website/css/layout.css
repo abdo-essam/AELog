@@ -393,4 +393,47 @@
     }
 }
 
+/* ==========================================================================
+   Light Mode Layout Overrides
+   ========================================================================== */
+
+[data-theme="light"] .navbar {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .navbar.scrolled {
+    background: rgba(240, 242, 247, 0.88);
+}
+
+[data-theme="light"] .hero-tech-stack {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .stat-divider {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .timeline-progress-line {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .timeline-bullet {
+    background: var(--color-surface);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .timeline-media {
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .timeline-section {
+    border-top-color: var(--color-border);
+}
+
+[data-theme="light"] .dark-band {
+    background-color: var(--color-surface);
+    border-top-color: var(--color-border);
+    border-bottom-color: var(--color-border);
+}
+
 

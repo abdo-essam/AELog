@@ -429,3 +429,96 @@
         transform: rotate(360deg);
     }
 }
+
+/* ==========================================================================
+   Light Mode Component Overrides
+   ========================================================================== */
+
+/* Glass surfaces */
+[data-theme="light"] .glass {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .glass-subtle {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .glass-panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(240,242,247,0.9) 100%);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .glow-border {
+    background: linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.04) 100%) border-box;
+}
+
+/* Buttons */
+[data-theme="light"] .btn-primary {
+    background: var(--color-text-primary);
+    color: #ffffff;
+}
+
+[data-theme="light"] .btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+/* Mobile mockup */
+[data-theme="light"] .mockup-phone {
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .mockup-header {
+    background: rgba(0, 0, 0, 0.04);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .mockup-log {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .mockup-log.error { background: rgba(239,68,68,0.06); }
+
+[data-theme="light"] .tag {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .mockup-log.error .tag {
+    background: rgba(239,68,68,0.15);
+    color: #b91c1c;
+}
+
+/* Interactive hover button */
+[data-theme="light"] .interactive-hover-btn {
+    background: var(--color-text-primary);
+    color: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .interactive-hover-btn.btn-secondary-hover {
+    background: transparent;
+    color: var(--color-text-primary);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Hover border button */
+[data-theme="light"] .hover-border-inner {
+    background: #ffffff;
+    color: var(--color-text-primary);
+}
+
+[data-theme="light"] .hover-border-btn:hover .hover-border-inner {
+    background: #f4f6fb;
+}
+
+/* GitHub stars pill */
+[data-theme="light"] .github-stars:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
