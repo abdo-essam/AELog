@@ -69,9 +69,9 @@
     display: inline-block;
     position: relative;
     vertical-align: bottom;
-    height: 1.2em; /* Keeps line height tight and uniform */
+    height: 1.25em; /* Raised slightly to prevent vertical descender clipping (e.g. g, p, y) */
     overflow: hidden;
-    margin: 0 2px;
+    margin: 0 2px 0 -4px; /* Offset left margin to align padded text perfectly */
     transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -85,6 +85,7 @@
     transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     color: var(--accent-purple); /* Solid premium color to bypass Chromium text-clip fading render bugs */
     font-weight: 700;
+    padding: 0 6px; /* Added horizontal padding to prevent edge glyph clipping */
 }
 
 .text-flip-word.active {

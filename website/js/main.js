@@ -119,40 +119,54 @@ function initScrollSpy() {
     const navLinks = document.querySelectorAll(".nav-links .nav-link");
     if (!sections.length || !navLinks.length) return;
 
+    // Build a set of section IDs that have a corresponding nav link (or alias)
+    const SECTION_NAV_MAP = {
+        "docs-showcase": "docs.html", // alias: home docs section → docs nav link
+    };
+
     const observerOptions = {
         root: null,
-        rootMargin: "-25% 0px -55% 0px", // Trigger when the section occupies the central focal area
+        rootMargin: "-25% 0px -55% 0px",
         threshold: 0
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const activeId = entry.target.getAttribute("id");
-                
-                navLinks.forEach(link => {
-                    const href = link.getAttribute("href");
-                    if (href && (href === `#${activeId}` || href.endsWith(`#${activeId}`))) {
-                        link.classList.add("nav-link-active");
-                    } else {
-                        link.classList.remove("nav-link-active");
-                    }
-                });
-            }
+            if (!entry.isIntersecting) return;
+
+            const activeId = entry.target.getAttribute("id");
+
+            // Check if this section maps to any nav link at all
+            const hasNavMatch = Array.from(navLinks).some(link => {
+                const href = link.getAttribute("href") || "";
+                const alias = SECTION_NAV_MAP[activeId];
+                return (alias && href.includes(alias))
+                    || href === `#${activeId}`
+                    || href.endsWith(`#${activeId}`);
+            });
+
+            // If no nav link maps to this section (e.g. #developer), keep current state intact
+            if (!hasNavMatch) return;
+
+            // Otherwise, update active state across all links
+            navLinks.forEach(link => {
+                const href = link.getAttribute("href") || "";
+                const alias = SECTION_NAV_MAP[activeId];
+                const isMatch = (alias && href.includes(alias))
+                    || href === `#${activeId}`
+                    || href.endsWith(`#${activeId}`);
+
+                link.classList.toggle("nav-link-active", isMatch);
+            });
         });
     }, observerOptions);
 
     sections.forEach(section => observer.observe(section));
 
-    // Clear highlights when user scrolls back to the very top (Hero section)
+    // Clear all highlights when scrolled back to the very top (Hero)
     window.addEventListener("scroll", () => {
         if (window.scrollY < 120) {
-            navLinks.forEach(link => {
-                // Keep Documentation active if we are on a docs sub-state, otherwise clean local anchors
-                if (link.getAttribute("href") !== "docs.html") {
-                    link.classList.remove("nav-link-active");
-                }
-            });
+            navLinks.forEach(link => link.classList.remove("nav-link-active"));
         }
     });
 }
