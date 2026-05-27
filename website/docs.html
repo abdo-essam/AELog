@@ -32,7 +32,8 @@
 </head>
 <body>
     <div class="background-grid"></div>
-    <div class="glow-orb orb-primary" style="opacity: 0.2"></div>
+    <div class="glow-orb orb-primary"></div>
+    <div class="glow-orb orb-secondary"></div>
 
     <nav class="navbar glass">
         <div class="container nav-container">
@@ -44,7 +45,8 @@
                 <a href="index.html#features" class="nav-link">Features</a>
                 <a href="index.html#integration" class="nav-link">Integration</a>
                 <a href="index.html#architecture" class="nav-link">Architecture</a>
-                <a href="docs.html" class="nav-link" style="color: white; font-weight: 600;">Documentation</a>
+                <a href="docs.html" class="nav-link nav-link-active">Documentation</a>
+                <a href="index.html#opensource" class="nav-link">Open Source</a>
             </div>
             <div class="nav-actions">
                 <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode"></button>
@@ -52,6 +54,7 @@
                     <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
                     <span>GitHub</span>
                 </a>
+                <a href="index.html#integration" class="btn btn-primary pill">Get Started</a>
             </div>
 
             <button class="mobile-menu-btn" aria-label="Toggle menu">
@@ -60,19 +63,46 @@
         </div>
     </nav>
 
-    <div class="docs-container">
-        <aside class="docs-sidebar glass-panel card-xl">
-            <h3>Reference Manual</h3>
-            <a class="docs-nav-link active" data-section="introduction" href="#introduction">Introduction</a>
-            <a class="docs-nav-link" data-section="installation" href="#installation">Installation</a>
-            <a class="docs-nav-link" data-section="quick-start" href="#quick-start">Quick Start</a>
-            <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
-            <a class="docs-nav-link" data-section="plugins-overview" href="#plugins-overview">Plugins Overview</a>
-            <a class="docs-nav-link" data-section="custom-plugins" href="#custom-plugins">Custom Plugins</a>
-            <a class="docs-nav-link" data-section="integrations" href="#integrations">Integrations</a>
-            <a class="docs-nav-link" data-section="changelog" href="#changelog">Changelog</a>
-            <a class="docs-nav-link" data-section="contributing" href="#contributing">Contributing</a>
+    <!-- Floating Mobile Sidebar Toggle Button -->
+    <button class="mobile-sidebar-toggle" aria-label="Toggle Sidebar Menu" id="mobile-sidebar-toggle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span>Menu</span>
+    </button>
 
+    <div class="docs-container">
+        <!-- Column 1: Refactored Left Sidebar with Search & Grouping -->
+        <aside class="docs-sidebar glass-panel card-xl" id="docs-sidebar">
+            <div class="docs-search-wrapper">
+                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="docs-search-input" placeholder="Search docs..." autocomplete="off">
+                <button id="docs-search-clear" class="search-clear-btn" style="display: none;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            
+            <div class="sidebar-category-group">
+                <h4>Getting Started</h4>
+                <a class="docs-nav-link active" data-section="introduction" href="#introduction">Introduction</a>
+                <a class="docs-nav-link" data-section="installation" href="#installation">Installation</a>
+                <a class="docs-nav-link" data-section="quick-start" href="#quick-start">Quick Start</a>
+            </div>
+            
+            <div class="sidebar-category-group">
+                <h4>Core Configuration</h4>
+                <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
+            </div>
+
+            <div class="sidebar-category-group">
+                <h4>Architecture & Plugins</h4>
+                <a class="docs-nav-link" data-section="plugins-overview" href="#plugins-overview">Plugins Overview</a>
+                <a class="docs-nav-link" data-section="custom-plugins" href="#custom-plugins">Custom Plugins</a>
+            </div>
+
+            <div class="sidebar-category-group">
+                <h4>Bridges & Roadmap</h4>
+                <a class="docs-nav-link" data-section="integrations" href="#integrations">Logging Bridges</a>
+                <a class="docs-nav-link" data-section="changelog" href="#changelog">Changelog</a>
+            </div>
         </aside>
 
         <main class="docs-content fade-up visible">
@@ -929,10 +959,36 @@ ci: add iOS build to CI pipeline
 
 </div>
 
+            <!-- Symmetrical Pagination at bottom of main content -->
+            <div class="docs-pagination mt-5">
+                <a href="#" id="prev-page-btn" class="pagination-btn glass-subtle pill">
+                    <span class="pagination-arrow">←</span>
+                    <div class="pagination-label">
+                        <span class="pagination-sub">Previous</span>
+                        <span class="pagination-title" id="prev-page-title">Introduction</span>
+                    </div>
+                </a>
+                <a href="#" id="next-page-btn" class="pagination-btn glass-subtle pill">
+                    <div class="pagination-label text-right">
+                        <span class="pagination-sub">Next</span>
+                        <span class="pagination-title" id="next-page-title">Installation</span>
+                    </div>
+                    <span class="pagination-arrow">→</span>
+                </a>
+            </div>
         </main>
+
+        <!-- Column 3: Right Outline Sidebar -->
+        <aside class="docs-outline-sidebar">
+            <div class="outline-sticky-wrapper">
+                <h4>On This Page</h4>
+                <ul id="docs-outline-list" class="outline-list">
+                    <!-- Automatically populated dynamically by JS based on current section H2s/H3s -->
+                </ul>
+            </div>
+        </aside>
     </div>
 
-    <script type="module" src="js/theme.js"></script>
     <script type="module" src="js/docs.js"></script>
 </body>
 </html>

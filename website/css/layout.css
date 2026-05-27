@@ -92,6 +92,11 @@
 
 .nav-link:hover { color: var(--color-text-primary); }
 
+.nav-link-active {
+    color: var(--color-text-primary) !important;
+    font-weight: 600;
+}
+
 .nav-actions { display: flex; align-items: center; gap: var(--spacing-md); }
 
 .github-stars {
@@ -177,10 +182,30 @@
 /* ==========================================================================
    Grid Utilities
    ========================================================================== */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+}
+
 .grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--spacing-2xl);
+}
+
+@media (max-width: 900px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-3 {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
 }
 
 /* ==========================================================================

@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/architecture.css">
     <link rel="stylesheet" href="css/setup-guide.css">
+    <link rel="stylesheet" href="css/features.css">
 
     <!-- Syntax highlighting for setup guide code blocks -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
@@ -48,6 +49,7 @@
             </a>
             <div class="nav-links">
                 <a href="#features" class="nav-link">Features</a>
+                <a href="#integration" class="nav-link">Integration</a>
                 <a href="#architecture" class="nav-link">Architecture</a>
                 <a href="docs.html" class="nav-link">Documentation</a>
                 <a href="#opensource" class="nav-link">Open Source</a>
@@ -120,6 +122,133 @@
             </div>
         </div>
     </header>
+
+    <!-- Features & Audience Section -->
+    <section id="features" class="section dark-band">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <div class="badge glass-subtle pill">Features & Purpose</div>
+                <h2 class="display-xl">Complete On-Device <span class="gradient-text">Diagnostics</span></h2>
+                <p class="body-lg mute-text">A powerful suite of modular plugins designed to speed up mobile development, QA testing, and troubleshooting.</p>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-dashboard grid-3 fade-up delay-1">
+                <!-- Feature 1: Logs -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">🔍</div>
+                    <h3 class="body-lg-strong">Log Inspector</h3>
+                    <p class="body-sm mute-text">Search, filter by severity levels, and copy logs instantly with syntax-highlighted JSON preview. No more scrolling through bloated IDE consoles.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 2: Network -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">🌐</div>
+                    <h3 class="body-lg-strong">Network Viewer</h3>
+                    <p class="body-sm mute-text">Inspect HTTP requests and responses, full headers, and body payloads with automatic secure redaction of sensitive credentials like authorization tokens.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 3: Analytics -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">📊</div>
+                    <h3 class="body-lg-strong">Analytics Tracker</h3>
+                    <p class="body-sm mute-text">Verify analytics events and screen views in real-time. Make sure your tracked properties are correctly populated as you navigate.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 4: Crashes -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">💥</div>
+                    <h3 class="body-lg-strong">Crash Reporter</h3>
+                    <p class="body-sm mute-text">Capture and persist fatal and non-fatal exceptions right on the device. Browse complete stack traces even after the app restarts.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 5: Extensible -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">🧩</div>
+                    <h3 class="body-lg-strong">Pluggable & Extensible</h3>
+                    <p class="body-sm mute-text">Extend AELog with custom debug screens (e.g., database viewers or feature flag toggles) using the simple UIPlugin API.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 6: Performance -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">🔌</div>
+                    <h3 class="body-lg-strong">Zero Overhead</h3>
+                    <p class="body-sm mute-text">AELog uses an efficient in-memory RingBuffer. A single enabled flag completely strips all UI costs in production release builds.</p>
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+
+            <!-- Audience: Built For Who? and Built For What? -->
+            <div class="audience-grid fade-up delay-2">
+                <!-- Left: Built For Who? -->
+                <div class="glass-panel card-xl magic-card audience-card">
+                    <h3 class="display-md"><span class="gradient-text">Built for who?</span></h3>
+                    <p class="body-md mute-text mt-4">AELog is engineered specifically for modern mobile developers and creators seeking high-velocity workflows.</p>
+                    
+                    <ul class="audience-list">
+                        <li>
+                            <span class="audience-item-icon">🍎</span>
+                            <div>
+                                <h4 class="body-md-strong">Kotlin Multiplatform Developers</h4>
+                                <p class="body-sm mute-text">Write once, debug everywhere. Native support for Android, iOS, Desktop (JVM), and WASM.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">👥</span>
+                            <div>
+                                <h4 class="body-md-strong">Collaborative Engineering Teams</h4>
+                                <p class="body-sm mute-text">Empower QA engineers and beta testers to capture rich logs and crashes directly on-device without an IDE.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">🚀</span>
+                            <div>
+                                <h4 class="body-md-strong">Solo Creators & Startups</h4>
+                                <p class="body-sm mute-text">Ditch complex, paid external cloud crash logging servers during active development and staging.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Right: Built For What? -->
+                <div class="glass-panel card-xl magic-card audience-card">
+                    <h3 class="display-md"><span class="gradient-text">Built for what?</span></h3>
+                    <p class="body-md mute-text mt-4">Solving the biggest friction points in modern mobile debugging, testing, and troubleshooting.</p>
+                    
+                    <ul class="audience-list">
+                        <li>
+                            <span class="audience-item-icon">⚡</span>
+                            <div>
+                                <h4 class="body-md-strong">Zero-Config Diagnostics</h4>
+                                <p class="body-sm mute-text">Instant debugging. No complex configurations or setup steps—plugins auto-initialize and start working.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">🔒</span>
+                            <div>
+                                <h4 class="body-md-strong">Offline Debugging & Security</h4>
+                                <p class="body-sm mute-text">All logs, network calls, and crash details are stored locally on-device. No leaks, no privacy violations.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">🐛</span>
+                            <div>
+                                <h4 class="body-md-strong">High-Velocity Bug Squashing</h4>
+                                <p class="body-sm mute-text">Verify network calls and analytics triggers, and view stack traces instantly when a bug or exception occurs.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Get Started / Installation Steps -->
     <section id="integration" class="section">
@@ -434,11 +563,131 @@ AELog.configure(
                 </div>
             </div>
         </div>
+
+    <!-- Documentation Summary Showcase Section -->
+    <section id="docs-showcase" class="section">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <div class="badge glass-subtle pill">Documentation</div>
+                <h2 class="display-xl">Complete Developer <span class="gradient-text">Reference</span></h2>
+                <p class="body-lg mute-text">Everything you need to integrate, configure, and extend AELog in your Kotlin Multiplatform apps.</p>
+            </div>
+
+            <div class="grid-2 fade-up delay-1">
+                <!-- Getting Started Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5s3 1.5 5.5-2.5C11 16 16 11 19 5c2-2 5-1 5-1s1 3-1 5c-6 3-11 8-14.5 12.5z"></path>
+                            <path d="M9 15l3 3"></path>
+                            <circle cx="9.5" cy="8.5" r="1.5"></circle>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Getting Started</h3>
+                        <p class="body-md mute-text mt-2">Learn the minimum dependencies, setup procedures, and complete a 5-minute integration for Android & iOS platforms.</p>
+                        <a href="docs.html#installation" class="btn-text mt-4">Read Setup Guide →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Custom Configuration Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Custom Configuration</h3>
+                        <p class="body-md mute-text mt-2">Configure custom background threads, thread-safety, custom capacity limits, and custom diagnostic error streams.</p>
+                        <a href="docs.html#configuration" class="btn-text mt-4">View Configuration Guide →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Custom Plugins Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 10h-1.25L15 6h-3V3H9v3H6l-1.75 4H3v2c0 2 1.5 3.5 3.5 3.5h7c2 0 3.5-1.5 3.5-3.5v-2z"></path>
+                            <path d="M12 17v4"></path>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Creating Custom Plugins</h3>
+                        <p class="body-md mute-text mt-2">Extend AELog by building decoupled background collectors or custom interactive UI panels in Compose.</p>
+                        <a href="docs.html#custom-plugins" class="btn-text mt-4">Explore Plugin APIs →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Integrations Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Logging Bridges</h3>
+                        <p class="body-md mute-text mt-2">Forward messages seamlessly from third-party ecosystems including Napier, Kermit, Timber, and Ktor logging.</p>
+                        <a href="docs.html#integrations" class="btn-text mt-4">View Logging Bridges →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-5 fade-up delay-2">
+                <a href="docs.html" class="btn btn-primary pill">Visit Full Documentation Portal</a>
+            </div>
+        </div>
     </section>
 
-    <!-- Features Grid (Replaced by Configurator) -->
 
+    <!-- Meet the Developer Section -->
+    <section id="developer" class="section">
+        <div class="container text-center">
+            <div class="section-header fade-up">
+                <div class="badge glass-subtle pill">Meet the Creator</div>
+                <h2 class="display-xl">Behind the <span class="gradient-text">Project</span></h2>
+                <p class="body-lg mute-text">The engineer crafting open-source developer tooling for modern mobile teams.</p>
+            </div>
 
+            <div class="developer-profile-card glass-panel card-xl magic-card fade-up delay-1">
+                <div class="developer-info">
+                    <h3 class="display-md">
+                        <a href="https://abdo-essam.github.io/" target="_blank" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">Abdo Essam</a>
+                    </h3>
+                    <p class="body-md-strong mute-text">Mobile Infrastructure Engineer & KMP Enthusiast</p>
+                    <p class="body-md developer-bio mt-4">
+                        I build tools that help developers ship faster, cleaner, and with complete confidence. AELog was born out of the frustration of constantly connecting cables, dealing with bloated IDE consoles, and fighting with unstable developer overlays. I designed AELog to be a lightweight, zero-dependency, and deeply extensible companion for Kotlin Multiplatform developers.
+                    </p>
+                    <div class="developer-badges mt-4">
+                        <span class="tech-chip glass-subtle pill">Kotlin</span>
+                        <span class="tech-chip glass-subtle pill">Android</span>
+                        <span class="tech-chip glass-subtle pill">iOS</span>
+                        <span class="tech-chip glass-subtle pill">Compose Multiplatform</span>
+                    </div>
+                    <div class="developer-actions mt-4">
+                        <a href="https://abdo-essam.github.io/" target="_blank" class="btn btn-primary pill">Visit Portfolio</a>
+                        <a href="https://github.com/abdo-essam" target="_blank" class="btn btn-secondary pill glass-subtle">GitHub Profile</a>
+                        <a href="https://github.com/abdo-essam/AELog" target="_blank" class="btn btn-secondary pill glass-subtle">Support AELog</a>
+                    </div>
+                </div>
+                <div class="glow-border"></div>
+            </div>
+        </div>
+    </section>
     <!-- Open Source & Community -->
     <section id="opensource" class="section">
         <div class="container text-center open-source-container fade-up">

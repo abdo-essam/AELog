@@ -35,6 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 3. Initialize Firebase-style installation steps
     initSetupGuide();
+
+    // 4. Initialize navbar scroll spy (dynamic active tab highlighting)
+    initScrollSpy();
 });
 
 /**
@@ -105,6 +108,52 @@ function initNavbarScroll() {
     // Separate concerns by toggling a CSS class instead of injecting inline styles directly
     window.addEventListener("scroll", () => {
         navbar.classList.toggle("scrolled", window.scrollY > NAVBAR_SCROLL_THRESHOLD);
+    });
+}
+
+/**
+ * Dynamic navbar active link highlighter (Scroll Spy).
+ */
+function initScrollSpy() {
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll(".nav-links .nav-link");
+    if (!sections.length || !navLinks.length) return;
+
+    const observerOptions = {
+        root: null,
+        rootMargin: "-25% 0px -55% 0px", // Trigger when the section occupies the central focal area
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const activeId = entry.target.getAttribute("id");
+                
+                navLinks.forEach(link => {
+                    const href = link.getAttribute("href");
+                    if (href && (href === `#${activeId}` || href.endsWith(`#${activeId}`))) {
+                        link.classList.add("nav-link-active");
+                    } else {
+                        link.classList.remove("nav-link-active");
+                    }
+                });
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+
+    // Clear highlights when user scrolls back to the very top (Hero section)
+    window.addEventListener("scroll", () => {
+        if (window.scrollY < 120) {
+            navLinks.forEach(link => {
+                // Keep Documentation active if we are on a docs sub-state, otherwise clean local anchors
+                if (link.getAttribute("href") !== "docs.html") {
+                    link.classList.remove("nav-link-active");
+                }
+            });
+        }
     });
 }
 
