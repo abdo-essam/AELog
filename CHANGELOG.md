@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2026-05-28
+
+### Added
+- **Unified Configuration DSL:** Replaced legacy, fragmented initialization methods (`configureCore`, `configurePlugin`) with a robust, type-safe, and atomic **`AELog.configure { ... }`** builder DSL.
+- **Global Notch Configuration:** Added `showNotch` parameter to `LogConfig` and `AELogBuilder` to allow developers to completely disable the floating notch trigger globally (affecting both XML Views and Compose setups) during startup.
+- **High-Fidelity Edge-Docked Notch:** Redesigned the floating trigger notch from a top-center pill into a premium vertical button docked snug against the **right edge of the screen** (`Alignment.CenterEnd`), featuring edge-cropped corner rounding and a vertical glowing silver-white gradient accent bar on its outer boundary.
+
+### Fixed
+- **Overlay Layout Clipping:** Resolved the `0x0` parent measurement constraint bug in `AELogOverlay.kt` by applying `Modifier.fillMaxSize()` to the container. The parent bounds now fill the full screen, ensuring perfect edge docking of the notch trigger while maintaining a **100% invisible, touch-pass-through layout** that never intercepts underlying app interactions.
+- **Removed Obsolete APIs:** Completely purged all deprecated legacy configuration methods (`configureCore`, `configurePlugin`) and old UI wrappers (such as `LogProvider` and `UiConfig`) to ensure a pristine, high-integrity, pre-release API surface.
+
 ## [1.0.5] - 2026-05-10
 
 ### Added
@@ -56,6 +67,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `stability-config.conf` wildcard `com.ae.log.*` replaced with targeted entries for open filter classes only
 - `OkHttpInterceptor`: `redactHeaders` → `excludeHeaders`; headers are filtered out entirely, not redacted with `***`
 - `kotlin.native.ignoreDisabledTargets=true` added to `gradle.properties` to suppress iOS disabled-target warnings on Linux CI
+
+
+## [1.0.4] - 2026-05-07
+
+### Added
+- **Modular Subprojects:** Completely reorganized and split the AELog project into independent sub-modules (e.g., `:core`, `:log-logs`, `:log-network`, `:log-network-ktor`, `:log-network-okhttp`, `:log-analytics`, `:log-crashes`).
+- **Comprehensive Testing Suite:** Added full test coverage for Ktor and OkHttp interceptors alongside automated stress and performance benchmark suites.
+
+### Changed
+- **Standardized UI Naming:** Renamed all UI components to standardized `Log*` prefixes (like `LogNotchButton`, `LogInspectorPanel`).
+- **AELog Interceptor Prefixes:** Relocated and standardized interceptor naming conventions using `AELog` prefixes (e.g., `AELogKtorInterceptor`, `AELogOkHttpInterceptor`).
+
+## [1.0.3] - 2026-05-05
+
+### Added
+- **Pulsing Animation:** Added a dynamic, pulsing status dot indicator for in-flight requests in the Network inspector list and detail view.
+- **Interactive UI Components:** Added reusable `ActionButton` and `ActionCard` layout components for plugin builders.
+
+### Changed
+- **Decoupled Architecture:** Extracted core functionality to simplify plugin registration and decouple core engine from plugin lifecycles.
+- **Improved Security:** Standardized header exclude management in network interceptors.
+
+### Fixed
+- **API Robustness:** Enhanced thread safety and memory leak prevention across the core event bus and database storage layers.
 
 
 ## [1.0.2] - 2026-05-03

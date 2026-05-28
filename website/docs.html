@@ -209,7 +209,7 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.0.5"
+aelog = "1.0.6"
 
 [libraries]
 aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
@@ -235,10 +235,10 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
-            implementation("io.github.abdo-essam:ae-log-network:1.0.5")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
+            implementation("io.github.abdo-essam:ae-log-logs:1.0.6")
+            implementation("io.github.abdo-essam:ae-log-network:1.0.6")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.0.6")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.0.6")
         }
     }
 }</code></pre>
@@ -774,56 +774,158 @@ AELog.log.entry(LogSeverity.INFO, &quot;MyApp&quot;, &quot;Direct log call&quot;
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
                 </div>
 
-                <!-- Milestone 1: Unreleased -->
+                <!-- Milestone 1: v1.0.6 -->
                 <div class="timeline-item">
                     <div class="timeline-bullet-wrapper">
                         <div class="timeline-bullet"></div>
                     </div>
                     <div class="timeline-content glass-panel card-xl">
-                        <h3 class="timeline-title">Unreleased <span class="timeline-date">— Current</span></h3>
-                        <p class="body-md mute-text">
-                            Preparing for the next feature release. Current tasks focus on adding file-based storage layer persistence for crashes, stabilizing Compose Multiplatform 1.9.3 compatibility, and building custom analytics integrations.
-                        </p>
-                        <div class="timeline-media">
-                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80" alt="Unreleased updates" class="timeline-img">
-                        </div>
-                        <div class="glow-border"></div>
-                    </div>
-                </div>
-
-                <!-- Milestone 2: v1.0.0 -->
-                <div class="timeline-item">
-                    <div class="timeline-bullet-wrapper">
-                        <div class="timeline-bullet"></div>
-                    </div>
-                    <div class="timeline-content glass-panel card-xl">
-                        <h3 class="timeline-title">v1.0.0 <span class="timeline-date">— July 2025</span></h3>
-                        <p class="body-md mute-text font-semibold">Initial stable production-grade release of AELog.</p>
-                        <ul class="body-sm mute-text" style="list-style-type: disc; padding-left: 20px; margin-top: 8px;">
-                            <li><strong>Decoupled Plugins:</strong> Extracted core capabilities into specialized sub-modules (<code>:ae-log-network</code>, <code>:ae-log-analytics</code>).</li>
-                            <li><strong>Compose Overlay:</strong> Adaptive overlay with bottom sheet layouts for mobile screens and dialogs for tablets.</li>
-                            <li><strong>Network & Logs:</strong> Real-time request/response JSON viewer and searchable logs panel.</li>
+                        <h3 class="timeline-title">v1.0.6 <span class="timeline-date">— May 28, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Unified Configuration DSL:</strong> Replaced legacy, fragmented initialization methods (<code>configureCore</code>, <code>configurePlugin</code>) with a robust, type-safe, and atomic <code>AELog.configure { ... }</code> builder DSL.</li>
+                            <li><strong>Global Notch Configuration:</strong> Added <code>showNotch</code> parameter to <code>LogConfig</code> and <code>AELogBuilder</code> to allow developers to completely disable the floating notch trigger globally during startup.</li>
+                            <li><strong>High-Fidelity Edge-Docked Notch:</strong> Redesigned the floating trigger notch from a top-center pill into a premium vertical button docked snug against the right edge of the screen.</li>
                         </ul>
-                        <div class="timeline-media">
-                            <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=600&q=80" alt="v1.0 Release" class="timeline-img">
-                        </div>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Overlay Layout Clipping:</strong> Resolved the 0x0 parent measurement constraint bug in <code>AELogOverlay.kt</code> by applying <code>Modifier.fillMaxSize()</code> with touch pass-through bounds.</li>
+                            <li><strong>Removed Obsolete APIs:</strong> Completely purged deprecated legacy configuration methods and old UI wrappers (such as <code>LogProvider</code> and <code>UiConfig</code>).</li>
+                        </ul>
                         <div class="glow-border"></div>
                     </div>
                 </div>
 
-                <!-- Milestone 3: v0.8.0 -->
+                <!-- Milestone 2: v1.0.5 -->
                 <div class="timeline-item">
                     <div class="timeline-bullet-wrapper">
                         <div class="timeline-bullet"></div>
                     </div>
                     <div class="timeline-content glass-panel card-xl">
-                        <h3 class="timeline-title">v0.8.0 <span class="timeline-date">— Late 2024</span></h3>
-                        <p class="body-md mute-text">
-                            Transitioned from a single monolithic debugger to a modular plugin architecture. Switched all state layers to strictly scoped, thread-safe Kotlin <code>StateFlow</code> streams.
-                        </p>
-                        <div class="timeline-media">
-                            <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80" alt="Beta Release" class="timeline-img">
-                        </div>
+                        <h3 class="timeline-title">v1.0.5 <span class="timeline-date">— May 10, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><code>stability-config.conf</code> — targeted Compose compiler stability config.</li>
+                            <li><code>NetworkMethod.UNKNOWN</code> — safe fallback for custom/unknown HTTP verbs.</li>
+                            <li><code>androidMain</code> <code>callerTag()</code> — added Android-specific skip prefixes to stack walker.</li>
+                            <li><strong>Network UI:</strong> Single-scroll detail view, custom Status Badges showing HTTP status codes, and animated in-flight request row indicator.</li>
+                            <li><strong>UI Timestamps:</strong> Localized 12-hour AM/PM format display.</li>
+                            <li><strong>Interceptors:</strong> Excluded headers configurations completely hiding credentials/tokens.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>UI:</strong> Bottom sheet selected tab state persistence.</li>
+                            <li><strong>OkHttp:</strong> Captured request bodies with null Content-Type.</li>
+                            <li><strong>Critical:</strong> Removed <code>LogEntry</code> default parameter side-effects and Napler/Timber/Ktor pipeline duplicate error messages.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 3: v1.0.4 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.4 <span class="timeline-date">— May 7, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Modular Subprojects:</strong> Completely reorganized and split the AELog project into independent sub-modules (e.g., <code>:core</code>, <code>:log-logs</code>, <code>:log-network</code>, <code>:log-network-ktor</code>, <code>:log-network-okhttp</code>, <code>:log-analytics</code>, <code>:log-crashes</code>).</li>
+                            <li><strong>Comprehensive Testing Suite:</strong> Added full test coverage for Ktor and OkHttp interceptors alongside automated stress and performance benchmark suites.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Standardized UI Naming:</strong> Renamed all UI components to standardized <code>Log*</code> prefixes (like <code>LogNotchButton</code>, <code>LogInspectorPanel</code>).</li>
+                            <li><strong>AELog Interceptor Prefixes:</strong> Relocated and standardized interceptor naming conventions using <code>AELog</code> prefixes (e.g., <code>AELogKtorInterceptor</code>, <code>AELogOkHttpInterceptor</code>).</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 4: v1.0.3 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.3 <span class="timeline-date">— May 5, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Pulsing Animation:</strong> Added a dynamic, pulsing status dot indicator for in-flight requests in the Network inspector list and detail view.</li>
+                            <li><strong>Interactive UI Components:</strong> Added reusable <code>ActionButton</code> and <code>ActionCard</code> layout components for plugin builders.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Decoupled Architecture:</strong> Extracted core functionality to simplify plugin registration and decouple core engine from plugin lifecycles.</li>
+                            <li><strong>Improved Security:</strong> Standardized header exclude management in network interceptors.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>API Robustness:</strong> Enhanced thread safety and memory leak prevention across the core event bus and database storage layers.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 5: v1.0.2 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.2 <span class="timeline-date">— May 3, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>Fixed lint errors in <code>LogProvider</code> and <code>OkHttpInterceptor</code>.</li>
+                            <li>Resolved prefix naming consistency issues.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 6: v1.0.1 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.1 <span class="timeline-date">— May 2, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>Standardized <code>IdGenerator</code> across all modules.</li>
+                            <li>Improved URL decoding for query parameters.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 7: v1.0.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.0 <span class="timeline-date">— May 1, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>🎉 Initial production release.</li>
+                            <li>Core <code>AELog</code> engine with modular plugin architecture.</li>
+                            <li>Material3 themed UI with light/dark mode support and adaptive layout bounds.</li>
+                            <li>Floating debug button trigger and interactive inspector panel.</li>
+                        </ul>
                         <div class="glow-border"></div>
                     </div>
                 </div>
