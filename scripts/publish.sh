@@ -38,7 +38,8 @@ echo "🧪 Running tests..."
 # Clean iOS build dir manually to avoid Gradle symlink/configuration cache issues.
 # This must happen BEFORE gradlew starts.
 rm -rf sample/iosApp/build
-./gradlew clean check allTests
+./gradlew clean
+./gradlew check allTests
 
 # 6. Verify API compatibility
 echo "🔍 Checking API compatibility..."
