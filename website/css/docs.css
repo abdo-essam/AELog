@@ -589,7 +589,19 @@
     background-clip: text;
 }
 [data-theme="light"] .docs-content pre {
-    background: rgba(10,10,20,0.92);
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+/* Do NOT set a flat color on pre code in light mode — it kills hljs token colors */
+[data-theme="light"] .docs-content pre code {
+    color: inherit;
+}
+/* Only apply chip styling to inline code — NOT inside pre blocks */
+[data-theme="light"] .docs-content :not(pre) > code {
+    background: rgba(59, 130, 246, 0.07);
+    color: #0550ae;
+    border-color: rgba(59, 130, 246, 0.18);
 }
 [data-theme="light"] .tab-chips-container {
     background: rgba(0,0,0,0.03);

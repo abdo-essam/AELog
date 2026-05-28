@@ -238,11 +238,13 @@
 }
 
 [data-theme="light"] .setup-code-block pre {
-    background: rgba(0, 0, 0, 0.04);
+    background: #ffffff;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 [data-theme="light"] .setup-code-block code {
-    color: var(--color-code-text);
+    color: #24292e;
+    background: transparent;
 }
 
 [data-theme="light"] .version-catalog-hint {
