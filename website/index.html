@@ -307,14 +307,17 @@ aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        
                 <div class="step-number">2</div>
                 <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Custom Configuration (Optional)</h3>
-                    <p class="step-desc mute-text">AELog <strong>automatically initialises</strong> on app startup! If you want to supply custom settings (like capacity limits), call <code>AELog.configure()</code> in your platform entry point (e.g. <code>Application.onCreate()</code>):</p>
+                    <p class="step-desc mute-text">AELog <strong>automatically initialises</strong> on app startup! If you want to supply custom settings (like disabling the floating notch globally or adjusting capacities), call <code>AELog.configure { }</code> in your platform entry point (e.g. <code>Application.onCreate()</code>):</p>
                     <div class="setup-code-block">
                         <div class="code-file-label">Application.kt / main.kt</div>
-                        <pre><code class="language-kotlin">// Only configure what you need — other auto-registered plugins keep their defaults!
-AELog.configure(
-    LogPlugin(maxEntries = 2_000), // Custom capacity limit
-    NetworkPlugin(maxEntries = 1_000)
-)</code></pre>
+                        <pre><code class="language-kotlin">AELog.configure {
+    // Disable the floating notch globally if desired (defaults to true)
+    showNotch = false 
+    
+    // Customize capacities or plugins
+    plugin(LogPlugin(maxEntries = 2_000))
+    plugin(NetworkPlugin(maxEntries = 1_000))
+}</code></pre>
                     </div>
                     <div class="step-note">
                         <span class="note-icon">ℹ️</span>
@@ -324,12 +327,12 @@ AELog.configure(
                 </div>
             </div>
 
-            <!-- Step 3: Wrap your UI -->
+            <!-- Step 3: Add the UI Overlay -->
             <div class="setup-step fade-up delay-2">
                 <div class="step-number">3</div>
                 <div class="step-content glass-panel card-xl magic-card">
-                    <h3 class="step-title">Wrap your root Composable</h3>
-                    <p class="step-desc mute-text">Wrap your app once with <code>LogProvider</code>. This is the only UI change required. The <code>enabled</code> flag means zero overhead in release builds.</p>
+                    <h3 class="step-title">Add the UI Overlay</h3>
+                    <p class="step-desc mute-text">Drop <code>AELogOverlay()</code> as a sibling anywhere in your root composable—no wrapper required! In XML Views, simply use launchViewer from your activity.</p>
                     <div class="tab-pair" id="ui-framework-tabs">
                         <button class="tab-chip active" data-ui="compose">Jetpack Compose</button>
                         <button class="tab-chip" data-ui="xml">XML Views (Android)</button>
@@ -337,27 +340,20 @@ AELog.configure(
                     <div id="ui-compose" class="setup-code-block">
                         <div class="code-file-label">App.kt</div>
                         <pre><code class="language-kotlin">@Composable
-fun App(isDebug: Boolean) {
-    LogProvider(
-        enabled = isDebug, // ← zero overhead in release builds
-        uiConfig = UiConfig(
-            showFloatingButton = true,
-            enableLongPress    = true,
-        )
-    ) {
-        MaterialTheme {
-            YourAppContent() // No other changes needed
-        }
+fun App() {
+    AELogOverlay() // ← Renders floating center-right notch above your UI
+    MaterialTheme {
+        YourAppContent() // No wrapping or tree alterations needed
     }
 }</code></pre>
                     </div>
                     <div id="ui-xml" class="setup-code-block is-hidden">
                         <div class="code-file-label">Any Activity.kt</div>
-                        <pre><code class="language-kotlin">// No Compose required — launch the built-in Activity
+                        <pre><code class="language-kotlin">// No Compose required — inject the viewer dynamically
 import com.ae.log.launchViewer
 
-// From a button click, developer menu, or shake gesture:
-AELog.launchViewer(requireContext())</code></pre>
+// From a button tap, custom developer gesture, etc:
+AELog.launchViewer(activity)</code></pre>
                     </div>
                     <div class="glow-border"></div>
                 </div>
