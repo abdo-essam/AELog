@@ -57,8 +57,6 @@ public object AELog {
         }
     }
 
-
-
     /**
      * Installs a new plugin into AELog.
      *
@@ -189,12 +187,13 @@ public class AELogBuilder {
     }
 
     internal fun build(): LogInspector {
-        val config = LogConfig(
-            enabled = enabled,
-            dispatcher = dispatcher,
-            errorHandler = errorHandler,
-            showNotch = showNotch
-        )
+        val config =
+            LogConfig(
+                enabled = enabled,
+                dispatcher = dispatcher,
+                errorHandler = errorHandler,
+                showNotch = showNotch,
+            )
         val inspector = LogInspector(config)
         plugins.forEach { plugin ->
             inspector.plugins.install(plugin)
@@ -202,4 +201,3 @@ public class AELogBuilder {
         return inspector
     }
 }
-

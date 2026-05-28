@@ -44,48 +44,50 @@ internal fun LogNotchButton(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .width(32.dp)
-            .height(120.dp)
-            .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-            )
-            .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
-            .background(Color(0xE6111111)) // Translucent deep charcoal
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClickLabel = "Open AELog panel",
-                onClick = onClick
-            )
+        modifier =
+            modifier
+                .width(32.dp)
+                .height(120.dp)
+                .shadow(
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
+                ).clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
+                .background(Color(0xE6111111)) // Translucent deep charcoal
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClickLabel = "Open AELog panel",
+                    onClick = onClick,
+                ),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             // Top: Bug icon
             Box(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .size(20.dp),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .padding(top = 10.dp)
+                        .size(20.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = Icons.Default.BugReport,
                     contentDescription = "Open AELog",
                     tint = Color.White,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp),
                 )
             }
 
             // Center: Rotated text "AELOG"
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = "AELOG",
@@ -93,11 +95,13 @@ internal fun LogNotchButton(
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 2.sp,
-                    modifier = Modifier
-                        .rotate(-90f)
-                        .width(76.dp), // Snug fit for vertical rotation
+                    modifier =
+                        Modifier
+                            .rotate(-90f)
+                            .width(76.dp),
+                    // Snug fit for vertical rotation
                     textAlign = TextAlign.Center,
-                    maxLines = 1
+                    maxLines = 1,
                 )
             }
 
@@ -107,18 +111,20 @@ internal fun LogNotchButton(
 
         // Left side: Glowing vertical accent indicator bar (outer edge facing app content)
         Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(3.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.7f),
-                            Color.White
-                        )
-                    )
-                )
-                .align(Alignment.CenterStart)
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .width(3.dp)
+                    .background(
+                        brush =
+                            Brush.verticalGradient(
+                                colors =
+                                    listOf(
+                                        Color.White.copy(alpha = 0.7f),
+                                        Color.White,
+                                    ),
+                            ),
+                    ).align(Alignment.CenterStart),
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.ae.log
 
+import com.ae.log.InternalAELogApi
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import kotlin.test.AfterTest
@@ -8,7 +9,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import com.ae.log.InternalAELogApi
 
 @OptIn(AELogTestApi::class, InternalAELogApi::class)
 class AELogConfigureTest {
@@ -119,7 +119,10 @@ class AELogConfigureTest {
     fun `configure - duplicate plugin id is rejected`() {
         val first = FakePlugin(id = "dupe", name = "First")
         val second = FakePlugin(id = "dupe", name = "Second")
-        AELog.configure { plugin(first); plugin(second) }
+        AELog.configure {
+            plugin(first)
+            plugin(second)
+        }
         // Only the first should be registered
         assertEquals(
             1,
@@ -338,7 +341,10 @@ class AELogConfigureTest {
     fun `configure - duplicate ids in same call - only first is installed`() {
         val first = FakePlugin(id = "log", name = "First")
         val second = FakePlugin(id = "log", name = "Second")
-        AELog.configure { plugin(first); plugin(second) }
+        AELog.configure {
+            plugin(first)
+            plugin(second)
+        }
 
         // distinctBy keeps only first; second is dropped before install
         assertTrue(first.attached)

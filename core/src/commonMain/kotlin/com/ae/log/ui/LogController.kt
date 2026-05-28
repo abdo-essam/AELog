@@ -45,4 +45,3 @@ internal val LocalLogController: ProvidableCompositionLocal<LogController> =
     staticCompositionLocalOf {
         error("LogController not provided.")
     }
-

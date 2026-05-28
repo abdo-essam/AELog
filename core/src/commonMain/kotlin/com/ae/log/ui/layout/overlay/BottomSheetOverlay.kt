@@ -49,15 +49,15 @@ public object BottomSheetOverlay : OverlayStrategy {
                                         consumed: Offset,
                                         available: Offset,
                                         source: NestedScrollSource,
-                                     ): Offset = available
+                                    ): Offset = available
 
-                                     override suspend fun onPostFling(
-                                         consumed: Velocity,
-                                         available: Velocity,
-                                     ): Velocity = available
-                                 }
-                             },
-                         ),
+                                    override suspend fun onPostFling(
+                                        consumed: Velocity,
+                                        available: Velocity,
+                                    ): Velocity = available
+                                }
+                            },
+                        ),
             ) {
                 content()
             }

@@ -20,7 +20,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,8 +32,6 @@ import com.ae.log.sample.ui.features.log.LogScreen
 import com.ae.log.sample.ui.features.network.NetworkScreen
 import com.ae.log.sample.ui.features.perf.PerfScreen
 import com.ae.log.sample.ui.theme.SampleTheme
-import com.ae.log.AELog
-import com.ae.log.logs.LogPlugin
 import com.ae.log.ui.AELogOverlay
 
 @Composable

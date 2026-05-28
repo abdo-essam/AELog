@@ -89,4 +89,3 @@ public fun AELogOverlay(showNotch: Boolean = AELog.config?.showNotch ?: true) {
         }
     }
 }
-

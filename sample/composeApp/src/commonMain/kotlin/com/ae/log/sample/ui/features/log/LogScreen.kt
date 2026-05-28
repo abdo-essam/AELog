@@ -48,7 +48,6 @@ fun LogScreen() {
                     ActionButton("Show Overlay", Color(0xFF4CAF50)) {
                         AELog.show()
                     }
-
                 }
             }
 
