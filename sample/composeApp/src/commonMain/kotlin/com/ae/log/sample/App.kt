@@ -41,7 +41,7 @@ import com.ae.log.ui.AELogOverlay
 fun App() {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
-    AELogOverlay(false)
+    AELogOverlay()
 
     SampleTheme {
         Scaffold(

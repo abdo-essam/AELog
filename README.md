@@ -183,17 +183,20 @@ aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",      
 AELog features **zero-config auto-initialisation** on Android! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with default settings when your app launches. **No setup or initialization code is required.**
 
 ### 2. Custom Configuration (Optional)
-If you want to adjust capacity limits or other settings on the built-in plugins, call `AELog.configure { }` from your platform entry point (e.g. `Application.onCreate()` for Android):
+If you want to adjust global settings (like disabling the floating trigger notch globally) or configure capacity limits on built-in plugins, call `AELog.configure { }` from your platform entry point (e.g. `Application.onCreate()` for Android):
 
 ```kotlin
-// Reconfigure only what you need — all other auto-registered plugins keep their defaults!
-AELog.configure { plugin(
-    LogPlugin(maxEntries = 2_000) }, // Custom capacity limit
-    NetworkPlugin(maxEntries = 1_000)
-)
+AELog.configure {
+    // Disable the floating notch globally across XML & Compose screens (defaults to true)
+    showNotch = false 
+    
+    // Customize capacity limits or other settings for specific plugins
+    plugin(LogPlugin(maxEntries = 2_000))
+    plugin(NetworkPlugin(maxEntries = 1_000))
+}
 ```
 
-### 2. Drop in the Overlay
+### 3. Drop in the Overlay
 
 #### For Compose Apps (Android & iOS)
 Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required:
@@ -201,7 +204,7 @@ Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wr
 ```kotlin
 @Composable
 fun App() {
-    AELogOverlay() // ← Renders floating notch + inspector panel as a Popup above your UI
+    AELogOverlay() // ← Renders floating center-right notch + inspector panel as a Popup above your UI
     MaterialTheme {
         YourAppContent()
     }
@@ -213,10 +216,10 @@ To **disable the library in release builds**, set:
 AELog.isEnabled = BuildConfig.DEBUG
 ```
 
-To **hide the floating notch** but still open the panel programmatically:
+To **hide the floating notch trigger** locally but still open the panel programmatically:
 ```kotlin
 AELogOverlay(showNotch = false)
-// Then trigger from a button or shake gesture:
+// Then trigger from a custom button or shake gesture:
 AELog.show()
 ```
 

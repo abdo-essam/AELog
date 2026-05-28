@@ -278,25 +278,27 @@ fun main() {
 <h2>1. Zero-Config (Automatic Setup)</h2>
 <p>AELog features <strong>zero-config auto-initialisation</strong> on Android. Just add the Gradle dependencies for the plugins you want, and they automatically register themselves. <strong>No initialization code is required in your Application class!</strong></p>
 <h2>2. Custom Configuration (Optional)</h2>
-<p>If you want to adjust capacity limits on the built-in plugins, call <code>AELog.configure { }</code> from your app entry point (<code>Application.onCreate()</code> on Android):</p>
-<pre><code class="language-kotlin">// Reconfigure only what you need &mdash; all other auto-registered plugins keep their defaults!
-AELog.configure { plugin(
-    LogPlugin(maxEntries = 2_000) },
-    NetworkPlugin(maxEntries = 1_000)
-)
-</code></pre>
-<h2>2. Drop in the Overlay</h2>
+<p>If you want to adjust global settings (like disabling the floating notch globally) or configure capacity limits on the built-in plugins, call <code>AELog.configure { }</code> from your app entry point (<code>Application.onCreate()</code> on Android):</p>
+<pre><code class="language-kotlin">AELog.configure {
+    // Disable the floating notch globally across XML & Compose screens (defaults to true)
+    showNotch = false 
+    
+    // Customize capacity limits or settings for specific plugins
+    plugin(LogPlugin(maxEntries = 2_000))
+    plugin(NetworkPlugin(maxEntries = 1_000))
+}</code></pre>
+<h2>3. Drop in the Overlay</h2>
 <p>Add <code>AELogOverlay()</code> as a <strong>sibling</strong> anywhere in your root composable &mdash; no wrapping required:</p>
 <pre><code class="language-kotlin">@Composable
 fun App() {
-    AELogOverlay() // &larr; Renders floating notch + inspector panel as a Popup above your UI
+    AELogOverlay() // &larr; Renders floating center-right notch + inspector panel as a Popup above your UI
     MaterialTheme {
         YourAppContent()
     }
 }
 </code></pre>
 <p>To <strong>disable in release builds</strong>: <code>AELog.isEnabled = BuildConfig.DEBUG</code><br>
-To <strong>hide the notch</strong> and trigger programmatically: <code>AELogOverlay(showNotch = false)</code> then <code>AELog.show()</code></p>
+To <strong>hide the floating notch trigger</strong> locally but still open the panel programmatically: <code>AELogOverlay(showNotch = false)</code> then <code>AELog.show()</code></p>
 <h2>3. Start Logging</h2>
 <p>Use the discoverable static APIs. AELog handles everything else behind the scenes.</p>
 <pre><code class="language-kotlin">// 1. Logs (with automatic tag derivation from the calling class)
@@ -328,23 +330,25 @@ try {
 <div id="configuration" class="docs-section ">
 <h1>Configuration</h1>
 <p>AELog is designed to be &quot;zero-config&quot; by default, but provides hooks to customize both data collection and UI behavior.</p>
-<h2>Core Configuration (Data)</h2>
-<p>Use <code>AELog.configure { }</code> to replace the auto-registered default with a custom-configured version:</p>
-<pre><code class="language-kotlin">// Override just the plugins you want &mdash; others stay at their defaults
-AELog.configure { plugin(
-    LogPlugin(maxEntries = 1_000) },
-    NetworkPlugin(maxEntries = 500),
-    CrashPlugin(this)
-)
+<h2>Core Configuration (Data & UI Globals)</h2>
+<p>Use <code>AELog.configure { }</code> to set global parameters or replace auto-registered default plugins with custom-configured versions:</p>
+<pre><code class="language-kotlin">AELog.configure {
+    // Disable the floating notch globally (across XML & Compose screens)
+    showNotch = false
+    
+    // Override specific plugins
+    plugin(LogPlugin(maxEntries = 1_000))
+    plugin(NetworkPlugin(maxEntries = 500))
+}
 </code></pre>
 <h2>UI Configuration</h2>
 <p>Control whether the floating notch is shown, or hide it and trigger the overlay programmatically:</p>
-<pre><code class="language-kotlin">// Default &mdash; shows the Dynamic Island-style notch trigger
+<pre><code class="language-kotlin">// Default &mdash; shows the vertical notch trigger on the right side of the screen
 AELogOverlay()
 
-// Hidden notch &mdash; open from a shake gesture, debug settings, etc.
+// Hidden notch trigger &mdash; open programmatically from custom buttons, shake gestures, etc.
 AELogOverlay(showNotch = false)
-// Then from anywhere:
+// Then from anywhere in your codebase:
 AELog.show()
 AELog.hide()
 

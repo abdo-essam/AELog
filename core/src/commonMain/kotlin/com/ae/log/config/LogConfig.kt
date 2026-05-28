@@ -11,4 +11,5 @@ public data class LogConfig(
     val dispatcher: CoroutineDispatcher = Dispatchers.Default,
     /** Invoked whenever an internal SDK error occurs. Defaults to stderr output. */
     val errorHandler: (Throwable) -> Unit = { t -> println("[AELog] Internal error: ${t.message}") },
+    val showNotch: Boolean = true,
 )

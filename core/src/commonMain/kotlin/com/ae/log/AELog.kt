@@ -179,6 +179,7 @@ public class AELogBuilder {
     public var enabled: Boolean = true
     public var dispatcher: CoroutineDispatcher = Dispatchers.Default
     public var errorHandler: (Throwable) -> Unit = { t -> println("[AELog] Internal error: ${t.message}") }
+    public var showNotch: Boolean = true
 
     @PublishedApi
     internal val plugins: MutableList<Plugin> = mutableListOf()
@@ -191,7 +192,8 @@ public class AELogBuilder {
         val config = LogConfig(
             enabled = enabled,
             dispatcher = dispatcher,
-            errorHandler = errorHandler
+            errorHandler = errorHandler,
+            showNotch = showNotch
         )
         val inspector = LogInspector(config)
         plugins.forEach { plugin ->

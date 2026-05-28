@@ -1,8 +1,10 @@
 package com.ae.log.ui
 
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ae.log.AELog
@@ -44,7 +46,7 @@ import com.ae.log.ui.theme.LogTheme
  * @param showNotch Whether to display the default top-center floating notch trigger.
  */
 @Composable
-public fun AELogOverlay(showNotch: Boolean = true) {
+public fun AELogOverlay(showNotch: Boolean = AELog.config?.showNotch ?: true) {
     val isEnabled by AELog.isEnabledFlow.collectAsState()
     val instance = AELog.instance
     if (!isEnabled || instance == null) return
@@ -59,7 +61,7 @@ public fun AELogOverlay(showNotch: Boolean = true) {
         if (isVisible) instance.lifecycle.notifyOpen() else instance.lifecycle.notifyClose()
     }
 
-    BoxWithConstraints {
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         val isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint
 
         CompositionLocalProvider(LocalLogController provides controller) {
@@ -68,7 +70,7 @@ public fun AELogOverlay(showNotch: Boolean = true) {
                 // Hidden while the panel is open so it doesn't overlap.
                 if (!isVisible && showNotch) {
                     Popup(
-                        alignment = Alignment.TopCenter,
+                        alignment = Alignment.CenterEnd,
                         properties = PopupProperties(focusable = false),
                     ) {
                         LogNotchButton(onClick = { controller.show() })
