@@ -2,6 +2,7 @@ package com.ae.log.analytics
 
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
+import com.ae.log.InternalAELogApi
 import com.ae.log.analytics.model.DefaultAdapterSource
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
@@ -10,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-@OptIn(AELogTestApi::class)
+@OptIn(AELogTestApi::class, InternalAELogApi::class)
 class AnalyticsPluginMigrationTest {
     @AfterTest
     fun tearDown() {
@@ -31,7 +32,7 @@ class AnalyticsPluginMigrationTest {
     @Test
     fun `onMigrateFrom - transfers existing events to new plugin`() {
         val autoPlugin = AnalyticsPlugin(maxEntries = 500)
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
 
         track(autoPlugin, "app_open")
         track(autoPlugin, "button_tap")
@@ -39,7 +40,7 @@ class AnalyticsPluginMigrationTest {
         assertEquals(3, autoPlugin.storage.events.value.size)
 
         val customPlugin = AnalyticsPlugin(maxEntries = 2000)
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         assertEquals(3, customPlugin.storage.events.value.size)
     }
@@ -47,11 +48,11 @@ class AnalyticsPluginMigrationTest {
     @Test
     fun `onMigrateFrom - preserves event name and properties`() {
         val autoPlugin = AnalyticsPlugin()
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
         autoPlugin.tracker.track("purchase", mapOf("item" to "premium", "price" to "9.99"))
 
         val customPlugin = AnalyticsPlugin(maxEntries = 2000)
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         val migrated =
             customPlugin.storage.events.value
@@ -64,11 +65,11 @@ class AnalyticsPluginMigrationTest {
     @Test
     fun `onMigrateFrom - preserves source adapter`() {
         val autoPlugin = AnalyticsPlugin()
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
         autoPlugin.tracker.track("login", source = DefaultAdapterSource.FIREBASE)
 
         val customPlugin = AnalyticsPlugin(maxEntries = 2000)
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         val migrated =
             customPlugin.storage.events.value
@@ -79,12 +80,12 @@ class AnalyticsPluginMigrationTest {
     @Test
     fun `onMigrateFrom - respects new plugin maxEntries capacity`() {
         val autoPlugin = AnalyticsPlugin(maxEntries = 500)
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
 
         repeat(10) { i -> track(autoPlugin, "event_$i") }
 
         val customPlugin = AnalyticsPlugin(maxEntries = 5)
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         assertTrue(customPlugin.storage.events.value.size <= 5)
     }
@@ -92,10 +93,10 @@ class AnalyticsPluginMigrationTest {
     @Test
     fun `onMigrateFrom - new plugin starts empty when old plugin had no events`() {
         val autoPlugin = AnalyticsPlugin()
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
 
         val customPlugin = AnalyticsPlugin(maxEntries = 2000)
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         assertTrue(
             customPlugin.storage.events.value
@@ -126,10 +127,10 @@ class AnalyticsPluginMigrationTest {
             override fun export() = ""
         }
 
-        AELog.registerPlugin(ImposterPlugin())
+        AELog.install(ImposterPlugin())
 
         val customPlugin = AnalyticsPlugin()
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         assertTrue(
             customPlugin.storage.events.value
@@ -140,11 +141,11 @@ class AnalyticsPluginMigrationTest {
     @Test
     fun `onMigrateFrom - events tracked after migration append to migrated events`() {
         val autoPlugin = AnalyticsPlugin()
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
         track(autoPlugin, "pre_migration_event")
 
         val customPlugin = AnalyticsPlugin(maxEntries = 500)
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         track(customPlugin, "post_migration_event")
 
@@ -164,11 +165,11 @@ class AnalyticsPluginMigrationTest {
     @Test
     fun `onMigrateFrom - screen events are preserved`() {
         val autoPlugin = AnalyticsPlugin()
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
         autoPlugin.tracker.screen("HomeScreen", mapOf("source" to "deeplink"))
 
         val customPlugin = AnalyticsPlugin(maxEntries = 500)
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         val migrated =
             customPlugin.storage.events.value

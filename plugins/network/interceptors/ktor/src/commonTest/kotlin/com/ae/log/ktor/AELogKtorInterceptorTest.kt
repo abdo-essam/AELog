@@ -21,7 +21,7 @@ class AELogKtorInterceptorTest {
     @BeforeTest
     fun setUp() {
         networkPlugin = NetworkPlugin()
-        AELog.configure(networkPlugin)
+        AELog.configure { plugin(networkPlugin) }
     }
 
     @AfterTest

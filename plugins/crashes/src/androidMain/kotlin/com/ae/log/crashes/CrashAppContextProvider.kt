@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import com.ae.log.AELog
+import com.ae.log.InternalAELogApi
 
 /**
  * Auto-initializer for the AELog Crashes plugin on Android.
@@ -15,14 +16,14 @@ import com.ae.log.AELog
  * registering [CrashPlugin] with AELog.
  *
  * ## Zero-config usage
- * Just add the dependency — no `AELog.configure()` call required:
+ * Just add the dependency — no `AELog.configure { }` call required:
  * ```kotlin
  * // build.gradle.kts
  * implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
  * ```
  *
  * ## Opt-out / custom config
- * Remove the auto-initializer via manifest merger and call `AELog.configure()` yourself:
+ * Remove the auto-initializer via manifest merger and call `AELog.configure { }` yourself:
  * ```xml
  * <!-- AndroidManifest.xml -->
  * <provider
@@ -32,17 +33,18 @@ import com.ae.log.AELog
  * ```
  * ```kotlin
  * // Application.onCreate()
- * AELog.configure(CrashPlugin(this))
+ * AELog.configure { plugin(CrashPlugin(this)) }
  * ```
  */
 internal class CrashAppContextProvider : ContentProvider() {
+    @OptIn(InternalAELogApi::class)
     override fun onCreate(): Boolean {
         val ctx = context ?: return false
         // 1. Capture the Application context first so defaultCrashStorageDir()
         //    resolves correctly when CrashPlugin() is constructed below.
         CrashAppContextHolder.init(ctx)
         // 2. Auto-register the plugin — same as LogPlugin/NetworkPlugin/AnalyticsPlugin.
-        AELog.registerPlugin(CrashPlugin())
+        AELog.install(CrashPlugin())
         return true
     }
 

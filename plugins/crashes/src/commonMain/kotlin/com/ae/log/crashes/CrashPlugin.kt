@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
  *
  * ## Zero-config installation — all platforms
  * ```kotlin
- * AELog.configure(CrashPlugin())
+ * AELog.configure { plugin(CrashPlugin()) }
  * ```
  * On Android, a self-initializing [ContentProvider][android.content.ContentProvider] captures
  * the application context automatically (same technique as WorkManager and Firebase).
@@ -65,7 +65,7 @@ public class CrashPlugin(
 
     override fun onAttach(context: PluginContext) {
         // Install the crash handler immediately so fatals are captured
-        // from the moment AELog.configure() is called — before any UI is shown.
+        // from the moment AELog.configure { } is called — before any UI is shown.
         handler.install()
         viewModel = CrashViewModel(storage = storage, scope = context.scope)
         context.scope.launch {

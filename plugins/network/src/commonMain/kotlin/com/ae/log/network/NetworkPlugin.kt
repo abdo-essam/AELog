@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELog.configure(NetworkPlugin())
+ * AELog.configure { plugin(NetworkPlugin()) }
  * ```
  *
  * ## Recording — Ktor (zero boilerplate)

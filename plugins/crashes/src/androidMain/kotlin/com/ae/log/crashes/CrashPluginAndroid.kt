@@ -10,7 +10,7 @@ import android.content.Context
  *
  * ```kotlin
  * // In Application.onCreate:
- * AELog.configure(CrashPlugin(this))
+ * AELog.configure { plugin(CrashPlugin(this)) }
  * ```
  *
  * @param context Application or Activity context.

@@ -2,7 +2,6 @@ package com.ae.log.benchmarks
 
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
-import com.ae.log.config.LogConfig
 import com.ae.log.network.NetworkPlugin
 import kotlinx.benchmark.Benchmark
 import kotlinx.benchmark.BenchmarkMode
@@ -45,10 +44,10 @@ open class NetworkPipelineBenchmark {
 
     @Setup
     fun setup() {
-        AELog.configure(
-            NetworkPlugin(maxEntries = 200),
-            config = LogConfig(dispatcher = Dispatchers.Unconfined),
-        )
+        AELog.configure {
+            dispatcher = Dispatchers.Unconfined
+            plugin(NetworkPlugin(maxEntries = 200))
+        }
         plugin = AELog.getPlugin<NetworkPlugin>()!!
     }
 

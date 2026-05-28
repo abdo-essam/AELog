@@ -33,7 +33,7 @@ class NetworkRecorderPerformanceTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.configure(NetworkPlugin())
+        AELog.configure { plugin(NetworkPlugin()) }
         storage = NetworkStorage(capacity = 200)
         recorder = NetworkRecorder(storage)
     }

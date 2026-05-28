@@ -8,8 +8,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import com.ae.log.InternalAELogApi
 
-@OptIn(AELogTestApi::class)
+@OptIn(AELogTestApi::class, InternalAELogApi::class)
 class AELogConfigureTest {
     @AfterTest
     fun tearDown() {
@@ -65,27 +66,27 @@ class AELogConfigureTest {
 
     @Test
     fun `configure - creates instance on first call`() {
-        AELog.configure()
+        AELog.configure { }
         assertNotNull(AELog.instance)
     }
 
     @Test
     fun `configure - is idempotent and second call is a no-op`() {
-        AELog.configure()
+        AELog.configure { }
         val first = AELog.instance
-        AELog.configure()
+        AELog.configure { }
         assertEquals(first, AELog.instance)
     }
 
     @Test
     fun `isEnabled - defaults to true`() {
-        AELog.configure()
+        AELog.configure { }
         assertTrue(AELog.isEnabled)
     }
 
     @Test
     fun `isEnabled - can be toggled`() {
-        AELog.configure()
+        AELog.configure { }
         AELog.isEnabled = false
         assertEquals(false, AELog.isEnabled)
         AELog.isEnabled = true
@@ -96,21 +97,21 @@ class AELogConfigureTest {
 
     @Test
     fun `getPlugin - returns null when not installed`() {
-        AELog.configure()
+        AELog.configure { }
         assertNull(AELog.getPlugin<FakePlugin>())
     }
 
     @Test
     fun `getPlugin - returns installed plugin`() {
         val plugin = FakePlugin()
-        AELog.configure(plugin)
+        AELog.configure { plugin(plugin) }
         assertNotNull(AELog.getPlugin<FakePlugin>())
     }
 
     @Test
     fun `install - calls onAttach on the plugin`() {
         val plugin = FakePlugin()
-        AELog.configure(plugin)
+        AELog.configure { plugin(plugin) }
         assertTrue(plugin.attached)
     }
 
@@ -118,7 +119,7 @@ class AELogConfigureTest {
     fun `configure - duplicate plugin id is rejected`() {
         val first = FakePlugin(id = "dupe", name = "First")
         val second = FakePlugin(id = "dupe", name = "Second")
-        AELog.configure(first, second)
+        AELog.configure { plugin(first); plugin(second) }
         // Only the first should be registered
         assertEquals(
             1,
@@ -142,14 +143,14 @@ class AELogConfigureTest {
     @Test
     fun `export - aggregates plugin export values`() {
         val plugin = FakePlugin().also { it.exportValue = "log data" }
-        AELog.configure(plugin)
+        AELog.configure { plugin(plugin) }
         assertTrue(AELog.export().contains("log data"))
     }
 
     @Test
     fun `clearAll - calls onClear on each plugin`() {
         val plugin = FakePlugin()
-        AELog.configure(plugin)
+        AELog.configure { plugin(plugin) }
         AELog.clearAll()
         assertTrue(plugin.cleared)
     }
@@ -158,18 +159,18 @@ class AELogConfigureTest {
 
     @Test
     fun `resetForTesting - allows re-initialization`() {
-        AELog.configure()
+        AELog.configure { }
         assertNotNull(AELog.instance)
         AELog.resetForTesting()
         assertNull(AELog.instance)
-        AELog.configure()
+        AELog.configure { }
         assertNotNull(AELog.instance)
     }
 
     @Test
     fun `resetForTesting - calls onStop and onDetach on plugins`() {
         val plugin = FakePlugin()
-        AELog.configure(plugin)
+        AELog.configure { plugin(plugin) }
         AELog.resetForTesting()
         assertTrue(plugin.stopped)
         assertTrue(plugin.detached)
@@ -177,7 +178,7 @@ class AELogConfigureTest {
 
     @Test
     fun `resetForTesting - resets isEnabled to true`() {
-        AELog.configure()
+        AELog.configure { }
         AELog.isEnabled = false
         AELog.resetForTesting()
         assertTrue(AELog.isEnabled)
@@ -188,14 +189,14 @@ class AELogConfigureTest {
     @Test
     fun `registerPlugin - creates instance on first call`() {
         val plugin = FakePlugin()
-        AELog.registerPlugin(plugin)
+        AELog.install(plugin)
         assertNotNull(AELog.instance)
     }
 
     @Test
     fun `registerPlugin - installs plugin and calls onAttach`() {
         val plugin = FakePlugin()
-        AELog.registerPlugin(plugin)
+        AELog.install(plugin)
         assertTrue(plugin.attached)
         assertNotNull(AELog.getPlugin<FakePlugin>())
     }
@@ -204,8 +205,8 @@ class AELogConfigureTest {
     fun `registerPlugin - multiple plugins can be registered independently`() {
         val log = FakePlugin(id = "log", name = "Log")
         val network = FakePlugin(id = "network", name = "Network")
-        AELog.registerPlugin(log)
-        AELog.registerPlugin(network)
+        AELog.install(log)
+        AELog.install(network)
         assertEquals(
             2,
             AELog.instance
@@ -222,8 +223,8 @@ class AELogConfigureTest {
     fun `registerPlugin - duplicate id is silently ignored`() {
         val first = FakePlugin(id = "log", name = "First")
         val second = FakePlugin(id = "log", name = "Second")
-        AELog.registerPlugin(first)
-        AELog.registerPlugin(second)
+        AELog.install(first)
+        AELog.install(second)
         assertEquals(
             1,
             AELog.instance
@@ -242,11 +243,11 @@ class AELogConfigureTest {
     fun `configure - calls onMigrateFrom when replacing an existing plugin`() {
         // Simulate auto-init (ContentProvider registers a default plugin)
         val autoPlugin = FakePlugin(id = "log", name = "AutoLog")
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
 
         // Consumer calls configure() with a custom version of the same plugin
         val customPlugin = FakePlugin(id = "log", name = "CustomLog")
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         // onMigrateFrom must be called with the old auto-registered instance
         assertEquals(autoPlugin, customPlugin.migratedFrom)
@@ -255,10 +256,10 @@ class AELogConfigureTest {
     @Test
     fun `configure - old plugin is detached after migration`() {
         val autoPlugin = FakePlugin(id = "log", name = "AutoLog")
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
 
         val customPlugin = FakePlugin(id = "log", name = "CustomLog")
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         // The auto plugin must be detached and removed
         assertTrue(autoPlugin.detached)
@@ -275,10 +276,10 @@ class AELogConfigureTest {
     @Test
     fun `configure - new plugin is installed and attached after migration`() {
         val autoPlugin = FakePlugin(id = "log", name = "AutoLog")
-        AELog.registerPlugin(autoPlugin)
+        AELog.install(autoPlugin)
 
         val customPlugin = FakePlugin(id = "log", name = "CustomLog")
-        AELog.configure(customPlugin)
+        AELog.configure { plugin(customPlugin) }
 
         // The custom plugin should now be the active one
         assertTrue(customPlugin.attached)
@@ -289,7 +290,7 @@ class AELogConfigureTest {
     fun `configure - does NOT call onMigrateFrom when no existing plugin with same id`() {
         // Fresh configure() with no prior auto-registered plugin for this id
         val plugin = FakePlugin(id = "analytics", name = "Analytics")
-        AELog.configure(plugin)
+        AELog.configure { plugin(plugin) }
 
         assertNull(plugin.migratedFrom)
         assertTrue(plugin.attached)
@@ -300,12 +301,12 @@ class AELogConfigureTest {
         // Auto-init registers two plugins
         val logPlugin = FakePlugin(id = "log", name = "Log")
         val networkPlugin = FakePlugin(id = "network", name = "Network")
-        AELog.registerPlugin(logPlugin)
-        AELog.registerPlugin(networkPlugin)
+        AELog.install(logPlugin)
+        AELog.install(networkPlugin)
 
         // Consumer only reconfigures log — network must remain untouched
         val customLog = FakePlugin(id = "log", name = "CustomLog")
-        AELog.configure(customLog)
+        AELog.configure { plugin(customLog) }
 
         // Network plugin must still be registered and not detached
         assertEquals(false, networkPlugin.detached)
@@ -322,10 +323,10 @@ class AELogConfigureTest {
     @Test
     fun `configure - second configure call replaces first custom plugin with migration`() {
         val v1 = FakePlugin(id = "log", name = "LogV1")
-        AELog.configure(v1)
+        AELog.configure { plugin(v1) }
 
         val v2 = FakePlugin(id = "log", name = "LogV2")
-        AELog.configure(v2)
+        AELog.configure { plugin(v2) }
 
         // v2 should have migrated from v1
         assertEquals(v1, v2.migratedFrom)
@@ -337,7 +338,7 @@ class AELogConfigureTest {
     fun `configure - duplicate ids in same call - only first is installed`() {
         val first = FakePlugin(id = "log", name = "First")
         val second = FakePlugin(id = "log", name = "Second")
-        AELog.configure(first, second)
+        AELog.configure { plugin(first); plugin(second) }
 
         // distinctBy keeps only first; second is dropped before install
         assertTrue(first.attached)

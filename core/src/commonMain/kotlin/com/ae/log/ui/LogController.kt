@@ -8,40 +8,41 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- * Controls the visibility of the AELog UI overlay.
- *
- * Access via [LocalLogController] inside [com.ae.log.ui.LogProvider].
+ * Controls the visibility of the AELog UI overlay internally.
  */
-public class LogController {
-    private val _isVisible = MutableStateFlow(false)
-    public val isVisible: StateFlow<Boolean> = _isVisible.asStateFlow()
+internal class LogController internal constructor(
+    private val backing: MutableStateFlow<Boolean>,
+) {
+    /** Creates a standalone controller backed by its own private [MutableStateFlow]. */
+    constructor() : this(MutableStateFlow(false))
+
+    val isVisible: StateFlow<Boolean> = backing.asStateFlow()
 
     private val _activeTabIndex = MutableStateFlow(0)
-    public val activeTabIndex: StateFlow<Int> = _activeTabIndex.asStateFlow()
+    val activeTabIndex: StateFlow<Int> = _activeTabIndex.asStateFlow()
 
-    public fun show() {
-        _isVisible.value = true
+    fun show() {
+        backing.value = true
     }
 
-    public fun hide() {
-        _isVisible.value = false
+    fun hide() {
+        backing.value = false
     }
 
-    public fun toggle() {
-        _isVisible.update { !it }
+    fun toggle() {
+        backing.update { !it }
     }
 
-    public fun selectTab(index: Int) {
+    fun selectTab(index: Int) {
         _activeTabIndex.value = index.coerceAtLeast(0)
     }
 }
 
 /**
- * CompositionLocal providing the [LogController].
- *
- * Available anywhere inside [com.ae.log.ui.LogProvider].
+ * CompositionLocal providing the [LogController] internally.
  */
-public val LocalLogController: ProvidableCompositionLocal<LogController> =
+internal val LocalLogController: ProvidableCompositionLocal<LogController> =
     staticCompositionLocalOf {
-        error("LogController not provided. Wrap your content with LogProvider.")
+        error("LogController not provided.")
     }
+

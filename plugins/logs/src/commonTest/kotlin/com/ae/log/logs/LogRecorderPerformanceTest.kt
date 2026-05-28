@@ -32,7 +32,7 @@ class LogRecorderPerformanceTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.configure(LogPlugin())
+        AELog.configure { plugin(LogPlugin()) }
         storage =
             com.ae.log.logs.storage
                 .LogStorage(capacity = 500)

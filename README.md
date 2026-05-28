@@ -183,47 +183,41 @@ aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",      
 AELog features **zero-config auto-initialisation** on Android! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with default settings when your app launches. **No setup or initialization code is required.**
 
 ### 2. Custom Configuration (Optional)
-If you want to configure custom settings (such as changing capacity limits or customizing error handlers), call `AELog.configure()` in your platform entry point (e.g. `Application.onCreate()` for Android, or your main `ViewController` for iOS):
+If you want to adjust capacity limits or other settings on the built-in plugins, call `AELog.configure { }` from your platform entry point (e.g. `Application.onCreate()` for Android):
 
 ```kotlin
 // Reconfigure only what you need — all other auto-registered plugins keep their defaults!
-AELog.configure(
-    LogPlugin(maxEntries = 2_000), // Custom capacity limit
+AELog.configure { plugin(
+    LogPlugin(maxEntries = 2_000) }, // Custom capacity limit
     NetworkPlugin(maxEntries = 1_000)
 )
 ```
 
-### 2. Launch the UI
+### 2. Drop in the Overlay
 
-#### For Jetpack Compose Apps
-Wrap your main content:
+#### For Compose Apps (Android & iOS)
+Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required:
 
 ```kotlin
 @Composable
-fun App(debugMode: Boolean) {
-    LogProvider(
-        enabled = debugMode, // ← disables UI overhead in release builds
-        uiConfig = UiConfig(
-            showFloatingButton = true, // Enables the 'bug' overlay button
-            enableLongPress = true,    // Show panel on 3-finger long press
-        )
-    ) {
-        MaterialTheme {
-            YourAppContent()
-        }
+fun App() {
+    AELogOverlay() // ← Renders floating notch + inspector panel as a Popup above your UI
+    MaterialTheme {
+        YourAppContent()
     }
 }
 ```
 
-#### For Traditional View-Based Android Apps (XML)
-No need to add Compose to your app! Just launch the built-in activity anywhere (like a developer menu button):
-
+To **disable the library in release builds**, set:
 ```kotlin
-import com.ae.log.launchViewer
-import com.ae.log.AELog
+AELog.isEnabled = BuildConfig.DEBUG
+```
 
-// Call from any Activity or Fragment
-AELog.launchViewer(requireContext()) 
+To **hide the floating notch** but still open the panel programmatically:
+```kotlin
+AELogOverlay(showNotch = false)
+// Then trigger from a button or shake gesture:
+AELog.show()
 ```
 
 ### 3. Log — primary API (`AELog`)
@@ -240,7 +234,7 @@ AELog.log.e("Database", "Failed to clear cache", exception) // stack trace auto-
 AELog.log.wtf("Auth", "Unexpected state")
 ```
 
-> All calls are **silent no-ops** if `AELog.configure()` has not been called yet — safe in shared modules that run before app startup.
+> All calls are **silent no-ops** if the library hasn't initialized yet — safe to call from shared modules before app startup.
 
 #### Auto-tag — no tag required (recommended)
 
@@ -312,9 +306,9 @@ val client = HttpClient {
 ### 4. Open AELog
 
 Three ways to open the inspector:
-1. Tap the floating **bug button** (bottom-right corner)
-2. Long-press with multiple fingers anywhere on screen (if enabled)
-3. Programmatically: `LocalLogController.current.show()`
+1. Tap the **floating notch** at the top of the screen (Dynamic Island-style)
+2. Programmatically from anywhere: `AELog.show()` / `AELog.hide()`
+3. Wire it to any custom trigger (shake gesture, debug menu button, etc.)
 
 ## 🧩 Modularity & Available Plugins
 
@@ -354,8 +348,8 @@ class FeatureFlagsPlugin : UIPlugin {
     }
 }
 
-// Install it
-AELog.configure(LogPlugin(), FeatureFlagsPlugin())
+// Install your custom plugin alongside the auto-registered ones
+AELog.install(FeatureFlagsPlugin())
 ```
 
 📖 See the [Custom Plugins Guide](https://abdo-essam.github.io/AELog/custom-plugins) for the full API reference.
@@ -383,7 +377,7 @@ The SDK follows an encapsulated `Model-Store-API-UI` pattern, making plugins 100
 ```mermaid
 graph TD
     subgraph UI ["UI Layer"]
-        LP["LogProvider\n(Compose wrapper)"]
+        OV["AELogOverlay()\n(Popup — zero wrapping)"]
     end
 
     subgraph Core ["Core — ae-log-core"]
@@ -413,7 +407,7 @@ graph TD
         OI["OkHttpInterceptor\nae-log-network-okhttp"]
     end
 
-    LP --> AE
+    OV --> AE
     AE --> EB
     AE --> LP1
     AE --> NP

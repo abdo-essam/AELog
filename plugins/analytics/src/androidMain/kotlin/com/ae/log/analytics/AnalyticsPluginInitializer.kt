@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import com.ae.log.AELog
+import com.ae.log.InternalAELogApi
 
 /**
  * Auto-initializer for the AELog Analytics plugin on Android.
@@ -14,14 +15,14 @@ import com.ae.log.AELog
  * registering [AnalyticsPlugin] with AELog automatically.
  *
  * ## Zero-config usage
- * Just add the dependency — no `AELog.configure()` call required:
+ * Just add the dependency — no `AELog.configure { }` call required:
  * ```kotlin
  * // build.gradle.kts
  * implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
  * ```
  *
  * ## Opt-out / custom config
- * Remove the auto-initializer via manifest merger and call `AELog.configure()` yourself:
+ * Remove the auto-initializer via manifest merger and call `AELog.configure { }` yourself:
  * ```xml
  * <!-- AndroidManifest.xml -->
  * <provider
@@ -31,12 +32,13 @@ import com.ae.log.AELog
  * ```
  * ```kotlin
  * // Application.onCreate()
- * AELog.configure(AnalyticsPlugin(maxEntries = 1_000))
+ * AELog.configure { plugin(AnalyticsPlugin(maxEntries = 1_000)) }
  * ```
  */
 internal class AnalyticsPluginInitializer : ContentProvider() {
     override fun onCreate(): Boolean {
-        AELog.registerPlugin(AnalyticsPlugin())
+        @OptIn(InternalAELogApi::class)
+        AELog.install(AnalyticsPlugin())
         return true
     }
 

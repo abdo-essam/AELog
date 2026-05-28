@@ -13,7 +13,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
-import com.ae.log.ui.UiConfig
 import com.ae.log.ui.theme.LogDimens
 
 /**
@@ -24,7 +23,6 @@ import com.ae.log.ui.theme.LogDimens
 public object BottomSheetOverlay : OverlayStrategy {
     @Composable
     override fun Overlay(
-        uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
@@ -43,7 +41,7 @@ public object BottomSheetOverlay : OverlayStrategy {
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(uiConfig.bottomSheetHeightFraction)
+                        .fillMaxHeight(0.9f)
                         .nestedScroll(
                             remember {
                                 object : NestedScrollConnection {
@@ -51,15 +49,15 @@ public object BottomSheetOverlay : OverlayStrategy {
                                         consumed: Offset,
                                         available: Offset,
                                         source: NestedScrollSource,
-                                    ): Offset = available
+                                     ): Offset = available
 
-                                    override suspend fun onPostFling(
-                                        consumed: Velocity,
-                                        available: Velocity,
-                                    ): Velocity = available
-                                }
-                            },
-                        ),
+                                     override suspend fun onPostFling(
+                                         consumed: Velocity,
+                                         available: Velocity,
+                                     ): Velocity = available
+                                 }
+                             },
+                         ),
             ) {
                 content()
             }

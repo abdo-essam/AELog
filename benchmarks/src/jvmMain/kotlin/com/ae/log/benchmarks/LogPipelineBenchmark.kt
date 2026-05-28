@@ -2,7 +2,6 @@ package com.ae.log.benchmarks
 
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
-import com.ae.log.config.LogConfig
 import com.ae.log.logs.LogPlugin
 import com.ae.log.logs.PlatformLogSink
 import com.ae.log.logs.log
@@ -46,12 +45,11 @@ import kotlinx.coroutines.Dispatchers
 open class LogPipelineBenchmark {
     @Setup
     fun setup() {
-        AELog.configure(
-            // PlatformLogSink.None avoids Logcat/println side-effects in the benchmark
-            LogPlugin(platformLogSink = PlatformLogSink.None),
-            NetworkPlugin(),
-            config = LogConfig(dispatcher = Dispatchers.Unconfined),
-        )
+        AELog.configure {
+            dispatcher = Dispatchers.Unconfined
+            plugin(LogPlugin(platformLogSink = PlatformLogSink.None))
+            plugin(NetworkPlugin())
+        }
     }
 
     @TearDown

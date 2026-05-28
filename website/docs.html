@@ -278,23 +278,25 @@ fun main() {
 <h2>1. Zero-Config (Automatic Setup)</h2>
 <p>AELog features <strong>zero-config auto-initialisation</strong> on Android. Just add the Gradle dependencies for the plugins you want, and they automatically register themselves. <strong>No initialization code is required in your Application class!</strong></p>
 <h2>2. Custom Configuration (Optional)</h2>
-<p>If you want to configure custom settings (such as changing capacity limits or customizing error handlers), call <code>AELog.configure()</code> in your platform entry point (e.g. <code>Application.onCreate()</code> for Android, or your main <code>ViewController</code> for iOS):</p>
-<pre><code class="language-kotlin">// Reconfigure only what you need — all other auto-registered plugins keep their defaults!
-AELog.configure(
-    LogPlugin(maxEntries = 2_000), // Custom capacity limit
+<p>If you want to adjust capacity limits on the built-in plugins, call <code>AELog.configure { }</code> from your app entry point (<code>Application.onCreate()</code> on Android):</p>
+<pre><code class="language-kotlin">// Reconfigure only what you need &mdash; all other auto-registered plugins keep their defaults!
+AELog.configure { plugin(
+    LogPlugin(maxEntries = 2_000) },
     NetworkPlugin(maxEntries = 1_000)
 )
 </code></pre>
-<h2>2. Wrap your App</h2>
-<p>Wrap your root Composable with <code>LogProvider</code>. This enables the floating debug button and the overlay panel.</p>
-<pre><code class="language-kotlin">// In your App composable (commonMain)
-LogProvider(
-    enabled = true // Tie this to your build variant (e.g., debug=true, release=false)
-) {
-    // Your app content
-    MyApp()
+<h2>2. Drop in the Overlay</h2>
+<p>Add <code>AELogOverlay()</code> as a <strong>sibling</strong> anywhere in your root composable &mdash; no wrapping required:</p>
+<pre><code class="language-kotlin">@Composable
+fun App() {
+    AELogOverlay() // &larr; Renders floating notch + inspector panel as a Popup above your UI
+    MaterialTheme {
+        YourAppContent()
+    }
 }
 </code></pre>
+<p>To <strong>disable in release builds</strong>: <code>AELog.isEnabled = BuildConfig.DEBUG</code><br>
+To <strong>hide the notch</strong> and trigger programmatically: <code>AELogOverlay(showNotch = false)</code> then <code>AELog.show()</code></p>
 <h2>3. Start Logging</h2>
 <p>Use the discoverable static APIs. AELog handles everything else behind the scenes.</p>
 <pre><code class="language-kotlin">// 1. Logs (with automatic tag derivation from the calling class)
@@ -317,9 +319,9 @@ try {
 <h2>Show / Hide the Overlay</h2>
 <p>The overlay can be triggered by:</p>
 <ul>
-<li><strong>Floating Button</strong> â€” enabled by default</li>
-<li><strong>Long-Press Gesture</strong> â€” enabled by default</li>
-<li><strong>Programmatically</strong> via <code>LocalLogController.current.show()</code> / <code>hide()</code></li>
+<li><strong>Floating Notch</strong> &mdash; the Dynamic Island-style pill at the top of the screen (shown by default)</li>
+<li><strong>Programmatically</strong> via <code>AELog.show()</code> / <code>AELog.hide()</code> from anywhere in your code</li>
+<li><strong>Custom triggers</strong> &mdash; wire <code>AELog.show()</code> to a shake gesture, debug settings, or any other event</li>
 </ul>
 
 </div>
@@ -327,47 +329,39 @@ try {
 <h1>Configuration</h1>
 <p>AELog is designed to be &quot;zero-config&quot; by default, but provides hooks to customize both data collection and UI behavior.</p>
 <h2>Core Configuration (Data)</h2>
-<p>Pass a <code>LogConfig</code> object to <code>AELog.configure()</code> to control background behavior:</p>
-<pre><code class="language-kotlin">AELog.configure(
-    LogPlugin(),
-    config = LogConfig(
-        maxLogEntries = 1000,
-        // Custom dispatcher for background processing
-        dispatcher = Dispatchers.Default,
-        // Catch and report internal SDK errors
-        errorHandler = { throwable -&gt; FirebaseCrashlytics.getInstance().recordException(throwable) }
-    )
+<p>Use <code>AELog.configure { }</code> to replace the auto-registered default with a custom-configured version:</p>
+<pre><code class="language-kotlin">// Override just the plugins you want &mdash; others stay at their defaults
+AELog.configure { plugin(
+    LogPlugin(maxEntries = 1_000) },
+    NetworkPlugin(maxEntries = 500),
+    CrashPlugin(this)
 )
 </code></pre>
 <h2>UI Configuration</h2>
-<p>Configure the overlay behavior via <code>LogProvider</code>:</p>
-<pre><code class="language-kotlin">LogProvider(
-    enabled = BuildConfig.DEBUG,
-    uiConfig = UiConfig(
-        showFloatingButton = true,
-        enableLongPress = true,
-        floatingButtonOffset = 100.dp,
-        overlayMode = OverlayMode.BottomSheet
-    )
-) {
-    MyApp()
-}
+<p>Control whether the floating notch is shown, or hide it and trigger the overlay programmatically:</p>
+<pre><code class="language-kotlin">// Default &mdash; shows the Dynamic Island-style notch trigger
+AELogOverlay()
+
+// Hidden notch &mdash; open from a shake gesture, debug settings, etc.
+AELogOverlay(showNotch = false)
+// Then from anywhere:
+AELog.show()
+AELog.hide()
+
+// Disable the entire library (e.g. in release builds)
+AELog.isEnabled = BuildConfig.DEBUG
 </code></pre>
-<blockquote>
-<p>[!TIP]
-You no longer need to pass <code>instance = AELog.default</code>. <code>LogProvider</code> picks up the initialized shared instance automatically.</p>
-</blockquote>
 
 </div>
 <div id="plugins-overview" class="docs-section ">
 <h1>Plugins Overview</h1>
 <p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host â€” plugins are what make it useful.</p>
 <h2>How Plugins Work</h2>
-<p>When you call <code>AELog.configure(...)</code>, you pass a list of plugins. The library:</p>
+<p>When you call <code>AELog.install(...)</code> or <code>AELog.configure { plugin(...) }</code>, the library:</p>
 <ol>
 <li><strong>Installs</strong> each plugin and calls its <code>onAttach()</code> lifecycle hook</li>
 <li><strong>Renders</strong> <code>UIPlugin</code> instances as tabs in the overlay panel</li>
-<li><strong>Manages</strong> the lifecycle â€” calling <code>onOpen()</code> / <code>onClose()</code> as the panel opens and closes</li>
+<li><strong>Manages</strong> the lifecycle &mdash; calling <code>onOpen()</code> / <code>onClose()</code> as the panel opens and closes</li>
 <li><strong>Provides</strong> each plugin with access to a coroutine scope and sibling plugins via <code>PluginContext</code></li>
 </ol>
 <h2>Built-in Plugins</h2>
@@ -411,14 +405,17 @@ You no longer need to pass <code>instance = AELog.default</code>. <code>LogProvi
 <h3>DataPlugin</h3>
 <p>A <strong>headless background collector</strong> with no UI. It feeds data to a <code>UIPlugin</code> or runs standalone. Use it for crash collectors, performance samplers, or anything that needs to observe data without a dedicated panel.</p>
 <h2>Installing Plugins</h2>
-<pre><code class="language-kotlin">// In your app entry point (Application.onCreate on Android, etc.)
-AELog.configure(
-    LogPlugin(),
-    NetworkPlugin(),
-    AnalyticsPlugin(),
-    CrashPlugin(),     // â† Crash reporter
-    MyCustomPlugin()   // â† your own plugin
+<pre><code class="language-kotlin">// Auto-registered on Android via ContentProvider — no code needed!
+// But if you need custom limits or want to add custom plugins:
+
+// Reconfigure an existing built-in plugin:
+AELog.configure { plugin(
+    LogPlugin(maxEntries = 2_000) },
+    NetworkPlugin(maxEntries = 500)
 )
+
+// Or register a new custom plugin:
+AELog.install(MyCustomPlugin())
 </code></pre>
 <h2>Plugin Lifecycle</h2>
 <pre><code class="language-mermaid">flowchart TD
@@ -574,7 +571,8 @@ AELog.configure(
 }
 </code></pre>
 <h3>Step 2: Install the Plugin</h3>
-<pre><code class="language-kotlin">AELogSetup.init(plugins = listOf(LogPlugin(), FeatureFlagsPlugin()))
+<pre><code class="language-kotlin">// Add your custom plugin alongside the auto-registered built-ins
+AELog.install(FeatureFlagsPlugin())
 </code></pre>
 <h3>Step 3: Done!</h3>
 <p>Your plugin now appears as a tab in the AELog panel.</p>
@@ -600,7 +598,7 @@ AELog.configure(
 }
 
 // Usage
-val perfPlugin = inspector.getPlugin&lt;PerformancePlugin&gt;()
+val perfPlugin = AELog.getPlugin&lt;PerformancePlugin&gt;()
 perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
 </code></pre>
 <h2>Plugin Lifecycle</h2>

@@ -4,13 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import com.ae.log.ui.LocalLogController
-import com.ae.log.ui.LogProvider
-import com.ae.log.ui.UiConfig
+import com.ae.log.ui.AELogOverlay
 import kotlinx.coroutines.flow.first
 
 /**
@@ -29,29 +24,20 @@ public class LogViewerActivity : ComponentActivity() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
 
         setContent {
-            LogProvider(
-                uiConfig = UiConfig(showFloatingButton = false),
-                enabled = true,
-                content = {
-                    val controller = LocalLogController.current
+            AELogOverlay()
 
-                    LaunchedEffect(Unit) {
-                        controller.show()
+            LaunchedEffect(Unit) {
+                AELog.show()
 
-                        // Wait until the state actually reflects that it is visible
-                        controller.isVisible.first { it }
+                // Wait until the state actually reflects that it is visible
+                AELog.instance?.overlayVisible?.first { it }
 
-                        // Now wait until it becomes invisible (e.g. user closed it)
-                        controller.isVisible.first { !it }
+                // Now wait until it becomes invisible (e.g. user closed it)
+                AELog.instance?.overlayVisible?.first { !it }
 
-                        // Finish the Activity
-                        finish()
-                    }
-
-                    // Empty container - the panel will open over it
-                    Box(modifier = Modifier.fillMaxSize())
-                },
-            )
+                // Finish the Activity
+                finish()
+            }
         }
     }
 }
@@ -78,32 +64,23 @@ public fun AELog.launchViewer(context: android.content.Context) {
             isFocusable = true
 
             setContent {
-                LogProvider(
-                    uiConfig = UiConfig(showFloatingButton = false),
-                    enabled = true,
-                    content = {
-                        val controller = LocalLogController.current
+                AELogOverlay()
 
-                        LaunchedEffect(Unit) {
-                            kotlinx.coroutines.delay(PANEL_SHOW_DELAY_MS)
-                            controller.show()
+                LaunchedEffect(Unit) {
+                    kotlinx.coroutines.delay(PANEL_SHOW_DELAY_MS)
+                    AELog.show()
 
-                            // Wait until the state actually reflects that it is visible
-                            controller.isVisible.first { it }
+                    // Wait until the state actually reflects that it is visible
+                    AELog.instance?.overlayVisible?.first { it }
 
-                            // Now wait until it becomes invisible (e.g. user closed it)
-                            controller.isVisible.first { !it }
+                    // Now wait until it becomes invisible (e.g. user closed it)
+                    AELog.instance?.overlayVisible?.first { !it }
 
-                            // Remove the ComposeView from the Activity
-                            decorView.post {
-                                decorView.removeView(this@apply)
-                            }
-                        }
-
-                        // Empty container - the panel will open over it
-                        Box(modifier = Modifier.fillMaxSize())
-                    },
-                )
+                    // Remove the ComposeView from the Activity
+                    decorView.post {
+                        decorView.removeView(this@apply)
+                    }
+                }
             }
         }
 

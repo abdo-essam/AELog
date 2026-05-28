@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELog.configure(LogPlugin())
+ * AELog.configure { plugin(LogPlugin()) }
  * ```
  *
  * ## Logging

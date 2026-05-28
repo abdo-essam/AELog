@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.ae.log.ui.UiConfig
 import com.ae.log.ui.theme.LogDimens
 
 /**
@@ -19,7 +18,6 @@ import com.ae.log.ui.theme.LogDimens
 public object DialogOverlay : OverlayStrategy {
     @Composable
     override fun Overlay(
-        uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
@@ -30,8 +28,8 @@ public object DialogOverlay : OverlayStrategy {
             Surface(
                 modifier =
                     Modifier
-                        .fillMaxWidth(uiConfig.dialogSizeFraction.first)
-                        .fillMaxHeight(uiConfig.dialogSizeFraction.second),
+                        .fillMaxWidth(0.85f)
+                        .fillMaxHeight(0.8f),
                 shape = RoundedCornerShape(LogDimens.overlayCornerRadius),
                 color = MaterialTheme.colorScheme.surface,
                 tonalElevation = LogDimens.dialogTonalElevation,

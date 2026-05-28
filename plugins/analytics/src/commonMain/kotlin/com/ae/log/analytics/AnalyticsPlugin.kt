@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELog.configure(AnalyticsPlugin())
+ * AELog.configure { plugin(AnalyticsPlugin()) }
  * ```
  *
  * ## Recording events:
