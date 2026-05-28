@@ -155,13 +155,13 @@
 <p>You can write your own plugins for anything else (database inspector, feature flag toggler, etc.).</p>
 <h2>Features</h2>
 <ul>
-<li>ðŸ“‹ <strong>Log Viewer</strong> â€” Real-time log inspection with severity filtering</li>
-<li>ðŸŒ <strong>Network Inspector</strong> â€” Detailed view of HTTP traffic and JSON payloads</li>
-<li>ðŸ“ˆ <strong>Analytics Tracker</strong> â€” Monitor properties across app flow</li>
-<li>ðŸ’¥ <strong>Crash Reporter</strong> â€” Capture and persist fatal and non-fatal exceptions on device</li>
-<li>ðŸ”Œ <strong>Plugin System</strong> â€” Easily extend with custom decoupled <code>UIPlugin</code> or <code>DataPlugin</code></li>
-<li>ðŸŽ¨ <strong>Compose UI</strong> â€” Material 3 themed overlay with dark/light mode support</li>
-<li>ðŸ“± <strong>Multiplatform</strong> â€” Works seamlessly across Android, iOS, and Desktop</li>
+<li>📋 <strong>Log Viewer</strong> — Real-time log inspection with severity filtering</li>
+<li>🌐 <strong>Network Inspector</strong> — Detailed view of HTTP traffic and JSON payloads</li>
+<li>📈 <strong>Analytics Tracker</strong> — Monitor properties across app flow</li>
+<li>💥 <strong>Crash Reporter</strong> — Capture and persist fatal and non-fatal exceptions on device</li>
+<li>🔌 <strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or <code>DataPlugin</code></li>
+<li>🎨 <strong>Compose UI</strong> — Material 3 themed overlay with dark/light mode support</li>
+<li>📱 <strong>Multiplatform</strong> — Works seamlessly across Android, iOS, and Desktop</li>
 </ul>
 <h2>Quick Links</h2>
 <ul>
@@ -489,13 +489,13 @@ AELog.install(MyCustomPlugin())
 <tbody><tr>
 <td><strong>UI Plugin</strong></td>
 <td><code>UIPlugin</code></td>
-<td>âœ… Tab + Content</td>
+<td>✅ Tab + Content</td>
 <td>Log viewer, network inspector, DB browser</td>
 </tr>
 <tr>
 <td><strong>Data Plugin</strong></td>
 <td><code>DataPlugin</code></td>
-<td>âŒ Headless</td>
+<td>❌ Headless</td>
 <td>Crash collector, performance sampler</td>
 </tr>
 </tbody></table>
@@ -608,43 +608,43 @@ perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
 <h2>Plugin Lifecycle</h2>
 <pre><code class="language-mermaid">flowchart TD
     Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
-    Attach --&gt; Open
+    Install(["install()"]) --> Attach["onAttach(context)"]
+    Attach --> Open
 
-    subgraph Panel [&quot;Panel Lifecycle (user opens/closes AELog panel)&quot;]
-        Open[&quot;onOpen()&quot;] --&gt; Close[&quot;onClose()&quot;]
-        Close --&gt; Open
+    subgraph Panel ["Panel Lifecycle (user opens/closes AELog panel)"]
+        Open["onOpen()"] --> Close["onClose()"]
+        Close --> Open
     end
 
-    Close --&gt; Detach[&quot;onDetach()&quot;]
-    Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
+    Close --> Detach["onDetach()"]
+    Uninstall(["uninstall()"]) --> Detach
 </code></pre>
 <div class="warning-callout">
-    <strong>âš ï¸ Important Lifecycle Notes</strong>
+    <strong>⚠️ Important Lifecycle Notes</strong>
     <ul>
         <li><code>onAttach</code> is called exactly once</li>
         <li><code>onOpen</code>/<code>onClose</code> may be called many times</li>
-        <li>Always null-check resources in <code>Content()</code> â€” it may render before <code>onAttach</code></li>
-        <li>Handle your own errors inside <code>Content()</code> â€” Compose has no try-catch for composables</li>
+        <li>Always null-check resources in <code>Content()</code> — it may render before <code>onAttach</code></li>
+        <li>Handle your own errors inside <code>Content()</code> — Compose has no try-catch for composables</li>
     </ul>
 </div>
 <h2>Best Practices</h2>
 <ul>
-<li><strong>Keep plugins focused</strong> â€” one responsibility per plugin</li>
-<li><strong>Use StateFlow</strong> â€” all reactive data should use <code>StateFlow</code>, not <code>mutableStateOf</code></li>
-<li><strong>Minimize main-thread work</strong> â€” heavy computation goes in <code>Dispatchers.Default</code></li>
-<li><strong>Clean up in onDetach</strong> â€” cancel coroutines, close resources</li>
-<li><strong>Test independently</strong> â€” plugins should be testable without the UI</li>
+<li><strong>Keep plugins focused</strong> — one responsibility per plugin</li>
+<li><strong>Use StateFlow</strong> — all reactive data should use <code>StateFlow</code>, not <code>mutableStateOf</code></li>
+<li><strong>Minimize main-thread work</strong> — heavy computation goes in <code>Dispatchers.Default</code></li>
+<li><strong>Clean up in onDetach</strong> — cancel coroutines, close resources</li>
+<li><strong>Test independently</strong> — plugins should be testable without the UI</li>
 </ul>
 
 </div>
 <div id="integrations" class="docs-section ">
 <h1>Logging Integrations</h1>
-<p>AELog works with <strong>any</strong> logging library. Just forward logs to the static <code>AELog.log.entry()</code> method.</p>
+<p>AELog works with <strong>any</strong> logging library. Just forward logs to the static <code>AELog.log</code> methods.</p>
 <h2>Kermit</h2>
 <pre><code class="language-kotlin">import co.touchlab.kermit.LogWriter
 import co.touchlab.kermit.Severity
 import com.ae.log.AELog
-import com.ae.log.plugins.log.model.LogSeverity
 
 class AELogKermitWriter : LogWriter() {
     override fun log(
@@ -653,22 +653,15 @@ class AELogKermitWriter : LogWriter() {
         tag: String,
         throwable: Throwable?
     ) {
-        AELog.log.entry(
-            severity = severity.toAELogLogSeverity(),
-            tag = tag,
-            message = message,
-            throwable = throwable
-        )
+        when (severity) {
+            Severity.Verbose -> AELog.log.v(tag, message, throwable)
+            Severity.Debug -> AELog.log.d(tag, message, throwable)
+            Severity.Info -> AELog.log.i(tag, message, throwable)
+            Severity.Warn -> AELog.log.w(tag, message, throwable)
+            Severity.Error -> AELog.log.e(tag, message, throwable)
+            Severity.Assert -> AELog.log.wtf(tag, message, throwable)
+        }
     }
-}
-
-private fun Severity.toAELogLogSeverity(): LogSeverity = when (this) {
-    Severity.Verbose -&gt; LogSeverity.VERBOSE
-    Severity.Debug -&gt; LogSeverity.DEBUG
-    Severity.Info -&gt; LogSeverity.INFO
-    Severity.Warn -&gt; LogSeverity.WARN
-    Severity.Error -&gt; LogSeverity.ERROR
-    Severity.Assert -&gt; LogSeverity.ASSERT
 }
 
 // Setup
@@ -678,7 +671,6 @@ Logger.addLogWriter(AELogKermitWriter())
 <pre><code class="language-kotlin">import io.github.aakira.napier.Antilog
 import io.github.aakira.napier.LogLevel
 import com.ae.log.AELog
-import com.ae.log.plugins.log.model.LogSeverity
 
 class AELogNapierAntilog : Antilog() {
     override fun performLog(
@@ -687,22 +679,17 @@ class AELogNapierAntilog : Antilog() {
         throwable: Throwable?,
         message: String?
     ) {
-        AELog.log.entry(
-            severity = priority.toAELogLogSeverity(),
-            tag = tag ?: &quot;Napier&quot;,
-            message = message ?: &quot;&quot;,
-            throwable = throwable
-        )
+        val resolvedTag = tag ?: "Napier"
+        val resolvedMsg = message ?: ""
+        when (priority) {
+            LogLevel.VERBOSE -> AELog.log.v(resolvedTag, resolvedMsg, throwable)
+            LogLevel.DEBUG -> AELog.log.d(resolvedTag, resolvedMsg, throwable)
+            LogLevel.INFO -> AELog.log.i(resolvedTag, resolvedMsg, throwable)
+            LogLevel.WARNING -> AELog.log.w(resolvedTag, resolvedMsg, throwable)
+            LogLevel.ERROR -> AELog.log.e(resolvedTag, resolvedMsg, throwable)
+            LogLevel.ASSERT -> AELog.log.wtf(resolvedTag, resolvedMsg, throwable)
+        }
     }
-}
-
-private fun LogLevel.toAELogLogSeverity(): LogSeverity = when (this) {
-    LogLevel.VERBOSE -&gt; LogSeverity.VERBOSE
-    LogLevel.DEBUG -&gt; LogSeverity.DEBUG
-    LogLevel.INFO -&gt; LogSeverity.INFO
-    LogLevel.WARNING -&gt; LogSeverity.WARN
-    LogLevel.ERROR -&gt; LogSeverity.ERROR
-    LogLevel.ASSERT -&gt; LogSeverity.ASSERT
 }
 
 // Setup
@@ -711,27 +698,20 @@ Napier.base(AELogNapierAntilog())
 <h2>Timber (Android)</h2>
 <pre><code class="language-kotlin">import timber.log.Timber
 import com.ae.log.AELog
-import com.ae.log.plugins.log.model.LogSeverity
 
 class AELogTimberTree : Timber.Tree() {
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        AELog.log.entry(
-            severity = priority.toAELogLogSeverity(),
-            tag = tag ?: &quot;Timber&quot;,
-            message = message,
-            throwable = t
-        )
+        val resolvedTag = tag ?: "Timber"
+        when (priority) {
+            android.util.Log.VERBOSE -> AELog.log.v(resolvedTag, message, t)
+            android.util.Log.DEBUG -> AELog.log.d(resolvedTag, message, t)
+            android.util.Log.INFO -> AELog.log.i(resolvedTag, message, t)
+            android.util.Log.WARN -> AELog.log.w(resolvedTag, message, t)
+            android.util.Log.ERROR -> AELog.log.e(resolvedTag, message, t)
+            android.util.Log.ASSERT -> AELog.log.wtf(resolvedTag, message, t)
+            else -> AELog.log.d(resolvedTag, message, t)
+        }
     }
-}
-
-private fun Int.toAELogLogSeverity(): LogSeverity = when (this) {
-    android.util.Log.VERBOSE -&gt; LogSeverity.VERBOSE
-    android.util.Log.DEBUG -&gt; LogSeverity.DEBUG
-    android.util.Log.INFO -&gt; LogSeverity.INFO
-    android.util.Log.WARN -&gt; LogSeverity.WARN
-    android.util.Log.ERROR -&gt; LogSeverity.ERROR
-    android.util.Log.ASSERT -&gt; LogSeverity.ASSERT
-    else -&gt; LogSeverity.DEBUG
 }
 
 // Setup
@@ -747,7 +727,7 @@ val client = HttpClient {
         logger = object : Logger {
             override fun log(message: String) {
                 // Forward to AELog
-                AELog.log.d(&quot;HTTP&quot;, message)
+                AELog.log.d("HTTP", message)
             }
         }
         level = LogLevel.ALL
@@ -756,13 +736,9 @@ val client = HttpClient {
 </code></pre>
 <h2>Direct Usage (No Library)</h2>
 <pre><code class="language-kotlin">// Use the static shorthands
-AELog.log.i(&quot;MyApp&quot;, &quot;App started&quot;)
-AELog.log.e(&quot;Auth&quot;, &quot;Login failed&quot;, error)
-
-// Or the generic log method
-AELog.log.entry(LogSeverity.INFO, &quot;MyApp&quot;, &quot;Direct log call&quot;)
+AELog.log.i("MyApp", "App started")
+AELog.log.e("Auth", "Login failed", error)
 </code></pre>
-
 </div>
 <div id="changelog" class="docs-section">
             <h1>Changelog</h1>
@@ -983,17 +959,17 @@ cd AELog
 ./gradlew apiCheck
 </code></pre>
 <h2>How to Contribute</h2>
-<h3>ðŸ› Reporting Bugs</h3>
+<h3>🐛 Reporting Bugs</h3>
 <ul>
 <li>Use the Bug Report template</li>
 <li>Include: KMP version, platform, steps to reproduce, expected vs actual behavior</li>
 </ul>
-<h3>ðŸ’¡ Suggesting Features</h3>
+<h3>💡 Suggesting Features</h3>
 <ul>
 <li>Use the Feature Request template</li>
 <li>Describe the use case, not just the solution</li>
 </ul>
-<h3>ðŸ”§ Submitting Changes</h3>
+<h3>🔧 Submitting Changes</h3>
 <ul>
 <li>Fork the repository</li>
 <li>Create a feature branch: <code>git checkout -b feat/my-feature</code></li>
