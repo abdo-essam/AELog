@@ -1,4 +1,4 @@
-﻿package com.ae.log.network.ui.components
+package com.ae.log.network.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -45,51 +45,26 @@ internal fun NetworkEntryDetails(
             entry.durationMs?.let { NetworkDetailSection("Duration", "${it}ms") }
 
             // ── Request ───────────────────────────────────────────────────
-            Spacer(Modifier.height(LogSpacing.x3))
-            NetworkSectionDivider("Request")
-
             val queryParams = entry.url.extractQueryParams()
             val hasCustomHeaders = entry.requestHeaders.isNotEmpty()
             val hasQueryParams = queryParams.isNotEmpty()
-            val hasBody = entry.requestBody != null
+            val hasRequestBody = !entry.requestBody.isNullOrBlank()
 
-            when {
-                hasBody -> {
-                    if (hasQueryParams) {
-                        Spacer(Modifier.height(LogSpacing.x2))
-                        NetworkHeadersSection("Query Parameters", queryParams)
-                    }
-                    if (hasCustomHeaders) {
-                        Spacer(Modifier.height(LogSpacing.x2))
-                        NetworkHeadersSection("Headers", entry.requestHeaders)
-                    }
-                    Spacer(Modifier.height(LogSpacing.x2))
-                    NetworkBodySection(
-                        label = "Body",
-                        body = entry.requestBody!!.prettyPrintJson(),
-                        onCopy = { clipboard.setText(AnnotatedString(entry.requestBody)) },
-                    )
-                }
-                hasQueryParams -> {
-                    Spacer(Modifier.height(LogSpacing.x2))
-                    NetworkHeadersSection("Query Parameters", queryParams)
-                    if (hasCustomHeaders) {
-                        Spacer(Modifier.height(LogSpacing.x2))
-                        NetworkHeadersSection("Headers", entry.requestHeaders)
-                    }
-                }
-                hasCustomHeaders -> {
-                    Spacer(Modifier.height(LogSpacing.x2))
-                    NetworkHeadersSection("Headers", entry.requestHeaders)
-                }
-                else -> {
-                    Spacer(Modifier.height(LogSpacing.x2))
-                    Text(
-                        text = "No request body or parameters",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+            if (hasQueryParams) {
+                Spacer(Modifier.height(LogSpacing.x3))
+                NetworkHeadersSection("Query Parameters", queryParams)
+            }
+            if (hasCustomHeaders) {
+                Spacer(Modifier.height(LogSpacing.x3))
+                NetworkHeadersSection("Request Headers", entry.requestHeaders)
+            }
+            if (hasRequestBody) {
+                Spacer(Modifier.height(LogSpacing.x3))
+                NetworkBodySection(
+                    label = "Request Body",
+                    body = entry.requestBody!!.prettyPrintJson(),
+                    onCopy = { clipboard.setText(AnnotatedString(entry.requestBody!!)) },
+                )
             }
 
             // ── Pending indicator ─────────────────────────────────────────
@@ -101,8 +76,6 @@ internal fun NetworkEntryDetails(
             // ── Error (connection failure only) ───────────────────────────
             entry.error?.let { error ->
                 Spacer(Modifier.height(LogSpacing.x3))
-                NetworkSectionDivider("Error")
-                Spacer(Modifier.height(LogSpacing.x1))
                 Box(
                     modifier =
                         Modifier
@@ -125,47 +98,20 @@ internal fun NetworkEntryDetails(
             }
 
             // ── Response ──────────────────────────────────────────────────
-            // Explicit parentheses to make precedence unambiguous:
-            // Show if complete-without-error, OR if there are already response headers/body.
-            if ((!entry.isPending && entry.error == null) ||
-                entry.responseHeaders.isNotEmpty() ||
-                entry.responseBody != null
-            ) {
+            val hasResponseHeaders = entry.responseHeaders.isNotEmpty()
+            val hasResponseBody = !entry.responseBody.isNullOrBlank()
+
+            if (hasResponseHeaders) {
                 Spacer(Modifier.height(LogSpacing.x3))
-                NetworkSectionDivider("Response")
-
-                if (entry.responseHeaders.isNotEmpty()) {
-                    Spacer(Modifier.height(LogSpacing.x2))
-                    NetworkHeadersSection("Headers", entry.responseHeaders)
-                }
-
-                val body = entry.responseBody
-                when {
-                    body != null && body.isNotBlank() -> {
-                        Spacer(Modifier.height(LogSpacing.x2))
-                        NetworkBodySection(
-                            label = "Body",
-                            body = body.prettyPrintJson(),
-                            onCopy = { clipboard.setText(AnnotatedString(body)) },
-                        )
-                    }
-                    body != null -> {
-                        Spacer(Modifier.height(LogSpacing.x2))
-                        Text(
-                            "Empty body",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                    !entry.isPending && entry.error == null -> {
-                        Spacer(Modifier.height(LogSpacing.x2))
-                        Text(
-                            "No response body",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                }
+                NetworkHeadersSection("Response Headers", entry.responseHeaders)
+            }
+            if (hasResponseBody) {
+                Spacer(Modifier.height(LogSpacing.x3))
+                NetworkBodySection(
+                    label = "Response Body",
+                    body = entry.responseBody!!.prettyPrintJson(),
+                    onCopy = { clipboard.setText(AnnotatedString(entry.responseBody!!)) },
+                )
             }
         }
     }
