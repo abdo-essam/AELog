@@ -1,12 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Lens outer element -->
+    <!-- Outer glass lens loop -->
     <circle cx="10.5" cy="10.5" r="7.5"></circle>
-    <!-- Lens inner element -->
-    <circle cx="10.5" cy="10.5" r="4.5" stroke-width="1.5"></circle>
-    <!-- Core element -->
+    <!-- Center aperture node -->
     <circle cx="10.5" cy="10.5" r="1.5" fill="#3b82f6"></circle>
-    <!-- Diagonal magnifying glass handle -->
+    <!-- Magnifying glass handle -->
     <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-    <!-- Shine reflection highlight path -->
+    <!-- Shine reflection highlight -->
     <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
 </svg>
