@@ -145,10 +145,10 @@
             </div>
             <div class="hero-visual fade-up delay-1">
                 <div class="mobile-frame">
-                    <img src="img/aelog_logs.png" alt="AELog Logs" class="mobile-screenshot active">
-                    <img src="img/aelog_network.png" alt="AELog Network" class="mobile-screenshot">
-                    <img src="img/aelog_crashes.png" alt="AELog Crashes" class="mobile-screenshot">
                     <img src="img/aelog_analytics.png" alt="AELog Analytics" class="mobile-screenshot">
+                    <img src="img/aelog_crashes.png" alt="AELog Crashes" class="mobile-screenshot">
+                    <img src="img/aelog_network.png" alt="AELog Network" class="mobile-screenshot">
+                    <img src="img/aelog_logs.png" alt="AELog Logs" class="mobile-screenshot active">
                     <div class="glow-border"></div>
                 </div>
             </div>
@@ -364,8 +364,8 @@ aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        
                         <div class="code-file-label">Application.kt / main.kt</div>
                         <pre><code class="language-kotlin">AELog.configure {
     // Disable the floating notch globally if desired (defaults to true)
-    showNotch = false 
-    
+    showNotch = false
+
     // Customize capacities or plugins
     plugin(LogPlugin(maxEntries = 2_000))
     plugin(NetworkPlugin(maxEntries = 1_000))
