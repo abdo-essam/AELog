@@ -13,9 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,11 +49,8 @@ internal fun LogNotchButton(
             modifier
                 .width(32.dp)
                 .height(120.dp)
-                .shadow(
-                    elevation = 8.dp,
-                    shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
-                ).clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
-                .background(Color(0xE6111111)) // Translucent deep charcoal
+                .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
+                .background(Color(0xFF111111)) // Fully opaque deep charcoal to prevent background colors from shining through
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
@@ -74,7 +72,7 @@ internal fun LogNotchButton(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    imageVector = Icons.Default.BugReport,
+                    imageVector = Icons.Default.Search,
                     contentDescription = "Open AELog",
                     tint = Color.White,
                     modifier = Modifier.size(16.dp),
@@ -98,7 +96,7 @@ internal fun LogNotchButton(
                     modifier =
                         Modifier
                             .rotate(-90f)
-                            .width(76.dp),
+                            .requiredWidth(76.dp), // Ignore parent constraints to prevent "G" truncation
                     // Snug fit for vertical rotation
                     textAlign = TextAlign.Center,
                     maxLines = 1,
@@ -108,23 +106,5 @@ internal fun LogNotchButton(
             // Bottom spacing to balance the top padding
             Box(modifier = Modifier.height(10.dp))
         }
-
-        // Left side: Glowing vertical accent indicator bar (outer edge facing app content)
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxHeight()
-                    .width(3.dp)
-                    .background(
-                        brush =
-                            Brush.verticalGradient(
-                                colors =
-                                    listOf(
-                                        Color.White.copy(alpha = 0.7f),
-                                        Color.White,
-                                    ),
-                            ),
-                    ).align(Alignment.CenterStart),
-        )
     }
 }

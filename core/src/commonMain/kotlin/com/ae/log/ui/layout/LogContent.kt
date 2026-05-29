@@ -44,21 +44,6 @@ internal fun LogContent(
     val selectedPlugin = plugins.getOrElse(safeIndex) { plugins.first() }
 
     Column(modifier = modifier.fillMaxSize()) {
-        // Header — title + active plugin's action buttons
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x3),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "AELog",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
 
         // Tab row (only shown when there are multiple plugins)
         if (plugins.size > 1) {
