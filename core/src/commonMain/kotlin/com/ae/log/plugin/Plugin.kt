@@ -8,8 +8,9 @@ public interface Plugin {
      * override this. Override only when using anonymous or local classes, or
      * when you intentionally want a fixed string that differs from the class name.
      */
-    public val id: String get() = this::class.qualifiedName
-        ?: error("Plugin must override 'id' — anonymous/local classes have no stable qualified name.")
+    public val id: String get() =
+        this::class.qualifiedName
+            ?: error("Plugin must override 'id' — anonymous/local classes have no stable qualified name.")
 
     /** Human-readable label shown in the AELog panel tab. */
     public val name: String
