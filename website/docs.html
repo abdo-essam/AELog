@@ -38,7 +38,12 @@
     <nav class="navbar glass">
         <div class="container nav-container">
             <a href="index.html" class="logo">
-                <span class="logo-icon">▲</span>
+                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <circle cx="12" cy="12" r="5" stroke-width="1.5"></circle>
+                    <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+                    <path d="M12 3a9 9 0 0 1 6.36 2.64" stroke-width="1.5" stroke-linecap="round" opacity="0.7"></path>
+                </svg>
                 <span class="logo-text">AELog</span>
             </a>
             <div class="nav-links">
@@ -107,7 +112,15 @@
 
         <main class="docs-content fade-up visible">
             <div id="introduction" class="docs-section active">
-<h1>AELog</h1>
+<h1 style="display: flex; align-items: center; gap: 12px;">
+    <svg class="logo-icon" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;">
+        <circle cx="12" cy="12" r="9"></circle>
+        <circle cx="12" cy="12" r="5" stroke-width="1.5"></circle>
+        <circle cx="12" cy="12" r="2" fill="currentColor"></circle>
+        <path d="M12 3a9 9 0 0 1 6.36 2.64" stroke-width="1.5" stroke-linecap="round" opacity="0.7"></path>
+    </svg>
+    AELog
+</h1>
 <p><strong>Extensible on-device dev tools for Kotlin Multiplatform.</strong></p>
 <p>AELog is a lightweight, plugin-based developer tools library for KMP apps. It provides a beautiful Compose UI overlay for inspecting logs, network traffic, and more â€” all without leaving the app.</p>
 <h2>What Is AELog?</h2>

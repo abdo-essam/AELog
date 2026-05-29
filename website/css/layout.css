@@ -80,7 +80,13 @@
     letter-spacing: -0.02em;
 }
 
-.logo-icon { color: var(--accent-blue); font-size: 24px; }
+.logo-icon {
+    color: var(--accent-blue);
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    flex-shrink: 0;
+}
 
 .nav-links { display: flex; gap: var(--spacing-xl); }
 

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="website/img/lens_logo.svg" width="96" height="96" alt="AELog Logo" />
+</p>
+
 <h1 align="center">AELog</h1>
 
 <p align="center">
