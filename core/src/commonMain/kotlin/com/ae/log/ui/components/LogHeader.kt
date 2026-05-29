@@ -52,26 +52,24 @@ public fun LogHeader(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(LogSpacing.x1),
         ) {
-            if (itemCount > 0) {
-                actions?.invoke(this)
+            actions?.invoke(this)
 
-                TextButton(
-                    onClick = onClearAll,
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
-                    contentPadding =
-                        PaddingValues(
-                            horizontal = LogSpacing.x2,
-                            vertical = LogSpacing.x1,
-                        ),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.DeleteOutline,
-                        contentDescription = "Clear all",
-                        modifier = Modifier.size(LogSpacing.x4),
-                    )
-                    Spacer(modifier = Modifier.width(LogSpacing.x1))
-                    Text("Clear", style = MaterialTheme.typography.labelSmall)
-                }
+            TextButton(
+                onClick = onClearAll,
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                contentPadding =
+                    PaddingValues(
+                        horizontal = LogSpacing.x2,
+                        vertical = LogSpacing.x1,
+                    ),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DeleteOutline,
+                    contentDescription = "Clear all",
+                    modifier = Modifier.size(LogSpacing.x4),
+                )
+                Spacer(modifier = Modifier.width(LogSpacing.x1))
+                Text("Clear", style = MaterialTheme.typography.labelSmall)
             }
         }
     }

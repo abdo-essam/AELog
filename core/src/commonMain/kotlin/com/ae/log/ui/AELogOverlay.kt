@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.ae.log.AELog
@@ -62,7 +63,7 @@ public fun AELogOverlay(showNotch: Boolean = AELog.config?.showNotch ?: true) {
     }
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint
+        val isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint && maxHeight > 480.dp
 
         CompositionLocalProvider(LocalLogController provides controller) {
             LogTheme {

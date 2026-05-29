@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 
@@ -35,72 +36,77 @@ public fun <T> LogList(
     modifier: Modifier = Modifier,
     itemContent: @Composable (index: Int, item: T) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        LogHeader(
-            itemCount = items.size,
-            itemLabel = itemLabel,
-            onClearAll = onClearAll,
-            actions = {
-                if (onCopyAll != null) {
-                    TextButton(
-                        onClick = onCopyAll,
-                        contentPadding = PaddingValues(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy all",
-                            modifier = Modifier.size(LogSpacing.x4),
-                        )
-                        Spacer(modifier = Modifier.width(LogSpacing.x1))
-                        Text("Copy All", style = MaterialTheme.typography.labelSmall)
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val isCompactHeight = maxHeight < 480.dp
+        val spacing = if (isCompactHeight) LogSpacing.x1_5 else LogSpacing.x3
+
+        Column(modifier = Modifier.fillMaxSize()) {
+            LogHeader(
+                itemCount = items.size,
+                itemLabel = itemLabel,
+                onClearAll = onClearAll,
+                actions = {
+                    if (onCopyAll != null) {
+                        TextButton(
+                            onClick = onCopyAll,
+                            contentPadding = PaddingValues(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = "Copy all",
+                                modifier = Modifier.size(LogSpacing.x4),
+                            )
+                            Spacer(modifier = Modifier.width(LogSpacing.x1))
+                            Text("Copy All", style = MaterialTheme.typography.labelSmall)
+                        }
                     }
-                }
-            },
-        )
+                },
+            )
 
-        Spacer(modifier = Modifier.height(LogSpacing.x3))
+            Spacer(modifier = Modifier.height(spacing))
 
-        LogSearchBar(
-            query = searchQuery,
-            onQueryChange = onSearchChange,
-            placeholder = searchPlaceholder,
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
+            LogSearchBar(
+                query = searchQuery,
+                onQueryChange = onSearchChange,
+                placeholder = searchPlaceholder,
+                modifier = Modifier.padding(horizontal = LogSpacing.x5),
+            )
 
-        Spacer(modifier = Modifier.height(LogSpacing.x3))
+            Spacer(modifier = Modifier.height(spacing))
 
-        LogFilterChips(
-            labels = filterLabels,
-            selectedIndex = selectedFilterIndex,
-            onSelect = onFilterSelect,
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
+            LogFilterChips(
+                labels = filterLabels,
+                selectedIndex = selectedFilterIndex,
+                onSelect = onFilterSelect,
+                modifier = Modifier.padding(horizontal = LogSpacing.x5),
+            )
 
-        Spacer(modifier = Modifier.height(LogSpacing.x3))
+            Spacer(modifier = Modifier.height(spacing))
 
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            if (items.isEmpty()) {
-                val msg = if (searchQuery.isNotEmpty()) emptyQueryMessage else emptyMessage
-                EmptyPlaceholder(msg)
-            } else {
-                Card(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = LogSpacing.x5),
-                    shape = RoundedCornerShape(LogSpacing.x3),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                ) {
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = LogSpacing.x2),
+            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                if (items.isEmpty()) {
+                    val msg = if (searchQuery.isNotEmpty()) emptyQueryMessage else emptyMessage
+                    EmptyPlaceholder(msg)
+                } else {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = LogSpacing.x5),
+                        shape = RoundedCornerShape(LogSpacing.x3),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     ) {
-                        itemsIndexed(items = items, key = { _, i -> itemKey(i) }) { index, item ->
-                            itemContent(index, item)
-                            if (index < items.lastIndex) {
-                                HorizontalDivider(
-                                    modifier = Modifier.padding(horizontal = LogSpacing.x3),
-                                    color = MaterialTheme.colorScheme.outlineVariant,
-                                    thickness = LogDimens.listDividerThickness,
-                                )
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = LogSpacing.x2),
+                        ) {
+                            itemsIndexed(items = items, key = { _, i -> itemKey(i) }) { index, item ->
+                                itemContent(index, item)
+                                if (index < items.lastIndex) {
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(horizontal = LogSpacing.x3),
+                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        thickness = LogDimens.listDividerThickness,
+                                    )
+                                }
                             }
                         }
                     }
