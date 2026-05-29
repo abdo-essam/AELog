@@ -42,9 +42,9 @@ public fun <T> LogList(
             onClearAll = onClearAll,
             actions = {
                 if (onCopyAll != null) {
-                    Button(
+                    TextButton(
                         onClick = onCopyAll,
-                        contentPadding = PaddingValues(horizontal = LogSpacing.x3, vertical = LogSpacing.x1),
+                        contentPadding = PaddingValues(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,

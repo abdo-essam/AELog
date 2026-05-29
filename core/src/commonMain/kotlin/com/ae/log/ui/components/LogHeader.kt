@@ -10,10 +10,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,25 +50,28 @@ public fun LogHeader(
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(LogSpacing.x2),
+            horizontalArrangement = Arrangement.spacedBy(LogSpacing.x1),
         ) {
-            actions?.invoke(this)
+            if (itemCount > 0) {
+                actions?.invoke(this)
 
-            Button(
-                onClick = onClearAll,
-                contentPadding =
-                    PaddingValues(
-                        horizontal = LogSpacing.x3,
-                        vertical = LogSpacing.x1,
-                    ),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.DeleteOutline,
-                    contentDescription = "Clear all",
-                    modifier = Modifier.size(LogSpacing.x4),
-                )
-                Spacer(modifier = Modifier.width(LogSpacing.x1))
-                Text("Clear", style = MaterialTheme.typography.labelSmall)
+                TextButton(
+                    onClick = onClearAll,
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                    contentPadding =
+                        PaddingValues(
+                            horizontal = LogSpacing.x2,
+                            vertical = LogSpacing.x1,
+                        ),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DeleteOutline,
+                        contentDescription = "Clear all",
+                        modifier = Modifier.size(LogSpacing.x4),
+                    )
+                    Spacer(modifier = Modifier.width(LogSpacing.x1))
+                    Text("Clear", style = MaterialTheme.typography.labelSmall)
+                }
             }
         }
     }
