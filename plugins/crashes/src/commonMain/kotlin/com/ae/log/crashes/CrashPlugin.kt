@@ -2,9 +2,9 @@ package com.ae.log.crashes
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.crashes.capture.CrashRecorder
 import com.ae.log.crashes.capture.PlatformCrashHandler
 import com.ae.log.crashes.storage.CrashStorage
@@ -52,7 +52,7 @@ public class CrashPlugin(
 ) : UIPlugin {
     override val id: String = ID
     override val name: String = "Crashes"
-    override val icon: ImageVector = Icons.Default.BugReport
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.BugReport, contentDescription = null) }
 
     internal val storage = CrashStorage(directoryPath = storageDir)
     internal val recorder = CrashRecorder(storage = storage)
@@ -74,12 +74,6 @@ public class CrashPlugin(
             }
         }
     }
-
-    // onStart/onStop are tied to the UI overlay lifecycle in this framework,
-    // not to the app lifecycle. The crash handler must be independent of the UI.
-    override fun onStart(): Unit = Unit
-
-    override fun onStop(): Unit = Unit
 
     override fun onClear() {
         storage.clear()

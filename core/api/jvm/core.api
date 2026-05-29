@@ -110,45 +110,29 @@ public final class com/ae/log/event/PanelOpenedEvent : com/ae/log/event/Event {
 	public static final field INSTANCE Lcom/ae/log/event/PanelOpenedEvent;
 }
 
-public abstract interface class com/ae/log/plugin/DataPlugin : com/ae/log/plugin/Plugin {
-}
-
-public final class com/ae/log/plugin/DataPlugin$DefaultImpls {
-	public static fun export (Lcom/ae/log/plugin/DataPlugin;)Ljava/lang/String;
-	public static fun onAttach (Lcom/ae/log/plugin/DataPlugin;Lcom/ae/log/plugin/PluginContext;)V
-	public static fun onClear (Lcom/ae/log/plugin/DataPlugin;)V
-	public static fun onClose (Lcom/ae/log/plugin/DataPlugin;)V
-	public static fun onDetach (Lcom/ae/log/plugin/DataPlugin;)V
-	public static fun onMigrateFrom (Lcom/ae/log/plugin/DataPlugin;Lcom/ae/log/plugin/Plugin;)V
-	public static fun onOpen (Lcom/ae/log/plugin/DataPlugin;)V
-	public static fun onStart (Lcom/ae/log/plugin/DataPlugin;)V
-	public static fun onStop (Lcom/ae/log/plugin/DataPlugin;)V
+public final class com/ae/log/plugin/ComposableSingletons$UIPluginKt {
+	public static final field INSTANCE Lcom/ae/log/plugin/ComposableSingletons$UIPluginKt;
+	public fun <init> ()V
+	public final fun getLambda$-825088105$core ()Lkotlin/jvm/functions/Function2;
 }
 
 public abstract interface class com/ae/log/plugin/Plugin {
 	public fun export ()Ljava/lang/String;
-	public abstract fun getId ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
 	public abstract fun getName ()Ljava/lang/String;
 	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
-	public fun onClose ()V
 	public fun onDetach ()V
 	public fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;)V
-	public fun onOpen ()V
-	public fun onStart ()V
-	public fun onStop ()V
 }
 
 public final class com/ae/log/plugin/Plugin$DefaultImpls {
 	public static fun export (Lcom/ae/log/plugin/Plugin;)Ljava/lang/String;
+	public static fun getId (Lcom/ae/log/plugin/Plugin;)Ljava/lang/String;
 	public static fun onAttach (Lcom/ae/log/plugin/Plugin;Lcom/ae/log/plugin/PluginContext;)V
 	public static fun onClear (Lcom/ae/log/plugin/Plugin;)V
-	public static fun onClose (Lcom/ae/log/plugin/Plugin;)V
 	public static fun onDetach (Lcom/ae/log/plugin/Plugin;)V
 	public static fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;Lcom/ae/log/plugin/Plugin;)V
-	public static fun onOpen (Lcom/ae/log/plugin/Plugin;)V
-	public static fun onStart (Lcom/ae/log/plugin/Plugin;)V
-	public static fun onStop (Lcom/ae/log/plugin/Plugin;)V
 }
 
 public abstract interface class com/ae/log/plugin/PluginContext {
@@ -175,25 +159,25 @@ public final class com/ae/log/plugin/PluginManager {
 }
 
 public abstract interface class com/ae/log/plugin/UIPlugin : com/ae/log/plugin/Plugin {
+	public static final field Companion Lcom/ae/log/plugin/UIPlugin$Companion;
 	public abstract fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
-	public abstract fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
-	public abstract fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
+	public fun getIcon ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/ae/log/plugin/UIPlugin$Companion {
+	public final fun getNoBadge ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public final class com/ae/log/plugin/UIPlugin$DefaultImpls {
-	public static fun HeaderActions (Lcom/ae/log/plugin/UIPlugin;Landroidx/compose/runtime/Composer;I)V
-	public static fun HeaderContent (Lcom/ae/log/plugin/UIPlugin;Landroidx/compose/runtime/Composer;I)V
 	public static fun export (Lcom/ae/log/plugin/UIPlugin;)Ljava/lang/String;
+	public static fun getBadgeCount (Lcom/ae/log/plugin/UIPlugin;)Lkotlinx/coroutines/flow/StateFlow;
+	public static fun getIcon (Lcom/ae/log/plugin/UIPlugin;)Lkotlin/jvm/functions/Function2;
+	public static fun getId (Lcom/ae/log/plugin/UIPlugin;)Ljava/lang/String;
 	public static fun onAttach (Lcom/ae/log/plugin/UIPlugin;Lcom/ae/log/plugin/PluginContext;)V
 	public static fun onClear (Lcom/ae/log/plugin/UIPlugin;)V
-	public static fun onClose (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onDetach (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onMigrateFrom (Lcom/ae/log/plugin/UIPlugin;Lcom/ae/log/plugin/Plugin;)V
-	public static fun onOpen (Lcom/ae/log/plugin/UIPlugin;)V
-	public static fun onStart (Lcom/ae/log/plugin/UIPlugin;)V
-	public static fun onStop (Lcom/ae/log/plugin/UIPlugin;)V
 }
 
 public final class com/ae/log/storage/InMemoryPluginStorage : com/ae/log/storage/PluginStorage {

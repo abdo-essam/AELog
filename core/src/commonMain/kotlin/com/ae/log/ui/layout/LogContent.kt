@@ -13,8 +13,8 @@ import com.ae.log.ui.theme.LogSpacing
  * Tabbed container that renders UI plugins as tabs.
  *
  * Each [UIPlugin] gets its own tab with an icon, name, and optional badge count.
- * The active plugin's [UIPlugin.HeaderContent], [UIPlugin.HeaderActions],
- * and [UIPlugin.Content] are rendered below the tab row.
+ * The active plugin's [UIPlugin.Content] is rendered below the tab row.
+ * Plugins are responsible for their own internal layout (e.g. search bars, sticky headers).
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +58,6 @@ internal fun LogContent(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Row { selectedPlugin.HeaderActions() }
         }
 
         // Tab row (only shown when there are multiple plugins)
@@ -88,10 +87,10 @@ internal fun LogContent(
                                         )
                                     }
                                 }) {
-                                    Icon(plugin.icon, contentDescription = plugin.name)
+                                    plugin.icon()
                                 }
                             } else {
-                                Icon(plugin.icon, contentDescription = plugin.name)
+                                plugin.icon()
                             }
                         },
                     )
@@ -99,9 +98,7 @@ internal fun LogContent(
             }
         }
 
-        // Active plugin slots
-        selectedPlugin.HeaderContent()
-
+        // Active plugin content
         PluginContent(
             plugin = selectedPlugin,
             modifier = Modifier.weight(1f),

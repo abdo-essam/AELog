@@ -12,7 +12,6 @@
 # Keep plugin interfaces for consumers
 -keep interface com.ae.log.core.AELogPlugin { *; }
 -keep interface com.ae.log.core.UIPlugin { *; }
--keep interface com.ae.log.core.DataPlugin { *; }
 
 # Kotlinx serialization
 -keepclassmembers class kotlinx.serialization.json.** { *** Companion; }

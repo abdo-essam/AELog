@@ -2,9 +2,9 @@ package com.ae.log.logs
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.logs.model.LogSeverity
 import com.ae.log.logs.storage.LogStorage
 import com.ae.log.logs.ui.LogContent
@@ -46,7 +46,7 @@ public class LogPlugin(
     LogRecordSink {
     override val id: String = ID
     override val name: String = "Logs"
-    override val icon: ImageVector = Icons.Default.Description
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Description, contentDescription = null) }
 
     internal val logStorage = LogStorage(capacity = maxEntries)
 

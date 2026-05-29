@@ -5,7 +5,6 @@ import com.ae.log.AELogTestApi
 import com.ae.log.InternalAELogApi
 import com.ae.log.analytics.model.DefaultAdapterSource
 import com.ae.log.plugin.Plugin
-import com.ae.log.plugin.PluginContext
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -109,22 +108,6 @@ class AnalyticsPluginMigrationTest {
         class ImposterPlugin : Plugin {
             override val id = AnalyticsPlugin.ID
             override val name = "Imposter"
-
-            override fun onAttach(context: PluginContext) {}
-
-            override fun onStart() {}
-
-            override fun onStop() {}
-
-            override fun onDetach() {}
-
-            override fun onClear() {}
-
-            override fun onOpen() {}
-
-            override fun onClose() {}
-
-            override fun export() = ""
         }
 
         AELog.install(ImposterPlugin())

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.Wifi
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -74,14 +75,13 @@ private fun SampleNavBar(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
 ) {
-    val items =
-        listOf(
-            NavItem("Logs", Icons.AutoMirrored.Filled.List, Icons.AutoMirrored.Outlined.List),
-            NavItem("Network", Icons.Filled.Wifi, Icons.Outlined.Wifi),
-            NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
-            NavItem("Crashes", Icons.Filled.BugReport, Icons.Outlined.BugReport),
-            NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
-        )
+    val items = listOf(
+        NavItem("Logs", Icons.AutoMirrored.Filled.List, Icons.AutoMirrored.Outlined.List),
+        NavItem("Network", Icons.Filled.Wifi, Icons.Outlined.Wifi),
+        NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
+        NavItem("Crashes", Icons.Filled.BugReport, Icons.Outlined.BugReport),
+        NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
+    )
 
     NavigationBar {
         items.forEachIndexed { index, item ->

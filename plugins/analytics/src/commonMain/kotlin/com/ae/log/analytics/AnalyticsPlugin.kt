@@ -2,9 +2,9 @@ package com.ae.log.analytics
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.analytics.storage.AnalyticsStorage
 import com.ae.log.analytics.ui.AnalyticsContent
 import com.ae.log.analytics.ui.AnalyticsViewModel
@@ -35,7 +35,7 @@ public class AnalyticsPlugin(
 ) : UIPlugin {
     override val id: String = ID
     override val name: String = "Analytics"
-    override val icon: ImageVector = Icons.Default.Analytics
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Analytics, contentDescription = null) }
 
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount

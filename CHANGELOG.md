@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2026-05-29
+
+### Simplified
+- **Unified Plugin Architecture:** Consolidated the redundant `DataPlugin` marker interface and `UIPlugin` under a single, streamlined `Plugin` base contract.
+- **Auto-Generated IDs:** Added reflection-based qualified class name `id` defaults, eliminating manual ID registration boilerplate.
+- **Consolidated UI Layout:** Removed legacy layout slots (`HeaderContent()` and `HeaderActions()`) from `UIPlugin`. Plugins now have 100% layout control (like sticky search/headers) directly inside `Content()`.
+- **YAGNI Lifecycle Cleanups:** Purged unused imperative hooks (`onStart()`, `onStop()`, `onOpen()`, `onClose()`) from the plugin interface in favor of reactive event subscriptions on the shared `EventBus`.
+
 ## [1.0.6] - 2026-05-28
 
 ### Added

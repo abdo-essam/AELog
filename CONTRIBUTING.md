@@ -100,7 +100,7 @@ ci: add iOS build to CI pipeline
 ```
 
 ### Architecture Rules
-* Plugins must implement `UIPlugin` or `DataPlugin`
+* Plugins must implement `UIPlugin` or `Plugin`
 * No Android-specific imports in `commonMain`
 * All state exposed as `StateFlow` (no LiveData)
 * Compose UI uses Material3 exclusively
@@ -113,11 +113,11 @@ flowchart TD
     
     subgraph Plugins ["Plugin System"]
         AELog --> LogPlugin["LogPlugin<br>(UIPlugin)"]
-        AELog --> CustomPlugin["Your Plugin<br>(UIPlugin)"]
-        AELog --> DataPlugin["DataPlugin<br>(headless)"]
+        AELog --> CustomPlugin["Your UI Plugin<br>(UIPlugin)"]
+        AELog --> HeadlessPlugin["Your Headless Plugin<br>(Plugin)"]
     end
     
     LogPlugin --> Storage["LogStorage / DataStore<br>(Storage Layer)"]
     CustomPlugin --> Storage
-    DataPlugin --> Storage
+    HeadlessPlugin --> Storage
 ```

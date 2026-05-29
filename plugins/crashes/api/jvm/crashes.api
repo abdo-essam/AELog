@@ -2,6 +2,12 @@ public final class com/ae/log/crashes/AELogCrashesKt {
 	public static final fun getCrashes (Lcom/ae/log/AELog;)Lcom/ae/log/crashes/CrashProxy;
 }
 
+public final class com/ae/log/crashes/ComposableSingletons$CrashPluginKt {
+	public static final field INSTANCE Lcom/ae/log/crashes/ComposableSingletons$CrashPluginKt;
+	public fun <init> ()V
+	public final fun getLambda$-1345531803$crashes ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/ae/log/crashes/CrashPlugin : com/ae/log/plugin/UIPlugin {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/crashes/CrashPlugin$Companion;
@@ -10,21 +16,15 @@ public final class com/ae/log/crashes/CrashPlugin : com/ae/log/plugin/UIPlugin {
 	public fun <init> (Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
 	public fun export ()Ljava/lang/String;
 	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
-	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public fun getIcon ()Lkotlin/jvm/functions/Function2;
 	public fun getId ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
 	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
-	public fun onClose ()V
 	public fun onDetach ()V
 	public fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;)V
-	public fun onOpen ()V
-	public fun onStart ()V
-	public fun onStop ()V
 	public final fun recordNonFatal (Ljava/lang/Throwable;Ljava/lang/String;)V
 	public static synthetic fun recordNonFatal$default (Lcom/ae/log/crashes/CrashPlugin;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
 }

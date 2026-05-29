@@ -34,38 +34,42 @@ core/
 
 AELog is designed so that all actual logger features (standard text logs, network interceptors, crash capture, etc.) are implemented as decoupled **Plugins**. The core does not know about these features; it merely coordinates them.
 
-There are two primary types of plugins:
-1. `DataPlugin`: A headless collector that processes data in the background (e.g. a crash logger).
-2. `UIPlugin`: A plugin that adds a custom visual panel (tab) to the Compose overlay.
+There are two ways to write plugins:
+1. **Headless Plugin**: Implement the base `Plugin` interface directly to collect or process data in the background (e.g. crash collection, network interceptors).
+2. **UI Plugin**: Implement the `UIPlugin` interface to add a visual panel (tab) to the Compose overlay.
 
 ### 2.1. Plugin Lifecycle Hooks
 
-Every plugin can hook into the following platform and UI lifecycle events:
+Every plugin can hook into the following lifecycle hooks:
 
 | Lifecycle Method | Description |
 |:---|:---|
-| `onAttach(context: PluginContext)` | Invoked when the plugin is registered in the SDK. The plugin receives a local `CoroutineScope` and access to the shared `EventBus` and `LogConfig`. |
-| `onStart()` | Invoked when the SDK finishes its initialization. Useful for starting background collection jobs. |
-| `onOpen()` | Called when the developer/user opens the AELog UI panel on screen. |
-| `onClose()` | Called when the user dismisses the AELog UI panel. |
-| `onStop()` | Called when the SDK is actively shut down (or when unit tests teardown). |
+| `onAttach(context: PluginContext)` | Invoked when the plugin is registered. The plugin receives a local `CoroutineScope` and access to the shared `EventBus` and `LogConfig`. |
 | `onDetach()` | Called when the plugin is uninstalled; its local coroutine scope is cancelled automatically. |
 | `onClear()` | Triggered when `AELog.clearAll()` is executed. The plugin must clear its stored records/caches. |
+| `onMigrateFrom(oldPlugin: Plugin)` | Triggered during `AELog.configure` hot-swaps, allowing you to transfer accumulated state from the previous instance of this plugin. |
+
+> [!TIP]
+> **Reactive Lifecycles**: Stale, imperative lifecycles like `onStart`, `onOpen`, and `onClose` are removed to favor a reactive approach. If your plugin needs to respond to overlay or app state changes, simply observe them from the `EventBus` in `onAttach`:
+> ```kotlin
+> context.collectEvents<PanelOpenedEvent> { /* Overlay opened */ }
+> context.collectEvents<PanelClosedEvent> { /* Overlay closed */ }
+> ```
 
 ---
 
 ## 3. Creating a Custom Plugin
 
-### 3.1. Headless Data Plugin Example
+### 3.1. Headless Plugin Example
 
 Here is how you create a simple data collection plugin:
 
 ```kotlin
-import com.ae.log.plugin.DataPlugin
+import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 
-class CustomDataPlugin : DataPlugin {
-    override val id: String = "custom-data-tracker"
+class CustomDataPlugin : Plugin {
+    // override val id: String = "custom-data-tracker" // Optional: Defaults to qualified class name
     override val name: String = "Custom Tracker"
 
     private var pluginContext: PluginContext? = null
@@ -73,7 +77,7 @@ class CustomDataPlugin : DataPlugin {
     override fun onAttach(context: PluginContext) {
         this.pluginContext = context
         
-        // Start listening to background lifecycle events or perform setup
+        // Start listening to background events or perform setup
         println("Plugin attached with scope: ${context.scope}")
     }
 
@@ -85,27 +89,23 @@ class CustomDataPlugin : DataPlugin {
 
 ### 3.2. Visual UI Plugin Example
 
-Here is how you create a plugin that renders a visual panel inside the overlay:
+Here is how you create a plugin that renders a visual panel inside the overlay. UI plugins now own their entire layout inside `Content` (e.g. sticky headers, search bars, list content):
 
 ```kotlin
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.plugin.UIPlugin
 import com.ae.log.plugin.PluginContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class CustomUiPlugin(
-    override val icon: ImageVector // The tab icon
-) : UIPlugin {
-    override val id: String = "custom-ui-panel"
+class CustomUiPlugin : UIPlugin {
+    // override val icon: @Composable () -> Unit = { Icon(Icons.Default.Star, null) } // Optional: Defaults to a generic plug icon!
+    // override val id: String = "custom-ui-panel" // Optional: Defaults to qualified class name
     override val name: String = "Custom Panel"
-
-    private val _badgeCount = MutableStateFlow(0)
-    override val badgeCount: StateFlow<Int> = _badgeCount
+    // override val badgeCount — omit entirely when you don't need a counter on the tab
 
     override fun onAttach(context: PluginContext) {
         // Perform initialization
@@ -113,14 +113,11 @@ class CustomUiPlugin(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        Box(modifier = modifier) {
-            Text("This is my custom panel content!")
+        Column(modifier = modifier.fillMaxSize()) {
+            // Renders your sticky search bars or custom action headers directly in Content!
+            Text("This is my custom panel header actions / controls")
+            Text("This is my custom panel main list content!")
         }
-    }
-
-    @Composable
-    override fun HeaderActions() {
-        // Custom clear or share action buttons in the header row
     }
 }
 ```

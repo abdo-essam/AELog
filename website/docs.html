@@ -159,7 +159,7 @@
 <li>🌐 <strong>Network Inspector</strong> — Detailed view of HTTP traffic and JSON payloads</li>
 <li>📈 <strong>Analytics Tracker</strong> — Monitor properties across app flow</li>
 <li>💥 <strong>Crash Reporter</strong> — Capture and persist fatal and non-fatal exceptions on device</li>
-<li>🔌 <strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or <code>DataPlugin</code></li>
+<li>🔌 <strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or headless <code>Plugin</code></li>
 <li>🎨 <strong>Compose UI</strong> — Material 3 themed overlay with dark/light mode support</li>
 <li>📱 <strong>Multiplatform</strong> — Works seamlessly across Android, iOS, and Desktop</li>
 </ul>
@@ -365,7 +365,6 @@ AELog.isEnabled = BuildConfig.DEBUG
 <ol>
 <li><strong>Installs</strong> each plugin and calls its <code>onAttach()</code> lifecycle hook</li>
 <li><strong>Renders</strong> <code>UIPlugin</code> instances as tabs in the overlay panel</li>
-<li><strong>Manages</strong> the lifecycle &mdash; calling <code>onOpen()</code> / <code>onClose()</code> as the panel opens and closes</li>
 <li><strong>Provides</strong> each plugin with access to a coroutine scope and sibling plugins via <code>PluginContext</code></li>
 </ol>
 <h2>Built-in Plugins</h2>
@@ -405,9 +404,9 @@ AELog.isEnabled = BuildConfig.DEBUG
 </tbody></table>
 <h2>Plugin Types</h2>
 <h3>UIPlugin</h3>
-<p>Renders a <strong>tab with header and content areas</strong> inside the AELog panel. Ideal for visually inspecting data (logs, network calls, feature flags, database records, etc.).</p>
-<h3>DataPlugin</h3>
-<p>A <strong>headless background collector</strong> with no UI. It feeds data to a <code>UIPlugin</code> or runs standalone. Use it for crash collectors, performance samplers, or anything that needs to observe data without a dedicated panel.</p>
+<p>Renders a <strong>tab inside the AELog panel</strong>. Ideal for visually inspecting data (logs, network calls, feature flags, database records, etc.). UI plugins now own their entire layout inside the <code>Content()</code> composable (e.g. sticky search bars, custom headers, and scrollable lists).</p>
+<h3>Plugin (Headless)</h3>
+<p>A <strong>headless background collector</strong> with no UI. Simply implement the standard <code>Plugin</code> interface directly. Use it for crash collectors, performance samplers, background interceptors, or anything that needs to observe data or listen to event signals without a dedicated visual tab.</p>
 <h2>Installing Plugins</h2>
 <pre><code class="language-kotlin">// Auto-registered on Android via ContentProvider — no code needed!
 // But if you need custom limits or want to add custom plugins:
@@ -423,16 +422,10 @@ AELog.install(MyCustomPlugin())
 </code></pre>
 <h2>Plugin Lifecycle</h2>
 <pre><code class="language-mermaid">flowchart TD
-    Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
-    Attach --&gt; Open
-
-    subgraph Panel [&quot;Panel Lifecycle (user opens/closes AELog panel)&quot;]
-        Open[&quot;onOpen()&quot;] --&gt; Close[&quot;onClose()&quot;]
-        Close --&gt; Open
-    end
-
-    Close --&gt; Detach[&quot;onDetach()&quot;]
-    Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
+    Install(["install()"]) --> Attach["onAttach(context)"]
+    Attach --> Active["Active State"]
+    Active --> Detach["onDetach()"]
+    Uninstall(["uninstall()"]) --> Detach
 </code></pre>
 <p>Each hook has a clear responsibility:</p>
 <table>
@@ -446,31 +439,26 @@ AELog.install(MyCustomPlugin())
 <tbody><tr>
 <td><code>onAttach(context)</code></td>
 <td>Once, on install</td>
-<td>Store <code>PluginContext</code>, start background work</td>
+<td>Store <code>PluginContext</code>, launch background collection, subscribe to EventBus events</td>
 </tr>
 <tr>
-<td><code>onOpen()</code></td>
-<td>Every time panel opens</td>
-<td>Resume UI updates, refresh data</td>
-</tr>
-<tr>
-<td><code>onClose()</code></td>
-<td>Every time panel closes</td>
-<td>Pause expensive operations</td>
+<td><code>onMigrateFrom(oldPlugin)</code></td>
+<td>On AELog.configure hot-swap</td>
+<td>Migrate accumulated memory buffers or state from the previous instance of the plugin</td>
 </tr>
 <tr>
 <td><code>onClear()</code></td>
 <td>User taps &quot;Clear All&quot;</td>
-<td>Reset stored data</td>
+<td>Reset stored entries or memory states</td>
 </tr>
 <tr>
 <td><code>onDetach()</code></td>
-<td>On uninstall</td>
-<td>Cancel coroutines, release resources</td>
+<td>On uninstall or reset</td>
+<td>Cancel coroutines, release resources, teardown native callbacks</td>
 </tr>
 </tbody></table>
 <h2>Creating Custom Plugins</h2>
-<p>See the <a href="custom-plugins.md">Custom Plugins</a> guide for a full walkthrough including code examples, lifecycle details, and best practices.</p>
+<p>See the <a href="#custom-plugins" class="docs-nav-link" data-section="custom-plugins">Custom Plugins</a> guide for a full walkthrough including code examples, lifecycle details, and best practices.</p>
 
 </div>
 <div id="custom-plugins" class="docs-section ">
@@ -493,39 +481,30 @@ AELog.install(MyCustomPlugin())
 <td>Log viewer, network inspector, DB browser</td>
 </tr>
 <tr>
-<td><strong>Data Plugin</strong></td>
-<td><code>DataPlugin</code></td>
+<td><strong>Headless Plugin</strong></td>
+<td><code>Plugin</code></td>
 <td>❌ Headless</td>
-<td>Crash collector, performance sampler</td>
+<td>Crash collector, performance sampler, background worker</td>
 </tr>
 </tbody></table>
 <h2>Creating a UI Plugin</h2>
 <h3>Step 1: Implement UIPlugin</h3>
 <pre><code class="language-kotlin">class FeatureFlagsPlugin : UIPlugin {
-    override val id = &quot;feature_flags&quot;
+    // override val id = &quot;feature_flags&quot; // Optional: Defaults to qualified class name
     override val name = &quot;Flags&quot;
-    override val icon = Icons.Default.Flag
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Flag, null) }
 
-    // Badge shown on tab (null = no badge)
-    private val _badgeCount = MutableStateFlow&lt;Int?&gt;(null)
-    override val badgeCount: StateFlow&lt;Int?&gt; = _badgeCount
+    // Override badgeCount only when your plugin tracks a meaningful live count.
+    // Omit it entirely if you don't need a badge — the default shows nothing.
+    private val _badgeCount = MutableStateFlow(0)
+    override val badgeCount: StateFlow&lt;Int&gt; = _badgeCount
 
-    private var inspector: AELog? = null
+    private var context: PluginContext? = null
 
     // Called once when installed
-    override fun onAttach(inspector: AELog) {
-        this.inspector = inspector
+    override fun onAttach(context: PluginContext) {
+        this.context = context
         _badgeCount.value = getFlags().size
-    }
-
-    // Called when AELog panel opens
-    override fun onOpen() {
-        refreshFlags()
-    }
-
-    // Called when AELog panel closes
-    override fun onClose() {
-        // Pause expensive operations
     }
 
     // Called when user taps &quot;Clear All&quot;
@@ -536,40 +515,35 @@ AELog.install(MyCustomPlugin())
 
     // Called when plugin is uninstalled
     override fun onDetach() {
-        inspector = null
+        context = null
     }
 
-    // Main content rendered in the AELog panel
+    // Main content rendered in the AELog panel (owns entire layout!)
     @Composable
     override fun Content(modifier: Modifier) {
         val flags = remember { getFlags() }
 
-        LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(flags) { flag -&gt;
-                FlagRow(
-                    name = flag.name,
-                    enabled = flag.enabled,
-                    onToggle = { toggleFlag(flag.id) }
-                )
+        Column(modifier = modifier.fillMaxSize()) {
+            // Sticky search/filter bar and action headers go directly inside Content()!
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(&quot;Toggle feature flags for testing&quot;, style = MaterialTheme.typography.bodySmall)
+                IconButton(onClick = { resetAllFlags() }) {
+                    Icon(Icons.Default.Refresh, &quot;Reset all&quot;)
+                }
             }
-        }
-    }
 
-    // Optional: Controls above the main content
-    @Composable
-    override fun HeaderContent() {
-        Text(
-            text = &quot;Toggle feature flags for testing&quot;,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(horizontal = 20.dp)
-        )
-    }
-
-    // Optional: Action buttons in the header
-    @Composable
-    override fun HeaderActions() {
-        IconButton(onClick = { resetAllFlags() }) {
-            Icon(Icons.Default.Refresh, &quot;Reset all&quot;)
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(flags) { flag -&gt;
+                    FlagRow(
+                        name = flag.name,
+                        enabled = flag.enabled,
+                        onToggle = { toggleFlag(flag.id) }
+                    )
+                }
+            }
         }
     }
 }
@@ -580,16 +554,16 @@ AELog.install(FeatureFlagsPlugin())
 </code></pre>
 <h3>Step 3: Done!</h3>
 <p>Your plugin now appears as a tab in the AELog panel.</p>
-<h2>Creating a Data Plugin</h2>
-<pre><code class="language-kotlin">class PerformancePlugin : DataPlugin {
-    override val id = &quot;performance&quot;
+<h2>Creating a Headless Plugin</h2>
+<pre><code class="language-kotlin">class PerformancePlugin : Plugin {
+    // override val id = &quot;performance&quot; // Optional: Defaults to qualified class name
     override val name = &quot;Performance&quot;
 
     private val _metrics = MutableStateFlow&lt;List&lt;Metric&gt;&gt;(emptyList())
     val metrics: StateFlow&lt;List&lt;Metric&gt;&gt; = _metrics.asStateFlow()
 
-    override fun onAttach(inspector: AELog) {
-        startCollecting()
+    override fun onAttach(context: PluginContext) {
+        startCollecting(context.scope)
     }
 
     override fun onDetach() {
@@ -608,33 +582,26 @@ perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
 <h2>Plugin Lifecycle</h2>
 <pre><code class="language-mermaid">flowchart TD
     Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
-    Install(["install()"]) --> Attach["onAttach(context)"]
-    Attach --> Open
-
-    subgraph Panel ["Panel Lifecycle (user opens/closes AELog panel)"]
-        Open["onOpen()"] --> Close["onClose()"]
-        Close --> Open
-    end
-
-    Close --> Detach["onDetach()"]
-    Uninstall(["uninstall()"]) --> Detach
+    Attach --&gt; Active[&quot;Active State&quot;]
+    Active --&gt; Detach[&quot;onDetach()&quot;]
+    Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
 </code></pre>
 <div class="warning-callout">
     <strong>⚠️ Important Lifecycle Notes</strong>
     <ul>
-        <li><code>onAttach</code> is called exactly once</li>
-        <li><code>onOpen</code>/<code>onClose</code> may be called many times</li>
-        <li>Always null-check resources in <code>Content()</code> — it may render before <code>onAttach</code></li>
-        <li>Handle your own errors inside <code>Content()</code> — Compose has no try-catch for composables</li>
+        <li><code>onAttach</code> is called exactly once when the plugin is installed</li>
+        <li>Stale imperative lifecycle hooks (like <code>onStart</code>, <code>onStop</code>, <code>onOpen</code>, <code>onClose</code>) are removed in favor of lightweight, reactive event subscriptions on the <code>EventBus</code></li>
+        <li>Always safety-check resources in <code>Content()</code> — it may recompose at any time</li>
+        <li>Handle UI errors gracefully inside <code>Content()</code></li>
     </ul>
 </div>
 <h2>Best Practices</h2>
 <ul>
 <li><strong>Keep plugins focused</strong> — one responsibility per plugin</li>
-<li><strong>Use StateFlow</strong> — all reactive data should use <code>StateFlow</code>, not <code>mutableStateOf</code></li>
-<li><strong>Minimize main-thread work</strong> — heavy computation goes in <code>Dispatchers.Default</code></li>
-<li><strong>Clean up in onDetach</strong> — cancel coroutines, close resources</li>
-<li><strong>Test independently</strong> — plugins should be testable without the UI</li>
+<li><strong>Use StateFlow</strong> — all reactive data should use <code>StateFlow</code></li>
+<li><strong>Minimize main-thread work</strong> — heavy computation goes in background coroutine scopes</li>
+<li><strong>Clean up in onDetach</strong> — cancel background tasks and release state</li>
+<li><strong>Test independently</strong> — plugins can be unit-tested fully in KMP commonMain</li>
 </ul>
 
 </div>
@@ -748,6 +715,25 @@ AELog.log.e("Auth", "Login failed", error)
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone 0: v1.0.7 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.7 <span class="timeline-date">— May 29, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Simplified</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Unified Plugin Architecture:</strong> Consolidated the redundant <code>DataPlugin</code> marker interface and <code>UIPlugin</code> under a single, streamlined <code>Plugin</code> base contract.</li>
+                            <li><strong>Auto-Generated IDs:</strong> Added reflection-based qualified class name <code>id</code> defaults, eliminating manual ID registration boilerplate.</li>
+                            <li><strong>Consolidated UI layout:</strong> Removed legacy layout slots (<code>HeaderContent()</code> and <code>HeaderActions()</code>) from <code>UIPlugin</code>. Plugins now have 100% layout control (like sticky search/headers) directly inside <code>Content()</code>.</li>
+                            <li><strong>YAGNI Lifecycle Cleanups:</strong> Purged unused imperative hooks (<code>onStart()</code>, <code>onStop()</code>, <code>onOpen()</code>, <code>onClose()</code>) from the plugin interface in favor of reactive event subscriptions on the shared <code>EventBus</code>.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
                 </div>
 
                 <!-- Milestone 1: v1.0.6 -->

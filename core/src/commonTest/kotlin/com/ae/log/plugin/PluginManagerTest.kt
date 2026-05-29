@@ -38,10 +38,6 @@ class PluginManagerTest {
             lastContext = context
         }
 
-        override fun onStart() {}
-
-        override fun onStop() {}
-
         override fun onDetach() {
             detachCount++
         }
@@ -49,10 +45,6 @@ class PluginManagerTest {
         override fun onClear() {
             clearCount++
         }
-
-        override fun onOpen() {}
-
-        override fun onClose() {}
 
         override fun export() = ""
     }

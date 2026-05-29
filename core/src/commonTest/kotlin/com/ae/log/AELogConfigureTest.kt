@@ -24,8 +24,6 @@ class AELogConfigureTest {
         override val name: String = "Fake",
     ) : Plugin {
         var attached = false
-        var started = false
-        var stopped = false
         var detached = false
         var cleared = false
         var exportValue = ""
@@ -33,14 +31,6 @@ class AELogConfigureTest {
 
         override fun onAttach(context: PluginContext) {
             attached = true
-        }
-
-        override fun onStart() {
-            started = true
-        }
-
-        override fun onStop() {
-            stopped = true
         }
 
         override fun onDetach() {
@@ -54,10 +44,6 @@ class AELogConfigureTest {
         override fun onMigrateFrom(oldPlugin: Plugin) {
             migratedFrom = oldPlugin
         }
-
-        override fun onOpen() {}
-
-        override fun onClose() {}
 
         override fun export() = exportValue
     }
@@ -171,11 +157,10 @@ class AELogConfigureTest {
     }
 
     @Test
-    fun `resetForTesting - calls onStop and onDetach on plugins`() {
+    fun `resetForTesting - calls onDetach on plugins`() {
         val plugin = FakePlugin()
         AELog.configure { plugin(plugin) }
         AELog.resetForTesting()
-        assertTrue(plugin.stopped)
         assertTrue(plugin.detached)
     }
 
