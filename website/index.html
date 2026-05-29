@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AELog | Production-Grade Mobile Logging</title>
-    <meta name="description" content="AELog is a production-grade logging and crash tracking library for mobile applications. See more. Fix faster.">
+    <meta name="description"
+        content="AELog is a production-grade logging and crash tracking library for mobile applications. See more. Fix faster.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
 
     <!-- Styles: modular CSS architecture (each file has a single responsibility) -->
     <link rel="stylesheet" href="css/base.css">
@@ -21,12 +25,13 @@
     <link rel="stylesheet" href="css/features.css">
 
     <!-- Syntax highlighting for setup guide code blocks -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" defer></script>
 
     <!-- Inline theme init: apply before first paint to prevent flash of wrong theme -->
     <script>
-        (function() {
+        (function () {
             var stored = localStorage.getItem('aelog-theme');
             var theme = (stored === 'light' || stored === 'dark') ? stored
                 : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
@@ -34,6 +39,7 @@
         })();
     </script>
 </head>
+
 <body>
     <!-- Animated Background Elements -->
     <div class="background-grid"></div>
@@ -55,10 +61,13 @@
                 <a href="#opensource" class="nav-link">Open Source</a>
             </div>
             <div class="nav-actions">
-                <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode"></button>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode"
+                    title="Switch to light mode"></button>
                 <a href="https://github.com/abdo-essam/AELog" target="_blank" class="github-stars glass-subtle">
                     <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                        </path>
                     </svg>
                     <span>GitHub</span>
                 </a>
@@ -100,23 +109,40 @@
                     <a href="#integration" class="hover-border-btn">
                         <span class="hover-border-inner">Start Integrating</span>
                     </a>
-                    <a href="https://github.com/abdo-essam/AELog" target="_blank" class="btn btn-secondary btn-large pill glass-subtle">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <a href="https://github.com/abdo-essam/AELog" target="_blank"
+                        class="btn btn-secondary btn-large pill glass-subtle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
                         Star on GitHub
                     </a>
                 </div>
                 <div class="hero-tech-stack">
                     <p class="body-sm-strong mute-text">Natively supports</p>
                     <div class="tech-logos">
-                        <div class="tech-chip glass-subtle pill"><img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Kotlin_Icon.png" alt="Kotlin" width="16"> Kotlin Multiplatform</div>
-                        <div class="tech-chip glass-subtle pill"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg" alt="Android" width="16"> Android</div>
-                        <div class="tech-chip glass-subtle pill"><svg width="16" height="16" viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg> iOS</div>
+                        <div class="tech-chip glass-subtle pill"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/7/74/Kotlin_Icon.png" alt="Kotlin"
+                                width="16"> Kotlin Multiplatform</div>
+                        <div class="tech-chip glass-subtle pill"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg"
+                                alt="Android" width="16"> Android</div>
+                        <div class="tech-chip glass-subtle pill"><svg width="16" height="16" viewBox="0 0 384 512"
+                                fill="currentColor">
+                                <path
+                                    d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+                            </svg> iOS</div>
                     </div>
                 </div>
             </div>
             <div class="hero-visual fade-up delay-1">
                 <div class="mobile-frame">
-                    <img src="img/aelog_mobile.png" alt="AELog Android In-App Overlay" class="mobile-screenshot">
+                    <img src="img/aelog_logs.png" alt="AELog Logs" class="mobile-screenshot active">
+                    <img src="img/aelog_network.png" alt="AELog Network" class="mobile-screenshot">
+                    <img src="img/aelog_crashes.png" alt="AELog Crashes" class="mobile-screenshot">
+                    <img src="img/aelog_analytics.png" alt="AELog Analytics" class="mobile-screenshot">
                     <div class="glow-border"></div>
                 </div>
             </div>
@@ -129,7 +155,8 @@
             <div class="section-header text-center fade-up">
                 <div class="badge glass-subtle pill">Features & Purpose</div>
                 <h2 class="display-xl">Complete On-Device <span class="gradient-text">Diagnostics</span></h2>
-                <p class="body-lg mute-text">A powerful suite of modular plugins designed to speed up mobile development, QA testing, and troubleshooting.</p>
+                <p class="body-lg mute-text">A powerful suite of modular plugins designed to speed up mobile
+                    development, QA testing, and troubleshooting.</p>
             </div>
 
             <!-- Features Grid -->
@@ -138,7 +165,8 @@
                 <div class="glass-panel card-xl magic-card feature-card">
                     <div class="feature-icon-wrapper">🔍</div>
                     <h3 class="body-lg-strong">Log Inspector</h3>
-                    <p class="body-sm mute-text">Search, filter by severity levels, and copy logs instantly with syntax-highlighted JSON preview. No more scrolling through bloated IDE consoles.</p>
+                    <p class="body-sm mute-text">Search, filter by severity levels, and copy logs instantly with
+                        syntax-highlighted JSON preview. No more scrolling through bloated IDE consoles.</p>
                     <div class="glow-border"></div>
                 </div>
 
@@ -146,7 +174,8 @@
                 <div class="glass-panel card-xl magic-card feature-card">
                     <div class="feature-icon-wrapper">🌐</div>
                     <h3 class="body-lg-strong">Network Viewer</h3>
-                    <p class="body-sm mute-text">Inspect HTTP requests and responses, full headers, and body payloads with automatic secure redaction of sensitive credentials like authorization tokens.</p>
+                    <p class="body-sm mute-text">Inspect HTTP requests and responses, full headers, and body payloads
+                        with automatic secure redaction of sensitive credentials like authorization tokens.</p>
                     <div class="glow-border"></div>
                 </div>
 
@@ -154,7 +183,8 @@
                 <div class="glass-panel card-xl magic-card feature-card">
                     <div class="feature-icon-wrapper">📊</div>
                     <h3 class="body-lg-strong">Analytics Tracker</h3>
-                    <p class="body-sm mute-text">Verify analytics events and screen views in real-time. Make sure your tracked properties are correctly populated as you navigate.</p>
+                    <p class="body-sm mute-text">Verify analytics events and screen views in real-time. Make sure your
+                        tracked properties are correctly populated as you navigate.</p>
                     <div class="glow-border"></div>
                 </div>
 
@@ -162,7 +192,8 @@
                 <div class="glass-panel card-xl magic-card feature-card">
                     <div class="feature-icon-wrapper">💥</div>
                     <h3 class="body-lg-strong">Crash Reporter</h3>
-                    <p class="body-sm mute-text">Capture and persist fatal and non-fatal exceptions right on the device. Browse complete stack traces even after the app restarts.</p>
+                    <p class="body-sm mute-text">Capture and persist fatal and non-fatal exceptions right on the device.
+                        Browse complete stack traces even after the app restarts.</p>
                     <div class="glow-border"></div>
                 </div>
 
@@ -170,7 +201,8 @@
                 <div class="glass-panel card-xl magic-card feature-card">
                     <div class="feature-icon-wrapper">🧩</div>
                     <h3 class="body-lg-strong">Pluggable & Extensible</h3>
-                    <p class="body-sm mute-text">Extend AELog with custom debug screens (e.g., database viewers or feature flag toggles) using the simple UIPlugin API.</p>
+                    <p class="body-sm mute-text">Extend AELog with custom debug screens (e.g., database viewers or
+                        feature flag toggles) using the simple UIPlugin API.</p>
                     <div class="glow-border"></div>
                 </div>
 
@@ -178,7 +210,8 @@
                 <div class="glass-panel card-xl magic-card feature-card">
                     <div class="feature-icon-wrapper">🔌</div>
                     <h3 class="body-lg-strong">Zero Overhead</h3>
-                    <p class="body-sm mute-text">AELog uses an efficient in-memory RingBuffer. A single enabled flag completely strips all UI costs in production release builds.</p>
+                    <p class="body-sm mute-text">AELog uses an efficient in-memory RingBuffer. A single enabled flag
+                        completely strips all UI costs in production release builds.</p>
                     <div class="glow-border"></div>
                 </div>
             </div>
@@ -188,28 +221,32 @@
                 <!-- Left: Built For Who? -->
                 <div class="glass-panel card-xl magic-card audience-card">
                     <h3 class="display-md"><span class="gradient-text">Built for who?</span></h3>
-                    <p class="body-md mute-text mt-4">AELog is engineered specifically for modern mobile developers and creators seeking high-velocity workflows.</p>
+                    <p class="body-md mute-text mt-4">AELog is engineered specifically for modern mobile developers and
+                        creators seeking high-velocity workflows.</p>
 
                     <ul class="audience-list">
                         <li>
                             <span class="audience-item-icon">🍎</span>
                             <div>
                                 <h4 class="body-md-strong">Kotlin Multiplatform Developers</h4>
-                                <p class="body-sm mute-text">Write once, debug everywhere. Native support for Android, iOS, Desktop (JVM), and WASM.</p>
+                                <p class="body-sm mute-text">Write once, debug everywhere. Native support for Android,
+                                    iOS, Desktop (JVM), and WASM.</p>
                             </div>
                         </li>
                         <li>
                             <span class="audience-item-icon">👥</span>
                             <div>
                                 <h4 class="body-md-strong">Collaborative Engineering Teams</h4>
-                                <p class="body-sm mute-text">Empower QA engineers and beta testers to capture rich logs and crashes directly on-device without an IDE.</p>
+                                <p class="body-sm mute-text">Empower QA engineers and beta testers to capture rich logs
+                                    and crashes directly on-device without an IDE.</p>
                             </div>
                         </li>
                         <li>
                             <span class="audience-item-icon">🚀</span>
                             <div>
                                 <h4 class="body-md-strong">Solo Creators & Startups</h4>
-                                <p class="body-sm mute-text">Ditch complex, paid external cloud crash logging servers during active development and staging.</p>
+                                <p class="body-sm mute-text">Ditch complex, paid external cloud crash logging servers
+                                    during active development and staging.</p>
                             </div>
                         </li>
                     </ul>
@@ -219,28 +256,32 @@
                 <!-- Right: Built For What? -->
                 <div class="glass-panel card-xl magic-card audience-card">
                     <h3 class="display-md"><span class="gradient-text">Built for what?</span></h3>
-                    <p class="body-md mute-text mt-4">Solving the biggest friction points in modern mobile debugging, testing, and troubleshooting.</p>
+                    <p class="body-md mute-text mt-4">Solving the biggest friction points in modern mobile debugging,
+                        testing, and troubleshooting.</p>
 
                     <ul class="audience-list">
                         <li>
                             <span class="audience-item-icon">⚡</span>
                             <div>
                                 <h4 class="body-md-strong">Zero-Config Diagnostics</h4>
-                                <p class="body-sm mute-text">Instant debugging. No complex configurations or setup steps—plugins auto-initialize and start working.</p>
+                                <p class="body-sm mute-text">Instant debugging. No complex configurations or setup
+                                    steps—plugins auto-initialize and start working.</p>
                             </div>
                         </li>
                         <li>
                             <span class="audience-item-icon">🔒</span>
                             <div>
                                 <h4 class="body-md-strong">Offline Debugging & Security</h4>
-                                <p class="body-sm mute-text">All logs, network calls, and crash details are stored locally on-device. No leaks, no privacy violations.</p>
+                                <p class="body-sm mute-text">All logs, network calls, and crash details are stored
+                                    locally on-device. No leaks, no privacy violations.</p>
                             </div>
                         </li>
                         <li>
                             <span class="audience-item-icon">🐛</span>
                             <div>
                                 <h4 class="body-md-strong">High-Velocity Bug Squashing</h4>
-                                <p class="body-sm mute-text">Verify network calls and analytics triggers, and view stack traces instantly when a bug or exception occurs.</p>
+                                <p class="body-sm mute-text">Verify network calls and analytics triggers, and view stack
+                                    traces instantly when a bug or exception occurs.</p>
                             </div>
                         </li>
                     </ul>
@@ -256,7 +297,8 @@
             <div class="section-header text-center fade-up">
                 <div class="badge glass-subtle pill">Quick Setup</div>
                 <h2 class="display-xl">Add AELog to your <span class="gradient-text">project</span></h2>
-                <p class="body-lg mute-text">Four steps to full in-app debugging. Pick only the plugins you need — every artifact is independently optional.</p>
+                <p class="body-lg mute-text">Four steps to full in-app debugging. Pick only the plugins you need — every
+                    artifact is independently optional.</p>
             </div>
 
             <!-- Step 1: Choose your scenario -->
@@ -264,7 +306,8 @@
                 <div class="step-number">1</div>
                 <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Add your dependency</h3>
-                    <p class="step-desc mute-text">Pick the plugins you want. Each artifact carries <code>ae-log-core</code> transitively — no need to add it manually.</p>
+                    <p class="step-desc mute-text">Pick the plugins you want. Each artifact carries
+                        <code>ae-log-core</code> transitively — no need to add it manually.</p>
 
                     <div class="scenario-tabs" id="scenario-tabs">
                         <button class="scenario-tab active" data-scenario="logs">🔍 Logs only</button>
@@ -307,7 +350,10 @@ aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        
                 <div class="step-number">2</div>
                 <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Custom Configuration (Optional)</h3>
-                    <p class="step-desc mute-text">AELog <strong>automatically initialises</strong> on app startup! If you want to supply custom settings (like disabling the floating notch globally or adjusting capacities), call <code>AELog.configure { }</code> in your platform entry point (e.g. <code>Application.onCreate()</code>):</p>
+                    <p class="step-desc mute-text">AELog <strong>automatically initialises</strong> on app startup! If
+                        you want to supply custom settings (like disabling the floating notch globally or adjusting
+                        capacities), call <code>AELog.configure { }</code> in your platform entry point (e.g.
+                        <code>Application.onCreate()</code>):</p>
                     <div class="setup-code-block">
                         <div class="code-file-label">Application.kt / main.kt</div>
                         <pre><code class="language-kotlin">AELog.configure {
@@ -332,7 +378,8 @@ aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        
                 <div class="step-number">3</div>
                 <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Add the UI Overlay</h3>
-                    <p class="step-desc mute-text">Drop <code>AELogOverlay()</code> as a sibling anywhere in your root composable—no wrapper required! In XML Views, simply use launchViewer from your activity.</p>
+                    <p class="step-desc mute-text">Drop <code>AELogOverlay()</code> as a sibling anywhere in your root
+                        composable—no wrapper required! In XML Views, simply use launchViewer from your activity.</p>
                     <div class="tab-pair" id="ui-framework-tabs">
                         <button class="tab-chip active" data-ui="compose">Jetpack Compose</button>
                         <button class="tab-chip" data-ui="xml">XML Views (Android)</button>
@@ -364,7 +411,8 @@ AELog.launchViewer(activity)</code></pre>
                 <div class="step-number">4</div>
                 <div class="step-content glass-panel card-xl magic-card">
                     <h3 class="step-title">Start logging</h3>
-                    <p class="step-desc mute-text">Use the static <code>AELog</code> API anywhere in your codebase. Tap the <strong>bug button</strong> to open the inspector.</p>
+                    <p class="step-desc mute-text">Use the static <code>AELog</code> API anywhere in your codebase. Tap
+                        the <strong>bug button</strong> to open the inspector.</p>
                     <div class="setup-code-block">
                         <div class="code-file-label">Anywhere in your app</div>
                         <pre><code class="language-kotlin">// Logs — mirrors Android Log.*
@@ -384,7 +432,8 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
                     </div>
                     <div class="step-note">
                         <span class="note-icon">🎯</span>
-                        <strong>Auto-tag:</strong> Omit the tag and AELog derives it from the caller's class name — no repetition needed.
+                        <strong>Auto-tag:</strong> Omit the tag and AELog derives it from the caller's class name — no
+                        repetition needed.
                     </div>
                     <div class="glow-border"></div>
                 </div>
@@ -397,11 +446,13 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
         <div class="container container-wide">
             <div class="section-header text-center fade-up">
                 <h2 class="display-xl">Built for <span class="gradient-text">Scale</span></h2>
-                <p class="body-lg mute-text">A multi-layered architecture that guarantees zero-data-loss and minimal performance overhead on the host application.</p>
+                <p class="body-lg mute-text">A multi-layered architecture that guarantees zero-data-loss and minimal
+                    performance overhead on the host application.</p>
             </div>
 
             <div class="architecture-diagram card-xl glass-panel fade-up delay-1">
-                <svg class="diagram-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet" style="min-height:480px;">
+                <svg class="diagram-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet"
+                    style="min-height:480px;">
                     <!-- Definitions -->
                     <defs>
                         <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -418,7 +469,7 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
                     <!-- Connection Lines -->
                     <g stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none">
                         <!-- UI to Core -->
-                        <path d="M 150 300 L 300 300" stroke="url(#lineGrad)" filter="url(#glow)"/>
+                        <path d="M 150 300 L 300 300" stroke="url(#lineGrad)" filter="url(#glow)" />
 
                         <!-- Core to Plugins -->
                         <path d="M 450 260 L 550 90" />
@@ -428,12 +479,16 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
 
                         <!-- Plugins to Storage (Dashed mappings based on Storage type) -->
                         <!-- In-Memory Storage mapping -->
-                        <path d="M 700 90 C 740 90, 760 140, 800 140" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" />
-                        <path d="M 700 270 C 740 270, 760 180, 800 180" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" />
-                        <path d="M 700 360 C 740 360, 760 210, 800 210" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" />
+                        <path d="M 700 90 C 740 90, 760 140, 800 140" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" />
+                        <path d="M 700 270 C 740 270, 760 180, 800 180" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" />
+                        <path d="M 700 360 C 740 360, 760 210, 800 210" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" />
 
                         <!-- Persistent Storage mapping -->
-                        <path d="M 700 180 C 740 180, 760 380, 800 380" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" />
+                        <path d="M 700 180 C 740 180, 760 380, 800 380" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" />
 
                         <!-- Interceptors to NetworkPlugin -->
                         <path d="M 625 460 L 625 315" stroke="#3b82f6" />
@@ -522,7 +577,8 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
 
                     <!-- Interceptors -->
                     <g class="node" transform="translate(550, 460)">
-                        <rect width="150" height="60" rx="12" fill="rgba(59, 130, 246, 0.08)" stroke="#3b82f6" stroke-width="1" stroke-dasharray="4,4" />
+                        <rect width="150" height="60" rx="12" fill="rgba(59, 130, 246, 0.08)" stroke="#3b82f6"
+                            stroke-width="1" stroke-dasharray="4,4" />
                         <text x="75" y="26" text-anchor="middle" class="node-title" fill="#3b82f6">Interceptors</text>
                         <text x="75" y="44" text-anchor="middle" class="node-subtitle">Ktor / OkHttp</text>
                     </g>
@@ -532,7 +588,8 @@ AELog.crashes.recordNonFatal(exception)</code></pre>
                 <div id="arch-info-panel" class="arch-info-panel glass-subtle">
                     <div class="arch-panel-badge" id="arch-info-badge">Core Engine</div>
                     <h4 id="arch-info-title" class="body-lg-strong">AELog Core</h4>
-                    <p id="arch-info-desc" class="body-sm mute-text">The heartbeat of the system. Manages Plugin Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.</p>
+                    <p id="arch-info-desc" class="body-sm mute-text">The heartbeat of the system. Manages Plugin
+                        Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.</p>
                     <pre><code id="arch-info-code" class="language-kotlin">// Configure custom plugins/settings if needed
 AELog.configure(
   LogPlugin(maxEntries = 2000)
@@ -545,17 +602,20 @@ AELog.configure(
                 <div class="feature-item fade-up">
                     <div class="icon-wrapper glass-subtle pill">⚡</div>
                     <h3 class="body-lg-strong">Zero Overhead</h3>
-                    <p class="body-md mute-text">The internal RingBuffer stores logs efficiently in memory, preventing out-of-memory errors and ensuring logging never blocks your main UI thread.</p>
+                    <p class="body-md mute-text">The internal RingBuffer stores logs efficiently in memory, preventing
+                        out-of-memory errors and ensuring logging never blocks your main UI thread.</p>
                 </div>
                 <div class="feature-item fade-up delay-1">
                     <div class="icon-wrapper glass-subtle pill">💾</div>
                     <h3 class="body-lg-strong">Pluggable Storage</h3>
-                    <p class="body-md mute-text">Store crashes and logs efficiently using file-based persistence that survives restarts.</p>
+                    <p class="body-md mute-text">Store crashes and logs efficiently using file-based persistence that
+                        survives restarts.</p>
                 </div>
                 <div class="feature-item fade-up delay-2">
                     <div class="icon-wrapper glass-subtle pill">🔌</div>
                     <h3 class="body-lg-strong">Modular Plugins</h3>
-                    <p class="body-md mute-text">Feature-agnostic core with independent modules for Network, Crashes, and Sinks.</p>
+                    <p class="body-md mute-text">Feature-agnostic core with independent modules for Network, Crashes,
+                        and Sinks.</p>
                 </div>
             </div>
         </div>
@@ -567,22 +627,27 @@ AELog.configure(
             <div class="section-header text-center fade-up">
                 <div class="badge glass-subtle pill">Documentation</div>
                 <h2 class="display-xl">Complete Developer <span class="gradient-text">Reference</span></h2>
-                <p class="body-lg mute-text">Everything you need to integrate, configure, and extend AELog in your Kotlin Multiplatform apps.</p>
+                <p class="body-lg mute-text">Everything you need to integrate, configure, and extend AELog in your
+                    Kotlin Multiplatform apps.</p>
             </div>
 
             <div class="grid-2 fade-up delay-1">
                 <!-- Getting Started Card -->
                 <div class="glass-panel card-xl magic-card docs-showcase-card">
                     <div class="docs-showcase-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5s3 1.5 5.5-2.5C11 16 16 11 19 5c2-2 5-1 5-1s1 3-1 5c-6 3-11 8-14.5 12.5z"></path>
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M4.5 16.5c-1.5 1.26-2.5 3.19-2.5 5.5s3 1.5 5.5-2.5C11 16 16 11 19 5c2-2 5-1 5-1s1 3-1 5c-6 3-11 8-14.5 12.5z">
+                            </path>
                             <path d="M9 15l3 3"></path>
                             <circle cx="9.5" cy="8.5" r="1.5"></circle>
                         </svg>
                     </div>
                     <div class="docs-showcase-content">
                         <h3 class="display-sm">Getting Started</h3>
-                        <p class="body-md mute-text mt-2">Learn the minimum dependencies, setup procedures, and complete a 5-minute integration for Android & iOS platforms.</p>
+                        <p class="body-md mute-text mt-2">Learn the minimum dependencies, setup procedures, and complete
+                            a 5-minute integration for Android & iOS platforms.</p>
                         <a href="docs.html#installation" class="btn-text mt-4">Read Setup Guide →</a>
                     </div>
                     <div class="glow-border"></div>
@@ -591,7 +656,8 @@ AELog.configure(
                 <!-- Custom Configuration Card -->
                 <div class="glass-panel card-xl magic-card docs-showcase-card">
                     <div class="docs-showcase-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="4" y1="21" x2="4" y2="14"></line>
                             <line x1="4" y1="10" x2="4" y2="3"></line>
                             <line x1="12" y1="21" x2="12" y2="12"></line>
@@ -605,7 +671,8 @@ AELog.configure(
                     </div>
                     <div class="docs-showcase-content">
                         <h3 class="display-sm">Custom Configuration</h3>
-                        <p class="body-md mute-text mt-2">Configure custom background threads, thread-safety, custom capacity limits, and custom diagnostic error streams.</p>
+                        <p class="body-md mute-text mt-2">Configure custom background threads, thread-safety, custom
+                            capacity limits, and custom diagnostic error streams.</p>
                         <a href="docs.html#configuration" class="btn-text mt-4">View Configuration Guide →</a>
                     </div>
                     <div class="glow-border"></div>
@@ -614,14 +681,18 @@ AELog.configure(
                 <!-- Custom Plugins Card -->
                 <div class="glass-panel card-xl magic-card docs-showcase-card">
                     <div class="docs-showcase-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 10h-1.25L15 6h-3V3H9v3H6l-1.75 4H3v2c0 2 1.5 3.5 3.5 3.5h7c2 0 3.5-1.5 3.5-3.5v-2z"></path>
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M18 10h-1.25L15 6h-3V3H9v3H6l-1.75 4H3v2c0 2 1.5 3.5 3.5 3.5h7c2 0 3.5-1.5 3.5-3.5v-2z">
+                            </path>
                             <path d="M12 17v4"></path>
                         </svg>
                     </div>
                     <div class="docs-showcase-content">
                         <h3 class="display-sm">Creating Custom Plugins</h3>
-                        <p class="body-md mute-text mt-2">Extend AELog by building decoupled background collectors or custom interactive UI panels in Compose.</p>
+                        <p class="body-md mute-text mt-2">Extend AELog by building decoupled background collectors or
+                            custom interactive UI panels in Compose.</p>
                         <a href="docs.html#custom-plugins" class="btn-text mt-4">Explore Plugin APIs →</a>
                     </div>
                     <div class="glow-border"></div>
@@ -630,14 +701,16 @@ AELog.configure(
                 <!-- Integrations Card -->
                 <div class="glass-panel card-xl magic-card docs-showcase-card">
                     <div class="docs-showcase-icon">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                         </svg>
                     </div>
                     <div class="docs-showcase-content">
                         <h3 class="display-sm">Logging Bridges</h3>
-                        <p class="body-md mute-text mt-2">Forward messages seamlessly from third-party ecosystems including Napier, Kermit, Timber, and Ktor logging.</p>
+                        <p class="body-md mute-text mt-2">Forward messages seamlessly from third-party ecosystems
+                            including Napier, Kermit, Timber, and Ktor logging.</p>
                         <a href="docs.html#integrations" class="btn-text mt-4">View Logging Bridges →</a>
                     </div>
                     <div class="glow-border"></div>
@@ -657,17 +730,23 @@ AELog.configure(
             <div class="section-header fade-up">
                 <div class="badge glass-subtle pill">Meet the Creator</div>
                 <h2 class="display-xl">Behind the <span class="gradient-text">Project</span></h2>
-                <p class="body-lg mute-text">The engineer crafting open-source developer tooling for modern mobile teams.</p>
+                <p class="body-lg mute-text">The engineer crafting open-source developer tooling for modern mobile
+                    teams.</p>
             </div>
 
             <div class="developer-profile-card glass-panel card-xl magic-card fade-up delay-1">
                 <div class="developer-info">
                     <h3 class="display-md">
-                        <a href="https://abdo-essam.github.io/" target="_blank" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">Abdo Essam</a>
+                        <a href="https://abdo-essam.github.io/" target="_blank"
+                            style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">Abdo
+                            Essam</a>
                     </h3>
                     <p class="body-md-strong mute-text">Mobile Infrastructure Engineer & KMP Enthusiast</p>
                     <p class="body-md developer-bio mt-4">
-                        I build tools that help developers ship faster, cleaner, and with complete confidence. AELog was born out of the frustration of constantly connecting cables, dealing with bloated IDE consoles, and fighting with unstable developer overlays. I designed AELog to be a lightweight, zero-dependency, and deeply extensible companion for Kotlin Multiplatform developers.
+                        I build tools that help developers ship faster, cleaner, and with complete confidence. AELog was
+                        born out of the frustration of constantly connecting cables, dealing with bloated IDE consoles,
+                        and fighting with unstable developer overlays. I designed AELog to be a lightweight,
+                        zero-dependency, and deeply extensible companion for Kotlin Multiplatform developers.
                     </p>
                     <div class="developer-badges mt-4">
                         <span class="tech-chip glass-subtle pill">Kotlin</span>
@@ -676,9 +755,12 @@ AELog.configure(
                         <span class="tech-chip glass-subtle pill">Compose Multiplatform</span>
                     </div>
                     <div class="developer-actions mt-4">
-                        <a href="https://abdo-essam.github.io/" target="_blank" class="btn btn-primary pill">Visit Portfolio</a>
-                        <a href="https://github.com/abdo-essam" target="_blank" class="btn btn-secondary pill glass-subtle">GitHub Profile</a>
-                        <a href="https://github.com/abdo-essam/AELog" target="_blank" class="btn btn-secondary pill glass-subtle">Support AELog</a>
+                        <a href="https://abdo-essam.github.io/" target="_blank" class="btn btn-primary pill">Visit
+                            Portfolio</a>
+                        <a href="https://github.com/abdo-essam" target="_blank"
+                            class="btn btn-secondary pill glass-subtle">GitHub Profile</a>
+                        <a href="https://github.com/abdo-essam/AELog" target="_blank"
+                            class="btn btn-secondary pill glass-subtle">Support AELog</a>
                     </div>
                 </div>
                 <div class="glow-border"></div>
@@ -690,7 +772,8 @@ AELog.configure(
         <div class="container text-center open-source-container fade-up">
             <div class="badge glass-subtle pill">Apache 2.0 Licensed</div>
             <h2 class="display-xl">Proudly Open Source</h2>
-            <p class="body-lg mute-text">AELog is community-driven and completely open source. Join the movement to build better mobile infrastructure.</p>
+            <p class="body-lg mute-text">AELog is community-driven and completely open source. Join the movement to
+                build better mobile infrastructure.</p>
 
             <div class="github-stats glass-panel card-xl">
                 <div class="stat-item">
@@ -708,13 +791,16 @@ AELog.configure(
                 <div class="stat-item">
                     <div class="icon-wrapper glass-subtle pill stat-icon">🚀</div>
                     <h4 class="body-lg-strong text-white stat-heading">First-Class KMP</h4>
-                    <p class="body-sm mute-text">Designed to run natively across Android, iOS, and common JVM targets.</p>
+                    <p class="body-sm mute-text">Designed to run natively across Android, iOS, and common JVM targets.
+                    </p>
                 </div>
             </div>
 
             <div class="open-source-actions">
-                <a href="https://github.com/abdo-essam/AELog/blob/main/CONTRIBUTING.md" target="_blank" class="btn btn-primary btn-large pill">Read Contribution Guide</a>
-                <a href="https://github.com/abdo-essam/AELog" target="_blank" class="btn btn-secondary btn-large pill glass-subtle">Fork Repository</a>
+                <a href="https://github.com/abdo-essam/AELog/blob/main/CONTRIBUTING.md" target="_blank"
+                    class="btn btn-primary btn-large pill">Read Contribution Guide</a>
+                <a href="https://github.com/abdo-essam/AELog" target="_blank"
+                    class="btn btn-secondary btn-large pill glass-subtle">Fork Repository</a>
             </div>
         </div>
     </section>
@@ -728,28 +814,34 @@ AELog.configure(
                         <span class="logo-icon">▲</span>
                         <span class="logo-text">AELog</span>
                     </a>
-                    <p class="body-sm mute-text mt-4">The enterprise-grade logging and crash tracking library designed for modern mobile teams.</p>
+                    <p class="body-sm mute-text mt-4">The enterprise-grade logging and crash tracking library designed
+                        for modern mobile teams.</p>
                 </div>
                 <div class="footer-links">
                     <h4 class="body-md-strong text-white">Resources</h4>
                     <ul>
                         <li><a href="docs.html" class="link-mute">Documentation</a></li>
                         <li><a href="docs.html" class="link-mute">API Reference</a></li>
-                        <li><a href="https://github.com/abdo-essam/AELog/tree/main/sample" class="link-mute" target="_blank">Sample Apps</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/tree/main/sample" class="link-mute"
+                                target="_blank">Sample Apps</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
                     <h4 class="body-md-strong text-white">Community</h4>
                     <ul>
-                        <li><a href="https://github.com/abdo-essam/AELog" class="link-mute" target="_blank">GitHub Repo</a></li>
-                        <li><a href="https://github.com/abdo-essam/AELog/discussions" class="link-mute" target="_blank">Discussions</a></li>
-                        <li><a href="https://github.com/abdo-essam/AELog/issues" class="link-mute" target="_blank">Issue Tracker</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog" class="link-mute" target="_blank">GitHub
+                                Repo</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/discussions" class="link-mute"
+                                target="_blank">Discussions</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/issues" class="link-mute" target="_blank">Issue
+                                Tracker</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
                     <h4 class="body-md-strong text-white">Legal</h4>
                     <ul>
-                        <li><a href="https://github.com/abdo-essam/AELog/blob/main/LICENSE" class="link-mute" target="_blank">Apache 2.0 License</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/blob/main/LICENSE" class="link-mute"
+                                target="_blank">Apache 2.0 License</a></li>
                         <li><a href="privacy.html" class="link-mute">Privacy Policy</a></li>
                     </ul>
                 </div>
@@ -763,5 +855,6 @@ AELog.configure(
     <!-- Scripts -->
     <script type="module" src="js/theme.js"></script>
     <script type="module" src="js/main.js"></script>
- </body>
+</body>
+
 </html>

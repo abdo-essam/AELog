@@ -12,6 +12,7 @@ import { initScrollProgress } from "./scroll-progress.js";
 import { initMagicCards } from "./magic-card.js";
 import { initTextFlip } from "./text-flip.js";
 import { initTheme } from "./theme.js";
+import { initScreenshotCarousel } from "./screenshot-carousel.js";
 
 // DOM Selector Constants to prevent hardcoding strings in methods
 const FADE_UP_SELECTOR = ".fade-up";
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initScrollProgress();
     initMagicCards();
     initTextFlip();
+    initScreenshotCarousel();
 
     // 2. Initialize interactive architecture diagram interactions
     initArchDiagram();

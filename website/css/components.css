@@ -167,7 +167,20 @@
     z-index: 30;
 }
 
-.mobile-screenshot { width: 100%; height: 100%; object-fit: cover; }
+.mobile-screenshot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.mobile-screenshot.active {
+    opacity: 1;
+}
 
 /* ==========================================================================
    Mockup Log UI (feature card preview)
