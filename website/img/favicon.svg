@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+    <!-- Dark rounded background -->
+    <rect width="32" height="32" rx="8" fill="#111111"/>
+    <!-- Outer lens circle -->
+    <circle cx="13" cy="13" r="8" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Center dot -->
+    <circle cx="13" cy="13" r="2" fill="#3b82f6"/>
+    <!-- Handle -->
+    <line x1="28" y1="28" x2="20" y2="20" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Shine arc -->
+    <path d="M13 5a8 8 0 0 1 5.66 2.34" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+</svg>
