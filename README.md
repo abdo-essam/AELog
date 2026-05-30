@@ -64,114 +64,15 @@
 
 ## 📦 Installation
 
-AELog is fully modularized. **You only add the artifact for the feature you need.**
-Every plugin module carries its dependencies transitively, so you never need to add
-`ae-log-core` or intermediate modules manually.
+AELog is fully modularized. **Add only the dependencies you need.** Every plugin module carries its dependencies transitively, so you never need to import `ae-log-core` manually.
 
-> **Pick your scenario below — copy only that block.**
+### 1. Version Catalog (Recommended)
 
----
-
-### 🔵 Scenario A — Logs only
-
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-logs:1.0.6")
-    // ↳ transitively includes ae-log-core
-}
-```
-
----
-
-### 🌐 Scenario B — Network inspection with Ktor
-
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.6")
-    // ↳ transitively includes ae-log-network and ae-log-core
-}
-```
-
----
-
-### 🟢 Scenario C — Network inspection with OkHttp (Android only)
-
-```kotlin
-// build.gradle.kts
-androidMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.6")
-    // ↳ transitively includes ae-log-network and ae-log-core
-}
-```
-
----
-
-### 📊 Scenario D — Analytics inspection
-
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-analytics:1.0.6")
-    // ↳ transitively includes ae-log-core
-}
-```
-
----
-
-### 💥 Scenario F — Crash Reporting only
-
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-crashes:1.0.6")
-    // ↳ transitively includes ae-log-core
-}
-```
-
----
-
-### 🚀 Scenario G — Full stack (Logs + Network + Analytics + Crashes)
-
-For a KMP project with Ktor on all platforms, analytics, and crashes:
-
-```kotlin
-// build.gradle.kts (shared module)
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.0.6")
-            implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.6")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.0.6")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.0.6")
-        }
-        androidMain.dependencies {
-            // Add this only if your Android target also uses OkHttp
-            implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.6")
-        }
-    }
-}
-```
-
----
-
-### 📖 Dependency map (full reference)
-
-| Artifact | Transitively includes | Platform |
-|---|---|---|
-| `ae-log-logs` | `ae-log-core` | KMP |
-| `ae-log-network` | `ae-log-core` | KMP |
-| `ae-log-network-ktor` | `ae-log-network`, `ae-log-core` | KMP |
-| `ae-log-network-okhttp` | `ae-log-network`, `ae-log-core` | Android |
-| `ae-log-analytics` | `ae-log-core` | KMP |
-| `ae-log-crashes` | `ae-log-core` | KMP |
-
-### Version Catalog
+Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.0.6"
+aelog = "1.0.7"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -180,6 +81,33 @@ aelog-network-okhttp   = { module = "io.github.abdo-essam:ae-log-network-okhttp"
 aelog-analytics        = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "aelog" }
 aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }
 ```
+
+### 2. Gradle Setup
+
+Add the required dependencies to your target source sets in `build.gradle.kts`:
+
+```kotlin
+// build.gradle.kts (shared module)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            // Pick only what you need (each carries core transitively)
+            implementation(libs.aelog.logs)
+            implementation(libs.aelog.network.ktor)
+            implementation(libs.aelog.analytics)
+            implementation(libs.aelog.crashes)
+        }
+        androidMain.dependencies {
+            // Add only if your Android target uses OkHttp
+            implementation(libs.aelog.network.okhttp)
+        }
+    }
+}
+```
+
+---
+
+📖 See the [Full Installation Guide](https://abdo-essam.github.io/AELog/) for direct dependency coordinates and details on transitive inclusions.
 
 ## 🚀 Quick Start
 
@@ -227,7 +155,7 @@ AELogOverlay(showNotch = false)
 AELog.show()
 ```
 
-### 3. Log — primary API (`AELog`)
+### 4. Log — primary API (`AELog`)
 
 `AELog` is a discoverable object modelled after Android's built-in `Log` class.
 Just type `AELog.` and the IDE lists every method — no extension hunting required:
@@ -271,19 +199,19 @@ try {
 
 AELog provides first-class interceptors for OkHttp and Ktor.
 
-#### Security (Redaction)
-Both interceptors are **secure by default**. They automatically redact sensitive headers like `Authorization` and `Cookie` to prevent token leakage in logs.
+#### Security (Header Exclusion)
+Both interceptors are **secure by default**. They automatically exclude sensitive headers like `Authorization` and `Cookie` to prevent credentials from appearing in logs.
 
 ```kotlin
 // OkHttp
-val interceptor = OkHttpInterceptor(
-    redactHeaders = setOf("X-Sensitive-Header") // Extends default redactions
+val interceptor = AELogOkHttpInterceptor(
+    excludeHeaders = setOf("X-Sensitive-Header") // Extends default exclusions
 )
 
 // Ktor
 val client = HttpClient {
-    install(KtorInterceptor) {
-        redactHeaders = setOf("X-Api-Key")
+    install(AELogKtorInterceptor) {
+        excludeHeaders = setOf("X-Api-Key")
     }
 }
 ```
@@ -292,7 +220,7 @@ val client = HttpClient {
 To prevent memory issues when inspecting large payloads (e.g., file uploads), bodies are automatically truncated (default 250 KB).
 
 ```kotlin
-OkHttpInterceptor(
+AELogOkHttpInterceptor(
     maxRequestBodyBytes = 500_000,  // 500 KB limit
     maxResponseBodyBytes = 1_000_000 // 1 MB limit
 )
@@ -301,16 +229,16 @@ OkHttpInterceptor(
 #### Ktor Response Body Capture
 By default, Ktor response streams can only be read once. To enable non-destructive inspection of response bodies:
 1. **Install DoubleReceive**: It is highly recommended to install the `DoubleReceive` plugin in your `HttpClient`.
-2. **Integrated Fallback**: AELog will attempt to capture the body using `bodyAsText()`. If `DoubleReceive` is not installed, this may consume the stream—ensure your app logic is compatible or use the recommended plugin.
+2. **Integrated Fallback**: AELog will attempt to capture the body using Ktor's internal stream handlers. If `DoubleReceive` is not installed, this may consume the stream—ensure your app logic is compatible or use the recommended plugin.
 
 ```kotlin
 val client = HttpClient {
     install(DoubleReceive) // Recommended for Network Plugin
-    install(KtorInterceptor)
+    install(AELogKtorInterceptor)
 }
 ```
 
-### 4. Open AELog
+### 5. Open AELog
 
 Three ways to open the inspector:
 1. Tap the **floating notch** at the top of the screen (Dynamic Island-style)
@@ -333,20 +261,16 @@ Create your own debug panel (e.g., a Database Inspector or Feature Flags toggler
 
 ```kotlin
 class FeatureFlagsPlugin : UIPlugin {
-    override val id = "feature_flags"
     override val name = "Flags"
-    override val icon = Icons.Default.Flag
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Flag, contentDescription = null) }
 
-    private val _badgeCount = MutableStateFlow<Int?>(null)
-    override val badgeCount: StateFlow<Int?> = _badgeCount
-
-    override fun onAttach(context: PluginContext) {
-        // Initialize your plugin (observe context.scope, context.eventBus, etc.)
-    }
+    // Optional: Live badge count shown on the tab (omit if not needed)
+    private val _badgeCount = MutableStateFlow(0)
+    override val badgeCount: StateFlow<Int> = _badgeCount
 
     @Composable
     override fun Content(modifier: Modifier) {
-        // Your Compose UI here
+        // Your Compose UI here (owns the entire panel layout)
         LazyColumn(modifier = modifier) {
             items(flags) { flag ->
                 FlagRow(flag)
@@ -363,16 +287,12 @@ AELog.install(FeatureFlagsPlugin())
 
 ## 🔗 Logging Integrations
 
-AELog works with **any** logging setup — just forward your log calls to the AELog API:
+AELog works with **any** logging library. Just forward logs to the static `AELog.log` methods:
 
 ```kotlin
-// Forward any log call directly — no bridge library needed
-AELog.log(
-    severity = LogSeverity.INFO,
-    tag = "MyTag",
-    message = "Something happened",
-    throwable = null, // stack trace is appended automatically when present
-)
+// Forward logs using the static shorthands directly
+AELog.log.i("MyTag", "Something happened")
+AELog.log.e("Database", "Failed to clear cache", exception)
 ```
 
 📖 See the [Logging Integrations Guide](https://abdo-essam.github.io/AELog/integrations) for adapter examples (Kermit, Napier, Timber, SLF4J).
