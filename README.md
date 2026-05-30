@@ -1,8 +1,7 @@
-<p align="center">
-  <img src="website/img/lens_logo.svg" width="96" height="96" alt="AELog Logo" />
-</p>
-
-<h1 align="center">AELog</h1>
+<h1 align="center">
+  <img src="website/img/lens_logo.svg" width="48" height="48" alt="AELog Logo" style="vertical-align: middle; margin-right: 8px; position: relative; top: -3px;" />
+  AELog
+</h1>
 
 <p align="center">
   <strong>Extensible on-device dev tools for Kotlin Multiplatform</strong>
@@ -245,15 +244,6 @@ Three ways to open the inspector:
 2. Programmatically from anywhere: `AELog.show()` / `AELog.hide()`
 3. Wire it to any custom trigger (shake gesture, debug menu button, etc.)
 
-## 🧩 Modularity & Available Plugins
-
-| Module / Plugin | Class | Description |
-|--------|------|-------------|
-| `:ae-log-core` | - | Infrastructure, EventBus, and UI Shell |
-| `:ae-log-logs` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
-| `:ae-log-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
-| `:ae-log-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
-| `:ae-log-crashes` | `CrashPlugin` | Crash reporter on device for fatal and non-fatal exceptions, with persistent storage |
 
 ## 🔨 Custom Plugins
 
@@ -348,14 +338,6 @@ graph TD
     OI --> NP
 ```
 
-## 📋 Requirements
-
-| Platform | Minimum Version |
-|----------|----------------|
-| Android | API 24 (Android 7.0) |
-| iOS | 15.0 |
-| Kotlin | 2.2.0+ |
-| Compose Multiplatform | 1.7.3+ |
 
 ## 🤝 Contributing
 
