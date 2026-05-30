@@ -11,6 +11,7 @@ import platform.Foundation.stringByAppendingPathComponent
 import platform.Foundation.timeIntervalSince1970
 import platform.Foundation.writeToFile
 
+@OptIn(kotlinx.cinterop.BetaInteropApi::class)
 internal class IosFileOperations(
     private val directoryPath: String,
 ) : FileOperations {
