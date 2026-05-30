@@ -44,8 +44,6 @@ internal fun LogContent(
     val selectedPlugin = plugins.getOrElse(safeIndex) { plugins.first() }
 
     Column(modifier = modifier.fillMaxSize()) {
-
-        // Tab row (only shown when there are multiple plugins)
         if (plugins.size > 1) {
             PrimaryScrollableTabRow(
                 selectedTabIndex = safeIndex,

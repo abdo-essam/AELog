@@ -213,14 +213,14 @@ public final class com/ae/log/ui/AELogOverlayKt {
 public final class com/ae/log/ui/components/ComposableSingletons$LogHeaderKt {
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogHeaderKt;
 	public fun <init> ()V
-	public final fun getLambda$1493217520$core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-229118979$core ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$LogListKt {
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogListKt;
 	public fun <init> ()V
 	public final fun getLambda$-1227493028$core ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-608073688$core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1485173173$core ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$LogSearchBarKt {

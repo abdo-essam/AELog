@@ -6,14 +6,13 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -25,8 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +47,8 @@ internal fun LogNotchButton(
                 .width(32.dp)
                 .height(120.dp)
                 .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
-                .background(Color(0xFF111111)) // Fully opaque deep charcoal to prevent background colors from shining through
+                .background(Color(0xFF111111)) // Fully opaque deep charcoal
+                // to prevent background colors from shining through
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
@@ -96,7 +94,8 @@ internal fun LogNotchButton(
                     modifier =
                         Modifier
                             .rotate(-90f)
-                            .requiredWidth(76.dp), // Ignore parent constraints to prevent "G" truncation
+                            .requiredWidth(76.dp), // Ignore parent constraints
+                    // to prevent "G" truncation
                     // Snug fit for vertical rotation
                     textAlign = TextAlign.Center,
                     maxLines = 1,
