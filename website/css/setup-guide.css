@@ -1,179 +1,309 @@
 /*
  * setup-guide.css
- * Firebase-style step-by-step installation guide:
- * numbered steps, scenario tabs, code file labels, step notes, UI framework switcher.
+ * Sleek, interactive split-screen stepper guide for AELog with interactive customizer selection cards.
  */
 
 /* ==========================================================================
-   Step Container
+   Interactive Customizer Selection Grid
    ========================================================================== */
-.setup-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    margin-bottom: var(--spacing-2xl);
+.customizer-selections {
+    margin-bottom: var(--spacing-xl);
 }
 
-.step-number {
+.selection-prompt {
+    font-size: 15px;
+    margin-bottom: 16px;
+}
+
+.selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.selection-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: var(--radius-lg);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    user-select: none;
+}
+
+.selection-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.selection-card.active {
+    border-color: var(--accent-blue);
+    background: var(--glass-bg-active);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+}
+
+/* Hide original inputs since we style the card itself */
+.card-checkbox {
+    margin-top: 3px;
+}
+
+.card-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    accent-color: var(--accent-blue);
+    cursor: pointer;
+}
+
+.card-icon {
+    font-size: 24px;
     flex-shrink: 0;
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    line-height: 1;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 600;
     color: white;
-    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.card-desc {
+    font-size: 12px;
+    color: var(--color-text-mute);
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   Split Container Stepper Layout
+   ========================================================================== */
+.setup-split-container {
+    display: grid;
+    grid-template-columns: 36% 60%;
+    gap: 4%;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+/* Left Stepper Column */
+.setup-stepper {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.stepper-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-radius: var(--radius-lg);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.stepper-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(139, 92, 246, 0.06));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.stepper-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.stepper-item:hover::before {
+    opacity: 1;
+}
+
+.stepper-item.active {
+    border-color: var(--accent-blue);
+    background: var(--glass-bg-active);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
+}
+
+.stepper-item.active::before {
+    opacity: 1;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+}
+
+.stepper-badge {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    font-size: 14px;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 28px;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    transition: all 0.3s ease;
 }
 
-.step-content {
-    flex: 1;
-    position: relative;
-    padding: 28px 32px 32px;
-}
-
-.step-title {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 8px;
+.stepper-item.active .stepper-badge {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    border-color: transparent;
     color: white;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
-.step-desc {
-    font-size: 15px;
-    line-height: 1.7;
-    margin-bottom: 20px;
+.stepper-info {
+    position: relative;
+    z-index: 1;
 }
 
-/* Inline code inside step descriptions */
-.step-desc code, .step-title code {
-    font-family: var(--font-mono);
+.stepper-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.stepper-desc {
     font-size: 13px;
-    background: var(--accent-blue-10);
-    color: var(--color-code-accent);
-    padding: 2px 6px;
-    border-radius: 5px;
-    border: 1px solid var(--accent-blue-20);
+    color: var(--color-text-mute);
+    margin: 0;
+    line-height: 1.4;
 }
 
 /* ==========================================================================
-   Scenario Tabs  (Firebase "Android / iOS / Web" style)
+   Right Sleek Mockup Window
    ========================================================================== */
-.scenario-tabs {
+.setup-window {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: 12px;
-}
-
-.scenario-tab {
-    background: transparent;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    padding: 6px 14px;
-    border-radius: var(--radius-pill);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: var(--font-sans);
-}
-
-.scenario-tab:hover  { background: rgba(255,255,255,0.05); color: white; }
-
-.scenario-tab.active {
-    background: var(--accent-blue-15);
-    border-color: var(--accent-blue);
-    color: var(--color-code-accent);
-}
-
-/* ==========================================================================
-   Setup Code Block
-   ========================================================================== */
-.setup-code-block {
-    margin-top: 16px;
-    border-radius: var(--radius-md);
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    background: rgba(10, 10, 12, 0.85);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
     overflow: hidden;
-    border: 1px solid var(--color-border);
+    height: 480px;
+    position: relative;
 }
 
-.code-file-label {
-    background: rgba(255,255,255,0.03);
-    border-bottom: 1px solid var(--color-border);
-    padding: 8px 16px;
+.window-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: rgba(16, 16, 20, 0.7);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.window-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.window-controls .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.window-controls .dot.red { background: #ff5f56; }
+.window-controls .dot.yellow { background: #ffbd2e; }
+.window-controls .dot.green { background: #27c93f; }
+
+.window-tab {
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--color-text-mute);
     letter-spacing: 0.05em;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 4px 14px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.setup-code-block pre {
-    margin: 0;
-    padding: 20px;
-    background: rgba(10, 10, 12, 0.8);
-    overflow-x: auto;
-}
-
-.setup-code-block code {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--color-code-text);
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-
-/* ==========================================================================
-   Version Catalog Hint
-   ========================================================================== */
-.version-catalog-hint {
+.window-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-top: 16px;
-    padding: 12px 16px;
-    background: rgba(59, 130, 246, 0.04);
-    border: 1px solid var(--accent-blue-12);
-    border-radius: var(--radius-md);
 }
 
-.hint-label { font-size: 13px; color: var(--color-text-secondary); flex: 1; }
-
-.hint-toggle {
-    background: var(--accent-blue-12);
-    border: 1px solid var(--accent-blue-25);
-    color: var(--color-code-accent);
-    padding: 4px 12px;
-    border-radius: var(--radius-pill);
-    font-size: 12px;
+.btn-copy {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--color-text-secondary);
+    padding: 5px 12px;
+    border-radius: var(--radius-md);
+    font-size: 11px;
     cursor: pointer;
     font-family: var(--font-sans);
     transition: all 0.2s ease;
+    user-select: none;
 }
 
-.hint-toggle:hover { background: var(--accent-blue-22); }
+.btn-copy:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+}
+
+.window-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow: hidden;
+}
+
+/* Tab controls wrapper inside code window */
+.step-controls-wrapper {
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease;
+}
 
 /* ==========================================================================
-   UI Framework Switcher (Compose / XML)
+   Tab selector chips
    ========================================================================== */
-.tab-pair { display: flex; gap: 8px; margin-bottom: 4px; }
+.tab-pair {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
 
 .tab-chip {
     background: transparent;
     border: 1px solid var(--color-border);
     color: var(--color-text-mute);
-    padding: 5px 14px;
+    padding: 6px 14px;
     border-radius: var(--radius-pill);
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
     font-family: var(--font-sans);
     transition: all 0.2s ease;
+}
+
+.tab-chip:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
 }
 
 .tab-chip.active {
@@ -183,81 +313,147 @@
 }
 
 /* ==========================================================================
-   Step Note / Callout
+   Version Catalog Hint & Toggle
    ========================================================================== */
-.step-note {
+.version-catalog-hint {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-top: 16px;
-    padding: 12px 16px;
-    background: rgba(16, 185, 129, 0.05);
-    border: 1px solid rgba(16, 185, 129, 0.15);
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(59, 130, 246, 0.04);
+    border: 1px solid var(--accent-blue-12);
     border-radius: var(--radius-md);
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
 }
 
-.note-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
-
-.step-note strong { color: #6ee7b7; }
-
-.step-note code {
-    font-family: var(--font-mono);
+.hint-label {
     font-size: 12px;
-    background: rgba(16, 185, 129, 0.1);
-    color: #6ee7b7;
-    padding: 2px 5px;
-    border-radius: 4px;
+    color: var(--color-text-secondary);
+    flex: 1;
+}
+
+.hint-toggle {
+    background: var(--accent-blue-12);
+    border: 1px solid var(--accent-blue-25);
+    color: var(--color-code-accent);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: all 0.2s ease;
+}
+
+.hint-toggle:hover {
+    background: var(--accent-blue-22);
 }
 
 /* ==========================================================================
-   Responsive
+   Code area & containers
    ========================================================================== */
-@media (max-width: 768px) {
-    .setup-step   { flex-direction: column; gap: 12px; }
-    .step-number  { margin-top: 0; }
+.code-area {
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    border-radius: var(--radius-md);
+    background: rgba(5, 5, 7, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.step-code-container {
+    height: 100%;
+    animation: fadeIn 0.3s ease;
+}
+
+.step-code-container pre {
+    margin: 0;
+    padding: 16px;
+    background: transparent;
+    overflow-x: auto;
+    height: 100%;
+}
+
+.step-code-container code {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #cbd5e1;
+}
+
+/* ==========================================================================
+   Responsive Splits
+   ========================================================================== */
+@media (max-width: 992px) {
+    .setup-split-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .setup-window {
+        height: 420px;
+    }
+}
+
+@media (max-width: 576px) {
+    .selection-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .setup-window {
+        height: 380px;
+    }
 }
 
 /* ==========================================================================
    Light Mode Setup-Guide Overrides
    ========================================================================== */
-
-[data-theme="light"] .step-title {
+[data-theme="light"] .card-title {
     color: var(--color-text-primary);
 }
 
-[data-theme="light"] .scenario-tab:hover {
-    background: rgba(0, 0, 0, 0.05);
+[data-theme="light"] .stepper-title {
     color: var(--color-text-primary);
 }
 
-[data-theme="light"] .code-file-label {
+[data-theme="light"] .selection-card:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .tab-chip:hover {
     background: rgba(0, 0, 0, 0.03);
+    color: var(--color-text-primary);
 }
 
-[data-theme="light"] .setup-code-block pre {
+[data-theme="light"] .setup-window {
     background: #ffffff;
-    border-top: 1px solid rgba(0, 0, 0, 0.07);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] .setup-code-block code {
-    color: #24292e;
-    background: transparent;
+[data-theme="light"] .window-header {
+    background: rgba(0, 0, 0, 0.02);
 }
 
-[data-theme="light"] .version-catalog-hint {
-    background: rgba(59, 130, 246, 0.04);
+[data-theme="light"] .window-tab {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-[data-theme="light"] .step-note {
-    background: rgba(16, 185, 129, 0.05);
+[data-theme="light"] .btn-copy {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    color: var(--color-text-secondary);
 }
 
-[data-theme="light"] .step-note strong { color: #059669; }
+[data-theme="light"] .btn-copy:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--color-text-primary);
+}
 
-[data-theme="light"] .step-note code {
-    background: rgba(16, 185, 129, 0.1);
-    color: #047857;
+[data-theme="light"] .code-area {
+    background: #fafafa;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .step-code-container code {
+    color: #1e293b;
 }

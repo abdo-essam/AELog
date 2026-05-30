@@ -303,143 +303,177 @@
             <div class="section-header text-center fade-up">
                 <div class="badge glass-subtle pill">Quick Setup</div>
                 <h2 class="display-xl">Add AELog to your <span class="gradient-text">project</span></h2>
-                <p class="body-lg mute-text">Four steps to full in-app debugging. Pick only the plugins you need — every
-                    artifact is independently optional.</p>
+                <p class="body-lg mute-text">Pick your features and get a perfectly tailored step-by-step setup guide instantly.</p>
             </div>
 
-            <!-- Step 1: Choose your scenario -->
-            <div class="setup-step fade-up delay-1">
-                <div class="step-number">1</div>
-                <div class="step-content glass-panel card-xl magic-card">
-                    <h3 class="step-title">Add your dependency</h3>
-                    <p class="step-desc mute-text">Pick the plugins you want. Each artifact carries
-                        <code>ae-log-core</code> transitively — no need to add it manually.</p>
-
-                    <div class="scenario-tabs" id="scenario-tabs">
-                        <button class="scenario-tab active" data-scenario="logs">🔍 Logs only</button>
-                        <button class="scenario-tab" data-scenario="network-ktor">🌐 Network (Ktor)</button>
-                        <button class="scenario-tab" data-scenario="network-okhttp">🌐 Network (OkHttp)</button>
-                        <button class="scenario-tab" data-scenario="analytics">📊 Analytics</button>
-                        <button class="scenario-tab" data-scenario="crashes">💥 Crashes</button>
-                        <button class="scenario-tab" data-scenario="full">🚀 Full Stack</button>
-                    </div>
-
-                    <div class="setup-code-block">
-                        <div class="code-file-label">build.gradle.kts</div>
-                        <pre><code id="dep-code" class="language-kotlin"></code></pre>
-                    </div>
-
-                    <div class="version-catalog-hint">
-                        <span class="hint-label">💡 Using Version Catalog?</span>
-                        <button class="hint-toggle" id="catalog-toggle">Show libs.versions.toml</button>
-                    </div>
-                    <div id="catalog-snippet" class="is-hidden">
-                        <div class="setup-code-block" style="margin-top:12px;">
-                            <div class="code-file-label">libs.versions.toml</div>
-                            <pre><code class="language-toml">[versions]
-aelog = "1.0.7"
-
-[libraries]
-aelog-logs           = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
-aelog-network-ktor   = { module = "io.github.abdo-essam:ae-log-network-ktor",   version.ref = "aelog" }
-aelog-network-okhttp = { module = "io.github.abdo-essam:ae-log-network-okhttp", version.ref = "aelog" }
-aelog-analytics      = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "aelog" }
-aelog-crashes        = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }</code></pre>
+            <!-- Selection Grid -->
+            <div class="customizer-selections fade-up">
+                <div class="selection-grid">
+                    <!-- Logs Choice -->
+                    <div class="selection-card active" data-feature="logs">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-logs" checked />
+                        </div>
+                        <div class="card-icon">🔍</div>
+                        <div class="card-info">
+                            <span class="card-title">Logs Viewer</span>
+                            <span class="card-desc">Console logs with search, filter, and copy</span>
                         </div>
                     </div>
-                    <div class="glow-border"></div>
+
+                    <!-- Network Choice -->
+                    <div class="selection-card active" data-feature="network">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-network" checked />
+                        </div>
+                        <div class="card-icon">🌐</div>
+                        <div class="card-info">
+                            <span class="card-title">Network Inspector</span>
+                            <span class="card-desc">Ktor / OkHttp response body viewer</span>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Choice -->
+                    <div class="selection-card" data-feature="analytics">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-analytics" />
+                        </div>
+                        <div class="card-icon">📊</div>
+                        <div class="card-info">
+                            <span class="card-title">Analytics Tracker</span>
+                            <span class="card-desc">Real-time event & screen logging</span>
+                        </div>
+                    </div>
+
+                    <!-- Crashes Choice -->
+                    <div class="selection-card" data-feature="crashes">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-crashes" />
+                        </div>
+                        <div class="card-icon">💥</div>
+                        <div class="card-info">
+                            <span class="card-title">Crash Reporter</span>
+                            <span class="card-desc">Persisted uncaught exception logs</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Step 2: Customise (Optional) -->
-            <div class="setup-step fade-up delay-2">
-                <div class="step-number">2</div>
-                <div class="step-content glass-panel card-xl magic-card">
-                    <h3 class="step-title">Custom Configuration (Optional)</h3>
-                    <p class="step-desc mute-text">AELog <strong>automatically initialises</strong> on app startup! If
-                        you want to supply custom settings (like disabling the floating notch globally or adjusting
-                        capacities), call <code>AELog.configure { }</code> in your platform entry point (e.g.
-                        <code>Application.onCreate()</code>):</p>
-                    <div class="setup-code-block">
-                        <div class="code-file-label">Application.kt / main.kt</div>
-                        <pre><code class="language-kotlin">AELog.configure {
-    // Disable the floating notch globally if desired (defaults to true)
-    showNotch = false
+            <div class="setup-split-container fade-up delay-1">
+                <!-- Left: Stepper Controls -->
+                <div class="setup-stepper">
+                    <!-- Step 1 Control -->
+                    <div class="stepper-item active" data-step="1">
+                        <div class="stepper-badge">1</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Add Dependency</h3>
+                            <p class="stepper-desc">Add customized build configurations to your shared module.</p>
+                        </div>
+                    </div>
 
-    // Customize capacities or plugins
-    plugin(LogPlugin(maxEntries = 2_000))
-    plugin(NetworkPlugin(maxEntries = 1_000))
-}</code></pre>
+                    <!-- Step 2 Control -->
+                    <div class="stepper-item" data-step="2">
+                        <div class="stepper-badge">2</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Configure (Optional)</h3>
+                            <p class="stepper-desc">Initialize AELog on app startup with custom limits or settings.</p>
+                        </div>
                     </div>
-                    <div class="step-note">
-                        <span class="note-icon">ℹ️</span>
-                        If you don't need custom limits or handlers, you can <strong>completely skip this step!</strong>
+
+                    <!-- Step 3 Control -->
+                    <div class="stepper-item" data-step="3">
+                        <div class="stepper-badge">3</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Drop in the Overlay</h3>
+                            <p class="stepper-desc">Render the floating trigger overlay globally in your UI.</p>
+                        </div>
                     </div>
-                    <div class="glow-border"></div>
+
+                    <!-- Step 4 Control -->
+                    <div class="stepper-item" data-step="4">
+                        <div class="stepper-badge">4</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Start Logging</h3>
+                            <p class="stepper-desc">Call static logging APIs from anywhere in your codebase.</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Step 3: Add the UI Overlay -->
-            <div class="setup-step fade-up delay-2">
-                <div class="step-number">3</div>
-                <div class="step-content glass-panel card-xl magic-card">
-                    <h3 class="step-title">Add the UI Overlay</h3>
-                    <p class="step-desc mute-text">Drop <code>AELogOverlay()</code> as a sibling anywhere in your root
-                        composable—no wrapper required! In XML Views, simply use launchViewer from your activity.</p>
-                    <div class="tab-pair" id="ui-framework-tabs">
-                        <button class="tab-chip active" data-ui="compose">Jetpack Compose</button>
-                        <button class="tab-chip" data-ui="xml">XML Views (Android)</button>
+                <!-- Right: Sleek Interactive Code Mockup Window -->
+                <div class="setup-window glass-panel card-xl">
+                    <div class="window-header">
+                        <div class="window-controls">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="window-tab" id="window-tab-name">shared/build.gradle.kts</div>
+                        <div class="window-actions">
+                            <button id="copy-setup-code" class="btn-copy" aria-label="Copy code">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
                     </div>
-                    <div id="ui-compose" class="setup-code-block">
-                        <div class="code-file-label">App.kt</div>
-                        <pre><code class="language-kotlin">@Composable
+
+                    <div class="window-content">
+                        <!-- Step 1 Inner Options (Visible when Step 1 is active) -->
+                        <div class="step-controls-wrapper" id="step-1-controls">
+                            <div class="tab-pair" id="network-client-tabs" style="margin-bottom:12px;">
+                                <button class="tab-chip active" data-client="ktor">Ktor Client</button>
+                                <button class="tab-chip" data-client="okhttp">OkHttp Client (Android)</button>
+                            </div>
+                            <div class="version-catalog-hint" style="margin-top:0;">
+                                <span class="hint-label">💡 Using Version Catalog?</span>
+                                <button class="hint-toggle" id="catalog-toggle">Show libs.versions.toml</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 Inner Options (Visible when Step 3 is active) -->
+                        <div class="step-controls-wrapper is-hidden" id="step-3-controls">
+                            <div class="tab-pair" id="ui-framework-tabs" style="margin-bottom:12px; margin-top:0;">
+                                <button class="tab-chip active" data-ui="compose">Jetpack Compose</button>
+                                <button class="tab-chip" data-ui="xml">XML Views (Android)</button>
+                            </div>
+                        </div>
+
+                        <!-- Sleek dark code block -->
+                        <div class="code-area">
+                            <!-- Step 1: Gradle Code -->
+                            <div class="step-code-container active" id="code-step-1">
+                                <pre><code id="dep-code" class="language-kotlin"></code></pre>
+                            </div>
+
+                            <!-- Step 2: Custom config -->
+                            <div class="step-code-container is-hidden" id="code-step-2">
+                                <pre><code id="config-code" class="language-kotlin"></code></pre>
+                            </div>
+
+                            <!-- Step 3: Add UI Overlay -->
+                            <div class="step-code-container is-hidden" id="code-step-3">
+                                <div id="ui-compose">
+                                    <pre><code class="language-kotlin">@Composable
 fun App() {
     AELogOverlay() // ← Renders floating center-right notch above your UI
     MaterialTheme {
         YourAppContent() // No wrapping or tree alterations needed
     }
 }</code></pre>
-                    </div>
-                    <div id="ui-xml" class="setup-code-block is-hidden">
-                        <div class="code-file-label">Any Activity.kt</div>
-                        <pre><code class="language-kotlin">// No Compose required — inject the viewer dynamically
+                                </div>
+                                <div id="ui-xml" class="is-hidden">
+                                    <pre><code class="language-kotlin">// No Compose required — inject the viewer dynamically
 import com.ae.log.launchViewer
 
 // From a button tap, custom developer gesture, etc:
 AELog.launchViewer(activity)</code></pre>
-                    </div>
-                    <div class="glow-border"></div>
-                </div>
-            </div>
+                                </div>
+                            </div>
 
-            <!-- Step 4: Use it -->
-            <div class="setup-step fade-up delay-2">
-                <div class="step-number">4</div>
-                <div class="step-content glass-panel card-xl magic-card">
-                    <h3 class="step-title">Start logging</h3>
-                    <p class="step-desc mute-text">Use the static <code>AELog</code> API anywhere in your codebase. Tap
-                        the <strong>bug button</strong> to open the inspector.</p>
-                    <div class="setup-code-block">
-                        <div class="code-file-label">Anywhere in your app</div>
-                        <pre><code class="language-kotlin">// Logs — mirrors Android Log.*
-AELog.log.v("Auth", "Checking token")
-AELog.log.d("Auth", "Token refreshed")
-AELog.log.e("DB", "Write failed", exception)
-
-// Network — or use the Ktor/OkHttp interceptor for auto-capture
-AELog.network.logRequest("GET", "https://api.example.com/users")
-
-// Analytics events
-AELog.analytics.logEvent("purchase", mapOf("item" to "premium", "price" to "9.99"))
-AELog.analytics.logScreen("HomeScreen")
-
-// Non-fatal crash capture
-AELog.crashes.recordNonFatal(exception)</code></pre>
-                    </div>
-                    <div class="step-note">
-                        <span class="note-icon">🎯</span>
-                        <strong>Auto-tag:</strong> Omit the tag and AELog derives it from the caller's class name — no
-                        repetition needed.
+                            <!-- Step 4: Start Logging -->
+                            <div class="step-code-container is-hidden" id="code-step-4">
+                                <pre><code id="usage-code" class="language-kotlin"></code></pre>
+                            </div>
+                        </div>
                     </div>
                     <div class="glow-border"></div>
                 </div>

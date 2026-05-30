@@ -244,7 +244,6 @@ Three ways to open the inspector:
 2. Programmatically from anywhere: `AELog.show()` / `AELog.hide()`
 3. Wire it to any custom trigger (shake gesture, debug menu button, etc.)
 
-
 ## 🔨 Custom Plugins
 
 Create your own debug panel (e.g., a Database Inspector or Feature Flags toggler) in 3 steps:
@@ -337,7 +336,6 @@ graph TD
     KI --> NP
     OI --> NP
 ```
-
 
 ## 🤝 Contributing
 

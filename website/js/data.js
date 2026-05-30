@@ -6,7 +6,7 @@
  */
 
 // ── Version ────────────────────────────────────────────────────────────────
-export const AELOG_VERSION = "1.0.5";
+export const AELOG_VERSION = "1.0.7";
 
 // ── Dependency Snippets (Step 1 of setup guide) ────────────────────────────
 export const DEP_SNIPPETS = {
