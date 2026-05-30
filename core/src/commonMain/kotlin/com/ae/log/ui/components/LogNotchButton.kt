@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -48,7 +48,7 @@ internal fun LogNotchButton(
                 .height(120.dp)
                 .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
                 .background(Color(0xFF111111)) // Fully opaque deep charcoal
-        // to prevent background colors from shining through
+                // to prevent background colors from shining through
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
@@ -95,7 +95,7 @@ internal fun LogNotchButton(
                         Modifier
                             .rotate(-90f)
                             .requiredWidth(76.dp), // Ignore parent constraints
-            // to prevent "G" truncation
+                    // to prevent "G" truncation
                     // Snug fit for vertical rotation
                     textAlign = TextAlign.Center,
                     maxLines = 1,
