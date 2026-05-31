@@ -36,4 +36,3 @@ internal class CrashRecorder(
         storage.record(event)
     }
 }
-
