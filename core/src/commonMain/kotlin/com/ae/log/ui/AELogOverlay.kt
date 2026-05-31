@@ -58,7 +58,6 @@ public fun AELogOverlay(showNotch: Boolean = AELog.config?.showNotch ?: true) {
     val plugins by instance.plugins.plugins.collectAsState()
     val uiPlugins = remember(plugins) { plugins.filterIsInstance<UIPlugin>() }
 
-
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         val isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint && maxHeight > 480.dp
 

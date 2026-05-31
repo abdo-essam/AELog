@@ -60,56 +60,6 @@ public final class com/ae/log/config/LogConfig {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/log/event/AllDataClearedEvent : com/ae/log/event/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/event/AllDataClearedEvent;
-}
-
-public final class com/ae/log/event/AppStartedEvent : com/ae/log/event/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/event/AppStartedEvent;
-}
-
-public final class com/ae/log/event/AppStoppedEvent : com/ae/log/event/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/event/AppStoppedEvent;
-}
-
-public abstract interface class com/ae/log/event/Event {
-}
-
-public final class com/ae/log/event/EventBus {
-	public static final field $stable I
-	public fun <init> ()V
-	public final fun getEvents ()Lkotlinx/coroutines/flow/SharedFlow;
-	public final fun publish (Lcom/ae/log/event/Event;)V
-	public final fun publishSuspend (Lcom/ae/log/event/Event;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class com/ae/log/event/LogTagRegisteredEvent : com/ae/log/event/Event {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/ae/log/event/LogTagRegisteredEvent;
-	public static synthetic fun copy$default (Lcom/ae/log/event/LogTagRegisteredEvent;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/ae/log/event/LogTagRegisteredEvent;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBadgeLabel ()Ljava/lang/String;
-	public final fun getTag ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/ae/log/event/PanelClosedEvent : com/ae/log/event/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/event/PanelClosedEvent;
-}
-
-public final class com/ae/log/event/PanelOpenedEvent : com/ae/log/event/Event {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/event/PanelOpenedEvent;
-}
-
 public final class com/ae/log/plugin/ComposableSingletons$UIPluginKt {
 	public static final field INSTANCE Lcom/ae/log/plugin/ComposableSingletons$UIPluginKt;
 	public fun <init> ()V
@@ -137,7 +87,6 @@ public final class com/ae/log/plugin/Plugin$DefaultImpls {
 
 public abstract interface class com/ae/log/plugin/PluginContext {
 	public abstract fun getConfig ()Lcom/ae/log/config/LogConfig;
-	public abstract fun getEventBus ()Lcom/ae/log/event/EventBus;
 	public abstract fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/plugin/Plugin;
 	public abstract fun getScope ()Lkotlinx/coroutines/CoroutineScope;
 }
