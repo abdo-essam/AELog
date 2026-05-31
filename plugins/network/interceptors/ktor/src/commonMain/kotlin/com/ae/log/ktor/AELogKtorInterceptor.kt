@@ -14,9 +14,9 @@ import io.ktor.http.content.OutgoingContent
 import io.ktor.util.*
 import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
-import kotlin.time.Clock
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlin.time.Clock
 
 /**
  * Ktor 3.x interceptor that records HTTP traffic to AELog.
@@ -117,16 +117,17 @@ public class AELogKtorInterceptor internal constructor(
                 val outgoing = content as? OutgoingContent
                 if (outgoing is OutgoingContent.WriteChannelContent && recorder != null && id != null) {
                     val buffer = ByteChannel(autoFlush = true)
-                    val bytes = coroutineScope {
-                        launch {
-                            try {
-                                outgoing.writeTo(buffer)
-                            } finally {
-                                buffer.flushAndClose()
+                    val bytes =
+                        coroutineScope {
+                            launch {
+                                try {
+                                    outgoing.writeTo(buffer)
+                                } finally {
+                                    buffer.flushAndClose()
+                                }
                             }
+                            buffer.toByteArray()
                         }
-                        buffer.toByteArray()
-                    }
                     val bodyText = bytes.decodeToString().trim().ifBlank { null }
                     recorder.updateRequestBody(id, bodyText)
                     val replacement =
