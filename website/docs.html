@@ -731,6 +731,67 @@ AELog.log.e("Auth", "Login failed", error)
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
                 </div>
 
+                <!-- Milestone -2: v1.1.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.0 <span class="timeline-date">— June 1, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>DeviceInfo in crash reports:</strong> Crash events now capture a <code>DeviceInfo</code> snapshot at crash time (device model, OS version, app version, build number). When a QA tester taps <strong>Copy</strong> on any crash, the clipboard text now includes a <code>── Device Info ──</code> section with full context — no need to ask the developer which build or device was affected.</li>
+                            <li><code>DeviceInfo</code> <code>expect/actual</code> implemented for Android (<code>android.os.Build</code> + <code>PackageManager</code>), iOS (<code>UIDevice</code> + <code>NSBundle</code>), and JVM (system properties fallback).</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -1: v1.0.9 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.9 <span class="timeline-date">— May 31, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Removed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>EventBus & lifecycle signals (YAGNI):</strong> The <code>EventBus</code>, <code>Event</code>, and <code>AELogLifecycle</code> classes have been deleted. None of the built-in plugins consumed these signals, so they were speculative plumbing that added unnecessary complexity. The <code>collectEvents</code> extension on <code>PluginContext</code> and the <code>eventBus</code> property are also gone.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><code>AELog.clearAll()</code> now delegates directly to <code>PluginManager</code> — the intermediate <code>AELogLifecycle.clearAll()</code> indirection is gone.</li>
+                            <li><code>PluginContext</code> is now simpler: only <code>scope</code>, <code>config</code>, and <code>getPlugin()</code> — no event infrastructure.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -0.5: v1.0.8 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.8 <span class="timeline-date">— May 31, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Ktor request body not logged for JSON POST requests:</strong> When <code>ContentNegotiation</code> serializes a data class, Ktor produces a <code>WriteChannelContent</code> (stream). The interceptor now drains the stream into a byte array, logs the decoded JSON body, and re-wraps it as <code>ByteArrayContent</code> — so the actual HTTP request body is fully preserved.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Tests</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>Added <code>records JSON request body</code> test asserting that a <code>setBody(...)</code> POST with <code>ContentType.Application.Json</code> records the body content in the log export.</li>
+                            <li>Extended <code>records POST request</code> with body assertions (<code>name</code>, <code>test</code>) to prevent regression.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
                 <!-- Milestone 0: v1.0.7 -->
                 <div class="timeline-item">
                     <div class="timeline-bullet-wrapper">
