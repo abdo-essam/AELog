@@ -1,7 +1,6 @@
 package com.ae.log
 
 import com.ae.log.config.LogConfig
-import com.ae.log.event.EventBus
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginManager
 import kotlinx.atomicfu.AtomicRef
@@ -136,7 +135,6 @@ public object AELog {
     @AELogTestApi
     public fun resetForTesting() {
         val current = instanceAtomic.value ?: return
-        current.lifecycle.notifyStop()
         current.plugins.uninstallAll()
         current.overlayVisible.value = false
         instanceAtomic.value = null
@@ -148,11 +146,8 @@ public object AELog {
 internal class LogInspector internal constructor(
     internal val config: LogConfig,
 ) {
-    internal val eventBus: EventBus = EventBus()
-
     @PublishedApi
-    internal val plugins: PluginManager = PluginManager(config, eventBus)
-    internal val lifecycle: AELogLifecycle = AELogLifecycle(plugins, eventBus)
+    internal val plugins: PluginManager = PluginManager(config)
 
     /**
      * Backing state for the overlay panel visibility.
@@ -170,7 +165,7 @@ internal class LogInspector internal constructor(
         return sb.toString().trim()
     }
 
-    internal fun clearAll(): Unit = lifecycle.clearAll()
+    internal fun clearAll() = plugins.forEach { it.onClear() }
 }
 
 public class AELogBuilder {

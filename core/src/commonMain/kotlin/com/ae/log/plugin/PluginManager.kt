@@ -1,7 +1,6 @@
 package com.ae.log.plugin
 
 import com.ae.log.config.LogConfig
-import com.ae.log.event.EventBus
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +14,6 @@ import kotlin.reflect.KClass
 
 public class PluginManager internal constructor(
     private val config: LogConfig,
-    private val eventBus: EventBus,
 ) {
     private val _plugins = MutableStateFlow<List<Plugin>>(emptyList())
     public val plugins: StateFlow<List<Plugin>> = _plugins.asStateFlow()
@@ -73,7 +71,6 @@ public class PluginManager internal constructor(
         object : PluginContext {
             override val scope = scope
             override val config = this@PluginManager.config
-            override val eventBus = this@PluginManager.eventBus
 
             @Suppress("UNCHECKED_CAST")
             override fun <T : Plugin> getPlugin(type: KClass<T>): T? = this@PluginManager.getPlugin(type)

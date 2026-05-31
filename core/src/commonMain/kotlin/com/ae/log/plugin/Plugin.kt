@@ -17,9 +17,9 @@ public interface Plugin {
 
     /**
      * Called once when this plugin is registered with [com.ae.log.AELog].
-     * Use this to subscribe to events, initialise coroutines, or wire up storage.
-     * The provided [PluginContext] gives access to the shared [kotlinx.coroutines.CoroutineScope],
-     * [com.ae.log.config.LogConfig], and [com.ae.log.event.EventBus].
+     * Use this to initialise coroutines or wire up storage.
+     * The provided [PluginContext] gives access to the shared [kotlinx.coroutines.CoroutineScope]
+     * and [com.ae.log.config.LogConfig].
      */
     public fun onAttach(context: PluginContext) {}
 
