@@ -120,10 +120,11 @@ public class AELogKtorInterceptor internal constructor(
                     val bytes = buffer.toByteArray()
                     val bodyText = bytes.decodeToString().trim().ifBlank { null }
                     recorder.updateRequestBody(id, bodyText)
-                    val replacement = ByteArrayContent(
-                        bytes = bytes,
-                        contentType = outgoing.contentType,
-                    )
+                    val replacement =
+                        ByteArrayContent(
+                            bytes = bytes,
+                            contentType = outgoing.contentType,
+                        )
                     proceedWith(replacement)
                     return@intercept
                 }
