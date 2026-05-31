@@ -71,7 +71,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.0.8"
+aelog = "1.0.9"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -298,7 +298,6 @@ graph TD
 
     subgraph Core ["Core — ae-log-core"]
         AE["AELog\n(singleton engine)"]
-        EB["EventBus"]
     end
 
     subgraph Plugins ["Plugins (optional, loaded on demand)"]
@@ -324,7 +323,6 @@ graph TD
     end
 
     OV --> AE
-    AE --> EB
     AE --> LP1
     AE --> NP
     AE --> AP

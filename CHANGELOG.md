@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2026-05-31
+
+### Removed
+- **EventBus & lifecycle signals (YAGNI):** The `EventBus`, `Event`, and `AELogLifecycle` classes have been deleted. None of the built-in plugins consumed these signals, so they were speculative plumbing that added unnecessary complexity. The `collectEvents` extension on `PluginContext` and the `eventBus` property are also gone. If lifecycle hooks are needed in the future they will be reintroduced based on a concrete use case.
+
+### Changed
+- `AELog.clearAll()` now delegates directly to `PluginManager` — the intermediate `AELogLifecycle.clearAll()` indirection is gone.
+- `PluginContext` is now simpler: only `scope`, `config`, and `getPlugin()` — no event infrastructure.
+
+---
+
 ## [1.0.8] - 2026-05-31
 
 ### Fixed
@@ -147,8 +158,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.0.9...HEAD
+[1.0.9]: https://github.com/abdo-essam/AELog/compare/v1.0.8...v1.0.9
+[1.0.8]: https://github.com/abdo-essam/AELog/compare/v1.0.7...v1.0.8
+[1.0.7]: https://github.com/abdo-essam/AELog/compare/v1.0.6...v1.0.7
+[1.0.6]: https://github.com/abdo-essam/AELog/compare/v1.0.5...v1.0.6
+[1.0.5]: https://github.com/abdo-essam/AELog/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/abdo-essam/AELog/compare/v1.0.3...v1.0.4
+[1.0.3]: https://github.com/abdo-essam/AELog/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/abdo-essam/AELog/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/abdo-essam/AELog/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/abdo-essam/AELog/releases/tag/v1.0.0
-
