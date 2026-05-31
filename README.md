@@ -71,7 +71,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.0.9"
+aelog = "1.1.0"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
