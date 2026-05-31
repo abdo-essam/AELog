@@ -37,6 +37,7 @@ public object InterceptorDefaults {
             "Accept-Language",
             "Connection",
             "Content-Type",
+            "Content-Length",
             "Host",
             "User-Agent",
             // Noisy system response headers

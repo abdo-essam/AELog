@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-05-31
+
+### Fixed
+- **Ktor request body not logged for JSON POST requests:** When `ContentNegotiation` serializes a data class, Ktor produces a `WriteChannelContent` (stream). The interceptor now drains the stream into a byte array, logs the decoded JSON body, and re-wraps it as `ByteArrayContent` — so the actual HTTP request body is fully preserved and the correct JSON appears in the Network inspector.
+
+### Tests
+- Added `records JSON request body` test asserting that a `setBody(...)` POST with `ContentType.Application.Json` records the body content in the log export.
+- Extended `records POST request` with body assertions (`name`, `test`) to prevent regression.
+
 ## [1.0.7] - 2026-05-29
 
 ### Simplified

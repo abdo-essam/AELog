@@ -9,9 +9,11 @@ import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.http.content.ByteArrayContent
 import io.ktor.http.content.OutgoingContent
 import io.ktor.util.*
 import io.ktor.utils.io.*
+import io.ktor.utils.io.core.*
 import kotlin.time.Clock
 
 /**
@@ -103,10 +105,35 @@ public class AELogKtorInterceptor internal constructor(
                     proceedWith(content)
                     return@intercept
                 }
+
+                val recorder = recorder()
+                val id = context.attributes.getOrNull(RequestIdKey)
+
+                // For WriteChannelContent (e.g. JSON serialized by ContentNegotiation),
+                // we must drain the channel into a byte array, log it, then re-emit as
+                // ByteArrayContent so the actual HTTP request body is preserved.
+                val outgoing = content as? OutgoingContent
+                if (outgoing is OutgoingContent.WriteChannelContent && recorder != null && id != null) {
+                    val buffer = ByteChannel(autoFlush = true)
+                    outgoing.writeTo(buffer)
+                    buffer.flushAndClose()
+                    val bytes = buffer.toByteArray()
+                    val bodyText = bytes.decodeToString().trim().ifBlank { null }
+                    recorder.updateRequestBody(id, bodyText)
+                    val replacement = ByteArrayContent(
+                        bytes = bytes,
+                        contentType = outgoing.contentType,
+                    )
+                    proceedWith(replacement)
+                    return@intercept
+                }
+
                 proceedWith(content)
-                val recorder = recorder() ?: return@intercept
-                val id = context.attributes.getOrNull(RequestIdKey) ?: return@intercept
-                extractBodyPreview(context.body)?.let { recorder.updateRequestBody(id, it) }
+
+                // For non-stream content (ByteArrayContent, TextContent, etc.)
+                if (recorder != null && id != null) {
+                    extractBodyPreview(context.body)?.let { recorder.updateRequestBody(id, it) }
+                }
             }
         }
 

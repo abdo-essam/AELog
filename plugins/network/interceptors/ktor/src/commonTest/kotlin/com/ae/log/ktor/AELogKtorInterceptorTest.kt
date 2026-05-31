@@ -77,6 +77,25 @@ class AELogKtorInterceptorTest {
             val export = networkPlugin.export()
             assertTrue(export.contains("POST"))
             assertTrue(export.contains("https://api.example.com/data"))
+            assertTrue(export.contains("name"))
+            assertTrue(export.contains("test"))
+        }
+
+    @Test
+    fun `records JSON request body`() =
+        runTest {
+            val client = mockClient()
+            client.post("https://api.example.com/data") {
+                contentType(ContentType.Application.Json)
+                setBody("""{"key":"value"}""")
+            }
+            client.close()
+
+            val export = networkPlugin.export()
+            assertTrue(
+                export.contains("key") && export.contains("value"),
+                "Expected request body to be captured. Export was:\n$export",
+            )
         }
 
     @Test
