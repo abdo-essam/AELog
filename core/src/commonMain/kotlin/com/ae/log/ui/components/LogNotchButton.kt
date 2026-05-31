@@ -47,8 +47,7 @@ internal fun LogNotchButton(
                 .width(32.dp)
                 .height(120.dp)
                 .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
-                .background(Color(0xFF111111)) // Fully opaque deep charcoal
-                // to prevent background colors from shining through
+                .background(Color(0xFF111111))
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
@@ -61,7 +60,6 @@ internal fun LogNotchButton(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            // Top: Bug icon
             Box(
                 modifier =
                     Modifier
@@ -77,7 +75,6 @@ internal fun LogNotchButton(
                 )
             }
 
-            // Center: Rotated text "AELOG"
             Box(
                 modifier =
                     Modifier
@@ -94,15 +91,12 @@ internal fun LogNotchButton(
                     modifier =
                         Modifier
                             .rotate(-90f)
-                            .requiredWidth(76.dp), // Ignore parent constraints
-                    // to prevent "G" truncation
-                    // Snug fit for vertical rotation
+                            .requiredWidth(76.dp),
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                 )
             }
 
-            // Bottom spacing to balance the top padding
             Box(modifier = Modifier.height(10.dp))
         }
     }

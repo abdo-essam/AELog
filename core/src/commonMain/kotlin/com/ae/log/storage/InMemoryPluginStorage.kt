@@ -56,8 +56,6 @@ public class InMemoryPluginStorage<T>(
         }
     }
 
-    // ── Network-specific (NOT in PluginStorage interface) ─────────────
-
     /** Atomically find and update the first matching element. No-op if not found. */
     public fun updateFirst(
         predicate: (T) -> Boolean,
