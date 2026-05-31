@@ -1,6 +1,7 @@
 package com.ae.log.crashes.capture
 
 import com.ae.log.crashes.model.CrashEvent
+import com.ae.log.crashes.model.currentDeviceInfo
 import com.ae.log.crashes.storage.CrashStorage
 import com.ae.log.utils.IdGenerator
 import kotlin.time.Clock
@@ -30,7 +31,9 @@ internal class CrashRecorder(
                 stackTrace = throwable.stackTraceToString(),
                 threadName = threadName,
                 isFatal = isFatal,
+                deviceInfo = currentDeviceInfo(),
             )
         storage.record(event)
     }
 }
+

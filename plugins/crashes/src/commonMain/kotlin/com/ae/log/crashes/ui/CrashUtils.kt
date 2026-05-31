@@ -9,9 +9,15 @@ internal object CrashUtils {
     fun formatEventForCopy(event: CrashEvent): String =
         buildString {
             appendLine("[${if (event.isFatal) "FATAL" else "NON-FATAL"}] ${event.exceptionType}")
-            appendLine("Thread : ${event.threadName}")
-            appendLine("Time   : ${formatTimestamp(event.timestamp)}")
-            if (event.message.isNotBlank()) appendLine("Message: ${event.message}")
+            appendLine("Thread  : ${event.threadName}")
+            appendLine("Time    : ${formatTimestamp(event.timestamp)}")
+            if (event.message.isNotBlank()) appendLine("Message : ${event.message}")
+            appendLine()
+            appendLine("── Device Info ──────────────────────────")
+            appendLine("Device  : ${event.deviceInfo.model}")
+            appendLine("OS      : ${event.deviceInfo.osVersion}")
+            appendLine("Version : ${event.deviceInfo.appVersion} (${event.deviceInfo.buildNumber})")
+            appendLine("─────────────────────────────────────────")
             appendLine()
             append(event.stackTrace)
         }
