@@ -2,15 +2,17 @@
 
 package com.ae.log.crashes.model
 
-import platform.UIKit.UIDevice
 import platform.Foundation.NSBundle
+import platform.UIKit.UIDevice
 
 internal actual fun currentDeviceInfo(): DeviceInfo {
     val device = UIDevice.currentDevice
-    val appVersion = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString")
-        as? String ?: "unknown"
-    val buildNumber = NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion")
-        as? String ?: "unknown"
+    val appVersion =
+        NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString")
+            as? String ?: "unknown"
+    val buildNumber =
+        NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleVersion")
+            as? String ?: "unknown"
 
     return DeviceInfo(
         model = device.model,

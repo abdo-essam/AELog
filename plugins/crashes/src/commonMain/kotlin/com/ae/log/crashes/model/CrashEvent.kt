@@ -21,11 +21,11 @@ public data class CrashEvent(
     val threadName: String,
     val isFatal: Boolean,
     /** Device and OS metadata captured at the moment of the crash. */
-    val deviceInfo: DeviceInfo = DeviceInfo(
-        model = "unknown",
-        osVersion = "unknown",
-        appVersion = "unknown",
-        buildNumber = "unknown",
-    ),
+    val deviceInfo: DeviceInfo =
+        DeviceInfo(
+            model = "unknown",
+            osVersion = "unknown",
+            appVersion = "unknown",
+            buildNumber = "unknown",
+        ),
 )
-
