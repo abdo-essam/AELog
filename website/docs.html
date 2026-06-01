@@ -223,7 +223,7 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.1.0"
+aelog = "1.1.2"
 
 [libraries]
 aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
@@ -249,10 +249,10 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.1.0")
-            implementation("io.github.abdo-essam:ae-log-network:1.1.0")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.1.0")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.1.0")
+            implementation("io.github.abdo-essam:ae-log-logs:1.1.2")
+            implementation("io.github.abdo-essam:ae-log-network:1.1.2")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.1.2")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.1.2")
         }
     }
 }</code></pre>
@@ -729,6 +729,29 @@ AELog.log.e("Auth", "Login failed", error)
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone -3: v1.1.2 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.2 <span class="timeline-date">— June 1, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Request Body on Error:</strong> Network logs now capture and display the request body early in the request pipeline, ensuring it remains visible even when requests fail with client/server errors or network exceptions.</li>
+                            <li><strong>Smart Binary Upload Handling:</strong> Binary uploads (like images/documents via <code>multipart/form-data</code>) are no longer dumped as raw binary strings into logs. AELog now displays a clean summary like <code>&lt;image/png: 110370 bytes&gt;</code>, preventing memory bloat and UI lag.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Premium Code Block Styles:</strong> Request and response body sections in the network details view now render with a solid, clean white background and black text in light theme for maximum readability.</li>
+                            <li><strong>Enhanced Contrast for Success Responses:</strong> Successful network entry detail sections are highlighted with a subtle green tint (<code>Color(0xFF4CAF50).copy(alpha = 0.08f)</code>) to distinguish them from the sheet background.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
                 </div>
 
                 <!-- Milestone -2: v1.1.0 -->
