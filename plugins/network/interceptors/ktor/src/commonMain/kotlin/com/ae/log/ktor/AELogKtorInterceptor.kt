@@ -111,6 +111,26 @@ public class AELogKtorInterceptor internal constructor(
                 val recorder = recorder()
                 val id = context.attributes.getOrNull(RequestIdKey)
 
+                // When ContentNegotiation is NOT installed, setBody(String) or setBody(ByteArray)
+                // passes raw primitives through the pipeline — they are never wrapped in OutgoingContent
+                // at this phase. Handle them explicitly before attempting the OutgoingContent cast.
+                if (recorder != null && id != null) {
+                    when (content) {
+                        is String -> {
+                            recorder.updateRequestBody(id, content.trim().ifBlank { null })
+                            proceedWith(content)
+                            return@intercept
+                        }
+                        is ByteArray -> {
+                            val text = runCatching { content.decodeToString().trim() }.getOrNull()
+                            recorder.updateRequestBody(id, text?.ifBlank { null })
+                            proceedWith(content)
+                            return@intercept
+                        }
+                        else -> Unit // fall through to OutgoingContent handling below
+                    }
+                }
+
                 val outgoing = content as? OutgoingContent
                 val contentType = outgoing?.contentType?.toString() ?: context.headers["Content-Type"]
                 val isCapturable = InterceptorDefaults.shouldCaptureBody(contentType, captureUnknown = true)
