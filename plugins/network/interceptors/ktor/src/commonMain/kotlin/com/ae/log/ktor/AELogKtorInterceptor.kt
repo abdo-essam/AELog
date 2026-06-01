@@ -111,10 +111,25 @@ public class AELogKtorInterceptor internal constructor(
                 val recorder = recorder()
                 val id = context.attributes.getOrNull(RequestIdKey)
 
+                val outgoing = content as? OutgoingContent
+                val contentType = outgoing?.contentType?.toString() ?: context.headers["Content-Type"]
+                val isCapturable = InterceptorDefaults.shouldCaptureBody(contentType, captureUnknown = true)
+
+                if (!isCapturable) {
+                    if (recorder != null && id != null) {
+                        val size = outgoing?.contentLength ?: context.headers["Content-Length"]?.toLongOrNull()
+                        val sizeStr = size?.let { "$it bytes" } ?: "unknown size"
+                        val typeStr = contentType ?: "unknown content type"
+                        val preview = "<$typeStr: $sizeStr>"
+                        recorder.updateRequestBody(id, preview)
+                    }
+                    proceedWith(content)
+                    return@intercept
+                }
+
                 // For WriteChannelContent (e.g. JSON serialized by ContentNegotiation),
                 // we must drain the channel into a byte array, log it, then re-emit as
                 // ByteArrayContent so the actual HTTP request body is preserved.
-                val outgoing = content as? OutgoingContent
                 if (outgoing is OutgoingContent.WriteChannelContent && recorder != null && id != null) {
                     val buffer = ByteChannel(autoFlush = true)
                     val bytes =
@@ -139,12 +154,12 @@ public class AELogKtorInterceptor internal constructor(
                     return@intercept
                 }
 
-                proceedWith(content)
-
                 // For non-stream content (ByteArrayContent, TextContent, etc.)
                 if (recorder != null && id != null) {
-                    extractBodyPreview(context.body)?.let { recorder.updateRequestBody(id, it) }
+                    extractBodyPreview(content)?.let { recorder.updateRequestBody(id, it) }
                 }
+
+                proceedWith(content)
             }
         }
 

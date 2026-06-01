@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -31,7 +32,7 @@ internal fun NetworkEntryDetails(
     val bgColor =
         when {
             entry.isError -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-            entry.isSuccess -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.15f)
+            entry.isSuccess -> Color(0xFF4CAF50).copy(alpha = 0.08f)
             else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
         }
 

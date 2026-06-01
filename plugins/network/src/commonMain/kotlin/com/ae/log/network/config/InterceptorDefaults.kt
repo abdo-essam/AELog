@@ -53,6 +53,7 @@ public object InterceptorDefaults {
             "X-Frame-Options",
             "X-Powered-By",
             "X-XSS-Protection",
+            "content-disposition"
         )
 
     /**
