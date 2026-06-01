@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.2] - 2026-06-01
+## [1.1.1] - 2026-06-01
 
 ### Added
 - **Request Body on Error:** Network logs now capture and display the request body early in the request pipeline, ensuring it remains visible even when requests fail with client/server errors or network exceptions.
@@ -178,8 +178,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.2...HEAD
-[1.1.2]: https://github.com/abdo-essam/AELog/compare/v1.1.0...v1.1.2
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/abdo-essam/AELog/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/abdo-essam/AELog/compare/v1.0.9...v1.1.0
 [1.0.9]: https://github.com/abdo-essam/AELog/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/abdo-essam/AELog/compare/v1.0.7...v1.0.8
