@@ -6,7 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ae.log.plugin.UIPlugin
-import com.ae.log.ui.LocalLogController
+import com.ae.log.ui.LogController
 import com.ae.log.ui.theme.LogSpacing
 
 /**
@@ -21,6 +21,7 @@ import com.ae.log.ui.theme.LogSpacing
 internal fun LogContent(
     plugins: List<UIPlugin>,
     onDismiss: () -> Unit,
+    controller: LogController,
     modifier: Modifier = Modifier,
 ) {
     if (plugins.isEmpty()) {
@@ -37,7 +38,6 @@ internal fun LogContent(
         return
     }
 
-    val controller = LocalLogController.current
     val activeTabIndex by controller.activeTabIndex.collectAsState()
 
     val safeIndex = activeTabIndex.coerceIn(0, plugins.lastIndex.coerceAtLeast(0))

@@ -61,27 +61,26 @@ public fun AELogOverlay(showNotch: Boolean = AELog.config?.showNotch ?: true) {
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
         val isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint && maxHeight > 480.dp
 
-        CompositionLocalProvider(LocalLogController provides controller) {
-            LogTheme {
-                // Notch pill — Dynamic Island-style trigger at the top of the screen.
-                // Hidden while the panel is open so it doesn't overlap.
-                if (!isVisible && showNotch) {
-                    Popup(
-                        alignment = Alignment.CenterEnd,
-                        properties = PopupProperties(focusable = false),
-                    ) {
-                        LogNotchButton(onClick = { controller.show() })
-                    }
+        LogTheme {
+            // Notch pill — Dynamic Island-style trigger at the top of the screen.
+            // Hidden while the panel is open so it doesn't overlap.
+            if (!isVisible && showNotch) {
+                Popup(
+                    alignment = Alignment.CenterEnd,
+                    properties = PopupProperties(focusable = false),
+                ) {
+                    LogNotchButton(onClick = { controller.show() })
                 }
+            }
 
-                // ModalBottomSheet / Dialog are already Popup-based — no layout parent needed.
-                if (isVisible) {
-                    LogContainer(
-                        plugins = uiPlugins,
-                        isLargeScreen = isLargeScreen,
-                        onDismiss = { controller.hide() },
-                    )
-                }
+            // ModalBottomSheet / Dialog are already Popup-based — no layout parent needed.
+            if (isVisible) {
+                LogContainer(
+                    plugins = uiPlugins,
+                    isLargeScreen = isLargeScreen,
+                    controller = controller,
+                    onDismiss = { controller.hide() },
+                )
             }
         }
     }
