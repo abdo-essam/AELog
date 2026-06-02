@@ -61,6 +61,16 @@ android {
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
+    signingConfigs {
+        create("debug") {
+            val userHome = System.getProperty("user.home")
+            storeFile = file("$userHome/.android/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.ae.log.sample"
         minSdk =
@@ -73,6 +83,12 @@ android {
                 .toInt()
         versionCode = 1
         versionName = "1.0"
+    }
+
+    buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
