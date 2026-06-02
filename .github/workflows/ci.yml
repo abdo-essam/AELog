@@ -39,7 +39,7 @@ jobs:
         run: ./gradlew spotlessApply
 
       - name: Update API dumps
-        run: ./gradlew apiDump
+        run: ./gradlew apiDump --no-configuration-cache
 
       - name: Auto Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -62,9 +62,15 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
+      # ── Generate Debug Keystore (CI workaround for AGP 8.11+) ──────────────
+      - name: Generate Debug Keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
+
       # ── Build ────────────────────────────────────────────────────────────────
       - name: Build
-        run: ./gradlew assemble
+        run: ./gradlew assemble --no-configuration-cache
 
       # ── Normal Unit Tests ────────────────────────────────────────────────────
       - name: Unit Tests
@@ -262,6 +268,11 @@ jobs:
           java-version: '21'
 
       - uses: gradle/actions/setup-gradle@v6
+
+      - name: Generate Debug Keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug" || true
 
       - name: Build Sample
         run: ./gradlew :sample:composeApp:assembleDebug
