@@ -13,6 +13,7 @@ import com.ae.log.InternalAELogApi
 @OptIn(InternalAELogApi::class, ExperimentalStdlibApi::class)
 @Suppress("DEPRECATION") // @EagerInitialization is the only zero-config iOS init mechanism.
 @EagerInitialization
-private val initAnalyticsPlugin = run {
-    AELog.install(AnalyticsPlugin())
-}
+private val initAnalyticsPlugin =
+    run {
+        AELog.install(AnalyticsPlugin())
+    }
