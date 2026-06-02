@@ -88,12 +88,10 @@ internal fun LogNotchButton(
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 2.sp,
-                    modifier =
-                        Modifier
-                            .rotate(-90f)
-                            .requiredWidth(76.dp),
+                    modifier = Modifier.rotate(-90f),
                     textAlign = TextAlign.Center,
                     maxLines = 1,
+                    softWrap = false,
                 )
             }
 
