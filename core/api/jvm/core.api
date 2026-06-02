@@ -176,7 +176,7 @@ public final class com/ae/log/ui/components/ComposableSingletons$LogSearchBarKt 
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogSearchBarKt;
 	public fun <init> ()V
 	public final fun getLambda$-2063243949$core ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$93132620$core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$671898765$core ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/ui/components/LogFilterChipsKt {
