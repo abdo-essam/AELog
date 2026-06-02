@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-06-02
+
+### Added
+- **Zero-Config iOS Auto-Initialization:** Added automatic initialization for all core plugins (`Logs`, `Network`, `Analytics`, and `Crashes`) on iOS via `@EagerInitialization` in KMP. iOS consumers no longer need to write any configuration or setup code—mirroring Android's zero-code setup experience.
+- **Auto-Initialization Documentation:** Fully documented iOS auto-initialization behaviors, including custom configuration and opt-out scenarios via the idempotent configuration API.
+
+### Fixed
+- **Ktor Raw Request Payloads:** Fixed interceptor logic in `log-network-ktor` to gracefully capture raw `String` and `ByteArray` request bodies when `ContentNegotiation` is not installed on the HttpClient.
+- **LogNotchButton Rotated Text Clipping:** Fixed a UI layout bug on iOS where the rotated notification notch text was clipped or invisible by removing the static `.requiredWidth` constraint and applying `softWrap = false`.
+
+---
+
 ## [1.1.1] - 2026-06-01
 
 ### Added
@@ -178,7 +190,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/abdo-essam/AELog/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/abdo-essam/AELog/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/abdo-essam/AELog/compare/v1.0.9...v1.1.0
 [1.0.9]: https://github.com/abdo-essam/AELog/compare/v1.0.8...v1.0.9

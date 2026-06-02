@@ -223,7 +223,7 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.1.1"
+aelog = "1.1.2"
 
 [libraries]
 aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
@@ -249,10 +249,10 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.1.1")
-            implementation("io.github.abdo-essam:ae-log-network:1.1.1")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.1.1")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.1.1")
+            implementation("io.github.abdo-essam:ae-log-logs:1.1.2")
+            implementation("io.github.abdo-essam:ae-log-network:1.1.2")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.1.2")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.1.2")
         }
     }
 }</code></pre>
@@ -729,6 +729,28 @@ AELog.log.e("Auth", "Login failed", error)
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone -4: v1.1.2 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.2 <span class="timeline-date">— June 2, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Zero-Config iOS Auto-Initialization:</strong> Added auto-initialization for all four core plugins on iOS using <code>@EagerInitialization</code> in KMP shared modules. iOS consumers now enjoy completely zero-code plugin setup just like Android!</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Ktor Interceptor Payloads:</strong> Fixed handling of raw <code>String</code> and <code>ByteArray</code> request bodies in Ktor client when <code>ContentNegotiation</code> is not installed.</li>
+                            <li><strong>Notch Label Clipping:</strong> Resolved notch button label clipping/invisibility on iOS by removing the static <code>requiredWidth</code> constraint and setting <code>softWrap = false</code> on the rotated Compose Text.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
                 </div>
 
                 <!-- Milestone -3: v1.1.1 -->
