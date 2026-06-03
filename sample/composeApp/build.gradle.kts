@@ -35,12 +35,12 @@ kotlin {
             implementation(project(":plugins:analytics")) // AnalyticsPlugin
             implementation(project(":plugins:crashes")) // CrashPlugin
             implementation(libs.ktor.client.core) // HttpClient DSL in commonMain
-            implementation(libs.runtime)
-            implementation(libs.foundation)
-            implementation(libs.material3)
-            implementation(libs.ui)
-            implementation(libs.material.icons.extended)
-            implementation(libs.components.resources)
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.components.resources)
         }
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
@@ -61,6 +61,16 @@ android {
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
+    signingConfigs {
+        getByName("debug") {
+            val userHome = System.getProperty("user.home")
+            storeFile = file("$userHome/.android/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.ae.log.sample"
         minSdk =
@@ -74,9 +84,18 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+
+    buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+    }
+    lint {
+        checkReleaseBuilds = false
     }
     buildFeatures {
         buildConfig = true // Required in AGP 8+ — disabled by default

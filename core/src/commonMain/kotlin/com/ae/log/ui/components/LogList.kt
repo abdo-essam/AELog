@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 public fun <T> LogList(
@@ -57,7 +58,7 @@ public fun <T> LogList(
                                 modifier = Modifier.size(LogSpacing.x4),
                             )
                             Spacer(modifier = Modifier.width(LogSpacing.x1))
-                            Text("Copy All", style = MaterialTheme.typography.labelSmall)
+                            Text("Copy All", style = LogTheme.typography.labelSmall)
                         }
                     }
                 },
@@ -91,7 +92,7 @@ public fun <T> LogList(
                     Card(
                         modifier = Modifier.fillMaxWidth().padding(horizontal = LogSpacing.x5),
                         shape = RoundedCornerShape(LogSpacing.x3),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
                     ) {
                         LazyColumn(
                             state = listState,
@@ -103,7 +104,7 @@ public fun <T> LogList(
                                 if (index < items.lastIndex) {
                                     HorizontalDivider(
                                         modifier = Modifier.padding(horizontal = LogSpacing.x3),
-                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        color = LogTheme.colors.outlineVariant,
                                         thickness = LogDimens.listDividerThickness,
                                     )
                                 }
@@ -121,8 +122,8 @@ public fun EmptyPlaceholder(message: String) {
     Box(Modifier.fillMaxSize().padding(LogSpacing.x8), Alignment.Center) {
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = LogTheme.typography.bodyMedium,
+            color = LogTheme.colors.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
     }
@@ -130,7 +131,7 @@ public fun EmptyPlaceholder(message: String) {
 
 @Composable
 public fun ExpandedDetails(
-    bgColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    bgColor: Color = LogTheme.colors.surfaceVariant,
     onCopy: () -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -155,14 +156,14 @@ public fun ExpandedDetails(
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
                     contentDescription = "Copy",
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = LogTheme.colors.primary,
                     modifier = Modifier.size(LogSpacing.x4),
                 )
                 Spacer(modifier = Modifier.width(LogSpacing.x1))
                 Text(
                     text = "Copy",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    style = LogTheme.typography.labelSmall,
+                    color = LogTheme.colors.primary,
                 )
             }
         }

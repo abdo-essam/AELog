@@ -223,7 +223,7 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.1.2"
+aelog = "1.1.5"
 
 [libraries]
 aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
@@ -249,10 +249,10 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.1.2")
-            implementation("io.github.abdo-essam:ae-log-network:1.1.2")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.1.2")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.1.2")
+            implementation("io.github.abdo-essam:ae-log-logs:1.1.5")
+            implementation("io.github.abdo-essam:ae-log-network:1.1.5")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.1.5")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.1.5")
         }
     }
 }</code></pre>
@@ -731,13 +731,29 @@ AELog.log.e("Auth", "Login failed", error)
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
                 </div>
 
-                <!-- Milestone -4: v1.1.2 -->
+                <!-- Milestone -5: v1.1.5 -->
                 <div class="timeline-item">
                     <div class="timeline-bullet-wrapper">
                         <div class="timeline-bullet"></div>
                     </div>
                     <div class="timeline-content glass-panel card-xl">
-                        <h3 class="timeline-title">v1.1.2 <span class="timeline-date">— June 2, 2026</span></h3>
+                        <h3 class="timeline-title">v1.1.5 <span class="timeline-date">— June 3, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>MaterialTheme Linkage Crash on iOS:</strong> Completely removed references to standard Compose MaterialTheme companion property accesses across core and plugins, replacing them with a custom static <code>LogTheme</code>. This prevents <code>IrLinkageError</code> crashes on iOS when linking AELog into applications using mismatched Compose Multiplatform versions.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -4: v1.1.4 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.4 <span class="timeline-date">— June 2, 2026</span></h3>
                         
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">

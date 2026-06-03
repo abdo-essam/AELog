@@ -1,7 +1,5 @@
 package com.ae.log.ui
 
-import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.staticCompositionLocalOf
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,11 +35,3 @@ internal class LogController internal constructor(
         _activeTabIndex.value = index.coerceAtLeast(0)
     }
 }
-
-/**
- * CompositionLocal providing the [LogController] internally.
- */
-internal val LocalLogController: ProvidableCompositionLocal<LogController> =
-    staticCompositionLocalOf {
-        error("LogController not provided.")
-    }

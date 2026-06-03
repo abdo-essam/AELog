@@ -6,12 +6,18 @@ import com.ae.log.InternalAELogApi
 import com.ae.log.logs.model.LogSeverity
 import com.ae.log.plugin.Plugin
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class, InternalAELogApi::class)
 class LogPluginMigrationTest {
+    @BeforeTest
+    fun setUp() {
+        AELog.resetForTesting()
+    }
+
     @AfterTest
     fun tearDown() {
         AELog.resetForTesting()
