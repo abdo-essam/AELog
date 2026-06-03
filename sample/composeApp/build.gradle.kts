@@ -94,6 +94,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+    lint {
+        checkReleaseBuilds = false
+    }
     buildFeatures {
         buildConfig = true // Required in AGP 8+ — disabled by default
     }
