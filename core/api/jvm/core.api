@@ -213,6 +213,32 @@ public abstract interface class com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public abstract fun Overlay (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
+public final class com/ae/log/ui/theme/LogColors {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/ui/theme/LogColors;
+	public final fun getBackground-0d7_KjU ()J
+	public final fun getError-0d7_KjU ()J
+	public final fun getErrorContainer-0d7_KjU ()J
+	public final fun getInverseOnSurface-0d7_KjU ()J
+	public final fun getInverseSurface-0d7_KjU ()J
+	public final fun getOnBackground-0d7_KjU ()J
+	public final fun getOnError-0d7_KjU ()J
+	public final fun getOnErrorContainer-0d7_KjU ()J
+	public final fun getOnPrimary-0d7_KjU ()J
+	public final fun getOnPrimaryContainer-0d7_KjU ()J
+	public final fun getOnSecondary-0d7_KjU ()J
+	public final fun getOnSurface-0d7_KjU ()J
+	public final fun getOnSurfaceVariant-0d7_KjU ()J
+	public final fun getOutline-0d7_KjU ()J
+	public final fun getOutlineVariant-0d7_KjU ()J
+	public final fun getPrimary-0d7_KjU ()J
+	public final fun getPrimaryContainer-0d7_KjU ()J
+	public final fun getScrim-0d7_KjU ()J
+	public final fun getSecondary-0d7_KjU ()J
+	public final fun getSurface-0d7_KjU ()J
+	public final fun getSurfaceVariant-0d7_KjU ()J
+}
+
 public final class com/ae/log/ui/theme/LogDimens {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/theme/LogDimens;
@@ -235,6 +261,24 @@ public final class com/ae/log/ui/theme/LogSpacing {
 	public final fun getX5-D9Ej5fM ()F
 	public final fun getX6-D9Ej5fM ()F
 	public final fun getX8-D9Ej5fM ()F
+}
+
+public final class com/ae/log/ui/theme/LogTheme {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/ui/theme/LogTheme;
+	public final fun getColors ()Lcom/ae/log/ui/theme/LogColors;
+	public final fun getTypography ()Lcom/ae/log/ui/theme/LogTypography;
+}
+
+public final class com/ae/log/ui/theme/LogTypography {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/ui/theme/LogTypography;
+	public final fun getBodyLarge ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getBodySmall ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLabelLarge ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLabelMedium ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLabelSmall ()Landroidx/compose/ui/text/TextStyle;
 }
 
 public final class com/ae/log/utils/CallerTagKt {
