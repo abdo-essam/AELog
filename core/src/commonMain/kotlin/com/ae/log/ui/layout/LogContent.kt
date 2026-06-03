@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import com.ae.log.plugin.UIPlugin
 import com.ae.log.ui.LogController
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /**
  * Tabbed container that renders UI plugins as tabs.
@@ -31,8 +32,8 @@ internal fun LogContent(
         ) {
             Text(
                 text = "No plugins installed",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = LogTheme.typography.bodyLarge,
+                color = LogTheme.colors.onSurfaceVariant,
             )
         }
         return
@@ -47,8 +48,8 @@ internal fun LogContent(
         if (plugins.size > 1) {
             PrimaryScrollableTabRow(
                 selectedTabIndex = safeIndex,
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = LogTheme.colors.surface,
+                contentColor = LogTheme.colors.primary,
                 edgePadding = LogSpacing.x4,
             ) {
                 plugins.forEachIndexed { index, plugin ->
@@ -58,7 +59,7 @@ internal fun LogContent(
                         selected = index == safeIndex,
                         onClick = { controller.selectTab(index) },
                         text = {
-                            Text(plugin.name, style = MaterialTheme.typography.labelMedium)
+                            Text(plugin.name, style = LogTheme.typography.labelMedium)
                         },
                         icon = {
                             if (count > 0) {
@@ -66,7 +67,7 @@ internal fun LogContent(
                                     Badge {
                                         Text(
                                             text = if (count > 99) "99+" else count.toString(),
-                                            style = MaterialTheme.typography.labelSmall,
+                                            style = LogTheme.typography.labelSmall,
                                         )
                                     }
                                 }) {

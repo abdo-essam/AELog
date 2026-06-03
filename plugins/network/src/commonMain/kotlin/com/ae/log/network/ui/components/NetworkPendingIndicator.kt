@@ -1,4 +1,4 @@
-﻿package com.ae.log.network.ui.components
+package com.ae.log.network.ui.components
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /** Animated three-dot indicator shown while a network response is still in-flight. */
 @Composable
@@ -56,14 +56,14 @@ internal fun NetworkPendingIndicator() {
                     Modifier
                         .size(7.dp)
                         .alpha(alpha)
-                        .background(MaterialTheme.colorScheme.primary, CircleShape),
+                        .background(LogTheme.colors.primary, CircleShape),
             )
         }
         Spacer(Modifier.width(LogSpacing.x1))
         Text(
             text = "Waiting for response\u2026",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = LogTheme.typography.bodySmall,
+            color = LogTheme.colors.onSurfaceVariant,
         )
     }
 }

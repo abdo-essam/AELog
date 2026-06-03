@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /** Horizontally-scrollable monospaced body block with an inline copy button. */
 @Composable
@@ -43,14 +43,14 @@ internal fun NetworkBodySection(
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
+                style = LogTheme.typography.labelSmall,
+                color = LogTheme.colors.primary,
             )
             IconButton(onClick = { onCopy(body) }, modifier = Modifier.size(36.dp)) {
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
                     contentDescription = "Copy $label",
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = LogTheme.colors.primary,
                     modifier = Modifier.size(LogSpacing.x4 + 2.dp),
                 )
             }

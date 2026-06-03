@@ -1,4 +1,4 @@
-﻿package com.ae.log.analytics.ui.components
+package com.ae.log.analytics.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.ae.log.analytics.model.AnalyticsEvent
 import com.ae.log.analytics.utils.toTimeLabel
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun AnalyticsEventItem(
@@ -60,8 +60,8 @@ internal fun AnalyticsEventItem(
                 ) {
                     Text(
                         text = event.name,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary,
+                        style = LogTheme.typography.bodySmall,
+                        color = LogTheme.colors.primary,
                         fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -69,15 +69,15 @@ internal fun AnalyticsEventItem(
                     )
                     Text(
                         text = event.timestamp.toTimeLabel(),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = LogTheme.typography.labelSmall,
+                        color = LogTheme.colors.onSurfaceVariant,
                     )
                 }
                 if (event.properties.isNotEmpty()) {
                     Text(
                         text = event.properties.entries.joinToString(" · ") { "${it.key}=${it.value}" },
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = LogTheme.typography.labelSmall,
+                        color = LogTheme.colors.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -93,7 +93,7 @@ internal fun AnalyticsEventItem(
                     },
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = LogTheme.colors.onSurfaceVariant,
             )
         }
 

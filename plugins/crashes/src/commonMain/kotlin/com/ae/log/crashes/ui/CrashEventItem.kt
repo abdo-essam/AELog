@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.ae.log.crashes.model.CrashEvent
 import com.ae.log.ui.components.ExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun CrashEventItem(
@@ -50,7 +51,7 @@ internal fun CrashEventItem(
             exit = shrinkVertically(),
         ) {
             ExpandedDetails(
-                bgColor = MaterialTheme.colorScheme.surfaceVariant,
+                bgColor = LogTheme.colors.surfaceVariant,
                 onCopy = { onCopy(event) },
             ) {
                 CrashStackTraceContent(event = event)
@@ -80,17 +81,17 @@ private fun CrashEventHeader(
             ) {
                 Text(
                     text = event.exceptionType,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = LogTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = LogTheme.colors.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                 )
                 Text(
                     text = CrashUtils.formatTimestamp(event.timestamp),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = LogTheme.typography.labelSmall,
+                    color = LogTheme.colors.onSurfaceVariant,
                 )
             }
 
@@ -107,8 +108,8 @@ private fun CrashEventHeader(
                 }
             Text(
                 text = preview,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = LogTheme.typography.labelSmall,
+                color = LogTheme.colors.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -117,8 +118,8 @@ private fun CrashEventHeader(
 
             Text(
                 text = "Thread: ${event.threadName}",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = LogTheme.typography.labelSmall,
+                color = LogTheme.colors.onSurfaceVariant,
             )
         }
 
@@ -128,7 +129,7 @@ private fun CrashEventHeader(
             imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
             contentDescription = null,
             modifier = Modifier.size(LogSpacing.x6),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = LogTheme.colors.onSurfaceVariant,
         )
     }
 }
@@ -156,7 +157,7 @@ private fun CrashSeverityBadge(isFatal: Boolean) {
             )
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelSmall,
+                style = LogTheme.typography.labelSmall,
                 fontWeight = FontWeight.Bold,
                 color = color,
             )
@@ -170,16 +171,16 @@ private fun CrashStackTraceContent(event: CrashEvent) {
         if (event.message.isNotBlank()) {
             Text(
                 text = event.message,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = LogTheme.typography.bodySmall,
+                color = LogTheme.colors.onSurfaceVariant,
             )
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            HorizontalDivider(color = LogTheme.colors.outlineVariant)
         }
         Text(
             text = event.stackTrace,
-            style = MaterialTheme.typography.labelSmall,
+            style = LogTheme.typography.labelSmall,
             fontFamily = FontFamily.Monospace,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = LogTheme.colors.onSurfaceVariant,
         )
     }
 }

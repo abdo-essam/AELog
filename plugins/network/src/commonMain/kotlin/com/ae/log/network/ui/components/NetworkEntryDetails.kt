@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import com.ae.log.network.utils.extractQueryParams
 import com.ae.log.network.utils.prettyPrintJson
 import com.ae.log.ui.components.ExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun NetworkEntryDetails(
@@ -31,9 +31,9 @@ internal fun NetworkEntryDetails(
 ) {
     val bgColor =
         when {
-            entry.isError -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+            entry.isError -> LogTheme.colors.errorContainer.copy(alpha = 0.3f)
             entry.isSuccess -> Color(0xFF4CAF50).copy(alpha = 0.08f)
-            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            else -> LogTheme.colors.surfaceVariant.copy(alpha = 0.5f)
         }
 
     val clipboard = LocalClipboardManager.current
@@ -82,17 +82,17 @@ internal fun NetworkEntryDetails(
                         Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(LogSpacing.x2))
-                            .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
+                            .background(LogTheme.colors.errorContainer.copy(alpha = 0.4f))
                             .padding(LogSpacing.x2),
                 ) {
                     SelectionContainer {
                         Text(
                             text = error,
                             style =
-                                MaterialTheme.typography.bodySmall.copy(
+                                LogTheme.typography.bodySmall.copy(
                                     fontFamily = FontFamily.Monospace,
                                 ),
-                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            color = LogTheme.colors.onErrorContainer,
                         )
                     }
                 }
