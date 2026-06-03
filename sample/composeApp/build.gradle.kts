@@ -62,7 +62,7 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
     signingConfigs {
-        create("debug") {
+        getByName("debug") {
             val userHome = System.getProperty("user.home")
             storeFile = file("$userHome/.android/debug.keystore")
             storePassword = "android"
