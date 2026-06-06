@@ -9,5 +9,4 @@ public interface PluginContext {
     public fun <T : Plugin> getPlugin(type: KClass<T>): T?
 }
 
-
 public inline fun <reified T : Plugin> PluginContext.getPlugin(): T? = getPlugin(T::class)

@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import com.ae.log.network.storage.NetworkStorage
 import com.ae.log.network.ui.NetworkContent
 import com.ae.log.network.ui.NetworkViewModel
-import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,8 +78,6 @@ public class NetworkPlugin : UIPlugin {
     override fun onClear() {
         storage.clear()
     }
-
-
 
     override fun export(): String =
         storage.entries.value.joinToString("\n\n") { entry ->

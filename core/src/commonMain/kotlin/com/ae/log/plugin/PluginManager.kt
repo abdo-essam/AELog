@@ -80,4 +80,3 @@ public class PluginManager internal constructor() {
         }
     }
 }
-

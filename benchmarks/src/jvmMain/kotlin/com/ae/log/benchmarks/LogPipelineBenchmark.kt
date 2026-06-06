@@ -3,7 +3,6 @@ package com.ae.log.benchmarks
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
 import com.ae.log.logs.LogPlugin
-import com.ae.log.logs.PlatformLogSink
 import com.ae.log.logs.log
 import com.ae.log.network.NetworkPlugin
 import kotlinx.benchmark.Benchmark

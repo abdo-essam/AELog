@@ -9,7 +9,6 @@ import com.ae.log.logs.model.LogSeverity
 import com.ae.log.logs.storage.LogStorage
 import com.ae.log.logs.ui.LogContent
 import com.ae.log.logs.ui.LogViewModel
-import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +37,8 @@ import kotlinx.coroutines.launch
  *
  * All calls are **silent no-ops** if [AELog.configure] has not been called yet.
  */
-public class LogPlugin : UIPlugin,
+public class LogPlugin :
+    UIPlugin,
     LogRecordSink {
     override val id: String = ID
     override val name: String = "Logs"
@@ -86,8 +86,6 @@ public class LogPlugin : UIPlugin,
     override fun onDetach() {
         viewModel = null
     }
-
-
 
     @Composable
     override fun Content(modifier: Modifier) {

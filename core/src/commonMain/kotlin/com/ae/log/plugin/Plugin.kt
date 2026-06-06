@@ -35,8 +35,6 @@ public interface Plugin {
      */
     public fun onClear() {}
 
-
-
     /**
      * Returns a plain-text snapshot of this plugin's current data, used by
      * [com.ae.log.AELog.export]. Return an empty string if there is nothing to export.

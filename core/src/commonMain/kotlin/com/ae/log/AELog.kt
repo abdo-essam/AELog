@@ -136,4 +136,3 @@ internal class LogInspector internal constructor() {
 
     internal fun clearAll() = plugins.forEach { it.onClear() }
 }
-
