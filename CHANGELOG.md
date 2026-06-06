@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **AELog.configure & LogConfig**: Removed the configure DSL block and `LogConfig` class, enforcing zero-config sensible defaults for all plugins.
 - **onMigrateFrom Lifecycle Hook**: Removed the obsolete `onMigrateFrom(oldPlugin)` hook from the `Plugin` interface and its overrides in built-in plugins (`LogPlugin`, `NetworkPlugin`, `AnalyticsPlugin`) due to the deprecation of dynamic configuration hot-swaps.
 
+### Fixed
+- **iOS/Native TOCTOU Race in `AELog.install()`**: Fixed a subtle race condition on Kotlin/Native where two separate reads of `instanceAtomic.value` inside `install()` could return different values (null vs non-null) under weak memory ordering, causing `plugins.install()` to be called on a null reference and the plugin to never be registered. The fix captures the resolved `LogInspector` into a single local variable before calling `install(plugin)`.
+
 ---
 
 ## [1.1.5] - 2026-06-03
