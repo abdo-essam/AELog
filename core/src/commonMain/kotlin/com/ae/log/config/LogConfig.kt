@@ -1,6 +1,5 @@
 package com.ae.log.config
 
-
 /**
  * Global configuration for the AELog SDK.
  */
