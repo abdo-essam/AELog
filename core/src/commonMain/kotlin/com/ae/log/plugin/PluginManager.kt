@@ -25,7 +25,7 @@ public class PluginManager internal constructor(
         synchronized(installLock) {
             if (_plugins.value.any { it.id == plugin.id }) return@synchronized
             _plugins.update { it + plugin }
-            val scope = CoroutineScope(SupervisorJob() + config.dispatcher)
+            val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
             scopes[plugin.id] = scope
             safeCall { plugin.onAttach(buildContext(scope)) }
         }

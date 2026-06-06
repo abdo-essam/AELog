@@ -17,7 +17,6 @@ import kotlinx.benchmark.Setup
 import kotlinx.benchmark.State
 import kotlinx.benchmark.TearDown
 import kotlinx.benchmark.Warmup
-import kotlinx.coroutines.Dispatchers
 
 /**
  * JMH benchmarks for the full AELog log pipeline:
@@ -46,7 +45,6 @@ open class LogPipelineBenchmark {
     @Setup
     fun setup() {
         AELog.configure {
-            dispatcher = Dispatchers.Unconfined
             plugin(LogPlugin(platformLogSink = PlatformLogSink.None))
             plugin(NetworkPlugin())
         }

@@ -5,8 +5,6 @@ import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginManager
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlin.jvm.JvmStatic
@@ -28,7 +26,6 @@ public object AELog {
      * AELog.configure {
      *     // Core configuration (optional)
      *     enabled = true
-     *     dispatcher = Dispatchers.Default
      *     errorHandler = { t -> println("SDK Error: ${t.message}") }
      *
      *     // Override or install plugins
@@ -170,7 +167,6 @@ internal class LogInspector internal constructor(
 
 public class AELogBuilder {
     public var enabled: Boolean = true
-    public var dispatcher: CoroutineDispatcher = Dispatchers.Default
     public var errorHandler: (Throwable) -> Unit = { t -> println("[AELog] Internal error: ${t.message}") }
     public var showNotch: Boolean = true
 
@@ -185,7 +181,6 @@ public class AELogBuilder {
         val config =
             LogConfig(
                 enabled = enabled,
-                dispatcher = dispatcher,
                 errorHandler = errorHandler,
                 showNotch = showNotch,
             )
