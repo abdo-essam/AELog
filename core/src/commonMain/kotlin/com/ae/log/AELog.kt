@@ -33,11 +33,12 @@ public object AELog {
         // Capture a single stable reference: create if absent, then use that exact instance.
         // Avoids a TOCTOU race on iOS/Native where a second read of instanceAtomic.value
         // could see a stale null after a successful CAS.
-        val inspector = instanceAtomic.value
-            ?: run {
-                val new = LogInspector()
-                if (instanceAtomic.compareAndSet(null, new)) new else instanceAtomic.value!!
-            }
+        val inspector =
+            instanceAtomic.value
+                ?: run {
+                    val new = LogInspector()
+                    if (instanceAtomic.compareAndSet(null, new)) new else instanceAtomic.value!!
+                }
         inspector.plugins.install(plugin)
     }
 
