@@ -547,14 +547,12 @@ AELog.launchViewer(activity)</code></pre>
                     <g class="node interactive-node" transform="translate(300, 200)" data-arch="core">
                         <rect width="150" height="200" rx="16" class="node-bg" />
                         <text x="75" y="35" text-anchor="middle" class="node-title">AELog Core</text>
-                        <rect x="15" y="55" width="120" height="28" rx="6" class="sub-node" />
-                        <text x="75" y="73" text-anchor="middle" class="node-subtitle">Plugin Registry</text>
-                        <rect x="15" y="93" width="120" height="28" rx="6" class="sub-node" />
-                        <text x="75" y="111" text-anchor="middle" class="node-subtitle">EventBus</text>
-                        <rect x="15" y="131" width="120" height="28" rx="6" class="sub-node" />
-                        <text x="75" y="149" text-anchor="middle" class="node-subtitle">PluginContext</text>
-                        <rect x="15" y="169" width="120" height="28" rx="6" class="sub-node" />
-                        <text x="75" y="187" text-anchor="middle" class="node-subtitle">Singleton API</text>
+                        <rect x="15" y="60" width="120" height="28" rx="6" class="sub-node" />
+                        <text x="75" y="78" text-anchor="middle" class="node-subtitle">Plugin Registry</text>
+                        <rect x="15" y="105" width="120" height="28" rx="6" class="sub-node" />
+                        <text x="75" y="123" text-anchor="middle" class="node-subtitle">PluginContext</text>
+                        <rect x="15" y="150" width="120" height="28" rx="6" class="sub-node" />
+                        <text x="75" y="168" text-anchor="middle" class="node-subtitle">Singleton API</text>
                         <rect width="150" height="200" rx="16" class="node-border" />
                     </g>
 
@@ -630,10 +628,9 @@ AELog.launchViewer(activity)</code></pre>
                     <h4 id="arch-info-title" class="body-lg-strong">AELog Core</h4>
                     <p id="arch-info-desc" class="body-sm mute-text">The heartbeat of the system. Manages Plugin
                         Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.</p>
-                    <pre><code id="arch-info-code" class="language-kotlin">// Configure custom plugins/settings if needed
-AELog.configure(
-  LogPlugin(maxEntries = 2000)
-)</code></pre>
+                    <pre><code id="arch-info-code" class="language-kotlin">// Install plugins & disable notch globally
+AELog.install(LogPlugin())
+AELog.showNotch = false</code></pre>
                 </div>
             </div>
 

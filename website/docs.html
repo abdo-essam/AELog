@@ -290,17 +290,11 @@ fun main() {
 <h1>Quick Start</h1>
 <p>Get up and running in just a few seconds.</p>
 <h2>1. Zero-Config (Automatic Setup)</h2>
-<p>AELog features <strong>zero-config auto-initialisation</strong> on Android. Just add the Gradle dependencies for the plugins you want, and they automatically register themselves. <strong>No initialization code is required in your Application class!</strong></p>
+<p>AELog features <strong>zero-config auto-initialisation</strong> on both Android and iOS. Just add the dependencies for the plugins you want, and they automatically register themselves. <strong>No initialization code is required in your application!</strong></p>
 <h2>2. Custom Configuration (Optional)</h2>
-<p>If you want to adjust global settings (like disabling the floating notch globally) or configure capacity limits on the built-in plugins, call <code>AELog.configure { }</code> from your app entry point (<code>Application.onCreate()</code> on Android):</p>
-<pre><code class="language-kotlin">AELog.configure {
-    // Disable the floating notch globally across XML & Compose screens (defaults to true)
-    showNotch = false 
-    
-    // Customize capacity limits or settings for specific plugins
-    plugin(LogPlugin(maxEntries = 2_000))
-    plugin(NetworkPlugin(maxEntries = 1_000))
-}</code></pre>
+<p>To disable the floating trigger notch globally (across all screens), set the static property <code>AELog.showNotch</code> at your app entry point (e.g. <code>Application.onCreate()</code> on Android):</p>
+<pre><code class="language-kotlin">// Disable the floating notch globally (defaults to true)
+AELog.showNotch = false</code></pre>
 <h2>3. Drop in the Overlay</h2>
 <p>Add <code>AELogOverlay()</code> as a <strong>sibling</strong> anywhere in your root composable &mdash; no wrapping required:</p>
 <pre><code class="language-kotlin">@Composable
@@ -345,16 +339,12 @@ try {
 <h1>Configuration</h1>
 <p>AELog is designed to be &quot;zero-config&quot; by default, but provides hooks to customize both data collection and UI behavior.</p>
 <h2>Core Configuration (Data & UI Globals)</h2>
-<p>Use <code>AELog.configure { }</code> to set global parameters or replace auto-registered default plugins with custom-configured versions:</p>
-<pre><code class="language-kotlin">AELog.configure {
-    // Disable the floating notch globally (across XML & Compose screens)
-    showNotch = false
-    
-    // Override specific plugins
-    plugin(LogPlugin(maxEntries = 1_000))
-    plugin(NetworkPlugin(maxEntries = 500))
-}
-</code></pre>
+<p>You can toggle global features like the floating notch trigger or enable/disable the logger using properties directly on <code>AELog</code>:</p>
+<pre><code class="language-kotlin">// Disable the floating notch globally (across XML & Compose screens)
+AELog.showNotch = false
+
+// Enable or disable the entire library programmatically
+AELog.isEnabled = BuildConfig.DEBUG</code></pre>
 <h2>UI Configuration</h2>
 <p>Control whether the floating notch is shown, or hide it and trigger the overlay programmatically:</p>
 <pre><code class="language-kotlin">// Default &mdash; shows the vertical notch trigger on the right side of the screen
@@ -375,7 +365,7 @@ AELog.isEnabled = BuildConfig.DEBUG
 <h1>Plugins Overview</h1>
 <p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host â€” plugins are what make it useful.</p>
 <h2>How Plugins Work</h2>
-<p>When you call <code>AELog.install(...)</code> or <code>AELog.configure { plugin(...) }</code>, the library:</p>
+<p>When you call <code>AELog.install(...)</code>, the library:</p>
 <ol>
 <li><strong>Installs</strong> each plugin and calls its <code>onAttach()</code> lifecycle hook</li>
 <li><strong>Renders</strong> <code>UIPlugin</code> instances as tabs in the overlay panel</li>
@@ -423,15 +413,8 @@ AELog.isEnabled = BuildConfig.DEBUG
 <p>A <strong>headless background collector</strong> with no UI. Simply implement the standard <code>Plugin</code> interface directly. Use it for crash collectors, performance samplers, background interceptors, or anything that needs to observe data or listen to event signals without a dedicated visual tab.</p>
 <h2>Installing Plugins</h2>
 <pre><code class="language-kotlin">// Auto-registered on Android via ContentProvider — no code needed!
-// But if you need custom limits or want to add custom plugins:
+// But if you are on other platforms (like iOS) or adding custom plugins:
 
-// Reconfigure an existing built-in plugin:
-AELog.configure { plugin(
-    LogPlugin(maxEntries = 2_000) },
-    NetworkPlugin(maxEntries = 500)
-)
-
-// Or register a new custom plugin:
 AELog.install(MyCustomPlugin())
 </code></pre>
 <h2>Plugin Lifecycle</h2>
@@ -454,11 +437,6 @@ AELog.install(MyCustomPlugin())
 <td><code>onAttach(context)</code></td>
 <td>Once, on install</td>
 <td>Store <code>PluginContext</code>, launch background collection, subscribe to EventBus events</td>
-</tr>
-<tr>
-<td><code>onMigrateFrom(oldPlugin)</code></td>
-<td>On AELog.configure hot-swap</td>
-<td>Migrate accumulated memory buffers or state from the previous instance of the plugin</td>
 </tr>
 <tr>
 <td><code>onClear()</code></td>
@@ -604,7 +582,7 @@ perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
     <strong>⚠️ Important Lifecycle Notes</strong>
     <ul>
         <li><code>onAttach</code> is called exactly once when the plugin is installed</li>
-        <li>Stale imperative lifecycle hooks (like <code>onStart</code>, <code>onStop</code>, <code>onOpen</code>, <code>onClose</code>) are removed in favor of lightweight, reactive event subscriptions on the <code>EventBus</code></li>
+        <li>Stale imperative lifecycle hooks (like <code>onStart</code>, <code>onStop</code>, <code>onOpen</code>, <code>onClose</code>) are removed to keep the API surface simple and focused (YAGNI).</li>
         <li>Always safety-check resources in <code>Content()</code> — it may recompose at any time</li>
         <li>Handle UI errors gracefully inside <code>Content()</code></li>
     </ul>
@@ -866,7 +844,7 @@ AELog.log.e("Auth", "Login failed", error)
                             <li><strong>Unified Plugin Architecture:</strong> Consolidated the redundant <code>DataPlugin</code> marker interface and <code>UIPlugin</code> under a single, streamlined <code>Plugin</code> base contract.</li>
                             <li><strong>Auto-Generated IDs:</strong> Added reflection-based qualified class name <code>id</code> defaults, eliminating manual ID registration boilerplate.</li>
                             <li><strong>Consolidated UI layout:</strong> Removed legacy layout slots (<code>HeaderContent()</code> and <code>HeaderActions()</code>) from <code>UIPlugin</code>. Plugins now have 100% layout control (like sticky search/headers) directly inside <code>Content()</code>.</li>
-                            <li><strong>YAGNI Lifecycle Cleanups:</strong> Purged unused imperative hooks (<code>onStart()</code>, <code>onStop()</code>, <code>onOpen()</code>, <code>onClose()</code>) from the plugin interface in favor of reactive event subscriptions on the shared <code>EventBus</code>.</li>
+                            <li><strong>YAGNI Lifecycle Cleanups:</strong> Purged unused imperative hooks (<code>onStart()</code>, <code>onStop()</code>, <code>onOpen()</code>, <code>onClose()</code>) from the plugin interface to keep the API surface simple and minimal.</li>
                         </ul>
                         <div class="glow-border"></div>
                     </div>

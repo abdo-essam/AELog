@@ -2,7 +2,6 @@ package com.ae.log.plugin
 
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
-import com.ae.log.config.LogConfig
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,8 +11,7 @@ import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class PluginManagerTest {
-    private val config = LogConfig()
-    private val manager = PluginManager(config)
+    private val manager = PluginManager()
 
     @AfterTest
     fun tearDown() {

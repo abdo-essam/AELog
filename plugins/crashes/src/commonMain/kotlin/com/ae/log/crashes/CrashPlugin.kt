@@ -47,14 +47,12 @@ import kotlinx.coroutines.launch
  *   Defaults to a platform-appropriate private directory.
  *   On Android prefer [CrashPlugin(context)] to get the proper files directory.
  */
-public class CrashPlugin(
-    private val storageDir: String = defaultCrashStorageDir(),
-) : UIPlugin {
+public class CrashPlugin : UIPlugin {
     override val id: String = ID
     override val name: String = "Crashes"
     override val icon: @Composable () -> Unit = { Icon(Icons.Default.BugReport, contentDescription = null) }
 
-    internal val storage = CrashStorage(directoryPath = storageDir)
+    internal val storage = CrashStorage(directoryPath = defaultCrashStorageDir())
     internal val recorder = CrashRecorder(storage = storage)
     private val handler = PlatformCrashHandler(recorder = recorder)
 

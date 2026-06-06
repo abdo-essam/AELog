@@ -44,15 +44,15 @@ import kotlinx.benchmark.Warmup
 open class LogPipelineBenchmark {
     @Setup
     fun setup() {
-        AELog.configure {
-            plugin(LogPlugin(platformLogSink = PlatformLogSink.None))
-            plugin(NetworkPlugin())
-        }
+        System.setProperty("aelog.benchmark", "true")
+        AELog.install(LogPlugin())
+        AELog.install(NetworkPlugin())
     }
 
     @TearDown
     fun teardown() {
         AELog.resetForTesting()
+        System.clearProperty("aelog.benchmark")
     }
 
     /**

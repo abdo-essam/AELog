@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material.icons.outlined.Wifi
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.ae.log.AELog
 import com.ae.log.sample.ui.features.analytics.AnalyticsScreen
 import com.ae.log.sample.ui.features.crashes.CrashScreen
 import com.ae.log.sample.ui.features.log.LogScreen

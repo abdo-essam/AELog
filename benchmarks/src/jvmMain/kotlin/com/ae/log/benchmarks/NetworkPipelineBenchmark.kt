@@ -43,9 +43,7 @@ open class NetworkPipelineBenchmark {
 
     @Setup
     fun setup() {
-        AELog.configure {
-            plugin(NetworkPlugin(maxEntries = 200))
-        }
+        AELog.install(NetworkPlugin())
         plugin = AELog.getPlugin<NetworkPlugin>()!!
     }
 

@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **Global Notch Toggle**: Added static property `AELog.showNotch` to allow globally enabling/disabling the floating trigger notch across all screens.
+- **Zero-Config iOS & Android Auto-Init**: Synchronized documentation and setups to highlight zero-config auto-initialization on both Android and iOS targets.
+
+### Removed
+- **AELog.configure & LogConfig**: Removed the configure DSL block and `LogConfig` class, enforcing zero-config sensible defaults for all plugins.
+- **onMigrateFrom Lifecycle Hook**: Removed the obsolete `onMigrateFrom(oldPlugin)` hook from the `Plugin` interface and its overrides in built-in plugins (`LogPlugin`, `NetworkPlugin`, `AnalyticsPlugin`) due to the deprecation of dynamic configuration hot-swaps.
+
+---
+
 ## [1.1.5] - 2026-06-03
 
 ### Fixed

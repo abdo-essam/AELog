@@ -1,6 +1,5 @@
 package com.ae.log.plugin
 
-import com.ae.log.config.LogConfig
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
@@ -13,9 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.reflect.KClass
 
-public class PluginManager internal constructor(
-    private val config: LogConfig,
-) {
+public class PluginManager internal constructor() {
     private val _plugins = MutableStateFlow<List<Plugin>>(emptyList())
     public val plugins: StateFlow<List<Plugin>> = _plugins.asStateFlow()
 
@@ -71,13 +68,16 @@ public class PluginManager internal constructor(
     private fun buildContext(scope: CoroutineScope): PluginContext =
         object : PluginContext {
             override val scope = scope
-            override val config = this@PluginManager.config
 
             @Suppress("UNCHECKED_CAST")
             override fun <T : Plugin> getPlugin(type: KClass<T>): T? = this@PluginManager.getPlugin(type)
         }
 
     private fun safeCall(block: () -> Unit) {
-        runCatching(block).onFailure { config.errorHandler.invoke(it) }
+        runCatching(block).onFailure { t ->
+            println("[AELog] Internal error: ${t.message}")
+            t.printStackTrace()
+        }
     }
 }
+

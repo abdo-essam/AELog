@@ -60,10 +60,9 @@ export const ARCH_DATA = {
         badge: "Core Engine",
         title: "AELog Core",
         desc: "The heartbeat of the system. Manages Plugin Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.",
-        code: `// Optional: configure custom settings
-AELog.configure(
-  LogPlugin(maxEntries = 2000)
-)`,
+        code: `// Install plugins and toggle notch globally
+AELog.install(LogPlugin())
+AELog.showNotch = false`,
     },
     logs: {
         badge: "ae-log-logs",

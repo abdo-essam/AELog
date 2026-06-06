@@ -280,26 +280,25 @@ kotlin {
 
     // Step 2: Custom Configuration Code Generation
     if (configCodeBlock) {
-        let snippet = `import com.ae.log.AELog
-`;
+        let snippet = `import com.ae.log.AELog\n`;
         if (state.features.logs) snippet += `import com.ae.log.logs.LogPlugin\n`;
         if (state.features.network) snippet += `import com.ae.log.network.NetworkPlugin\n`;
+        if (state.features.analytics) snippet += `import com.ae.log.analytics.AnalyticsPlugin\n`;
+        if (state.features.crashes) snippet += `import com.ae.log.crashes.CrashPlugin\n`;
 
         snippet += `
-AELog.configure {
-    // Disable the floating notch globally if desired (defaults to true)
-    showNotch = false
+// AELog boots up automatically with zero-config on Android & iOS!
+// If you want to disable the floating notch trigger globally:
+AELog.showNotch = false // (defaults to true)
+
+// For manual plugin installation on other targets (e.g. Desktop, etc.):
 `;
-        if (state.features.logs) {
-            snippet += `
-    // Optional plugin customizations
-    plugin(LogPlugin(maxEntries = 2_000))\n`;
-        }
-        if (state.features.network) {
-            snippet += `    plugin(NetworkPlugin(maxEntries = 1_000))\n`;
-        }
-        snippet += `}`;
-        configCodeBlock.textContent = snippet;
+        if (state.features.logs) snippet += `AELog.install(LogPlugin())\n`;
+        if (state.features.network) snippet += `AELog.install(NetworkPlugin())\n`;
+        if (state.features.analytics) snippet += `AELog.install(AnalyticsPlugin())\n`;
+        if (state.features.crashes) snippet += `AELog.install(CrashPlugin())\n`;
+
+        configCodeBlock.textContent = snippet.trim();
     }
 
     // Step 4: Usage APIs Code Generation

@@ -1,6 +1,5 @@
 package com.ae.log
 
-import com.ae.log.config.LogConfig
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginManager
 import kotlinx.atomicfu.AtomicRef
@@ -16,43 +15,6 @@ public object AELog {
     @PublishedApi
     internal val instance: LogInspector? get() = instanceAtomic.value
 
-    internal val config: LogConfig? get() = instance?.config
-
-    /**
-     * Configures the AELog library and its plugins using a type-safe Kotlin DSL.
-     *
-     * ## Usage
-     * ```kotlin
-     * AELog.configure {
-     *     // Core configuration (optional)
-     *     enabled = true
-     *     errorHandler = { t -> println("SDK Error: ${t.message}") }
-     *
-     *     // Override or install plugins
-     *     plugin(LogPlugin(maxEntries = 2_000))
-     *     plugin(NetworkPlugin(maxEntries = 500))
-     * }
-     * ```
-     */
-    @JvmStatic
-    public fun configure(block: AELogBuilder.() -> Unit) {
-        val builder = AELogBuilder().apply(block)
-        if (instanceAtomic.value == null) {
-            val newInstance = builder.build()
-            instanceAtomic.compareAndSet(null, newInstance)
-        } else {
-            val inspector = instanceAtomic.value!!
-            builder.plugins.distinctBy { it.id }.forEach { plugin ->
-                val oldPlugin = inspector.plugins.getPluginById(plugin.id)
-                if (oldPlugin != null) {
-                    plugin.onMigrateFrom(oldPlugin)
-                }
-                inspector.plugins.uninstall(plugin.id)
-                inspector.plugins.install(plugin)
-            }
-        }
-    }
-
     /**
      * Installs a new plugin into AELog.
      *
@@ -64,15 +26,12 @@ public object AELog {
      * AELog.install(LiveMetricsPlugin())
      * ```
      *
-     * To **reconfigure** an existing built-in plugin (e.g. change max entries),
-     * use [override] instead.
-     *
      * Safe to call from multiple threads concurrently.
      */
     @JvmStatic
     public fun install(plugin: Plugin) {
         if (instanceAtomic.value == null) {
-            val newInstance = LogInspector(LogConfig())
+            val newInstance = LogInspector()
             instanceAtomic.compareAndSet(null, newInstance)
         }
         instanceAtomic.value?.plugins?.install(plugin)
@@ -93,6 +52,18 @@ public object AELog {
 
     internal val isEnabledFlow: kotlinx.coroutines.flow.StateFlow<Boolean> =
         enabledStateFlow.asStateFlow()
+
+    private val showNotchStateFlow = MutableStateFlow(true)
+
+    @JvmStatic
+    public var showNotch: Boolean
+        get() = showNotchStateFlow.value
+        set(value) {
+            showNotchStateFlow.value = value
+        }
+
+    internal val showNotchFlow: kotlinx.coroutines.flow.StateFlow<Boolean> =
+        showNotchStateFlow.asStateFlow()
 
     /**
      * Programmatically opens the AELog overlay panel.
@@ -131,20 +102,21 @@ public object AELog {
      */
     @AELogTestApi
     public fun resetForTesting() {
-        val current = instanceAtomic.value ?: return
-        current.plugins.uninstallAll()
-        current.overlayVisible.value = false
-        instanceAtomic.value = null
+        val current = instanceAtomic.value
+        if (current != null) {
+            current.plugins.uninstallAll()
+            current.overlayVisible.value = false
+            instanceAtomic.value = null
+        }
         enabledStateFlow.value = true
+        showNotchStateFlow.value = true
     }
 }
 
 @PublishedApi
-internal class LogInspector internal constructor(
-    internal val config: LogConfig,
-) {
+internal class LogInspector internal constructor() {
     @PublishedApi
-    internal val plugins: PluginManager = PluginManager(config)
+    internal val plugins: PluginManager = PluginManager()
 
     /**
      * Backing state for the overlay panel visibility.
@@ -165,29 +137,3 @@ internal class LogInspector internal constructor(
     internal fun clearAll() = plugins.forEach { it.onClear() }
 }
 
-public class AELogBuilder {
-    public var enabled: Boolean = true
-    public var errorHandler: (Throwable) -> Unit = { t -> println("[AELog] Internal error: ${t.message}") }
-    public var showNotch: Boolean = true
-
-    @PublishedApi
-    internal val plugins: MutableList<Plugin> = mutableListOf()
-
-    public fun plugin(plugin: Plugin) {
-        plugins.add(plugin)
-    }
-
-    internal fun build(): LogInspector {
-        val config =
-            LogConfig(
-                enabled = enabled,
-                errorHandler = errorHandler,
-                showNotch = showNotch,
-            )
-        val inspector = LogInspector(config)
-        plugins.forEach { plugin ->
-            inspector.plugins.install(plugin)
-        }
-        return inspector
-    }
-}

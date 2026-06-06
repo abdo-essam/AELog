@@ -15,24 +15,10 @@ import com.ae.log.InternalAELogApi
  * registering [NetworkPlugin] with AELog automatically.
  *
  * ## Zero-config usage
- * Just add the dependency — no `AELog.configure { }` call required:
+ * Just add the dependency — no setup required:
  * ```kotlin
  * // build.gradle.kts
  * implementation("io.github.abdo-essam:ae-log-network:1.0.5")
- * ```
- *
- * ## Opt-out / custom config
- * Remove the auto-initializer via manifest merger and call `AELog.configure { }` yourself:
- * ```xml
- * <!-- AndroidManifest.xml -->
- * <provider
- *     android:name="com.ae.log.network.NetworkPluginInitializer"
- *     android:authorities="${applicationId}.ae_log_network_init"
- *     tools:node="remove" />
- * ```
- * ```kotlin
- * // Application.onCreate()
- * AELog.configure { plugin(NetworkPlugin(maxEntries = 500)) }
  * ```
  */
 internal class NetworkPluginInitializer : ContentProvider() {
