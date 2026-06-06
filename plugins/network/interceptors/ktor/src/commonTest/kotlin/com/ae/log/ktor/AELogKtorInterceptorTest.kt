@@ -20,6 +20,9 @@ class AELogKtorInterceptorTest {
 
     @BeforeTest
     fun setUp() {
+        // On iOS, @EagerInitialization auto-installs a NetworkPlugin before the test runs.
+        // Reset first so the test's own plugin instance is the one that gets registered.
+        AELog.resetForTesting()
         networkPlugin = NetworkPlugin()
         AELog.install(networkPlugin)
     }

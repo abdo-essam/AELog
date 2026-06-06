@@ -17,6 +17,7 @@ class LogRecorderTest {
 
     @BeforeTest
     fun setUp() {
+        AELog.resetForTesting()
         AELog.install(LogPlugin())
         storage = LogStorage(capacity = 100)
         recorder =

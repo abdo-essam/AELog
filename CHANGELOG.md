@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **onMigrateFrom Lifecycle Hook**: Removed the obsolete `onMigrateFrom(oldPlugin)` hook from the `Plugin` interface and its overrides in built-in plugins (`LogPlugin`, `NetworkPlugin`, `AnalyticsPlugin`) due to the deprecation of dynamic configuration hot-swaps.
 
 ### Fixed
-- **iOS/Native TOCTOU Race in `AELog.install()`**: Fixed a subtle race condition on Kotlin/Native where two separate reads of `instanceAtomic.value` inside `install()` could return different values (null vs non-null) under weak memory ordering, causing `plugins.install()` to be called on a null reference and the plugin to never be registered. The fix captures the resolved `LogInspector` into a single local variable before calling `install(plugin)`.
+- **iOS test isolation — duplicate plugin rejected silently**: On iOS, the `@EagerInitialization` annotated properties in each plugin's `iosMain` initializer auto-register a plugin instance before any test code runs. When a test's `@BeforeTest` called `AELog.install(plugin)`, `PluginManager` silently rejected it as a duplicate (same `id`). The test then held a reference to its own unused instance while `AELog.network.log()` routed data to the eager instance — causing `plugin.export()` to return empty. Fixed by calling `AELog.resetForTesting()` at the top of every `@BeforeTest` to evict any eagerly-registered plugins before the test installs its own.
 
 ---
 
