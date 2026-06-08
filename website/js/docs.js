@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTableOfContents();
     updatePagination();
     initMobileDrawer();
+    initSyntaxHighlighting();
     
     // Handle loading from hash if present in URL
     handleInitialHashNavigation();
@@ -159,6 +160,7 @@ function switchActiveSection(targetId) {
     // Rebuild page dependencies
     updateTableOfContents();
     updatePagination();
+    initSyntaxHighlighting();
     
     // Recalculate timeline layout instantly when the section is revealed
     setTimeout(() => {
@@ -451,6 +453,7 @@ function initSearchEngine() {
             initCopyButtons();
             initMermaidDiagrams();
             initTimeline();
+            initSyntaxHighlighting();
             return;
         }
         
@@ -488,6 +491,7 @@ function initSearchEngine() {
         initCopyButtons();
         initMermaidDiagrams();
         updateTableOfContents();
+        initSyntaxHighlighting();
     });
     
     clearBtn.addEventListener("click", () => {
@@ -575,4 +579,21 @@ function initMobileDrawer() {
     document.querySelectorAll(DOCS_NAV_LINK_CLASS).forEach(link => {
         link.addEventListener("click", closeMenu);
     });
+}
+
+/**
+ * Custom Syntax Highlighting trigger using highlight.js
+ */
+function initSyntaxHighlighting() {
+    const highlight = () => {
+        if (window.hljs) {
+            document.querySelectorAll("pre code:not(.language-mermaid)").forEach(codeBlock => {
+                window.hljs.highlightElement(codeBlock);
+            });
+        }
+    };
+    highlight();
+    if (!window.hljs) {
+        window.addEventListener("load", highlight);
+    }
 }

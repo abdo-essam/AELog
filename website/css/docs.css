@@ -359,6 +359,106 @@
 .warning-callout strong { display: block; margin-bottom: 8px; color: #fbd38d; }
 .warning-callout ul { margin: 0; padding-left: 20px; }
 
+/* Theme overrides for warning-callout to prevent unreadable text in light theme */
+[data-theme="light"] .warning-callout {
+    background: rgba(245, 158, 11, 0.1);
+}
+[data-theme="light"] .warning-callout strong {
+    color: #b25e00;
+}
+
+/* Info Callout */
+.info-callout {
+    border-left: 3px solid var(--accent-blue);
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 16px 22px;
+    margin: 24px 0;
+}
+.info-callout strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #93c5fd;
+}
+.info-callout ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+[data-theme="light"] .info-callout {
+    background: rgba(59, 130, 246, 0.08);
+}
+[data-theme="light"] .info-callout strong {
+    color: #1d4ed8;
+}
+
+/* Screenshots Grid in Docs */
+.plugin-screenshot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin: 32px 0;
+}
+
+.screenshot-card {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+}
+
+.screenshot-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+.screenshot-card h4 {
+    margin-top: 0 !important;
+    margin-bottom: 12px !important;
+    font-size: 16px !important;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.screenshot-card img {
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.screenshot-card:hover img {
+    transform: scale(1.02);
+}
+
+.screenshot-card p {
+    font-size: 13px !important;
+    margin: 0 !important;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+    .plugin-screenshot-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+[data-theme="light"] .screenshot-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .screenshot-card img {
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
 /* ==========================================================================
    Tables
    ========================================================================== */

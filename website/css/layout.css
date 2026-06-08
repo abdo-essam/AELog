@@ -217,30 +217,56 @@
 /* ==========================================================================
    Open Source Section
    ========================================================================== */
-.open-source-container { max-width: 800px; }
+.open-source-container { max-width: 900px; margin: 0 auto; }
 
-/* Grid layout — was previously set as an inline style in index.html (H-4 fix) */
 .github-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--spacing-xl);
-    padding: var(--spacing-2xl);
+    gap: var(--spacing-2xl);
     margin: var(--spacing-3xl) 0;
 }
 
-/* Stat card elements — replace per-element inline styles (H-4 fix) */
-.stat-item { text-align: center; }
+.stat-card {
+    text-align: center;
+    padding: var(--spacing-xl) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+}
 
-.stat-icon {
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+.stat-icon-wrapper {
     width: 48px;
     height: 48px;
-    font-size: 20px;
-    margin: 0 auto var(--spacing-sm);
+    border-radius: var(--radius-pill);
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-md);
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+    background: var(--gradient-primary);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.stat-svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.2;
 }
 
 .stat-heading { margin-bottom: var(--spacing-sm); }
 
-.stat-divider { width: 1px; background: rgba(255,255,255,0.1); }
+[data-theme="light"] .stat-icon-wrapper {
+    background: rgba(139, 92, 246, 0.08);
+}
 
 .open-source-actions {
     display: flex;

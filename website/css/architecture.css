@@ -177,3 +177,17 @@
     background: rgba(0, 0, 0, 0.04);
     color: var(--color-code-text);
 }
+
+/* Connection lines responsive stroke */
+.diagram-svg path,
+.diagram-svg line {
+    transition: stroke 0.3s ease;
+}
+
+[data-theme="light"] .diagram-svg path:not([stroke="#3b82f6"]):not([stroke="url(#lineGrad)"]),
+[data-theme="light"] .diagram-svg line:not([stroke="#3b82f6"]):not([stroke="url(#lineGrad)"]) {
+    stroke: rgba(15, 17, 23, 0.22);
+}
+[data-theme="light"] .diagram-svg path[stroke-dasharray="4,4"] {
+    stroke: rgba(15, 17, 23, 0.45);
+}

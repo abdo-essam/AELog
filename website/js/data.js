@@ -125,5 +125,41 @@ AELog.analytics.logEvent(
 // Log a screen view
 AELog.analytics.logScreen("HomeScreen")`,
     },
+    ui: {
+        badge: "Presentation Layer",
+        title: "UI Overlay",
+        desc: "The rendering overlay displaying the floating notch trigger and full inspector panel. Written entirely in Jetpack Compose Multiplatform for seamless cross-platform performance.",
+        code: `// Overlay sits at the root of your UI tree
+AELogOverlay(
+    showNotch = true,
+    initialTheme = Theme.Dark
+)`,
+    },
+    ram: {
+        badge: "In-Memory Storage",
+        title: "RAM Storage",
+        desc: "Ultra-fast, non-blocking cache powered by an efficient RingBuffer. Guarantees that logs, network data, and analytics events never consume disk IO during app execution.",
+        code: `// Set maximum capacity (number of events)
+AELog.install(LogPlugin(
+    storage = InMemoryPluginStorage(capacity = 500)
+))`,
+    },
+    disk: {
+        badge: "Persistent Storage",
+        title: "Disk Storage",
+        desc: "Robust local persistence backed by Jetpack DataStore / file streams. Used by CrashPlugin to ensure crash logs are stored safely and survive application restarts.",
+        code: `// Stored locally in app Sandbox directory:
+// Android: /data/data/app/files/aelog/
+// iOS: Library/Application Support/aelog/`,
+    },
+    interceptors: {
+        badge: "Auto-Interceptors",
+        title: "Network Interceptors",
+        desc: "Plugs directly into your network clients (Ktor or OkHttp) to automatically intercept and log HTTP traffic, including method badges, status codes, headers, and JSON body payloads.",
+        code: `// Add Ktor interceptor globally:
+val client = HttpClient {
+    install(AELogKtorInterceptor)
+}`,
+    },
 };
 
