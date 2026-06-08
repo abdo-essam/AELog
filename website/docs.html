@@ -224,7 +224,7 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.1.5"
+aelog = "1.1.7"
 
 [libraries]
 aelog-logs      = { module = "io.github.abdo-essam:ae-log-logs", version.ref = "aelog" }
@@ -250,10 +250,10 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.1.5")
-            implementation("io.github.abdo-essam:ae-log-network:1.1.5")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.1.5")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.1.5")
+            implementation("io.github.abdo-essam:ae-log-logs:1.1.7")
+            implementation("io.github.abdo-essam:ae-log-network:1.1.7")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.1.7")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.1.7")
         }
     }
 }</code></pre>
@@ -809,6 +809,51 @@ AELog.log.e("Auth", "Login failed", error)
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone -7: v1.1.7 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.7 <span class="timeline-date">— June 8, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Ktor Interceptor Response Capture:</strong> Fixed Ktor interceptor in <code>log-network-ktor</code> to correctly capture response body payloads on error responses (like HTTP 401). By intercepting the response body in <code>receivePipeline.State</code> after Ktor's <code>SaveBody</code> plugin has buffered it, we ensure <code>rawContent</code> can be read as a fresh channel and the response is safely logged without exhausting the stream or throwing exceptions.</li>
+                            <li><strong>iOS Test Name Compatibility:</strong> Renamed backtick-quoted test names containing parentheses to prevent Kotlin/Native compilation failures on iOS simulator targets.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -6: v1.1.6 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.6 <span class="timeline-date">— June 8, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Global Notch Toggle:</strong> Added static property <code>AELog.showNotch</code> to allow globally enabling/disabling the floating trigger notch across all screens.</li>
+                            <li><strong>Zero-Config iOS & Android Auto-Init:</strong> Synchronized documentation and setups to highlight zero-config auto-initialization on both Android and iOS targets.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Removed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>AELog.configure & LogConfig:</strong> Removed the configure DSL block and <code>LogConfig</code> class, enforcing zero-config sensible defaults for all plugins.</li>
+                            <li><strong>onMigrateFrom Lifecycle Hook:</strong> Removed the obsolete <code>onMigrateFrom(oldPlugin)</code> hook from the <code>Plugin</code> interface and its overrides in built-in plugins (<code>LogPlugin</code>, <code>NetworkPlugin</code>, <code>AnalyticsPlugin</code>) due to the deprecation of dynamic configuration hot-swaps.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>iOS test isolation — duplicate plugin rejected silently:</strong> Fixed by calling <code>AELog.resetForTesting()</code> at the top of every <code>@BeforeTest</code> to evict any eagerly-registered plugins before the test installs its own.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
                 </div>
 
                 <!-- Milestone -5: v1.1.5 -->

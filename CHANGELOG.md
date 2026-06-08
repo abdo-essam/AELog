@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.7] - 2026-06-08
+
+### Fixed
+- **Ktor Interceptor Response Capture**: Fixed Ktor interceptor in `log-network-ktor` to correctly capture response body payloads on error responses (like HTTP 401). By intercepting the response body in `receivePipeline.State` after Ktor's `SaveBody` plugin has buffered it, we ensure `rawContent` can be read as a fresh channel and the response is safely logged without exhausting the stream or throwing exceptions.
+- **iOS Test Name Compatibility**: Renamed backtick-quoted test names containing parentheses to prevent Kotlin/Native compilation failures on iOS simulator targets.
+
+---
+
+## [1.1.6] - 2026-06-08
+
 ### Added
 - **Global Notch Toggle**: Added static property `AELog.showNotch` to allow globally enabling/disabling the floating trigger notch across all screens.
 - **Zero-Config iOS & Android Auto-Init**: Synchronized documentation and setups to highlight zero-config auto-initialization on both Android and iOS targets.
@@ -226,7 +236,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.5...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.7...HEAD
+[1.1.7]: https://github.com/abdo-essam/AELog/compare/v1.1.6...v1.1.7
+[1.1.6]: https://github.com/abdo-essam/AELog/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/abdo-essam/AELog/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/abdo-essam/AELog/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/abdo-essam/AELog/compare/v1.1.2...v1.1.3
