@@ -55,6 +55,7 @@ public class AELogKtorInterceptor internal constructor(
 
         private val RequestIdKey = AttributeKey<String>("AELogRequestId")
         private val StartTimeKey = AttributeKey<Long>("AELogStartTime")
+
         /** Bytes buffered eagerly in receivePipeline so responsePipeline can re-inject them. */
         private val BufferedBodyKey = AttributeKey<ByteArray>("AELogBufferedBody")
 
