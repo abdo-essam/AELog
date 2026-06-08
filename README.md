@@ -1,6 +1,5 @@
 <h1 align="center">
-  <img src="website/img/lens_logo.svg" width="48" height="48" alt="AELog Logo" style="vertical-align: middle; margin-right: 8px; position: relative; top: -3px;" />
-  AELog
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" />AELog
 </h1>
 
 <p align="center">
@@ -42,9 +41,13 @@
 ---
 
 <p align="center">
-  <img src="docs/assets/demo-light.gif" width="280" alt="Light Mode Demo" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="docs/assets/demo-dark.gif" width="280" alt="Dark Mode Demo" />
+  <img src="website/img/aelog_logs.png" width="190" alt="Logs Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_network.png" width="190" alt="Network Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_analytics.png" width="190" alt="Analytics Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_crashes.png" width="190" alt="Crashes Plugin" />
 </p>
 
 ## ✨ Features

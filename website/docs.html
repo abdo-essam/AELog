@@ -52,7 +52,7 @@
                 <a href="index.html#integration" class="nav-link">Integration</a>
                 <a href="index.html#architecture" class="nav-link">Architecture</a>
                 <a href="docs.html" class="nav-link nav-link-active">Documentation</a>
-                <a href="index.html#opensource" class="nav-link">Open Source</a>
+                <a href="index.html#developer" class="nav-link">Behind the Project</a>
             </div>
             <div class="nav-actions">
                 <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode"></button>
@@ -97,7 +97,8 @@
                 <h4>Core Configuration</h4>
                 <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
             </div>
-
+            
+            <!-- Logical Category Group Sidebar: Plugins & Architecture -->
             <div class="sidebar-category-group">
                 <h4>Architecture & Plugins</h4>
                 <a class="docs-nav-link" data-section="plugins-overview" href="#plugins-overview">Plugins Overview</a>
@@ -123,17 +124,17 @@
     AELog
 </h1>
 <p><strong>Extensible on-device dev tools for Kotlin Multiplatform.</strong></p>
-<p>AELog is a lightweight, plugin-based developer tools library for KMP apps. It provides a beautiful Compose UI overlay for inspecting logs, network traffic, and more â€” all without leaving the app.</p>
+<p>AELog is a lightweight, plugin-based developer tools library for KMP apps. It provides a beautiful Compose UI overlay for inspecting logs, network traffic, and more — all without leaving the app.</p>
 <h2>What Is AELog?</h2>
 <h3>The Big Picture</h3>
-<p>AELog is an <strong>in-app debugging overlay</strong> for Kotlin Multiplatform apps. Imagine you&#39;re developing a mobile app and you want to see, while the app is running:</p>
+<p>AELog is an <strong>in-app debugging overlay</strong> for Kotlin Multiplatform apps. Imagine you're developing a mobile app and you want to see, while the app is running:</p>
 <ul>
 <li>All log messages your code emits</li>
 <li>Every HTTP request your app makes</li>
 <li>Every analytics event being tracked</li>
 </ul>
-<p>Today, developers attach a laptop, hook up Logcat (Android) or Console.app (iOS), and read logs externally. That&#39;s painful â€” especially on iOS, or when testing on someone else&#39;s device.</p>
-<p><strong>AELog solves this by drawing a debug panel directly on top of your app&#39;s UI.</strong> Tap a floating bug button â†’ a panel slides up showing tabs for Logs, Network, Analytics. No external tools needed.</p>
+<p>Today, developers attach a laptop, hook up Logcat (Android) or Console.app (iOS), and read logs externally. That's painful — especially on iOS, or when testing on someone else's device.</p>
+<p><strong>AELog solves this by drawing a debug panel directly on top of your app's UI.</strong> Tap a floating bug button &rarr; a panel slides up showing tabs for Logs, Network, Analytics. No external tools needed.</p>
 <h3>The Core Idea: Plugins</h3>
 <p>Everything in AELog is a <strong>plugin</strong>. The library itself is just a host that:</p>
 <ul>
@@ -155,7 +156,7 @@
 </tr>
 <tr>
 <td><code>NetworkPlugin</code></td>
-<td>Captures HTTP traffic â€” requests, responses, and headers</td>
+<td>Captures HTTP traffic — requests, responses, and headers</td>
 </tr>
 <tr>
 <td><code>AnalyticsPlugin</code></td>
@@ -168,14 +169,14 @@
 </tbody></table>
 <p>You can write your own plugins for anything else (database inspector, feature flag toggler, etc.).</p>
 <h2>Features</h2>
-<ul>
-<li>📋 <strong>Log Viewer</strong> — Real-time log inspection with severity filtering</li>
-<li>🌐 <strong>Network Inspector</strong> — Detailed view of HTTP traffic and JSON payloads</li>
-<li>📈 <strong>Analytics Tracker</strong> — Monitor properties across app flow</li>
-<li>💥 <strong>Crash Reporter</strong> — Capture and persist fatal and non-fatal exceptions on device</li>
-<li>🔌 <strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or headless <code>Plugin</code></li>
-<li>🎨 <strong>Compose UI</strong> — Material 3 themed overlay with dark/light mode support</li>
-<li>📱 <strong>Multiplatform</strong> — Works seamlessly across Android, iOS, and Desktop</li>
+<ul class="clean-bullet-list" style="margin: 20px 0 20px 24px; padding-left: 0; line-height: 1.8; color: var(--color-text-secondary); display: flex; flex-direction: column; gap: 8px;">
+  <li><strong>Log Viewer</strong> — Real-time log inspection with severity filtering</li>
+  <li><strong>Network Inspector</strong> — Detailed view of HTTP traffic and JSON payloads</li>
+  <li><strong>Analytics Tracker</strong> — Monitor properties across app flow</li>
+  <li><strong>Crash Reporter</strong> — Capture and persist fatal and non-fatal exceptions on device</li>
+  <li><strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or headless <code>Plugin</code></li>
+  <li><strong>Compose UI</strong> — Material 3 themed overlay with dark/light mode support</li>
+  <li><strong>Multiplatform</strong> — Works seamlessly across Android, iOS, and Desktop</li>
 </ul>
 <h2>Quick Links</h2>
 <ul>
@@ -226,7 +227,7 @@
 aelog = "1.1.5"
 
 [libraries]
-aelog-core      = { module = "io.github.abdo-essam:ae-log-core", version.ref = "aelog" }
+aelog-logs      = { module = "io.github.abdo-essam:ae-log-logs", version.ref = "aelog" }
 aelog-network   = { module = "io.github.abdo-essam:ae-log-network", version.ref = "aelog" }
 aelog-analytics = { module = "io.github.abdo-essam:ae-log-analytics", version.ref = "aelog" }
 aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref = "aelog" }</code></pre>
@@ -235,7 +236,7 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.aelog.core)
+            implementation(libs.aelog.logs)
             implementation(libs.aelog.network)
             implementation(libs.aelog.analytics)
             implementation(libs.aelog.crashes)
@@ -258,10 +259,10 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
 }</code></pre>
 </div>
 
-<div class="warning-callout" style="margin: 28px 0; border-left-color: var(--accent-blue); background: rgba(59, 130, 246, 0.04);">
-    <strong style="color: #93c5fd;">ℹ️ Transitive Dependencies</strong>
-    <p style="margin: 0; font-size: 14px;">AELog uses <code>api</code> dependencies to keep your build file clean.</p>
-    <ul style="margin: 8px 0 0; padding-left: 20px; font-size: 14px; color: var(--color-text-secondary);">
+<div class="info-callout">
+    <strong>Transitive Dependencies</strong>
+    <p>AELog uses <code>api</code> dependencies to keep your build file clean.</p>
+    <ul>
         <li>If you use <code>ae-log-network-ktor</code>, it <strong>automatically</strong> includes <code>ae-log-network</code> and <code>ae-log-core</code>.</li>
         <li>You do <strong>not</strong> need to manually add the core library if you are already using a plugin.</li>
     </ul>
@@ -273,16 +274,18 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
 fun main() {
     // Simply check if AELog is accessible
     AELog.isEnabled = true
-    println(&quot;AELog is accessible and enabled: ${AELog.isEnabled}&quot;)
+    println("AELog is accessible and enabled: ${AELog.isEnabled}")
 }
 </code></pre>
-<p>!!! success &quot;Expected output&quot;
-    <code>text     AELog is accessible and enabled: true     </code></p>
+<div class="success-callout">
+    <strong>Expected Output</strong>
+    <pre><code class="language-text">AELog is accessible and enabled: true</code></pre>
+</div>
 <h2>Next Steps</h2>
 <ul>
-<li><a href="quick-start.md">Quick Start Guide</a> â€” Integrate into your app in 5 minutes</li>
-<li><a href="configuration.md">Configuration</a> â€” Customize behavior and appearance</li>
-<li><a href="plugins-guide.md">Custom Plugins</a> â€” Build your own debug panels</li>
+    <li><a href="#quick-start" class="docs-nav-link" data-section="quick-start">Quick Start Guide</a> — Integrate into your app in 5 minutes</li>
+    <li><a href="#configuration" class="docs-nav-link" data-section="configuration">Configuration</a> — Customize behavior and appearance</li>
+    <li><a href="#custom-plugins" class="docs-nav-link" data-section="custom-plugins">Custom Plugins</a> — Build your own debug panels</li>
 </ul>
 
 </div>
@@ -363,7 +366,7 @@ AELog.isEnabled = BuildConfig.DEBUG
 </div>
 <div id="plugins-overview" class="docs-section ">
 <h1>Plugins Overview</h1>
-<p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host â€” plugins are what make it useful.</p>
+<p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host — plugins are what make it useful.</p>
 <h2>How Plugins Work</h2>
 <p>When you call <code>AELog.install(...)</code>, the library:</p>
 <ol>
@@ -406,6 +409,28 @@ AELog.isEnabled = BuildConfig.DEBUG
 <td>Captures, records, and persists fatal crashes and non-fatal exceptions on device</td>
 </tr>
 </tbody></table>
+<div class="plugin-screenshot-grid">
+    <div class="screenshot-card">
+        <h4>Logs Inspector</h4>
+        <img src="img/aelog_logs.png" alt="AELog Logs Plugin UI" />
+        <p>Browse console output with search capabilities and filter logs by severity level.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Network Inspector</h4>
+        <img src="img/aelog_network.png" alt="AELog Network Plugin UI" />
+        <p>Inspect Ktor and OkHttp HTTP request/response payloads, status codes, and headers.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Analytics Tracker</h4>
+        <img src="img/aelog_analytics.png" alt="AELog Analytics Plugin UI" />
+        <p>View analytics events, screen views, and user property parameters as they trigger in real-time.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Crash Reporter</h4>
+        <img src="img/aelog_crashes.png" alt="AELog Crash Plugin UI" />
+        <p>Review local fatal stack traces and persisted exception reports directly on the test device.</p>
+    </div>
+</div>
 <h2>Plugin Types</h2>
 <h3>UIPlugin</h3>
 <p>Renders a <strong>tab inside the AELog panel</strong>. Ideal for visually inspecting data (logs, network calls, feature flags, database records, etc.). UI plugins now own their entire layout inside the <code>Content()</code> composable (e.g. sticky search bars, custom headers, and scrollable lists).</p>
@@ -418,12 +443,46 @@ AELog.isEnabled = BuildConfig.DEBUG
 AELog.install(MyCustomPlugin())
 </code></pre>
 <h2>Plugin Lifecycle</h2>
-<pre><code class="language-mermaid">flowchart TD
-    Install(["install()"]) --> Attach["onAttach(context)"]
-    Attach --> Active["Active State"]
-    Active --> Detach["onDetach()"]
-    Uninstall(["uninstall()"]) --> Detach
-</code></pre>
+<div class="flowchart-wrapper" style="margin: 24px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;">
+    <svg width="100%" height="90" viewBox="0 0 680 90" style="max-width: 680px; display: inline-block;">
+        <defs>
+            <marker id="flow-arrow-blue-mark-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-blue" />
+            </marker>
+            <marker id="flow-arrow-green-mark-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-green" />
+            </marker>
+            <marker id="flow-arrow-neutral-mark-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-neutral" />
+            </marker>
+        </defs>
+        <!-- Nodes -->
+        <g transform="translate(10, 20)" class="flow-node flow-node-blue">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">install()</text>
+        </g>
+        <path d="M 100 40 L 134 40" fill="none" class="flow-arrow-blue" stroke-width="1.5" marker-end="url(#flow-arrow-blue-mark-1)" />
+        <g transform="translate(140, 20)" class="flow-node flow-node-neutral">
+            <rect width="130" height="40" rx="6" stroke-width="1"/>
+            <text x="65" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onAttach(context)</text>
+        </g>
+        <path d="M 270 40 L 304 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-1)" />
+        <g transform="translate(310, 20)" class="flow-node flow-node-green">
+            <rect width="110" height="40" rx="6" stroke-width="1.5"/>
+            <text x="55" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">Active State</text>
+        </g>
+        <path d="M 420 40 L 454 40" fill="none" class="flow-arrow-green" stroke-width="1.5" marker-end="url(#flow-arrow-green-mark-1)" />
+        <g transform="translate(460, 20)" class="flow-node flow-node-neutral">
+            <rect width="90" height="40" rx="6" stroke-width="1"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onDetach()</text>
+        </g>
+        <path d="M 550 40 L 574 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-1)" />
+        <g transform="translate(580, 20)" class="flow-node flow-node-red">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">uninstall()</text>
+        </g>
+    </svg>
+</div>
 <p>Each hook has a clear responsibility:</p>
 <table>
 <thead>
@@ -450,7 +509,16 @@ AELog.install(MyCustomPlugin())
 </tr>
 </tbody></table>
 <h2>Creating Custom Plugins</h2>
-<p>See the <a href="#custom-plugins" class="docs-nav-link" data-section="custom-plugins">Custom Plugins</a> guide for a full walkthrough including code examples, lifecycle details, and best practices.</p>
+<div class="doc-cta-card">
+    <div class="doc-cta-icon-wrapper">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+    </div>
+    <div class="doc-cta-content">
+        <h3>Build Your Own Custom Tooling</h3>
+        <p>AELog is fully extensible. Learn how to write custom UI modules and headless background plugins to tailor the debugger to your team's exact workflow.</p>
+        <a href="#custom-plugins" class="btn btn-primary pill docs-nav-link" data-section="custom-plugins">Read Custom Plugins Guide</a>
+    </div>
+</div>
 
 </div>
 <div id="custom-plugins" class="docs-section ">
@@ -572,12 +640,46 @@ val perfPlugin = AELog.getPlugin&lt;PerformancePlugin&gt;()
 perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
 </code></pre>
 <h2>Plugin Lifecycle</h2>
-<pre><code class="language-mermaid">flowchart TD
-    Install([&quot;install()&quot;]) --&gt; Attach[&quot;onAttach(context)&quot;]
-    Attach --&gt; Active[&quot;Active State&quot;]
-    Active --&gt; Detach[&quot;onDetach()&quot;]
-    Uninstall([&quot;uninstall()&quot;]) --&gt; Detach
-</code></pre>
+<div class="flowchart-wrapper" style="margin: 24px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;">
+    <svg width="100%" height="90" viewBox="0 0 680 90" style="max-width: 680px; display: inline-block;">
+        <defs>
+            <marker id="flow-arrow-blue-mark-2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-blue" />
+            </marker>
+            <marker id="flow-arrow-green-mark-2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-green" />
+            </marker>
+            <marker id="flow-arrow-neutral-mark-2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-neutral" />
+            </marker>
+        </defs>
+        <!-- Nodes -->
+        <g transform="translate(10, 20)" class="flow-node flow-node-blue">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">install()</text>
+        </g>
+        <path d="M 100 40 L 134 40" fill="none" class="flow-arrow-blue" stroke-width="1.5" marker-end="url(#flow-arrow-blue-mark-2)" />
+        <g transform="translate(140, 20)" class="flow-node flow-node-neutral">
+            <rect width="130" height="40" rx="6" stroke-width="1"/>
+            <text x="65" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onAttach(context)</text>
+        </g>
+        <path d="M 270 40 L 304 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-2)" />
+        <g transform="translate(310, 20)" class="flow-node flow-node-green">
+            <rect width="110" height="40" rx="6" stroke-width="1.5"/>
+            <text x="55" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">Active State</text>
+        </g>
+        <path d="M 420 40 L 454 40" fill="none" class="flow-arrow-green" stroke-width="1.5" marker-end="url(#flow-arrow-green-mark-2)" />
+        <g transform="translate(460, 20)" class="flow-node flow-node-neutral">
+            <rect width="90" height="40" rx="6" stroke-width="1"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onDetach()</text>
+        </g>
+        <path d="M 550 40 L 574 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-2)" />
+        <g transform="translate(580, 20)" class="flow-node flow-node-red">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">uninstall()</text>
+        </g>
+    </svg>
+</div>
 <div class="warning-callout">
     <strong>⚠️ Important Lifecycle Notes</strong>
     <ul>
@@ -1082,7 +1184,7 @@ cd AELog
 <h2>Pull Request Process</h2>
 <ul>
 <li>Fill out the PR template completely</li>
-<li>Ensure CI passes â€” all checks must be green</li>
+<li>Ensure CI passes — all checks must be green</li>
 <li>One approval required from a maintainer</li>
 <li>Squash merge is preferred for clean history</li>
 <li>Update CHANGELOG.md under <code>[Unreleased]</code></li>
@@ -1091,7 +1193,7 @@ cd AELog
 <h3>Kotlin Style</h3>
 <ul>
 <li>Follow Kotlin Coding Conventions</li>
-<li>Use <code>explicitApi()</code> â€” all public APIs need visibility modifiers</li>
+<li>Use <code>explicitApi()</code> — all public APIs need visibility modifiers</li>
 <li>Mark internal APIs with <code>internal</code> keyword</li>
 <li>KDoc on all public classes, functions, and properties</li>
 </ul>
@@ -1115,27 +1217,78 @@ ci: add iOS build to CI pipeline
 <li>Keep the public API surface minimal</li>
 </ul>
 <h2>Architecture Overview</h2>
-<pre><code class="language-mermaid">flowchart TD
-    AELogProvider["AELogProvider<br>(Compose Entry Point)"] --> AELog["AELog<br>(Core Engine)"]
+<div class="flowchart-wrapper" style="margin: 24px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;">
+    <svg width="100%" height="340" viewBox="0 0 550 340" style="max-width: 550px; display: inline-block;">
+        <defs>
+            <marker id="arch-arrow-main" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--accent-blue)" />
+            </marker>
+        </defs>
 
-    subgraph Plugins ["Plugin System"]
-        AELog --> LogPlugin["LogPlugin"]
-        AELog --> CrashPlugin["CrashPlugin"]
-        AELog --> NetworkPlugin["NetworkPlugin"]
-        AELog --> AnalyticsPlugin["AnalyticsPlugin"]
-    end
+        <g transform="translate(190, 10)">
+            <rect width="170" height="40" rx="8" fill="rgba(59, 130, 246, 0.12)" stroke="var(--accent-blue)" stroke-width="1.5" />
+            <text x="85" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="#fff" class="flow-text">AELogProvider</text>
+        </g>
+        
+        <path d="M 275 50 L 275 70" stroke="var(--accent-blue)" stroke-width="1.5" fill="none" marker-end="url(#arch-arrow-main)" />
 
-    subgraph Storage ["Storage Layer"]
-        Memory["RAM Storage<br>(InMemoryPluginStorage)"]
-        Disk["Disk Storage<br>(PersistentPluginStorage)"]
-    end
+        <g transform="translate(190, 75)">
+            <rect width="170" height="40" rx="8" fill="rgba(255, 255, 255, 0.05)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="85" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="12" fill="var(--color-text-secondary)" class="flow-text">AELog (Core Engine)</text>
+        </g>
 
-    LogPlugin --> Memory
-    NetworkPlugin --> Memory
-    AnalyticsPlugin --> Memory
+        <rect x="10" y="135" width="530" height="80" rx="10" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="3,3" />
+        <text x="20" y="150" font-family="var(--font-sans)" font-size="9" font-weight="700" fill="var(--color-text-secondary)" letter-spacing="0.05em">PLUGIN SYSTEM</text>
 
-    CrashPlugin --> Disk
-</code></pre>
+        <path d="M 275 115 L 275 130" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        <path d="M 75 130 L 465 130" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        <path d="M 75 130 L 75 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 205 130 L 205 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 335 130 L 335 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 465 130 L 465 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+
+        <g transform="translate(20, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">LogPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-logs</text>
+        </g>
+        <g transform="translate(150, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">CrashPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-crashes</text>
+        </g>
+        <g transform="translate(280, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">NetworkPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-network</text>
+        </g>
+        <g transform="translate(410, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">AnalyticsPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-analytics</text>
+        </g>
+
+        <rect x="50" y="245" width="450" height="80" rx="10" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="3,3" />
+        <text x="60" y="260" font-family="var(--font-sans)" font-size="9" font-weight="700" fill="var(--color-text-secondary)" letter-spacing="0.05em">STORAGE LAYER</text>
+
+        <g transform="translate(70, 270)">
+            <rect width="180" height="45" rx="6" fill="rgba(16, 185, 129, 0.08)" stroke="var(--accent-green)" stroke-width="1" />
+            <text x="90" y="19" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">RAM Storage</text>
+            <text x="90" y="33" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">InMemoryPluginStorage</text>
+        </g>
+        <g transform="translate(300, 270)">
+            <rect width="180" height="45" rx="6" fill="rgba(245, 158, 11, 0.08)" stroke="var(--accent-yellow)" stroke-width="1" />
+            <text x="90" y="19" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">Disk Storage</text>
+            <text x="90" y="33" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">PersistentPluginStorage</text>
+        </g>
+
+        <path d="M 75 205 L 75 230 L 160 230 L 160 265" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 335 205 L 335 230 L 160 230" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        <path d="M 465 205 L 465 230 L 335 230" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        
+        <path d="M 205 205 L 205 240 L 390 240 L 390 265" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+    </svg>
+</div>
 
 </div>
 
