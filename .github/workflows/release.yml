@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - 'v*'
-
+  workflow_dispatch:
 permissions:
   contents: write
 
@@ -34,6 +34,11 @@ jobs:
             echo "Tag version ($EXPECTED) doesn't match gradle.properties ($ACTUAL)"
             exit 1
           fi
+
+      - name: Generate Debug Keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug" -storetype JKS || true
 
       - name: Run Full Test Suite
         run: ./gradlew allTests

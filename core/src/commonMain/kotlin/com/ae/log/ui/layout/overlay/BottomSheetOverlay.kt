@@ -13,8 +13,8 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
-import com.ae.log.ui.UiConfig
 import com.ae.log.ui.theme.LogDimens
+import com.ae.log.ui.theme.LogTheme
 
 /**
  * Presents the AELog panel as a [ModalBottomSheet].
@@ -24,7 +24,6 @@ import com.ae.log.ui.theme.LogDimens
 public object BottomSheetOverlay : OverlayStrategy {
     @Composable
     override fun Overlay(
-        uiConfig: UiConfig,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
@@ -32,7 +31,7 @@ public object BottomSheetOverlay : OverlayStrategy {
         ModalBottomSheet(
             onDismissRequest = onDismiss,
             sheetState = sheetState,
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = LogTheme.colors.surface,
             shape =
                 RoundedCornerShape(
                     topStart = LogDimens.overlayCornerRadius,
@@ -43,7 +42,7 @@ public object BottomSheetOverlay : OverlayStrategy {
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(uiConfig.bottomSheetHeightFraction)
+                        .fillMaxHeight(0.9f)
                         .nestedScroll(
                             remember {
                                 object : NestedScrollConnection {

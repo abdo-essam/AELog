@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+    <title>AELog | Documentation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Styles: modular CSS architecture -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/docs.css">
+
+    <!-- Syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" defer></script>
+
+    <!-- Inline theme init: prevent flash of wrong theme -->
+    <script>
+        (function() {
+            var stored = localStorage.getItem('aelog-theme');
+            var theme = (stored === 'light' || stored === 'dark') ? stored
+                : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="glow-orb orb-primary"></div>
+    <div class="glow-orb orb-secondary"></div>
+
+    <nav class="navbar glass">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                    <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+                    <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
+                    <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+                </svg>
+                <span class="logo-text">AELog</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html#features" class="nav-link">Features</a>
+                <a href="index.html#integration" class="nav-link">Integration</a>
+                <a href="index.html#architecture" class="nav-link">Architecture</a>
+                <a href="docs.html" class="nav-link nav-link-active">Documentation</a>
+                <a href="index.html#developer" class="nav-link">Behind the Project</a>
+            </div>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode"></button>
+                <a href="https://github.com/abdo-essam/AELog" target="_blank" class="btn btn-secondary pill">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                    <span>GitHub</span>
+                </a>
+                <a href="index.html#integration" class="btn btn-primary pill">Get Started</a>
+            </div>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Floating Mobile Sidebar Toggle Button -->
+    <button class="mobile-sidebar-toggle" aria-label="Toggle Sidebar Menu" id="mobile-sidebar-toggle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <span>Menu</span>
+    </button>
+
+    <div class="docs-container">
+        <!-- Column 1: Refactored Left Sidebar with Search & Grouping -->
+        <aside class="docs-sidebar glass-panel card-xl" id="docs-sidebar">
+            <div class="docs-search-wrapper">
+                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="docs-search-input" placeholder="Search docs..." autocomplete="off">
+                <button id="docs-search-clear" class="search-clear-btn" style="display: none;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            
+            <div class="sidebar-category-group">
+                <h4>Getting Started</h4>
+                <a class="docs-nav-link active" data-section="introduction" href="#introduction">Introduction</a>
+                <a class="docs-nav-link" data-section="installation" href="#installation">Installation</a>
+                <a class="docs-nav-link" data-section="quick-start" href="#quick-start">Quick Start</a>
+            </div>
+            
+            <div class="sidebar-category-group">
+                <h4>Core Configuration</h4>
+                <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
+            </div>
+            
+            <!-- Logical Category Group Sidebar: Plugins & Architecture -->
+            <div class="sidebar-category-group">
+                <h4>Architecture & Plugins</h4>
+                <a class="docs-nav-link" data-section="plugins-overview" href="#plugins-overview">Plugins Overview</a>
+                <a class="docs-nav-link" data-section="custom-plugins" href="#custom-plugins">Custom Plugins</a>
+            </div>
+
+            <div class="sidebar-category-group">
+                <h4>Bridges & Roadmap</h4>
+                <a class="docs-nav-link" data-section="integrations" href="#integrations">Logging Bridges</a>
+                <a class="docs-nav-link" data-section="changelog" href="#changelog">Changelog</a>
+            </div>
+        </aside>
+
+        <main class="docs-content fade-up visible">
+            <div id="introduction" class="docs-section active">
+<h1 style="display: flex; align-items: center; gap: 12px;">
+    <svg class="logo-icon" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;">
+        <circle cx="10.5" cy="10.5" r="7.5"></circle>
+        <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+        <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
+        <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+    </svg>
+    AELog
+</h1>
+<p><strong>Extensible on-device dev tools for Kotlin Multiplatform.</strong></p>
+<p>AELog is a lightweight, plugin-based developer tools library for KMP apps. It provides a beautiful Compose UI overlay for inspecting logs, network traffic, and more — all without leaving the app.</p>
+<h2>What Is AELog?</h2>
+<h3>The Big Picture</h3>
+<p>AELog is an <strong>in-app debugging overlay</strong> for Kotlin Multiplatform apps. Imagine you're developing a mobile app and you want to see, while the app is running:</p>
+<ul>
+<li>All log messages your code emits</li>
+<li>Every HTTP request your app makes</li>
+<li>Every analytics event being tracked</li>
+</ul>
+<p>Today, developers attach a laptop, hook up Logcat (Android) or Console.app (iOS), and read logs externally. That's painful — especially on iOS, or when testing on someone else's device.</p>
+<p><strong>AELog solves this by drawing a debug panel directly on top of your app's UI.</strong> Tap a floating bug button &rarr; a panel slides up showing tabs for Logs, Network, Analytics. No external tools needed.</p>
+<h3>The Core Idea: Plugins</h3>
+<p>Everything in AELog is a <strong>plugin</strong>. The library itself is just a host that:</p>
+<ul>
+<li>Manages a list of installed plugins</li>
+<li>Renders them as tabs in an overlay panel</li>
+<li>Provides each plugin with a coroutine scope, an event bus, and a way to find sibling plugins</li>
+</ul>
+<p>Three built-in plugins ship with the library:</p>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>LogPlugin</code></td>
+<td>Captures text logs (like Logcat) with severity filtering</td>
+</tr>
+<tr>
+<td><code>NetworkPlugin</code></td>
+<td>Captures HTTP traffic — requests, responses, and headers</td>
+</tr>
+<tr>
+<td><code>AnalyticsPlugin</code></td>
+<td>Captures analytics events and screen views with custom properties</td>
+</tr>
+<tr>
+<td><code>CrashPlugin</code></td>
+<td>Intercepts, records and persists fatal and non-fatal exceptions on device</td>
+</tr>
+</tbody></table>
+<p>You can write your own plugins for anything else (database inspector, feature flag toggler, etc.).</p>
+<h2>Features</h2>
+<ul class="clean-bullet-list" style="margin: 20px 0 20px 24px; padding-left: 0; line-height: 1.8; color: var(--color-text-secondary); display: flex; flex-direction: column; gap: 8px;">
+  <li><strong>Log Viewer</strong> — Real-time log inspection with severity filtering</li>
+  <li><strong>Network Inspector</strong> — Detailed view of HTTP traffic and JSON payloads</li>
+  <li><strong>Analytics Tracker</strong> — Monitor properties across app flow</li>
+  <li><strong>Crash Reporter</strong> — Capture and persist fatal and non-fatal exceptions on device</li>
+  <li><strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or headless <code>Plugin</code></li>
+  <li><strong>Compose UI</strong> — Material 3 themed overlay with dark/light mode support</li>
+  <li><strong>Multiplatform</strong> — Works seamlessly across Android, iOS, and Desktop</li>
+</ul>
+<h2>Quick Links</h2>
+<ul>
+<li><a href="#installation" class="docs-nav-link" data-section="installation">Getting Started</a></li>
+<li><a href="#plugins-overview" class="docs-nav-link" data-section="plugins-overview">Plugins Overview</a></li>
+<li><a href="#custom-plugins" class="docs-nav-link" data-section="custom-plugins">Custom Plugins</a></li>
+<li><a href="#changelog" class="docs-nav-link" data-section="changelog">Changelog</a></li>
+</ul>
+
+</div>
+<div id="installation" class="docs-section ">
+<h1>Getting Started</h1>
+<h2>Requirements</h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Minimum</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android</td>
+<td>API 24 (7.0)</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>15.0</td>
+</tr>
+<tr>
+<td>Kotlin</td>
+<td>2.2.0</td>
+</tr>
+<tr>
+<td>Compose Multiplatform</td>
+<td>1.7.3</td>
+</tr>
+</tbody></table>
+<h2>Installation</h2>
+
+<div class="tab-pair" id="install-framework-tabs" style="margin-bottom: var(--spacing-md);">
+    <button class="tab-chip active" data-install="catalog">Version Catalog (Recommended)</button>
+    <button class="tab-chip" data-install="direct">Direct Dependency</button>
+</div>
+
+<div id="install-catalog" class="setup-code-block">
+    <div class="code-file-label">gradle/libs.versions.toml</div>
+    <pre><code class="language-toml">[versions]
+aelog = "1.1.7"
+
+[libraries]
+aelog-logs      = { module = "io.github.abdo-essam:ae-log-logs", version.ref = "aelog" }
+aelog-network   = { module = "io.github.abdo-essam:ae-log-network", version.ref = "aelog" }
+aelog-analytics = { module = "io.github.abdo-essam:ae-log-analytics", version.ref = "aelog" }
+aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref = "aelog" }</code></pre>
+
+    <div class="code-file-label">shared/build.gradle.kts</div>
+    <pre><code class="language-kotlin">kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.aelog.logs)
+            implementation(libs.aelog.network)
+            implementation(libs.aelog.analytics)
+            implementation(libs.aelog.crashes)
+        }
+    }
+}</code></pre>
+</div>
+
+<div id="install-direct" class="setup-code-block is-hidden">
+    <div class="code-file-label">shared/build.gradle.kts</div>
+    <pre><code class="language-kotlin">kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("io.github.abdo-essam:ae-log-logs:1.1.7")
+            implementation("io.github.abdo-essam:ae-log-network:1.1.7")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.1.7")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.1.7")
+        }
+    }
+}</code></pre>
+</div>
+
+<div class="info-callout">
+    <strong>Transitive Dependencies</strong>
+    <p>AELog uses <code>api</code> dependencies to keep your build file clean.</p>
+    <ul>
+        <li>If you use <code>ae-log-network-ktor</code>, it <strong>automatically</strong> includes <code>ae-log-network</code> and <code>ae-log-core</code>.</li>
+        <li>You do <strong>not</strong> need to manually add the core library if you are already using a plugin.</li>
+    </ul>
+</div>
+
+<h2>Verify Installation</h2>
+<pre><code class="language-kotlin">import com.ae.log.AELog
+
+fun main() {
+    // Simply check if AELog is accessible
+    AELog.isEnabled = true
+    println("AELog is accessible and enabled: ${AELog.isEnabled}")
+}
+</code></pre>
+<div class="success-callout">
+    <strong>Expected Output</strong>
+    <pre><code class="language-text">AELog is accessible and enabled: true</code></pre>
+</div>
+<h2>Next Steps</h2>
+<ul>
+    <li><a href="#quick-start" class="docs-nav-link" data-section="quick-start">Quick Start Guide</a> — Integrate into your app in 5 minutes</li>
+    <li><a href="#configuration" class="docs-nav-link" data-section="configuration">Configuration</a> — Customize behavior and appearance</li>
+    <li><a href="#custom-plugins" class="docs-nav-link" data-section="custom-plugins">Custom Plugins</a> — Build your own debug panels</li>
+</ul>
+
+</div>
+<div id="quick-start" class="docs-section ">
+<h1>Quick Start</h1>
+<p>Get up and running in just a few seconds.</p>
+<h2>1. Zero-Config (Automatic Setup)</h2>
+<p>AELog features <strong>zero-config auto-initialisation</strong> on both Android and iOS. Just add the dependencies for the plugins you want, and they automatically register themselves. <strong>No initialization code is required in your application!</strong></p>
+<h2>2. Custom Configuration (Optional)</h2>
+<p>To disable the floating trigger notch globally (across all screens), set the static property <code>AELog.showNotch</code> at your app entry point (e.g. <code>Application.onCreate()</code> on Android):</p>
+<pre><code class="language-kotlin">// Disable the floating notch globally (defaults to true)
+AELog.showNotch = false</code></pre>
+<h2>3. Drop in the Overlay</h2>
+<p>Add <code>AELogOverlay()</code> as a <strong>sibling</strong> anywhere in your root composable &mdash; no wrapping required:</p>
+<pre><code class="language-kotlin">@Composable
+fun App() {
+    AELogOverlay() // &larr; Renders floating center-right notch + inspector panel as a Popup above your UI
+    MaterialTheme {
+        YourAppContent()
+    }
+}
+</code></pre>
+<p>To <strong>disable in release builds</strong>: <code>AELog.isEnabled = BuildConfig.DEBUG</code><br>
+To <strong>hide the floating notch trigger</strong> locally but still open the panel programmatically: <code>AELogOverlay(showNotch = false)</code> then <code>AELog.show()</code></p>
+<h2>3. Start Logging</h2>
+<p>Use the discoverable static APIs. AELog handles everything else behind the scenes.</p>
+<pre><code class="language-kotlin">// 1. Logs (with automatic tag derivation from the calling class)
+AELog.log.i(&quot;App launched!&quot;)
+AELog.log.d(&quot;Auth&quot;, &quot;Token refreshed&quot;) // Or specify an explicit tag
+
+// 2. Network (handled automatically via interceptors)
+// val client = HttpClient { install(AELogKtorInterceptor) }
+
+// 3. Analytics
+AELog.analytics.logEvent(&quot;button_tap&quot;)
+
+// 4. Crashes (manually record non-fatal exceptions)
+try {
+    performDangerousTask()
+} catch (t: Throwable) {
+    AELog.crashes.recordNonFatal(t)
+}
+</code></pre>
+<h2>Show / Hide the Overlay</h2>
+<p>The overlay can be triggered by:</p>
+<ul>
+<li><strong>Floating Notch</strong> &mdash; the Dynamic Island-style pill at the top of the screen (shown by default)</li>
+<li><strong>Programmatically</strong> via <code>AELog.show()</code> / <code>AELog.hide()</code> from anywhere in your code</li>
+<li><strong>Custom triggers</strong> &mdash; wire <code>AELog.show()</code> to a shake gesture, debug settings, or any other event</li>
+</ul>
+
+</div>
+<div id="configuration" class="docs-section ">
+<h1>Configuration</h1>
+<p>AELog is designed to be &quot;zero-config&quot; by default, but provides hooks to customize both data collection and UI behavior.</p>
+<h2>Core Configuration (Data & UI Globals)</h2>
+<p>You can toggle global features like the floating notch trigger or enable/disable the logger using properties directly on <code>AELog</code>:</p>
+<pre><code class="language-kotlin">// Disable the floating notch globally (across XML & Compose screens)
+AELog.showNotch = false
+
+// Enable or disable the entire library programmatically
+AELog.isEnabled = BuildConfig.DEBUG</code></pre>
+<h2>UI Configuration</h2>
+<p>Control whether the floating notch is shown, or hide it and trigger the overlay programmatically:</p>
+<pre><code class="language-kotlin">// Default &mdash; shows the vertical notch trigger on the right side of the screen
+AELogOverlay()
+
+// Hidden notch trigger &mdash; open programmatically from custom buttons, shake gestures, etc.
+AELogOverlay(showNotch = false)
+// Then from anywhere in your codebase:
+AELog.show()
+AELog.hide()
+
+// Disable the entire library (e.g. in release builds)
+AELog.isEnabled = BuildConfig.DEBUG
+</code></pre>
+
+</div>
+<div id="plugins-overview" class="docs-section ">
+<h1>Plugins Overview</h1>
+<p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host — plugins are what make it useful.</p>
+<h2>How Plugins Work</h2>
+<p>When you call <code>AELog.install(...)</code>, the library:</p>
+<ol>
+<li><strong>Installs</strong> each plugin and calls its <code>onAttach()</code> lifecycle hook</li>
+<li><strong>Renders</strong> <code>UIPlugin</code> instances as tabs in the overlay panel</li>
+<li><strong>Provides</strong> each plugin with access to a coroutine scope and sibling plugins via <code>PluginContext</code></li>
+</ol>
+<h2>Built-in Plugins</h2>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>Module</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>LogPlugin</code></td>
+<td><code>:ae-log-logs</code></td>
+<td><code>UIPlugin</code></td>
+<td>Real-time log viewer with level filtering (VERBOSE / DEBUG / INFO / WARN / ERROR)</td>
+</tr>
+<tr>
+<td><code>NetworkPlugin</code></td>
+<td><code>:ae-log-network</code></td>
+<td><code>UIPlugin</code></td>
+<td>HTTP traffic inspector with method badges, status filtering, and full body view</td>
+</tr>
+<tr>
+<td><code>AnalyticsPlugin</code></td>
+<td><code>:ae-log-analytics</code></td>
+<td><code>UIPlugin</code></td>
+<td>Tracks analytics events and screen views with expandable custom properties</td>
+</tr>
+<tr>
+<td><code>CrashPlugin</code></td>
+<td><code>:ae-log-crashes</code></td>
+<td><code>UIPlugin</code></td>
+<td>Captures, records, and persists fatal crashes and non-fatal exceptions on device</td>
+</tr>
+</tbody></table>
+<div class="plugin-screenshot-grid">
+    <div class="screenshot-card">
+        <h4>Logs Inspector</h4>
+        <img src="img/aelog_logs.png" alt="AELog Logs Plugin UI" />
+        <p>Browse console output with search capabilities and filter logs by severity level.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Network Inspector</h4>
+        <img src="img/aelog_network.png" alt="AELog Network Plugin UI" />
+        <p>Inspect Ktor and OkHttp HTTP request/response payloads, status codes, and headers.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Analytics Tracker</h4>
+        <img src="img/aelog_analytics.png" alt="AELog Analytics Plugin UI" />
+        <p>View analytics events, screen views, and user property parameters as they trigger in real-time.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Crash Reporter</h4>
+        <img src="img/aelog_crashes.png" alt="AELog Crash Plugin UI" />
+        <p>Review local fatal stack traces and persisted exception reports directly on the test device.</p>
+    </div>
+</div>
+<h2>Plugin Types</h2>
+<h3>UIPlugin</h3>
+<p>Renders a <strong>tab inside the AELog panel</strong>. Ideal for visually inspecting data (logs, network calls, feature flags, database records, etc.). UI plugins now own their entire layout inside the <code>Content()</code> composable (e.g. sticky search bars, custom headers, and scrollable lists).</p>
+<h3>Plugin (Headless)</h3>
+<p>A <strong>headless background collector</strong> with no UI. Simply implement the standard <code>Plugin</code> interface directly. Use it for crash collectors, performance samplers, background interceptors, or anything that needs to observe data or listen to event signals without a dedicated visual tab.</p>
+<h2>Installing Plugins</h2>
+<pre><code class="language-kotlin">// Auto-registered on Android via ContentProvider — no code needed!
+// But if you are on other platforms (like iOS) or adding custom plugins:
+
+AELog.install(MyCustomPlugin())
+</code></pre>
+<h2>Plugin Lifecycle</h2>
+<div class="flowchart-wrapper" style="margin: 24px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;">
+    <svg width="100%" height="90" viewBox="0 0 680 90" style="max-width: 680px; display: inline-block;">
+        <defs>
+            <marker id="flow-arrow-blue-mark-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-blue" />
+            </marker>
+            <marker id="flow-arrow-green-mark-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-green" />
+            </marker>
+            <marker id="flow-arrow-neutral-mark-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-neutral" />
+            </marker>
+        </defs>
+        <!-- Nodes -->
+        <g transform="translate(10, 20)" class="flow-node flow-node-blue">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">install()</text>
+        </g>
+        <path d="M 100 40 L 134 40" fill="none" class="flow-arrow-blue" stroke-width="1.5" marker-end="url(#flow-arrow-blue-mark-1)" />
+        <g transform="translate(140, 20)" class="flow-node flow-node-neutral">
+            <rect width="130" height="40" rx="6" stroke-width="1"/>
+            <text x="65" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onAttach(context)</text>
+        </g>
+        <path d="M 270 40 L 304 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-1)" />
+        <g transform="translate(310, 20)" class="flow-node flow-node-green">
+            <rect width="110" height="40" rx="6" stroke-width="1.5"/>
+            <text x="55" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">Active State</text>
+        </g>
+        <path d="M 420 40 L 454 40" fill="none" class="flow-arrow-green" stroke-width="1.5" marker-end="url(#flow-arrow-green-mark-1)" />
+        <g transform="translate(460, 20)" class="flow-node flow-node-neutral">
+            <rect width="90" height="40" rx="6" stroke-width="1"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onDetach()</text>
+        </g>
+        <path d="M 550 40 L 574 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-1)" />
+        <g transform="translate(580, 20)" class="flow-node flow-node-red">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">uninstall()</text>
+        </g>
+    </svg>
+</div>
+<p>Each hook has a clear responsibility:</p>
+<table>
+<thead>
+<tr>
+<th>Hook</th>
+<th>When Called</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>onAttach(context)</code></td>
+<td>Once, on install</td>
+<td>Store <code>PluginContext</code>, launch background collection, subscribe to EventBus events</td>
+</tr>
+<tr>
+<td><code>onClear()</code></td>
+<td>User taps &quot;Clear All&quot;</td>
+<td>Reset stored entries or memory states</td>
+</tr>
+<tr>
+<td><code>onDetach()</code></td>
+<td>On uninstall or reset</td>
+<td>Cancel coroutines, release resources, teardown native callbacks</td>
+</tr>
+</tbody></table>
+<h2>Creating Custom Plugins</h2>
+<div class="doc-cta-card">
+    <div class="doc-cta-icon-wrapper">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+    </div>
+    <div class="doc-cta-content">
+        <h3>Build Your Own Custom Tooling</h3>
+        <p>AELog is fully extensible. Learn how to write custom UI modules and headless background plugins to tailor the debugger to your team's exact workflow.</p>
+        <a href="#custom-plugins" class="btn btn-primary pill docs-nav-link" data-section="custom-plugins">Read Custom Plugins Guide</a>
+    </div>
+</div>
+
+</div>
+<div id="custom-plugins" class="docs-section ">
+<h1>Creating Custom Plugins</h1>
+<p>AELog is designed to be extended. You can create two types of plugins:</p>
+<h2>Plugin Types</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Interface</th>
+<th>Has UI</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>UI Plugin</strong></td>
+<td><code>UIPlugin</code></td>
+<td>✅ Tab + Content</td>
+<td>Log viewer, network inspector, DB browser</td>
+</tr>
+<tr>
+<td><strong>Headless Plugin</strong></td>
+<td><code>Plugin</code></td>
+<td>❌ Headless</td>
+<td>Crash collector, performance sampler, background worker</td>
+</tr>
+</tbody></table>
+<h2>Creating a UI Plugin</h2>
+<h3>Step 1: Implement UIPlugin</h3>
+<pre><code class="language-kotlin">class FeatureFlagsPlugin : UIPlugin {
+    // override val id = &quot;feature_flags&quot; // Optional: Defaults to qualified class name
+    override val name = &quot;Flags&quot;
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Flag, null) }
+
+    // Override badgeCount only when your plugin tracks a meaningful live count.
+    // Omit it entirely if you don't need a badge — the default shows nothing.
+    private val _badgeCount = MutableStateFlow(0)
+    override val badgeCount: StateFlow&lt;Int&gt; = _badgeCount
+
+    private var context: PluginContext? = null
+
+    // Called once when installed
+    override fun onAttach(context: PluginContext) {
+        this.context = context
+        _badgeCount.value = getFlags().size
+    }
+
+    // Called when user taps &quot;Clear All&quot;
+    override fun onClear() {
+        resetFlags()
+        _badgeCount.value = 0
+    }
+
+    // Called when plugin is uninstalled
+    override fun onDetach() {
+        context = null
+    }
+
+    // Main content rendered in the AELog panel (owns entire layout!)
+    @Composable
+    override fun Content(modifier: Modifier) {
+        val flags = remember { getFlags() }
+
+        Column(modifier = modifier.fillMaxSize()) {
+            // Sticky search/filter bar and action headers go directly inside Content()!
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(&quot;Toggle feature flags for testing&quot;, style = MaterialTheme.typography.bodySmall)
+                IconButton(onClick = { resetAllFlags() }) {
+                    Icon(Icons.Default.Refresh, &quot;Reset all&quot;)
+                }
+            }
+
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(flags) { flag -&gt;
+                    FlagRow(
+                        name = flag.name,
+                        enabled = flag.enabled,
+                        onToggle = { toggleFlag(flag.id) }
+                    )
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<h3>Step 2: Install the Plugin</h3>
+<pre><code class="language-kotlin">// Add your custom plugin alongside the auto-registered built-ins
+AELog.install(FeatureFlagsPlugin())
+</code></pre>
+<h3>Step 3: Done!</h3>
+<p>Your plugin now appears as a tab in the AELog panel.</p>
+<h2>Creating a Headless Plugin</h2>
+<pre><code class="language-kotlin">class PerformancePlugin : Plugin {
+    // override val id = &quot;performance&quot; // Optional: Defaults to qualified class name
+    override val name = &quot;Performance&quot;
+
+    private val _metrics = MutableStateFlow&lt;List&lt;Metric&gt;&gt;(emptyList())
+    val metrics: StateFlow&lt;List&lt;Metric&gt;&gt; = _metrics.asStateFlow()
+
+    override fun onAttach(context: PluginContext) {
+        startCollecting(context.scope)
+    }
+
+    override fun onDetach() {
+        stopCollecting()
+    }
+
+    fun recordMetric(name: String, durationMs: Long) {
+        _metrics.update { it + Metric(name, durationMs) }
+    }
+}
+
+// Usage
+val perfPlugin = AELog.getPlugin&lt;PerformancePlugin&gt;()
+perfPlugin?.recordMetric(&quot;api_call&quot;, 250L)
+</code></pre>
+<h2>Plugin Lifecycle</h2>
+<div class="flowchart-wrapper" style="margin: 24px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;">
+    <svg width="100%" height="90" viewBox="0 0 680 90" style="max-width: 680px; display: inline-block;">
+        <defs>
+            <marker id="flow-arrow-blue-mark-2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-blue" />
+            </marker>
+            <marker id="flow-arrow-green-mark-2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-green" />
+            </marker>
+            <marker id="flow-arrow-neutral-mark-2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" class="flow-mark-neutral" />
+            </marker>
+        </defs>
+        <!-- Nodes -->
+        <g transform="translate(10, 20)" class="flow-node flow-node-blue">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">install()</text>
+        </g>
+        <path d="M 100 40 L 134 40" fill="none" class="flow-arrow-blue" stroke-width="1.5" marker-end="url(#flow-arrow-blue-mark-2)" />
+        <g transform="translate(140, 20)" class="flow-node flow-node-neutral">
+            <rect width="130" height="40" rx="6" stroke-width="1"/>
+            <text x="65" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onAttach(context)</text>
+        </g>
+        <path d="M 270 40 L 304 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-2)" />
+        <g transform="translate(310, 20)" class="flow-node flow-node-green">
+            <rect width="110" height="40" rx="6" stroke-width="1.5"/>
+            <text x="55" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">Active State</text>
+        </g>
+        <path d="M 420 40 L 454 40" fill="none" class="flow-arrow-green" stroke-width="1.5" marker-end="url(#flow-arrow-green-mark-2)" />
+        <g transform="translate(460, 20)" class="flow-node flow-node-neutral">
+            <rect width="90" height="40" rx="6" stroke-width="1"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">onDetach()</text>
+        </g>
+        <path d="M 550 40 L 574 40" fill="none" class="flow-arrow-neutral" stroke-width="1" marker-end="url(#flow-arrow-neutral-mark-2)" />
+        <g transform="translate(580, 20)" class="flow-node flow-node-red">
+            <rect width="90" height="40" rx="20" stroke-width="1.5"/>
+            <text x="45" y="25" text-anchor="middle" font-family="var(--font-sans)" font-size="12">uninstall()</text>
+        </g>
+    </svg>
+</div>
+<div class="warning-callout">
+    <strong>⚠️ Important Lifecycle Notes</strong>
+    <ul>
+        <li><code>onAttach</code> is called exactly once when the plugin is installed</li>
+        <li>Stale imperative lifecycle hooks (like <code>onStart</code>, <code>onStop</code>, <code>onOpen</code>, <code>onClose</code>) are removed to keep the API surface simple and focused (YAGNI).</li>
+        <li>Always safety-check resources in <code>Content()</code> — it may recompose at any time</li>
+        <li>Handle UI errors gracefully inside <code>Content()</code></li>
+    </ul>
+</div>
+<h2>Best Practices</h2>
+<ul>
+<li><strong>Keep plugins focused</strong> — one responsibility per plugin</li>
+<li><strong>Use StateFlow</strong> — all reactive data should use <code>StateFlow</code></li>
+<li><strong>Minimize main-thread work</strong> — heavy computation goes in background coroutine scopes</li>
+<li><strong>Clean up in onDetach</strong> — cancel background tasks and release state</li>
+<li><strong>Test independently</strong> — plugins can be unit-tested fully in KMP commonMain</li>
+</ul>
+
+</div>
+<div id="integrations" class="docs-section ">
+<h1>Logging Integrations</h1>
+<p>AELog works with <strong>any</strong> logging library. Just forward logs to the static <code>AELog.log</code> methods.</p>
+<h2>Kermit</h2>
+<pre><code class="language-kotlin">import co.touchlab.kermit.LogWriter
+import co.touchlab.kermit.Severity
+import com.ae.log.AELog
+
+class AELogKermitWriter : LogWriter() {
+    override fun log(
+        severity: Severity,
+        message: String,
+        tag: String,
+        throwable: Throwable?
+    ) {
+        when (severity) {
+            Severity.Verbose -> AELog.log.v(tag, message, throwable)
+            Severity.Debug -> AELog.log.d(tag, message, throwable)
+            Severity.Info -> AELog.log.i(tag, message, throwable)
+            Severity.Warn -> AELog.log.w(tag, message, throwable)
+            Severity.Error -> AELog.log.e(tag, message, throwable)
+            Severity.Assert -> AELog.log.wtf(tag, message, throwable)
+        }
+    }
+}
+
+// Setup
+Logger.addLogWriter(AELogKermitWriter())
+</code></pre>
+<h2>Napier</h2>
+<pre><code class="language-kotlin">import io.github.aakira.napier.Antilog
+import io.github.aakira.napier.LogLevel
+import com.ae.log.AELog
+
+class AELogNapierAntilog : Antilog() {
+    override fun performLog(
+        priority: LogLevel,
+        tag: String?,
+        throwable: Throwable?,
+        message: String?
+    ) {
+        val resolvedTag = tag ?: "Napier"
+        val resolvedMsg = message ?: ""
+        when (priority) {
+            LogLevel.VERBOSE -> AELog.log.v(resolvedTag, resolvedMsg, throwable)
+            LogLevel.DEBUG -> AELog.log.d(resolvedTag, resolvedMsg, throwable)
+            LogLevel.INFO -> AELog.log.i(resolvedTag, resolvedMsg, throwable)
+            LogLevel.WARNING -> AELog.log.w(resolvedTag, resolvedMsg, throwable)
+            LogLevel.ERROR -> AELog.log.e(resolvedTag, resolvedMsg, throwable)
+            LogLevel.ASSERT -> AELog.log.wtf(resolvedTag, resolvedMsg, throwable)
+        }
+    }
+}
+
+// Setup
+Napier.base(AELogNapierAntilog())
+</code></pre>
+<h2>Timber (Android)</h2>
+<pre><code class="language-kotlin">import timber.log.Timber
+import com.ae.log.AELog
+
+class AELogTimberTree : Timber.Tree() {
+    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+        val resolvedTag = tag ?: "Timber"
+        when (priority) {
+            android.util.Log.VERBOSE -> AELog.log.v(resolvedTag, message, t)
+            android.util.Log.DEBUG -> AELog.log.d(resolvedTag, message, t)
+            android.util.Log.INFO -> AELog.log.i(resolvedTag, message, t)
+            android.util.Log.WARN -> AELog.log.w(resolvedTag, message, t)
+            android.util.Log.ERROR -> AELog.log.e(resolvedTag, message, t)
+            android.util.Log.ASSERT -> AELog.log.wtf(resolvedTag, message, t)
+            else -> AELog.log.d(resolvedTag, message, t)
+        }
+    }
+}
+
+// Setup
+Timber.plant(AELogTimberTree())
+</code></pre>
+<h2>Ktor Client Logging</h2>
+<pre><code class="language-kotlin">import io.ktor.client.*
+import io.ktor.client.plugins.logging.*
+import com.ae.log.AELog
+
+val client = HttpClient {
+    install(Logging) {
+        logger = object : Logger {
+            override fun log(message: String) {
+                // Forward to AELog
+                AELog.log.d("HTTP", message)
+            }
+        }
+        level = LogLevel.ALL
+    }
+}
+</code></pre>
+<h2>Direct Usage (No Library)</h2>
+<pre><code class="language-kotlin">// Use the static shorthands
+AELog.log.i("MyApp", "App started")
+AELog.log.e("Auth", "Login failed", error)
+</code></pre>
+</div>
+<div id="changelog" class="docs-section">
+            <h1>Changelog</h1>
+            <p class="mute-text">All notable changes and releases of AELog are detailed below in our interactive project roadmap.</p>
+
+            <div class="timeline-container" id="journey-timeline">
+                <!-- Timeline progress bar line -->
+                <div class="timeline-progress-line">
+                    <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone -7: v1.1.7 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.7 <span class="timeline-date">— June 8, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Ktor Interceptor Response Capture:</strong> Fixed Ktor interceptor in <code>log-network-ktor</code> to correctly capture response body payloads on error responses (like HTTP 401). By intercepting the response body in <code>receivePipeline.State</code> after Ktor's <code>SaveBody</code> plugin has buffered it, we ensure <code>rawContent</code> can be read as a fresh channel and the response is safely logged without exhausting the stream or throwing exceptions.</li>
+                            <li><strong>iOS Test Name Compatibility:</strong> Renamed backtick-quoted test names containing parentheses to prevent Kotlin/Native compilation failures on iOS simulator targets.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -6: v1.1.6 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.6 <span class="timeline-date">— June 8, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Global Notch Toggle:</strong> Added static property <code>AELog.showNotch</code> to allow globally enabling/disabling the floating trigger notch across all screens.</li>
+                            <li><strong>Zero-Config iOS & Android Auto-Init:</strong> Synchronized documentation and setups to highlight zero-config auto-initialization on both Android and iOS targets.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Removed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>AELog.configure & LogConfig:</strong> Removed the configure DSL block and <code>LogConfig</code> class, enforcing zero-config sensible defaults for all plugins.</li>
+                            <li><strong>onMigrateFrom Lifecycle Hook:</strong> Removed the obsolete <code>onMigrateFrom(oldPlugin)</code> hook from the <code>Plugin</code> interface and its overrides in built-in plugins (<code>LogPlugin</code>, <code>NetworkPlugin</code>, <code>AnalyticsPlugin</code>) due to the deprecation of dynamic configuration hot-swaps.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>iOS test isolation — duplicate plugin rejected silently:</strong> Fixed by calling <code>AELog.resetForTesting()</code> at the top of every <code>@BeforeTest</code> to evict any eagerly-registered plugins before the test installs its own.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -5: v1.1.5 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.5 <span class="timeline-date">— June 3, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>MaterialTheme Linkage Crash on iOS:</strong> Completely removed references to standard Compose MaterialTheme companion property accesses across core and plugins, replacing them with a custom static <code>LogTheme</code>. This prevents <code>IrLinkageError</code> crashes on iOS when linking AELog into applications using mismatched Compose Multiplatform versions.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -4: v1.1.4 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.4 <span class="timeline-date">— June 2, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Zero-Config iOS Auto-Initialization:</strong> Added auto-initialization for all four core plugins on iOS using <code>@EagerInitialization</code> in KMP shared modules. iOS consumers now enjoy completely zero-code plugin setup just like Android!</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Ktor Interceptor Payloads:</strong> Fixed handling of raw <code>String</code> and <code>ByteArray</code> request bodies in Ktor client when <code>ContentNegotiation</code> is not installed.</li>
+                            <li><strong>Notch Label Clipping:</strong> Resolved notch button label clipping/invisibility on iOS by removing the static <code>requiredWidth</code> constraint and setting <code>softWrap = false</code> on the rotated Compose Text.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -3: v1.1.1 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.1 <span class="timeline-date">— June 1, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Request Body on Error:</strong> Network logs now capture and display the request body early in the request pipeline, ensuring it remains visible even when requests fail with client/server errors or network exceptions.</li>
+                            <li><strong>Smart Binary Upload Handling:</strong> Binary uploads (like images/documents via <code>multipart/form-data</code>) are no longer dumped as raw binary strings into logs. AELog now displays a clean summary like <code>&lt;image/png: 110370 bytes&gt;</code>, preventing memory bloat and UI lag.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Premium Code Block Styles:</strong> Request and response body sections in the network details view now render with a solid, clean white background and black text in light theme for maximum readability.</li>
+                            <li><strong>Enhanced Contrast for Success Responses:</strong> Successful network entry detail sections are highlighted with a subtle green tint (<code>Color(0xFF4CAF50).copy(alpha = 0.08f)</code>) to distinguish them from the sheet background.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -2: v1.1.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.0 <span class="timeline-date">— June 1, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>DeviceInfo in crash reports:</strong> Crash events now capture a <code>DeviceInfo</code> snapshot at crash time (device model, OS version, app version, build number). When a QA tester taps <strong>Copy</strong> on any crash, the clipboard text now includes a <code>── Device Info ──</code> section with full context — no need to ask the developer which build or device was affected.</li>
+                            <li><code>DeviceInfo</code> <code>expect/actual</code> implemented for Android (<code>android.os.Build</code> + <code>PackageManager</code>), iOS (<code>UIDevice</code> + <code>NSBundle</code>), and JVM (system properties fallback).</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -1: v1.0.9 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.9 <span class="timeline-date">— May 31, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Removed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>EventBus & lifecycle signals (YAGNI):</strong> The <code>EventBus</code>, <code>Event</code>, and <code>AELogLifecycle</code> classes have been deleted. None of the built-in plugins consumed these signals, so they were speculative plumbing that added unnecessary complexity. The <code>collectEvents</code> extension on <code>PluginContext</code> and the <code>eventBus</code> property are also gone.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><code>AELog.clearAll()</code> now delegates directly to <code>PluginManager</code> — the intermediate <code>AELogLifecycle.clearAll()</code> indirection is gone.</li>
+                            <li><code>PluginContext</code> is now simpler: only <code>scope</code>, <code>config</code>, and <code>getPlugin()</code> — no event infrastructure.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone -0.5: v1.0.8 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.8 <span class="timeline-date">— May 31, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Ktor request body not logged for JSON POST requests:</strong> When <code>ContentNegotiation</code> serializes a data class, Ktor produces a <code>WriteChannelContent</code> (stream). The interceptor now drains the stream into a byte array, logs the decoded JSON body, and re-wraps it as <code>ByteArrayContent</code> — so the actual HTTP request body is fully preserved.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Tests</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>Added <code>records JSON request body</code> test asserting that a <code>setBody(...)</code> POST with <code>ContentType.Application.Json</code> records the body content in the log export.</li>
+                            <li>Extended <code>records POST request</code> with body assertions (<code>name</code>, <code>test</code>) to prevent regression.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 0: v1.0.7 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.7 <span class="timeline-date">— May 29, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Simplified</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Unified Plugin Architecture:</strong> Consolidated the redundant <code>DataPlugin</code> marker interface and <code>UIPlugin</code> under a single, streamlined <code>Plugin</code> base contract.</li>
+                            <li><strong>Auto-Generated IDs:</strong> Added reflection-based qualified class name <code>id</code> defaults, eliminating manual ID registration boilerplate.</li>
+                            <li><strong>Consolidated UI layout:</strong> Removed legacy layout slots (<code>HeaderContent()</code> and <code>HeaderActions()</code>) from <code>UIPlugin</code>. Plugins now have 100% layout control (like sticky search/headers) directly inside <code>Content()</code>.</li>
+                            <li><strong>YAGNI Lifecycle Cleanups:</strong> Purged unused imperative hooks (<code>onStart()</code>, <code>onStop()</code>, <code>onOpen()</code>, <code>onClose()</code>) from the plugin interface to keep the API surface simple and minimal.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 1: v1.0.6 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.6 <span class="timeline-date">— May 28, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Unified Configuration DSL:</strong> Replaced legacy, fragmented initialization methods (<code>configureCore</code>, <code>configurePlugin</code>) with a robust, type-safe, and atomic <code>AELog.configure { ... }</code> builder DSL.</li>
+                            <li><strong>Global Notch Configuration:</strong> Added <code>showNotch</code> parameter to <code>LogConfig</code> and <code>AELogBuilder</code> to allow developers to completely disable the floating notch trigger globally during startup.</li>
+                            <li><strong>High-Fidelity Edge-Docked Notch:</strong> Redesigned the floating trigger notch from a top-center pill into a premium vertical button docked snug against the right edge of the screen.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Overlay Layout Clipping:</strong> Resolved the 0x0 parent measurement constraint bug in <code>AELogOverlay.kt</code> by applying <code>Modifier.fillMaxSize()</code> with touch pass-through bounds.</li>
+                            <li><strong>Removed Obsolete APIs:</strong> Completely purged deprecated legacy configuration methods and old UI wrappers (such as <code>LogProvider</code> and <code>UiConfig</code>).</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 2: v1.0.5 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.5 <span class="timeline-date">— May 10, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><code>stability-config.conf</code> — targeted Compose compiler stability config.</li>
+                            <li><code>NetworkMethod.UNKNOWN</code> — safe fallback for custom/unknown HTTP verbs.</li>
+                            <li><code>androidMain</code> <code>callerTag()</code> — added Android-specific skip prefixes to stack walker.</li>
+                            <li><strong>Network UI:</strong> Single-scroll detail view, custom Status Badges showing HTTP status codes, and animated in-flight request row indicator.</li>
+                            <li><strong>UI Timestamps:</strong> Localized 12-hour AM/PM format display.</li>
+                            <li><strong>Interceptors:</strong> Excluded headers configurations completely hiding credentials/tokens.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>UI:</strong> Bottom sheet selected tab state persistence.</li>
+                            <li><strong>OkHttp:</strong> Captured request bodies with null Content-Type.</li>
+                            <li><strong>Critical:</strong> Removed <code>LogEntry</code> default parameter side-effects and Napler/Timber/Ktor pipeline duplicate error messages.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 3: v1.0.4 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.4 <span class="timeline-date">— May 7, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Modular Subprojects:</strong> Completely reorganized and split the AELog project into independent sub-modules (e.g., <code>:core</code>, <code>:log-logs</code>, <code>:log-network</code>, <code>:log-network-ktor</code>, <code>:log-network-okhttp</code>, <code>:log-analytics</code>, <code>:log-crashes</code>).</li>
+                            <li><strong>Comprehensive Testing Suite:</strong> Added full test coverage for Ktor and OkHttp interceptors alongside automated stress and performance benchmark suites.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Standardized UI Naming:</strong> Renamed all UI components to standardized <code>Log*</code> prefixes (like <code>LogNotchButton</code>, <code>LogInspectorPanel</code>).</li>
+                            <li><strong>AELog Interceptor Prefixes:</strong> Relocated and standardized interceptor naming conventions using <code>AELog</code> prefixes (e.g., <code>AELogKtorInterceptor</code>, <code>AELogOkHttpInterceptor</code>).</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 4: v1.0.3 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.3 <span class="timeline-date">— May 5, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Pulsing Animation:</strong> Added a dynamic, pulsing status dot indicator for in-flight requests in the Network inspector list and detail view.</li>
+                            <li><strong>Interactive UI Components:</strong> Added reusable <code>ActionButton</code> and <code>ActionCard</code> layout components for plugin builders.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Changed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Decoupled Architecture:</strong> Extracted core functionality to simplify plugin registration and decouple core engine from plugin lifecycles.</li>
+                            <li><strong>Improved Security:</strong> Standardized header exclude management in network interceptors.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>API Robustness:</strong> Enhanced thread safety and memory leak prevention across the core event bus and database storage layers.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 5: v1.0.2 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.2 <span class="timeline-date">— May 3, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Fixed</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>Fixed lint errors in <code>LogProvider</code> and <code>OkHttpInterceptor</code>.</li>
+                            <li>Resolved prefix naming consistency issues.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 6: v1.0.1 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.1 <span class="timeline-date">— May 2, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>Standardized <code>IdGenerator</code> across all modules.</li>
+                            <li>Improved URL decoding for query parameters.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
+                <!-- Milestone 7: v1.0.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.0.0 <span class="timeline-date">— May 1, 2026</span></h3>
+                        
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li>🎉 Initial production release.</li>
+                            <li>Core <code>AELog</code> engine with modular plugin architecture.</li>
+                            <li>Material3 themed UI with light/dark mode support and adaptive layout bounds.</li>
+                            <li>Floating debug button trigger and interactive inspector panel.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+            </div>
+
+</div>
+<div id="contributing" class="docs-section ">
+<h1>Contributing to AELog</h1>
+<p>First off, thank you for considering contributing! ðŸŽ‰</p>
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#code-of-conduct">Code of Conduct</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#development-setup">Development Setup</a></li>
+<li><a href="#how-to-contribute">How to Contribute</a></li>
+<li><a href="#pull-request-process">Pull Request Process</a></li>
+<li><a href="#coding-standards">Coding Standards</a></li>
+<li><a href="#architecture-overview">Architecture Overview</a></li>
+</ul>
+<h2>Code of Conduct</h2>
+<p>This project follows our <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>.
+By participating, you agree to uphold this code.</p>
+<h2>Getting Started</h2>
+<h3>Prerequisites</h3>
+<ul>
+<li>JDK 17+</li>
+<li>Android Studio Ladybug or later / Fleet</li>
+<li>Xcode 15+ (for iOS targets)</li>
+<li>Kotlin 2.2.0+</li>
+</ul>
+<h3>Development Setup</h3>
+<pre><code class="language-bash"># Clone the repository
+git clone https://github.com/abdo-essam/AELog.git
+cd AELog
+
+# Build the project
+./gradlew build
+
+# Run tests
+./gradlew allTests
+
+# Run the sample app (Android)
+./gradlew :sample:composeApp:installDebug
+
+# Check code formatting
+./gradlew spotlessCheck
+
+# Fix code formatting
+./gradlew spotlessApply
+
+# Generate API docs
+./gradlew dokkaGeneratePublicationHtml
+
+# Verify binary compatibility
+./gradlew apiCheck
+</code></pre>
+<h2>How to Contribute</h2>
+<h3>🐛 Reporting Bugs</h3>
+<ul>
+<li>Use the Bug Report template</li>
+<li>Include: KMP version, platform, steps to reproduce, expected vs actual behavior</li>
+</ul>
+<h3>💡 Suggesting Features</h3>
+<ul>
+<li>Use the Feature Request template</li>
+<li>Describe the use case, not just the solution</li>
+</ul>
+<h3>🔧 Submitting Changes</h3>
+<ul>
+<li>Fork the repository</li>
+<li>Create a feature branch: <code>git checkout -b feat/my-feature</code></li>
+<li>Make your changes</li>
+<li>Add/update tests</li>
+<li>Run the full check: <code>./gradlew check</code></li>
+<li>Commit using Conventional Commits</li>
+<li>Push and open a Pull Request</li>
+</ul>
+<h2>Pull Request Process</h2>
+<ul>
+<li>Fill out the PR template completely</li>
+<li>Ensure CI passes — all checks must be green</li>
+<li>One approval required from a maintainer</li>
+<li>Squash merge is preferred for clean history</li>
+<li>Update CHANGELOG.md under <code>[Unreleased]</code></li>
+</ul>
+<h2>Coding Standards</h2>
+<h3>Kotlin Style</h3>
+<ul>
+<li>Follow Kotlin Coding Conventions</li>
+<li>Use <code>explicitApi()</code> — all public APIs need visibility modifiers</li>
+<li>Mark internal APIs with <code>internal</code> keyword</li>
+<li>KDoc on all public classes, functions, and properties</li>
+</ul>
+<h3>Commit Conventions</h3>
+<p>We use Conventional Commits:</p>
+<pre><code class="language-text">feat: add network inspection plugin
+fix: resolve theme bleed into host app
+docs: update plugin creation guide
+test: add LogStorage unit tests
+refactor: extract log filtering to separate class
+chore: update Kotlin to 2.3.0
+perf: cache LogEntry computed properties
+ci: add iOS build to CI pipeline
+</code></pre>
+<h3>Architecture Rules</h3>
+<ul>
+<li>Plugins must extend the core Plugin lifecycle classes</li>
+<li>No Android-specific imports in <code>commonMain</code></li>
+<li>All state exposed as <code>StateFlow</code> (no LiveData)</li>
+<li>Compose UI uses Material3 exclusively</li>
+<li>Keep the public API surface minimal</li>
+</ul>
+<h2>Architecture Overview</h2>
+<div class="flowchart-wrapper" style="margin: 24px 0; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;">
+    <svg width="100%" height="340" viewBox="0 0 550 340" style="max-width: 550px; display: inline-block;">
+        <defs>
+            <marker id="arch-arrow-main" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--accent-blue)" />
+            </marker>
+        </defs>
+
+        <g transform="translate(190, 10)">
+            <rect width="170" height="40" rx="8" fill="rgba(59, 130, 246, 0.12)" stroke="var(--accent-blue)" stroke-width="1.5" />
+            <text x="85" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="#fff" class="flow-text">AELogProvider</text>
+        </g>
+        
+        <path d="M 275 50 L 275 70" stroke="var(--accent-blue)" stroke-width="1.5" fill="none" marker-end="url(#arch-arrow-main)" />
+
+        <g transform="translate(190, 75)">
+            <rect width="170" height="40" rx="8" fill="rgba(255, 255, 255, 0.05)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="85" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="12" fill="var(--color-text-secondary)" class="flow-text">AELog (Core Engine)</text>
+        </g>
+
+        <rect x="10" y="135" width="530" height="80" rx="10" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="3,3" />
+        <text x="20" y="150" font-family="var(--font-sans)" font-size="9" font-weight="700" fill="var(--color-text-secondary)" letter-spacing="0.05em">PLUGIN SYSTEM</text>
+
+        <path d="M 275 115 L 275 130" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        <path d="M 75 130 L 465 130" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        <path d="M 75 130 L 75 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 205 130 L 205 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 335 130 L 335 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 465 130 L 465 155" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+
+        <g transform="translate(20, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">LogPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-logs</text>
+        </g>
+        <g transform="translate(150, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">CrashPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-crashes</text>
+        </g>
+        <g transform="translate(280, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">NetworkPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-network</text>
+        </g>
+        <g transform="translate(410, 160)">
+            <rect width="110" height="45" rx="6" fill="rgba(255,255,255,0.03)" stroke="var(--color-border)" stroke-width="1" />
+            <text x="55" y="20" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">AnalyticsPlugin</text>
+            <text x="55" y="34" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">:ae-log-analytics</text>
+        </g>
+
+        <rect x="50" y="245" width="450" height="80" rx="10" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="3,3" />
+        <text x="60" y="260" font-family="var(--font-sans)" font-size="9" font-weight="700" fill="var(--color-text-secondary)" letter-spacing="0.05em">STORAGE LAYER</text>
+
+        <g transform="translate(70, 270)">
+            <rect width="180" height="45" rx="6" fill="rgba(16, 185, 129, 0.08)" stroke="var(--accent-green)" stroke-width="1" />
+            <text x="90" y="19" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">RAM Storage</text>
+            <text x="90" y="33" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">InMemoryPluginStorage</text>
+        </g>
+        <g transform="translate(300, 270)">
+            <rect width="180" height="45" rx="6" fill="rgba(245, 158, 11, 0.08)" stroke="var(--accent-yellow)" stroke-width="1" />
+            <text x="90" y="19" text-anchor="middle" font-family="var(--font-sans)" font-size="11" font-weight="600" fill="#fff" class="flow-text">Disk Storage</text>
+            <text x="90" y="33" text-anchor="middle" font-family="var(--font-sans)" font-size="9" fill="var(--color-text-secondary)" class="flow-text">PersistentPluginStorage</text>
+        </g>
+
+        <path d="M 75 205 L 75 230 L 160 230 L 160 265" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+        <path d="M 335 205 L 335 230 L 160 230" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        <path d="M 465 205 L 465 230 L 335 230" stroke="var(--color-border)" stroke-width="1" fill="none" />
+        
+        <path d="M 205 205 L 205 240 L 390 240 L 390 265" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
+    </svg>
+</div>
+
+</div>
+
+            <!-- Symmetrical Pagination at bottom of main content -->
+            <div class="docs-pagination mt-5">
+                <a href="#" id="prev-page-btn" class="pagination-btn glass-subtle pill">
+                    <span class="pagination-arrow">←</span>
+                    <div class="pagination-label">
+                        <span class="pagination-sub">Previous</span>
+                        <span class="pagination-title" id="prev-page-title">Introduction</span>
+                    </div>
+                </a>
+                <a href="#" id="next-page-btn" class="pagination-btn glass-subtle pill">
+                    <div class="pagination-label text-right">
+                        <span class="pagination-sub">Next</span>
+                        <span class="pagination-title" id="next-page-title">Installation</span>
+                    </div>
+                    <span class="pagination-arrow">→</span>
+                </a>
+            </div>
+        </main>
+
+        <!-- Column 3: Right Outline Sidebar -->
+        <aside class="docs-outline-sidebar">
+            <div class="outline-sticky-wrapper">
+                <h4>On This Page</h4>
+                <ul id="docs-outline-list" class="outline-list">
+                    <!-- Automatically populated dynamically by JS based on current section H2s/H3s -->
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script type="module" src="js/docs.js"></script>
+</body>
+</html>
+

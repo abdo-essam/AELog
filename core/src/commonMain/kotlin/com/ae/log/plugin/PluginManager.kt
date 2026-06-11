@@ -1,10 +1,9 @@
 package com.ae.log.plugin
 
-import com.ae.log.config.LogConfig
-import com.ae.log.event.EventBus
 import kotlinx.atomicfu.locks.SynchronizedObject
 import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,10 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.reflect.KClass
 
-public class PluginManager internal constructor(
-    private val config: LogConfig,
-    private val eventBus: EventBus,
-) {
+public class PluginManager internal constructor() {
     private val _plugins = MutableStateFlow<List<Plugin>>(emptyList())
     public val plugins: StateFlow<List<Plugin>> = _plugins.asStateFlow()
 
@@ -27,7 +23,7 @@ public class PluginManager internal constructor(
         synchronized(installLock) {
             if (_plugins.value.any { it.id == plugin.id }) return@synchronized
             _plugins.update { it + plugin }
-            val scope = CoroutineScope(SupervisorJob() + config.dispatcher)
+            val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
             scopes[plugin.id] = scope
             safeCall { plugin.onAttach(buildContext(scope)) }
         }
@@ -72,14 +68,15 @@ public class PluginManager internal constructor(
     private fun buildContext(scope: CoroutineScope): PluginContext =
         object : PluginContext {
             override val scope = scope
-            override val config = this@PluginManager.config
-            override val eventBus = this@PluginManager.eventBus
 
             @Suppress("UNCHECKED_CAST")
             override fun <T : Plugin> getPlugin(type: KClass<T>): T? = this@PluginManager.getPlugin(type)
         }
 
     private fun safeCall(block: () -> Unit) {
-        runCatching(block).onFailure { config.errorHandler.invoke(it) }
+        runCatching(block).onFailure { t ->
+            println("[AELog] Internal error: ${t.message}")
+            t.printStackTrace()
+        }
     }
 }

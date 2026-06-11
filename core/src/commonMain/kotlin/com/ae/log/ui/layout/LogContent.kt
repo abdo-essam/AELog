@@ -6,21 +6,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ae.log.plugin.UIPlugin
-import com.ae.log.ui.LocalLogController
+import com.ae.log.ui.LogController
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /**
  * Tabbed container that renders UI plugins as tabs.
  *
  * Each [UIPlugin] gets its own tab with an icon, name, and optional badge count.
- * The active plugin's [UIPlugin.HeaderContent], [UIPlugin.HeaderActions],
- * and [UIPlugin.Content] are rendered below the tab row.
+ * The active plugin's [UIPlugin.Content] is rendered below the tab row.
+ * Plugins are responsible for their own internal layout (e.g. search bars, sticky headers).
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LogContent(
     plugins: List<UIPlugin>,
     onDismiss: () -> Unit,
+    controller: LogController,
     modifier: Modifier = Modifier,
 ) {
     if (plugins.isEmpty()) {
@@ -30,43 +32,24 @@ internal fun LogContent(
         ) {
             Text(
                 text = "No plugins installed",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = LogTheme.typography.bodyLarge,
+                color = LogTheme.colors.onSurfaceVariant,
             )
         }
         return
     }
 
-    val controller = LocalLogController.current
     val activeTabIndex by controller.activeTabIndex.collectAsState()
 
     val safeIndex = activeTabIndex.coerceIn(0, plugins.lastIndex.coerceAtLeast(0))
     val selectedPlugin = plugins.getOrElse(safeIndex) { plugins.first() }
 
     Column(modifier = modifier.fillMaxSize()) {
-        // Header — title + active plugin's action buttons
-        Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x3),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = "AELog",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            Row { selectedPlugin.HeaderActions() }
-        }
-
-        // Tab row (only shown when there are multiple plugins)
         if (plugins.size > 1) {
             PrimaryScrollableTabRow(
                 selectedTabIndex = safeIndex,
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = LogTheme.colors.surface,
+                contentColor = LogTheme.colors.primary,
                 edgePadding = LogSpacing.x4,
             ) {
                 plugins.forEachIndexed { index, plugin ->
@@ -76,7 +59,7 @@ internal fun LogContent(
                         selected = index == safeIndex,
                         onClick = { controller.selectTab(index) },
                         text = {
-                            Text(plugin.name, style = MaterialTheme.typography.labelMedium)
+                            Text(plugin.name, style = LogTheme.typography.labelMedium)
                         },
                         icon = {
                             if (count > 0) {
@@ -84,14 +67,14 @@ internal fun LogContent(
                                     Badge {
                                         Text(
                                             text = if (count > 99) "99+" else count.toString(),
-                                            style = MaterialTheme.typography.labelSmall,
+                                            style = LogTheme.typography.labelSmall,
                                         )
                                     }
                                 }) {
-                                    Icon(plugin.icon, contentDescription = plugin.name)
+                                    plugin.icon()
                                 }
                             } else {
-                                Icon(plugin.icon, contentDescription = plugin.name)
+                                plugin.icon()
                             }
                         },
                     )
@@ -99,9 +82,7 @@ internal fun LogContent(
             }
         }
 
-        // Active plugin slots
-        selectedPlugin.HeaderContent()
-
+        // Active plugin content
         PluginContent(
             plugin = selectedPlugin,
             modifier = Modifier.weight(1f),

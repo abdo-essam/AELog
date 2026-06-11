@@ -1,4 +1,4 @@
-﻿package com.ae.log.logs.ui
+package com.ae.log.logs.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.ae.log.logs.model.LogEntry
 import com.ae.log.ui.components.ExpandedDetails
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun LogEntryItem(
@@ -46,7 +47,7 @@ internal fun LogEntryItem(
             exit = shrinkVertically(),
         ) {
             ExpandedDetails(
-                bgColor = MaterialTheme.colorScheme.surfaceVariant,
+                bgColor = LogTheme.colors.surfaceVariant,
                 onCopy = { onCopy(log) },
             ) {
                 LogDetailsContent(log = log)
@@ -76,17 +77,17 @@ private fun LogEntryHeader(
             ) {
                 Text(
                     text = log.tag,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = LogTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = LogTheme.colors.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
                 )
                 Text(
                     text = LogUtils.formatTimestamp(log.timestamp),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = LogTheme.typography.labelSmall,
+                    color = LogTheme.colors.onSurfaceVariant,
                 )
             }
 
@@ -102,8 +103,8 @@ private fun LogEntryHeader(
                 }
             Text(
                 text = preview,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = LogTheme.typography.labelSmall,
+                color = LogTheme.colors.onSurfaceVariant,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -115,7 +116,7 @@ private fun LogEntryHeader(
             imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
             contentDescription = null,
             modifier = Modifier.size(LogSpacing.x6),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = LogTheme.colors.onSurfaceVariant,
         )
     }
 }

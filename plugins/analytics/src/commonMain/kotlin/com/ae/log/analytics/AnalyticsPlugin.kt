@@ -1,10 +1,10 @@
-﻿package com.ae.log.analytics
+package com.ae.log.analytics
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.analytics.storage.AnalyticsStorage
 import com.ae.log.analytics.ui.AnalyticsContent
 import com.ae.log.analytics.ui.AnalyticsViewModel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELog.init(AnalyticsPlugin())
+ * AELog.configure { plugin(AnalyticsPlugin()) }
  * ```
  *
  * ## Recording events:
@@ -29,17 +29,15 @@ import kotlinx.coroutines.launch
  * analytics?.screen("ProductDetail", mapOf("productId" to "123"))
  * ```
  */
-public class AnalyticsPlugin(
-    maxEntries: Int = 500,
-) : UIPlugin {
+public class AnalyticsPlugin : UIPlugin {
     override val id: String = ID
     override val name: String = "Analytics"
-    override val icon: ImageVector = Icons.Default.Analytics
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Analytics, contentDescription = null) }
 
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    private val storage = AnalyticsStorage(capacity = maxEntries)
+    internal val storage = AnalyticsStorage(capacity = 500)
 
     @kotlin.concurrent.Volatile private var viewModel: AnalyticsViewModel? = null
 

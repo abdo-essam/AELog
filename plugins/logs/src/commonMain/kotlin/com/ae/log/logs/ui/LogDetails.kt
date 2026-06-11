@@ -1,9 +1,8 @@
-﻿package com.ae.log.logs.ui
+package com.ae.log.logs.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,6 +10,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.ae.log.logs.model.LogEntry
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun LogDetailsContent(log: LogEntry) {
@@ -19,8 +19,8 @@ internal fun LogDetailsContent(log: LogEntry) {
             Column {
                 Text(
                     text = "Message",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = LogTheme.typography.labelSmall,
+                    color = LogTheme.colors.onSurfaceVariant,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Box(
@@ -28,13 +28,13 @@ internal fun LogDetailsContent(log: LogEntry) {
                         Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(LogSpacing.x2))
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .background(LogTheme.colors.surfaceVariant)
                             .padding(LogSpacing.x2),
                 ) {
                     Text(
                         text = log.message,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        style = LogTheme.typography.bodySmall,
+                        color = LogTheme.colors.onSurface,
                     )
                 }
             }

@@ -1,4 +1,6 @@
-<h1 align="center">AELog</h1>
+<h1 align="center">
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" />AELog
+</h1>
 
 <p align="center">
   <strong>Extensible on-device dev tools for Kotlin Multiplatform</strong>
@@ -39,9 +41,13 @@
 ---
 
 <p align="center">
-  <img src="docs/assets/demo-light.gif" width="280" alt="Light Mode Demo" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="docs/assets/demo-dark.gif" width="280" alt="Dark Mode Demo" />
+  <img src="website/img/aelog_logs.png" width="190" alt="Logs Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_network.png" width="190" alt="Network Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_analytics.png" width="190" alt="Analytics Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_crashes.png" width="190" alt="Crashes Plugin" />
 </p>
 
 ## ✨ Features
@@ -51,6 +57,7 @@
 | 🔍 **Log Inspector** | Search, filter, and copy logs with syntax-highlighted JSON |
 | 🌐 **Network Viewer** | HTTP request/response inspection with method badges |
 | 📊 **Analytics Tracker** | Monitor analytics events in real-time |
+| 💥 **Crash Reporter** | Capture and persist fatal and non-fatal exceptions on device |
 | 🎨 **Beautiful UI** | Material3 design with light/dark mode support |
 | 🧩 **Plugin System** | Extend with custom debug panels through modular dependencies |
 | 📱 **Adaptive Layout** | Bottom sheet on phones, dialog on tablets |
@@ -59,156 +66,92 @@
 
 ## 📦 Installation
 
-AELog is fully modularized. **You only add the artifact for the feature you need.**
-Every plugin module carries its dependencies transitively, so you never need to add
-`ae-log-core` or intermediate modules manually.
+AELog is fully modularized. **Add only the dependencies you need.** Every plugin module carries its dependencies transitively, so you never need to import `ae-log-core` manually.
 
-> **Pick your scenario below — copy only that block.**
+### 1. Version Catalog (Recommended)
 
----
-
-### 🔵 Scenario A — Logs only
-
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
-    // ↳ transitively includes ae-log-core
-}
-```
-
----
-
-### 🌐 Scenario B — Network inspection with Ktor
-
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.5")
-    // ↳ transitively includes ae-log-network and ae-log-core
-}
-```
-
----
-
-### 🟢 Scenario C — Network inspection with OkHttp (Android only)
-
-```kotlin
-// build.gradle.kts
-androidMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.5")
-    // ↳ transitively includes ae-log-network and ae-log-core
-}
-```
-
----
-
-### 📊 Scenario D — Analytics inspection
-
-```kotlin
-// build.gradle.kts
-commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
-    // ↳ transitively includes ae-log-core
-}
-```
-
----
-
-### 🚀 Scenario E — Full stack (Logs + Network + Analytics)
-
-For a KMP project with Ktor on all platforms and OkHttp on Android:
-
-```kotlin
-// build.gradle.kts (shared module)
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
-            implementation("io.github.abdo-essam:ae-log-network-ktor:1.0.5")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.0.5")
-        }
-        androidMain.dependencies {
-            // Add this only if your Android target also uses OkHttp
-            implementation("io.github.abdo-essam:ae-log-network-okhttp:1.0.5")
-        }
-    }
-}
-```
-
----
-
-### 📖 Dependency map (full reference)
-
-| Artifact | Transitively includes | Platform |
-|---|---|---|
-| `ae-log-logs` | `ae-log-core` | KMP |
-| `ae-log-network` | `ae-log-core` | KMP |
-| `ae-log-network-ktor` | `ae-log-network`, `ae-log-core` | KMP |
-| `ae-log-network-okhttp` | `ae-log-network`, `ae-log-core` | Android |
-| `ae-log-analytics` | `ae-log-core` | KMP |
-
-### Version Catalog
+Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.0.5"
+aelog = "1.1.7"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
 aelog-network-ktor     = { module = "io.github.abdo-essam:ae-log-network-ktor",   version.ref = "aelog" }
 aelog-network-okhttp   = { module = "io.github.abdo-essam:ae-log-network-okhttp", version.ref = "aelog" }
 aelog-analytics        = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "aelog" }
+aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }
 ```
+
+### 2. Gradle Setup
+
+Add the required dependencies to your target source sets in `build.gradle.kts`:
+
+```kotlin
+// build.gradle.kts (shared module)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            // Pick only what you need (each carries core transitively)
+            implementation(libs.aelog.logs)
+            implementation(libs.aelog.network.ktor)
+            implementation(libs.aelog.analytics)
+            implementation(libs.aelog.crashes)
+        }
+        androidMain.dependencies {
+            // Add only if your Android target uses OkHttp
+            implementation(libs.aelog.network.okhttp)
+        }
+    }
+}
+```
+
+---
+
+📖 See the [Full Installation Guide](https://abdo-essam.github.io/AELog/) for direct dependency coordinates and details on transitive inclusions.
 
 ## 🚀 Quick Start
 
-### 1. Initialize & Install Plugins
+### 1. Zero-Config (Automatic Setup)
+AELog features **zero-config auto-initialisation** on Android! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with sensible defaults when your app launches. **No setup, configuration, or initialization code is required.**
 
-Best called early in your platform-specific entry points (e.g. `Application.onCreate` for Android, or main `ViewController` for iOS):
+### 2. Drop in the Overlay
 
-```kotlin
-AELog.init(
-    LogPlugin(),      // Built-in log viewer
-    NetworkPlugin(),   // Network inspector
-    AnalyticsPlugin()  // Analytics tracker
-)
-```
-
-### 2. Launch the UI
-
-#### For Jetpack Compose Apps
-Wrap your main content:
+#### For Compose Apps (Android & iOS)
+Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required. By default, the floating notch trigger is disabled (`showNotch = false`), allowing you to control visibility programmatically via custom developer gestures or buttons:
 
 ```kotlin
 @Composable
-fun App(debugMode: Boolean) {
-    LogProvider(
-        enabled = debugMode, // ← disables UI overhead in release builds
-        uiConfig = UiConfig(
-            showFloatingButton = true, // Enables the 'bug' overlay button
-            enableLongPress = true,    // Show panel on 3-finger long press
-        )
-    ) {
-        MaterialTheme {
+fun App() {
+    // Renders the overlay container in the background
+    AELogOverlay() 
+    
+    MaterialTheme {
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(onClick = { AELog.show() }) {
+                    Icon(Icons.Default.BugReport, contentDescription = "Open Inspector")
+                }
+            }
+        ) {
             YourAppContent()
         }
     }
 }
 ```
 
-#### For Traditional View-Based Android Apps (XML)
-No need to add Compose to your app! Just launch the built-in activity anywhere (like a developer menu button):
-
+To **disable the library in release builds**, set:
 ```kotlin
-import com.ae.log.launchViewer
-import com.ae.log.AELog
-
-// Call from any Activity or Fragment
-AELog.launchViewer(requireContext()) 
+AELog.isEnabled = BuildConfig.DEBUG
 ```
 
-### 3. Log — primary API (`AELog`)
+To **enable the floating notch trigger** on the edge of the screen:
+```kotlin
+AELogOverlay(showNotch = true)
+```
+
+### 4. Log — primary API (`AELog`)
 
 `AELog` is a discoverable object modelled after Android's built-in `Log` class.
 Just type `AELog.` and the IDE lists every method — no extension hunting required:
@@ -222,7 +165,7 @@ AELog.log.e("Database", "Failed to clear cache", exception) // stack trace auto-
 AELog.log.wtf("Auth", "Unexpected state")
 ```
 
-> All calls are **silent no-ops** if `AELog.init()` has not been called yet — safe in shared modules that run before app startup.
+> All calls are **silent no-ops** if the library hasn't initialized yet — safe to call from shared modules before app startup.
 
 #### Auto-tag — no tag required (recommended)
 
@@ -235,29 +178,36 @@ AELog.log.e("Failed to clear cache", t)  // tag → "Database"
 ```
 
 ```kotlin
-// Network & Analytics APIs
+// Network, Analytics & Crashes APIs
 AELog.network.logRequest(method = "GET", url = "https://api.example.com/users")
 AELog.network.logResponse(url = "https://api.example.com/users", statusCode = 200)
 AELog.analytics.logEvent("item_added_to_cart", properties = mapOf("id" to "123"))
+
+// Capture non-fatal exceptions manually
+try {
+    performDangerousWork()
+} catch (t: Throwable) {
+    AELog.crashes.recordNonFatal(t)
+}
 ```
 
 ### 🌐 Network Interceptors
 
 AELog provides first-class interceptors for OkHttp and Ktor.
 
-#### Security (Redaction)
-Both interceptors are **secure by default**. They automatically redact sensitive headers like `Authorization` and `Cookie` to prevent token leakage in logs.
+#### Security (Header Exclusion)
+Both interceptors are **secure by default**. They automatically exclude sensitive headers like `Authorization` and `Cookie` to prevent credentials from appearing in logs.
 
 ```kotlin
 // OkHttp
-val interceptor = OkHttpInterceptor(
-    redactHeaders = setOf("X-Sensitive-Header") // Extends default redactions
+val interceptor = AELogOkHttpInterceptor(
+    excludeHeaders = setOf("X-Sensitive-Header") // Extends default exclusions
 )
 
 // Ktor
 val client = HttpClient {
-    install(KtorInterceptor) {
-        redactHeaders = setOf("X-Api-Key")
+    install(AELogKtorInterceptor) {
+        excludeHeaders = setOf("X-Api-Key")
     }
 }
 ```
@@ -266,7 +216,7 @@ val client = HttpClient {
 To prevent memory issues when inspecting large payloads (e.g., file uploads), bodies are automatically truncated (default 250 KB).
 
 ```kotlin
-OkHttpInterceptor(
+AELogOkHttpInterceptor(
     maxRequestBodyBytes = 500_000,  // 500 KB limit
     maxResponseBodyBytes = 1_000_000 // 1 MB limit
 )
@@ -275,30 +225,21 @@ OkHttpInterceptor(
 #### Ktor Response Body Capture
 By default, Ktor response streams can only be read once. To enable non-destructive inspection of response bodies:
 1. **Install DoubleReceive**: It is highly recommended to install the `DoubleReceive` plugin in your `HttpClient`.
-2. **Integrated Fallback**: AELog will attempt to capture the body using `bodyAsText()`. If `DoubleReceive` is not installed, this may consume the stream—ensure your app logic is compatible or use the recommended plugin.
+2. **Integrated Fallback**: AELog will attempt to capture the body using Ktor's internal stream handlers. If `DoubleReceive` is not installed, this may consume the stream—ensure your app logic is compatible or use the recommended plugin.
 
 ```kotlin
 val client = HttpClient {
     install(DoubleReceive) // Recommended for Network Plugin
-    install(KtorInterceptor)
+    install(AELogKtorInterceptor)
 }
 ```
 
-### 4. Open AELog
+### 5. Open AELog
 
 Three ways to open the inspector:
-1. Tap the floating **bug button** (bottom-right corner)
-2. Long-press with multiple fingers anywhere on screen (if enabled)
-3. Programmatically: `LocalLogController.current.show()`
-
-## 🧩 Modularity & Available Plugins
-
-| Module / Plugin | Class | Description |
-|--------|------|-------------|
-| `:ae-log-core` | - | Infrastructure, EventBus, and UI Shell |
-| `:ae-log-logs` | `LogPlugin` | Log viewer with severity filters (ALL / VERBOSE / DEBUG / INFO / WARN / ERROR) |
-| `:ae-log-network` | `NetworkPlugin` | HTTP inspector with method badges, status filtering (2xx / 4xx / 5xx) and full body view |
-| `:ae-log-analytics` | `AnalyticsPlugin` | Analytics tracker separating Screens / Events with expandable properties |
+1. Tap the **floating notch** at the top of the screen (Dynamic Island-style)
+2. Programmatically from anywhere: `AELog.show()` / `AELog.hide()`
+3. Wire it to any custom trigger (shake gesture, debug menu button, etc.)
 
 ## 🔨 Custom Plugins
 
@@ -306,20 +247,16 @@ Create your own debug panel (e.g., a Database Inspector or Feature Flags toggler
 
 ```kotlin
 class FeatureFlagsPlugin : UIPlugin {
-    override val id = "feature_flags"
     override val name = "Flags"
-    override val icon = Icons.Default.Flag
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Flag, contentDescription = null) }
 
-    private val _badgeCount = MutableStateFlow<Int?>(null)
-    override val badgeCount: StateFlow<Int?> = _badgeCount
-
-    override fun onAttach(context: PluginContext) {
-        // Initialize your plugin (observe context.scope, context.eventBus, etc.)
-    }
+    // Optional: Live badge count shown on the tab (omit if not needed)
+    private val _badgeCount = MutableStateFlow(0)
+    override val badgeCount: StateFlow<Int> = _badgeCount
 
     @Composable
     override fun Content(modifier: Modifier) {
-        // Your Compose UI here
+        // Your Compose UI here (owns the entire panel layout)
         LazyColumn(modifier = modifier) {
             items(flags) { flag ->
                 FlagRow(flag)
@@ -328,24 +265,20 @@ class FeatureFlagsPlugin : UIPlugin {
     }
 }
 
-// Install it
-AELog.init(LogPlugin(), FeatureFlagsPlugin())
+// Install your custom plugin alongside the auto-registered ones
+AELog.install(FeatureFlagsPlugin())
 ```
 
 📖 See the [Custom Plugins Guide](https://abdo-essam.github.io/AELog/custom-plugins) for the full API reference.
 
 ## 🔗 Logging Integrations
 
-AELog works with **any** logging setup — just forward your log calls to the AELog API:
+AELog works with **any** logging library. Just forward logs to the static `AELog.log` methods:
 
 ```kotlin
-// Forward any log call directly — no bridge library needed
-AELog.log(
-    severity = LogSeverity.INFO,
-    tag = "MyTag",
-    message = "Something happened",
-    throwable = null, // stack trace is appended automatically when present
-)
+// Forward logs using the static shorthands directly
+AELog.log.i("MyTag", "Something happened")
+AELog.log.e("Database", "Failed to clear cache", exception)
 ```
 
 📖 See the [Logging Integrations Guide](https://abdo-essam.github.io/AELog/integrations) for adapter examples (Kermit, Napier, Timber, SLF4J).
@@ -357,12 +290,11 @@ The SDK follows an encapsulated `Model-Store-API-UI` pattern, making plugins 100
 ```mermaid
 graph TD
     subgraph UI ["UI Layer"]
-        LP["LogProvider\n(Compose wrapper)"]
+        OV["AELogOverlay()\n(Popup — zero wrapping)"]
     end
 
     subgraph Core ["Core — ae-log-core"]
         AE["AELog\n(singleton engine)"]
-        EB["EventBus"]
     end
 
     subgraph Plugins ["Plugins (optional, loaded on demand)"]
@@ -370,6 +302,7 @@ graph TD
         LP1["LogPlugin\nae-log-logs"]
         NP["NetworkPlugin\nae-log-network"]
         AP["AnalyticsPlugin\nae-log-analytics"]
+        CP["CrashPlugin\nae-log-crashes"]
     end
 
     subgraph Storage ["Data Layer (StateFlow — thread-safe)"]
@@ -377,6 +310,7 @@ graph TD
         LS[("LogStorage")]
         NS[("NetworkStorage")]
         AS[("AnalyticsStorage")]
+        CS[("CrashStorage")]
     end
 
     subgraph Interceptors ["Auto-interceptors (optional)"]
@@ -385,26 +319,18 @@ graph TD
         OI["OkHttpInterceptor\nae-log-network-okhttp"]
     end
 
-    LP --> AE
-    AE --> EB
+    OV --> AE
     AE --> LP1
     AE --> NP
     AE --> AP
+    AE --> CP
     LP1 --> LS
     NP --> NS
     AP --> AS
+    CP --> CS
     KI --> NP
     OI --> NP
 ```
-
-## 📋 Requirements
-
-| Platform | Minimum Version |
-|----------|----------------|
-| Android | API 24 (Android 7.0) |
-| iOS | 15.0 |
-| Kotlin | 2.2.0+ |
-| Compose Multiplatform | 1.7.3+ |
 
 ## 🤝 Contributing
 
@@ -433,3 +359,4 @@ You may obtain a copy of the License at
 
 - Jetpack Compose — UI toolkit
 - Kotlin Multiplatform — Cross-platform framework
+

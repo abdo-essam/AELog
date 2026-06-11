@@ -2,9 +2,7 @@ package com.ae.log.benchmarks
 
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
-import com.ae.log.config.LogConfig
 import com.ae.log.logs.LogPlugin
-import com.ae.log.logs.PlatformLogSink
 import com.ae.log.logs.log
 import com.ae.log.network.NetworkPlugin
 import kotlinx.benchmark.Benchmark
@@ -18,7 +16,6 @@ import kotlinx.benchmark.Setup
 import kotlinx.benchmark.State
 import kotlinx.benchmark.TearDown
 import kotlinx.benchmark.Warmup
-import kotlinx.coroutines.Dispatchers
 
 /**
  * JMH benchmarks for the full AELog log pipeline:
@@ -28,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
  *       → AELog.getPlugin<LogPlugin>()    (list scan + isInstance)
  *         → LogPlugin.record()
  *           → LogRecorder.log()           (severity filter + clock + id)
- *             → PluginStorage.add()       (lock + RingBuffer + StateFlow)
+ *             → InMemoryPluginStorage.add()  (lock + list copy + StateFlow)
  *
  * [logWithExplicitTag] shows the cost of the entire chain WITHOUT stack capture.
  * [logWithCallerTag]   adds the cost of [callerTag()], which captures a stack trace.
@@ -46,17 +43,15 @@ import kotlinx.coroutines.Dispatchers
 open class LogPipelineBenchmark {
     @Setup
     fun setup() {
-        AELog.init(
-            // PlatformLogSink.None avoids Logcat/println side-effects in the benchmark
-            LogPlugin(platformLogSink = PlatformLogSink.None),
-            NetworkPlugin(),
-            config = LogConfig(dispatcher = Dispatchers.Unconfined),
-        )
+        System.setProperty("aelog.benchmark", "true")
+        AELog.install(LogPlugin())
+        AELog.install(NetworkPlugin())
     }
 
     @TearDown
     fun teardown() {
         AELog.resetForTesting()
+        System.clearProperty("aelog.benchmark")
     }
 
     /**

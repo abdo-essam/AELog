@@ -37,6 +37,7 @@ include(":plugins:network")
 include(":plugins:network:interceptors:ktor")
 include(":plugins:network:interceptors:okhttp")
 include(":plugins:analytics")
+include(":plugins:crashes")
 include(":sample:composeApp")
 include(":benchmarks")
 

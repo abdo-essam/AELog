@@ -15,8 +15,11 @@ class NetworkProxyTest {
 
     @BeforeTest
     fun setUp() {
+        // On iOS, @EagerInitialization auto-installs a NetworkPlugin before the test runs.
+        // Reset first so the test's own plugin instance is the one that gets registered.
+        AELog.resetForTesting()
         plugin = NetworkPlugin()
-        AELog.init(plugin)
+        AELog.install(plugin)
     }
 
     @AfterTest
@@ -88,7 +91,6 @@ class NetworkProxyTest {
     @Test
     fun `logRequest - returns null when plugin is not installed`() {
         AELog.resetForTesting()
-        AELog.init() // no plugins
         val id = AELog.network.logRequest(method = "GET", url = "https://api.example.com")
         assertNull(id)
     }

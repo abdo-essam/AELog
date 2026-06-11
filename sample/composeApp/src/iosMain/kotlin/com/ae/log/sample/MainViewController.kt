@@ -11,5 +11,5 @@ fun MainViewController() =
         },
     ) {
         SampleState.initialize()
-        App(debugMode = true)
+        App()
     }

@@ -1,8 +1,9 @@
-﻿package com.ae.log.logs
+package com.ae.log.logs
 
 import com.ae.log.AELog
 import com.ae.log.logs.model.LogEntry
 import com.ae.log.logs.model.LogSeverity
+import com.ae.log.logs.storage.LogStorage
 import com.ae.log.utils.IdGenerator
 import kotlin.time.Clock
 
@@ -33,7 +34,7 @@ public class LogRecorder internal constructor(
 
         val fullMessage = if (throwable != null) "$message\n${throwable.stackTraceToString()}" else message
 
-        storage.add(
+        storage.record(
             LogEntry(
                 id = idGenerator(),
                 severity = severity,

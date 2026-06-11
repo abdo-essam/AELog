@@ -2,8 +2,6 @@ package com.ae.log.plugin
 
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
-import com.ae.log.config.LogConfig
-import com.ae.log.event.EventBus
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,9 +11,7 @@ import kotlin.test.assertTrue
 
 @OptIn(AELogTestApi::class)
 class PluginManagerTest {
-    private val config = LogConfig()
-    private val eventBus = EventBus()
-    private val manager = PluginManager(config, eventBus)
+    private val manager = PluginManager()
 
     @AfterTest
     fun tearDown() {
@@ -38,10 +34,6 @@ class PluginManagerTest {
             lastContext = context
         }
 
-        override fun onStart() {}
-
-        override fun onStop() {}
-
         override fun onDetach() {
             detachCount++
         }
@@ -49,10 +41,6 @@ class PluginManagerTest {
         override fun onClear() {
             clearCount++
         }
-
-        override fun onOpen() {}
-
-        override fun onClose() {}
 
         override fun export() = ""
     }

@@ -2,32 +2,27 @@ public final class com/ae/log/logs/AELogLogsKt {
 	public static final fun getLog (Lcom/ae/log/AELog;)Lcom/ae/log/logs/LogProxy;
 }
 
+public final class com/ae/log/logs/ComposableSingletons$LogPluginKt {
+	public static final field INSTANCE Lcom/ae/log/logs/ComposableSingletons$LogPluginKt;
+	public fun <init> ()V
+	public final fun getLambda$2032451677$logs ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/ae/log/logs/LogPlugin : com/ae/log/logs/LogRecordSink, com/ae/log/plugin/UIPlugin {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/logs/LogPlugin$Companion;
 	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
-	public fun <init> (ILcom/ae/log/logs/model/LogSeverity;Lcom/ae/log/logs/PlatformLogSink;)V
-	public synthetic fun <init> (ILcom/ae/log/logs/model/LogSeverity;Lcom/ae/log/logs/PlatformLogSink;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderActions (Landroidx/compose/runtime/Composer;I)V
-	public fun HeaderContent (Landroidx/compose/runtime/Composer;I)V
 	public fun export ()Ljava/lang/String;
 	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
-	public fun getIcon ()Landroidx/compose/ui/graphics/vector/ImageVector;
+	public fun getIcon ()Lkotlin/jvm/functions/Function2;
 	public fun getId ()Ljava/lang/String;
-	public final fun getMaxEntries ()I
-	public final fun getMinSeverity ()Lcom/ae/log/logs/model/LogSeverity;
 	public fun getName ()Ljava/lang/String;
-	public final fun getPlatformLogSink ()Lcom/ae/log/logs/PlatformLogSink;
 	public final fun getRecorder ()Lcom/ae/log/logs/LogRecorder;
 	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
-	public fun onClose ()V
 	public fun onDetach ()V
-	public fun onOpen ()V
-	public fun onStart ()V
-	public fun onStop ()V
 	public fun record (Lcom/ae/log/logs/model/LogSeverity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
 }
 
@@ -69,13 +64,10 @@ public abstract interface class com/ae/log/logs/LogRecordSink : com/ae/log/plugi
 
 public final class com/ae/log/logs/LogRecordSink$DefaultImpls {
 	public static fun export (Lcom/ae/log/logs/LogRecordSink;)Ljava/lang/String;
+	public static fun getId (Lcom/ae/log/logs/LogRecordSink;)Ljava/lang/String;
 	public static fun onAttach (Lcom/ae/log/logs/LogRecordSink;Lcom/ae/log/plugin/PluginContext;)V
 	public static fun onClear (Lcom/ae/log/logs/LogRecordSink;)V
-	public static fun onClose (Lcom/ae/log/logs/LogRecordSink;)V
 	public static fun onDetach (Lcom/ae/log/logs/LogRecordSink;)V
-	public static fun onOpen (Lcom/ae/log/logs/LogRecordSink;)V
-	public static fun onStart (Lcom/ae/log/logs/LogRecordSink;)V
-	public static fun onStop (Lcom/ae/log/logs/LogRecordSink;)V
 }
 
 public final class com/ae/log/logs/LogRecorder {

@@ -17,7 +17,8 @@ class AnalyticsTrackerTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.init(AnalyticsPlugin())
+        AELog.resetForTesting()
+        AELog.install(AnalyticsPlugin())
         storage = AnalyticsStorage()
         tracker = AnalyticsTracker(storage)
     }

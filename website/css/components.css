@@ -1,0 +1,545 @@
+/*
+ * components.css
+ * Reusable UI components: buttons, badges, glass surfaces, cards,
+ * mobile mockup, feature cards, and code display blocks.
+ */
+
+/* ==========================================================================
+   Glassmorphism Surfaces
+   ========================================================================== */
+.glass {
+    background: rgba(18, 18, 23, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border);
+}
+
+.glass-subtle {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel {
+    background: linear-gradient(180deg, rgba(30,30,36,0.6) 0%, rgba(18,18,23,0.8) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-border {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    border: 1px solid transparent;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 100%) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+}
+
+/* ==========================================================================
+   Shape Utilities
+   ========================================================================== */
+.pill     { border-radius: var(--radius-pill); }
+.card-xl  { border-radius: var(--radius-xl); }
+.circular { border-radius: var(--radius-full); }
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.btn-primary {
+    background: var(--color-text-primary);
+    color: var(--color-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+    background: var(--color-btn-primary-hover);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--color-text-primary);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 16px;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.btn-large { padding: var(--spacing-md) var(--spacing-xl); font-size: 18px; }
+
+/* ==========================================================================
+   Badges
+   ========================================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: var(--spacing-lg);
+}
+
+.badge-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-emerald);
+    box-shadow: 0 0 10px var(--accent-emerald);
+}
+
+/* Small icon wrapper (arch features list) */
+.feature-item { text-align: center; }
+
+.icon-wrapper {
+    width: 64px; height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   Mobile Frame / Screenshot
+   ========================================================================== */
+.mobile-frame {
+    background: #000;
+    border: 10px solid #171717;
+    border-radius: 38px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.08);
+    position: relative;
+    max-width: 320px;
+    margin: 0 auto;
+    aspect-ratio: 9/19.5;
+}
+
+/* Android Speaker Grill */
+.mobile-frame::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 64px; height: 4px;
+    background: #262626;
+    border-radius: 4px;
+    z-index: 30;
+}
+
+/* Android Punch-hole Camera */
+.mobile-frame::after {
+    content: '';
+    position: absolute;
+    top: 18px; left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 14px;
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    z-index: 30;
+}
+
+.mobile-screenshot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.mobile-screenshot.active {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   Mockup Log UI (feature card preview)
+   ========================================================================== */
+.mockup-phone {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: var(--color-mockup-bg);
+}
+
+.mockup-header {
+    background: rgba(255,255,255,0.05);
+    padding: 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.mockup-body { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+
+.mockup-log {
+    background: rgba(255,255,255,0.03);
+    padding: 12px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-left: 2px solid transparent;
+}
+
+.mockup-log.error   { border-left-color: var(--accent-red);     background: rgba(239,68,68,0.05); }
+.mockup-log.net     { border-left-color: var(--accent-blue); }
+.mockup-log.info    { border-left-color: var(--accent-emerald); }
+.mockup-log.warning { border-left-color: var(--accent-yellow); }
+
+.tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.1);
+    font-weight: 600;
+}
+
+.mockup-log.error .tag { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 992px) {
+    .feature-span-2      { grid-column: span 1; }
+}
+
+/* ==========================================================================
+   Interactive Hover Button (Magic UI Port)
+   ========================================================================== */
+.interactive-hover-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--radius-pill);
+    background: var(--color-text-primary);
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    z-index: 1;
+}
+
+.interactive-hover-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 24px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+}
+
+.interactive-hover-btn .btn-text-visible {
+    position: relative;
+    padding-left: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-hover-btn .btn-text-hidden {
+    position: absolute;
+    opacity: 0;
+    transform: translate(-10px, 0);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+}
+
+.interactive-hover-btn:hover {
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+    border-color: var(--accent-purple);
+}
+
+.interactive-hover-btn:hover::before {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    left: -50px;
+}
+
+.interactive-hover-btn:hover .btn-text-visible {
+    opacity: 0;
+    transform: translate(15px, 0);
+}
+
+.interactive-hover-btn:hover .btn-text-hidden {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+/* Secondary interactive hover btn */
+.interactive-hover-btn.btn-secondary-hover {
+    background: transparent;
+    color: var(--color-text-primary);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.interactive-hover-btn.btn-secondary-hover::before {
+    background: var(--accent-blue);
+}
+
+.interactive-hover-btn.btn-secondary-hover:hover {
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+    border-color: var(--accent-blue);
+}
+
+
+/* ==========================================================================
+   Magic Card spotlight border (Magic UI Port)
+   ========================================================================== */
+.magic-card {
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+.magic-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px; /* Border thickness */
+    background: radial-gradient(
+        220px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+        rgba(139, 92, 246, 0.45) 0%,
+        rgba(59, 130, 246, 0.25) 50%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Backplate glow effect inside card */
+.magic-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        320px circle at var(--mouse-x, -500px) var(--mouse-y, -500px),
+        rgba(139, 92, 246, 0.05) 0%,
+        rgba(59, 130, 246, 0.02) 50%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   Hover Border Gradient Button (Magic UI Port)
+   ========================================================================== */
+.hover-border-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5px; /* Border thickness */
+    border-radius: 9999px;
+    background: transparent;
+    overflow: hidden;
+    text-decoration: none;
+    z-index: 1;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Rotating gradient layer */
+.hover-border-btn::before {
+    content: '';
+    position: absolute;
+    inset: -150%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 120deg,
+        var(--accent-blue) 180deg,
+        var(--accent-purple) 240deg,
+        transparent 300deg,
+        transparent 360deg
+    );
+    animation: spin-gradient 4s linear infinite;
+    z-index: -2;
+    transition: opacity 0.3s ease;
+}
+
+/* Inner content background container */
+.hover-border-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: 9999px;
+    background: #08080c; /* Dark background inside */
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 18px;
+    z-index: -1;
+    transition: background 0.3s ease;
+}
+
+.hover-border-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
+}
+
+.hover-border-btn:hover .hover-border-inner {
+    background: #111115;
+}
+
+@keyframes spin-gradient {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================================
+   Light Mode Component Overrides
+   ========================================================================== */
+
+/* Glass surfaces */
+[data-theme="light"] .glass {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .glass-subtle {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .glass-panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(240,242,247,0.9) 100%);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .glow-border {
+    background: linear-gradient(135deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.04) 100%) border-box;
+}
+
+/* Buttons */
+[data-theme="light"] .btn-primary {
+    background: var(--color-text-primary);
+    color: #ffffff;
+}
+
+[data-theme="light"] .btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .btn-secondary {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile mockup */
+[data-theme="light"] .mockup-phone {
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .mockup-header {
+    background: rgba(0, 0, 0, 0.04);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .mockup-log {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .mockup-log.error { background: rgba(239,68,68,0.06); }
+
+[data-theme="light"] .tag {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .mockup-log.error .tag {
+    background: rgba(239,68,68,0.15);
+    color: #b91c1c;
+}
+
+/* Interactive hover button */
+[data-theme="light"] .interactive-hover-btn {
+    background: var(--color-text-primary);
+    color: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .interactive-hover-btn.btn-secondary-hover {
+    background: transparent;
+    color: var(--color-text-primary);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Hover border button */
+[data-theme="light"] .hover-border-inner {
+    background: #ffffff;
+    color: var(--color-text-primary);
+}
+
+[data-theme="light"] .hover-border-btn:hover .hover-border-inner {
+    background: #f4f6fb;
+}
+
+/* GitHub stars pill */
+[data-theme="light"] .github-stars:hover {
+    background: rgba(0, 0, 0, 0.06);
+}

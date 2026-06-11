@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!--
+            Auto-initializer: AGP merges this into the host app's manifest.
+            The ContentProvider runs before Application.onCreate(), capturing
+            the Application context and registering CrashPlugin with AELog
+            so consumers need zero setup code.
+
+            To opt out and use a custom CrashPlugin config, remove this provider
+            via manifest merger (tools:node="remove") and call AELog.configure() yourself.
+        -->
+        <provider
+            android:name="com.ae.log.crashes.CrashAppContextProvider"
+            android:authorities="${applicationId}.ae_log_crash_init"
+            android:exported="false" />
+    </application>
+</manifest>
+

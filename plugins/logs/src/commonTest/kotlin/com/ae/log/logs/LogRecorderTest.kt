@@ -3,6 +3,7 @@ package com.ae.log.logs
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
 import com.ae.log.logs.model.LogSeverity
+import com.ae.log.logs.storage.LogStorage
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -16,7 +17,8 @@ class LogRecorderTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.init(LogPlugin())
+        AELog.resetForTesting()
+        AELog.install(LogPlugin())
         storage = LogStorage(capacity = 100)
         recorder =
             LogRecorder(
@@ -35,8 +37,8 @@ class LogRecorderTest {
     @Test
     fun `log - stores entry in storage`() {
         recorder.log(LogSeverity.DEBUG, "MyTag", "Hello world")
-        assertEquals(1, storage.dataFlow.value.size)
-        val entry = storage.dataFlow.value.first()
+        assertEquals(1, storage.entries.value.size)
+        val entry = storage.entries.value.first()
         assertEquals(LogSeverity.DEBUG, entry.severity)
         assertEquals("MyTag", entry.tag)
         assertEquals("Hello world", entry.message)
@@ -46,7 +48,7 @@ class LogRecorderTest {
     fun `log - assigns non-blank id`() {
         recorder.log(LogSeverity.INFO, "Tag", "msg")
         assertTrue(
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .id
                 .isNotBlank(),
@@ -57,7 +59,7 @@ class LogRecorderTest {
     fun `log - assigns positive timestamp`() {
         recorder.log(LogSeverity.INFO, "Tag", "msg")
         assertTrue(
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .timestamp > 0,
         )
@@ -70,7 +72,7 @@ class LogRecorderTest {
         val ex = RuntimeException("boom")
         recorder.log(LogSeverity.ERROR, "Tag", "Crashed", ex)
         val message =
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .message
         assertTrue(message.contains("boom"))
@@ -81,7 +83,7 @@ class LogRecorderTest {
     fun `log - does not append newline when throwable is null`() {
         recorder.log(LogSeverity.INFO, "Tag", "Clean message", null)
         val message =
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .message
         assertEquals("Clean message", message)
@@ -101,7 +103,7 @@ class LogRecorderTest {
         warnRecorder.log(LogSeverity.INFO, "Tag", "also filtered")
         warnRecorder.log(LogSeverity.WARN, "Tag", "this gets through")
         warnRecorder.log(LogSeverity.ERROR, "Tag", "and this too")
-        assertEquals(2, storage.dataFlow.value.size)
+        assertEquals(2, storage.entries.value.size)
     }
 
     // ── isEnabled gate ─────────────────────────────────────────────────────
@@ -110,7 +112,7 @@ class LogRecorderTest {
     fun `log - is no-op when AELog isEnabled is false`() {
         AELog.isEnabled = false
         recorder.log(LogSeverity.ERROR, "Tag", "Should not be stored")
-        assertTrue(storage.dataFlow.value.isEmpty())
+        assertTrue(storage.entries.value.isEmpty())
     }
 
     // ── Shorthand methods ──────────────────────────────────────────────────
@@ -120,7 +122,7 @@ class LogRecorderTest {
         recorder.v("Tag", "verbose")
         assertEquals(
             LogSeverity.VERBOSE,
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .severity,
         )
@@ -131,7 +133,7 @@ class LogRecorderTest {
         recorder.d("Tag", "debug")
         assertEquals(
             LogSeverity.DEBUG,
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .severity,
         )
@@ -142,7 +144,7 @@ class LogRecorderTest {
         recorder.i("Tag", "info")
         assertEquals(
             LogSeverity.INFO,
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .severity,
         )
@@ -153,7 +155,7 @@ class LogRecorderTest {
         recorder.w("Tag", "warn")
         assertEquals(
             LogSeverity.WARN,
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .severity,
         )
@@ -164,7 +166,7 @@ class LogRecorderTest {
         recorder.e("Tag", "error")
         assertEquals(
             LogSeverity.ERROR,
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .severity,
         )
@@ -175,7 +177,7 @@ class LogRecorderTest {
         recorder.wtf("Tag", "assert")
         assertEquals(
             LogSeverity.ASSERT,
-            storage.dataFlow.value
+            storage.entries.value
                 .first()
                 .severity,
         )

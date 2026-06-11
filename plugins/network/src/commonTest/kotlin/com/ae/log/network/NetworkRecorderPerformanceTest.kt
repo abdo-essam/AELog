@@ -15,8 +15,8 @@ import kotlin.time.measureTime
  * Strategy 4: Integration-level throughput tests for the network recording pipeline.
  *
  * Tests the full two-phase flow:
- *   recorder.logRequest()  → NetworkStorage.recordOrReplace() → PluginStorage.addOrReplace()
- *   recorder.logResponse() → NetworkStorage.update()          → PluginStorage.updateFirst()
+ *   recorder.logRequest()  → NetworkStorage.recordOrReplace() → InMemoryPluginStorage.addOrReplace()
+ *   recorder.logResponse() → NetworkStorage.update()          → InMemoryPluginStorage.updateFirst()
  *
  * This is the most expensive per-call path in the network plugin because:
  * 1. logRequest  → addOrReplace → indexOfFirst (scan) + add + toList + StateFlow emit
@@ -33,7 +33,7 @@ class NetworkRecorderPerformanceTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.init(NetworkPlugin())
+        AELog.install(NetworkPlugin())
         storage = NetworkStorage(capacity = 200)
         recorder = NetworkRecorder(storage)
     }

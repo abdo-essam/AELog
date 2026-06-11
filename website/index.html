@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+    <title>AELog | Production-Grade Mobile Logging</title>
+    <meta name="description"
+        content="AELog is a production-grade logging and crash tracking library for mobile applications. See more. Fix faster.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles: modular CSS architecture (each file has a single responsibility) -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/architecture.css">
+    <link rel="stylesheet" href="css/setup-guide.css">
+    <link rel="stylesheet" href="css/features.css">
+
+    <!-- Syntax highlighting for setup guide code blocks -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js" defer></script>
+
+    <!-- Inline theme init: apply before first paint to prevent flash of wrong theme -->
+    <script>
+        (function () {
+            var stored = localStorage.getItem('aelog-theme');
+            var theme = (stored === 'light' || stored === 'dark') ? stored
+                : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- Animated Background Elements -->
+    <div class="background-grid"></div>
+    <div class="glow-orb orb-primary"></div>
+    <div class="glow-orb orb-secondary"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                    <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+                    <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
+                    <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+                </svg>
+                <span class="logo-text">AELog</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#integration" class="nav-link">Integration</a>
+                <a href="#architecture" class="nav-link">Architecture</a>
+                <a href="docs.html" class="nav-link">Documentation</a>
+                <a href="#developer" class="nav-link">Behind the Project</a>
+            </div>
+            <div class="nav-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode"
+                    title="Switch to light mode"></button>
+                <a href="https://github.com/abdo-essam/AELog" target="_blank" class="github-stars glass-subtle">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+                        <path
+                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                        </path>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+                <a href="#integration" class="btn btn-primary pill">Get Started</a>
+            </div>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero section">
+        <div class="container hero-container">
+            <div class="hero-content fade-up">
+                <div class="badge glass-subtle pill">
+                    <span class="badge-dot"></span>
+                    v1.1.7 is now live for KMP & Android
+                </div>
+                <h1 class="display-xxl hero-title">
+                    See more.<br>
+                    <span class="aurora-text">Fix faster.</span>
+                </h1>
+                <p class="body-lg hero-subtitle">
+                    The enterprise-grade logging and crash tracking library built for
+                    <span class="text-flip-container">
+                        <span class="text-flip-word active">Kotlin Multiplatform</span>
+                        <span class="text-flip-word">Android Apps</span>
+                        <span class="text-flip-word">iOS Projects</span>
+                        <span class="text-flip-word">Network Tracing</span>
+                        <span class="text-flip-word">Crash Capture</span>
+                    </span>
+                    to help mobile teams debug and ship with confidence.
+                </p>
+                <div class="hero-actions">
+                    <a href="#integration" class="hover-border-btn">
+                        <span class="hover-border-inner">Start Integrating</span>
+                    </a>
+                    <a href="https://github.com/abdo-essam/AELog" target="_blank"
+                        class="btn btn-secondary btn-large pill glass-subtle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                        Star on GitHub
+                    </a>
+                </div>
+                <div class="hero-tech-stack">
+                    <p class="body-sm-strong mute-text">Natively supports</p>
+                    <div class="tech-logos">
+                        <div class="tech-chip glass-subtle pill"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/7/74/Kotlin_Icon.png" alt="Kotlin"
+                                width="16"> Kotlin Multiplatform</div>
+                        <div class="tech-chip glass-subtle pill"><img
+                                src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg"
+                                alt="Android" width="16"> Android</div>
+                        <div class="tech-chip glass-subtle pill"><svg width="16" height="16" viewBox="0 0 384 512"
+                                fill="currentColor">
+                                <path
+                                    d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+                            </svg> iOS</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual fade-up delay-1">
+                <div class="mobile-frame">
+                    <img src="img/aelog_analytics.png" alt="AELog Analytics" class="mobile-screenshot">
+                    <img src="img/aelog_crashes.png" alt="AELog Crashes" class="mobile-screenshot">
+                    <img src="img/aelog_network.png" alt="AELog Network" class="mobile-screenshot">
+                    <img src="img/aelog_logs.png" alt="AELog Logs" class="mobile-screenshot active">
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features & Audience Section -->
+    <section id="features" class="section dark-band">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <div class="badge glass-subtle pill">Features & Purpose</div>
+                <h2 class="display-xl">Complete On-Device <span class="gradient-text">Diagnostics</span></h2>
+                <p class="body-lg mute-text">A powerful suite of modular plugins designed to speed up mobile
+                    development, QA testing, and troubleshooting.</p>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-dashboard grid-3 fade-up delay-1">
+                <!-- Feature 1: Logs -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Log Inspector</h3>
+                    <p class="body-sm mute-text">Search, filter by severity levels, and copy logs instantly with
+                        syntax-highlighted JSON preview. No more scrolling through bloated IDE consoles.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 2: Network -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Network Viewer</h3>
+                    <p class="body-sm mute-text">Inspect HTTP requests and responses, full headers, and body payloads
+                        with automatic secure redaction of sensitive credentials like authorization tokens.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 3: Analytics -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Analytics Tracker</h3>
+                    <p class="body-sm mute-text">Verify analytics events and screen views in real-time. Make sure your
+                        tracked properties are correctly populated as you navigate.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 4: Crashes -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Crash Reporter</h3>
+                    <p class="body-sm mute-text">Capture and persist fatal and non-fatal exceptions right on the device.
+                        Browse complete stack traces even after the app restarts.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 5: Extensible -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Pluggable & Extensible</h3>
+                    <p class="body-sm mute-text">Extend AELog with custom debug screens (e.g., database viewers or
+                        feature flag toggles) using the simple UIPlugin API.</p>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Feature 6: Performance -->
+                <div class="glass-panel card-xl magic-card feature-card">
+                    <div class="feature-icon-wrapper">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect><line x1="22" y1="12" x2="18" y2="12"></line><line x1="12" y1="2" x2="12" y2="7"></line><line x1="12" y1="17" x2="12" y2="22"></line></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Zero Overhead</h3>
+                    <p class="body-sm mute-text">AELog uses an efficient in-memory RingBuffer. A single enabled flag
+                        completely strips all UI costs in production release builds.</p>
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+
+            <!-- Audience: Built For Who? and Built For What? -->
+            <div class="audience-grid fade-up delay-2">
+                <!-- Left: Built For Who? -->
+                <div class="glass-panel card-xl magic-card audience-card">
+                    <h3 class="display-md"><span class="gradient-text">Built for who?</span></h3>
+                    <p class="body-md mute-text mt-4">AELog is engineered specifically for modern mobile developers and
+                        creators seeking high-velocity workflows.</p>
+
+                    <ul class="audience-list">
+                        <li>
+                            <span class="audience-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="audience-svg"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            </span>
+                            <div>
+                                <h4 class="body-md-strong">Kotlin Multiplatform Developers</h4>
+                                <p class="body-sm mute-text">Write once, debug everywhere. Native support for Android,
+                                    iOS, Desktop (JVM), and WASM.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="audience-svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            </span>
+                            <div>
+                                <h4 class="body-md-strong">Collaborative Engineering Teams</h4>
+                                <p class="body-sm mute-text">Empower QA engineers and beta testers to capture rich logs
+                                    and crashes directly on-device without an IDE.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="audience-svg"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            </span>
+                            <div>
+                                <h4 class="body-md-strong">Solo Creators & Startups</h4>
+                                <p class="body-sm mute-text">Ditch complex, paid external cloud crash logging servers
+                                    during active development and staging.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Right: Built For What? -->
+                <div class="glass-panel card-xl magic-card audience-card">
+                    <h3 class="display-md"><span class="gradient-text">Built for what?</span></h3>
+                    <p class="body-md mute-text mt-4">Solving the biggest friction points in modern mobile debugging,
+                        testing, and troubleshooting.</p>
+
+                    <ul class="audience-list">
+                        <li>
+                            <span class="audience-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="audience-svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                            </span>
+                            <div>
+                                <h4 class="body-md-strong">Zero-Config Diagnostics</h4>
+                                <p class="body-sm mute-text">Instant debugging. No complex configurations or setup
+                                    steps—plugins auto-initialize and start working.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="audience-svg"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                            </span>
+                            <div>
+                                <h4 class="body-md-strong">Offline Debugging & Security</h4>
+                                <p class="body-sm mute-text">All logs, network calls, and crash details are stored
+                                    locally on-device. No leaks, no privacy violations.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="audience-item-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="audience-svg"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                            </span>
+                            <div>
+                                <h4 class="body-md-strong">High-Velocity Bug Squashing</h4>
+                                <p class="body-sm mute-text">Verify network calls and analytics triggers, and view stack
+                                    traces instantly when a bug or exception occurs.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Get Started / Installation Steps -->
+    <section id="integration" class="section">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <div class="badge glass-subtle pill">Quick Setup</div>
+                <h2 class="display-xl">Add AELog to your <span class="gradient-text">project</span></h2>
+                <p class="body-lg mute-text">Pick your features and get a perfectly tailored step-by-step setup guide instantly.</p>
+            </div>
+
+            <!-- Selection Grid -->
+            <div class="customizer-selections fade-up">
+                <div class="selection-grid">
+                    <!-- Logs Choice -->
+                    <div class="selection-card active" data-feature="logs">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-logs" checked />
+                        </div>
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-title">Logs Viewer</span>
+                            <span class="card-desc">Console logs with search, filter, and copy</span>
+                        </div>
+                    </div>
+
+                    <!-- Network Choice -->
+                    <div class="selection-card active" data-feature="network">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-network" checked />
+                        </div>
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-title">Network Inspector</span>
+                            <span class="card-desc">Ktor / OkHttp response body viewer</span>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Choice -->
+                    <div class="selection-card" data-feature="analytics">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-analytics" />
+                        </div>
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-title">Analytics Tracker</span>
+                            <span class="card-desc">Real-time event & screen logging</span>
+                        </div>
+                    </div>
+
+                    <!-- Crashes Choice -->
+                    <div class="selection-card" data-feature="crashes">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-crashes" />
+                        </div>
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-title">Crash Reporter</span>
+                            <span class="card-desc">Persisted uncaught exception logs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="setup-split-container fade-up delay-1">
+                <!-- Left: Stepper Controls -->
+                <div class="setup-stepper">
+                    <!-- Step 1 Control -->
+                    <div class="stepper-item active" data-step="1">
+                        <div class="stepper-badge">1</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Add Dependency</h3>
+                            <p class="stepper-desc">Add customized build configurations to your shared module.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 Control -->
+                    <div class="stepper-item" data-step="2">
+                        <div class="stepper-badge">2</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Configure (Optional)</h3>
+                            <p class="stepper-desc">Initialize AELog on app startup with custom limits or settings.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 Control -->
+                    <div class="stepper-item" data-step="3">
+                        <div class="stepper-badge">3</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Drop in the Overlay</h3>
+                            <p class="stepper-desc">Render the floating trigger overlay globally in your UI.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 Control -->
+                    <div class="stepper-item" data-step="4">
+                        <div class="stepper-badge">4</div>
+                        <div class="stepper-info">
+                            <h3 class="stepper-title">Start Logging</h3>
+                            <p class="stepper-desc">Call static logging APIs from anywhere in your codebase.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Sleek Interactive Code Mockup Window -->
+                <div class="setup-window glass-panel card-xl">
+                    <div class="window-header">
+                        <div class="window-controls">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="window-tab" id="window-tab-name">shared/build.gradle.kts</div>
+                        <div class="window-actions">
+                            <button id="copy-setup-code" class="btn-copy" aria-label="Copy code">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="window-content">
+                        <!-- Step 1 Inner Options (Visible when Step 1 is active) -->
+                        <div class="step-controls-wrapper" id="step-1-controls">
+                            <div class="tab-pair" id="network-client-tabs" style="margin-bottom:12px;">
+                                <button class="tab-chip active" data-client="ktor">Ktor Client</button>
+                                <button class="tab-chip" data-client="okhttp">OkHttp Client (Android)</button>
+                            </div>
+                            <div class="version-catalog-hint" style="margin-top:0;">
+                                <span class="hint-label">💡 Using Version Catalog?</span>
+                                <button class="hint-toggle" id="catalog-toggle">Show libs.versions.toml</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 Inner Options (Visible when Step 3 is active) -->
+                        <div class="step-controls-wrapper is-hidden" id="step-3-controls">
+                            <div class="tab-pair" id="ui-framework-tabs" style="margin-bottom:12px; margin-top:0;">
+                                <button class="tab-chip active" data-ui="compose">Jetpack Compose</button>
+                                <button class="tab-chip" data-ui="xml">XML Views (Android)</button>
+                            </div>
+                        </div>
+
+                        <!-- Sleek dark code block -->
+                        <div class="code-area">
+                            <!-- Step 1: Gradle Code -->
+                            <div class="step-code-container active" id="code-step-1">
+                                <pre><code id="dep-code" class="language-kotlin"></code></pre>
+                            </div>
+
+                            <!-- Step 2: Custom config -->
+                            <div class="step-code-container is-hidden" id="code-step-2">
+                                <pre><code id="config-code" class="language-kotlin"></code></pre>
+                            </div>
+
+                            <!-- Step 3: Add UI Overlay -->
+                            <div class="step-code-container is-hidden" id="code-step-3">
+                                <div id="ui-compose">
+                                    <pre><code class="language-kotlin">@Composable
+fun App() {
+    AELogOverlay() // ← Renders floating center-right notch above your UI
+    MaterialTheme {
+        YourAppContent() // No wrapping or tree alterations needed
+    }
+}</code></pre>
+                                </div>
+                                <div id="ui-xml" class="is-hidden">
+                                    <pre><code class="language-kotlin">// No Compose required — inject the viewer dynamically
+import com.ae.log.launchViewer
+
+// From a button tap, custom developer gesture, etc:
+AELog.launchViewer(activity)</code></pre>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Start Logging -->
+                            <div class="step-code-container is-hidden" id="code-step-4">
+                                <pre><code id="usage-code" class="language-kotlin"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="section architecture-section dark-band">
+        <div class="container container-wide">
+            <div class="section-header text-center fade-up">
+                <h2 class="display-xl">Built for <span class="gradient-text">Scale</span></h2>
+                <p class="body-lg mute-text">A multi-layered architecture that guarantees zero-data-loss and minimal
+                    performance overhead on the host application.</p>
+            </div>
+
+            <div class="architecture-diagram card-xl glass-panel fade-up delay-1">
+                <svg class="diagram-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet"
+                    style="min-height:480px;">
+                    <!-- Definitions -->
+                    <defs>
+                        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#3b82f6" />
+                            <stop offset="50%" stop-color="#8b5cf6" />
+                            <stop offset="100%" stop-color="#10b981" />
+                        </linearGradient>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="currentColor" />
+                        </marker>
+                    </defs>
+
+                    <!-- Connection Lines -->
+                    <g stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" class="diagram-lines">
+                        <!-- UI to Core: Plugin Registry Query (Upper Connection) -->
+                        <path d="M 315 274 C 220 274, 210 285, 150 285" stroke="url(#lineGrad)" filter="url(#glow)" marker-end="url(#arrow)" />
+                        
+                        <!-- UI to Core: Singleton API State & Commands (Lower Connection) -->
+                        <path d="M 150 315 C 210 315, 220 364, 315 364" stroke="url(#lineGrad)" filter="url(#glow)" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+
+                        <!-- Core to Plugins -->
+                        <path d="M 450 260 L 550 90" marker-end="url(#arrow)" />
+                        <path d="M 450 290 L 550 180" marker-end="url(#arrow)" />
+                        <path d="M 450 310 L 550 270" marker-end="url(#arrow)" />
+                        <path d="M 450 340 L 550 360" marker-end="url(#arrow)" />
+
+                        <!-- Plugins to Storage (Dashed mappings based on Storage type) -->
+                        <!-- In-Memory Storage mapping -->
+                        <path d="M 700 90 C 740 90, 760 140, 800 140" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+                        <path d="M 700 270 C 740 270, 760 180, 800 180" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+                        <path d="M 700 360 C 740 360, 760 210, 800 210" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+
+                        <!-- Persistent Storage mapping -->
+                        <path d="M 700 180 C 740 180, 760 380, 800 380" stroke-dasharray="4,4"
+                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+
+                        <!-- Interceptors to NetworkPlugin -->
+                        <path d="M 625 460 L 625 396" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow)" />
+                    </g>
+
+                    <!-- Network Subsystem Bounding Box -->
+                    <rect x="535" y="310" width="180" height="225" rx="16" ry="16" fill="rgba(59, 130, 246, 0.04)" stroke="rgba(59, 130, 246, 0.25)" stroke-width="1.5" stroke-dasharray="4,4" />
+                    <text x="625" y="327" text-anchor="middle" font-family="var(--font-sans)" font-size="10" font-weight="700" fill="#3b82f6" letter-spacing="0.08em">NETWORK LAYER</text>
+
+                    <!-- UI Layer -->
+                    <g class="node interactive-node" transform="translate(50, 250)" data-arch="ui">
+                        <rect width="100" height="100" rx="16" class="node-bg" />
+                        <text x="50" y="40" text-anchor="middle" class="node-title">UI Layer</text>
+                        <text x="50" y="60" text-anchor="middle" class="node-subtitle">LogProvider</text>
+                        <text x="50" y="78" text-anchor="middle" class="node-subtitle">Composable</text>
+                        <rect width="100" height="100" rx="16" class="node-border" />
+                    </g>
+
+                    <!-- Core Engine -->
+                    <g class="node interactive-node" transform="translate(300, 200)" data-arch="core">
+                        <rect width="150" height="200" rx="16" class="node-bg" />
+                        <text x="75" y="35" text-anchor="middle" class="node-title">AELog Core</text>
+                        <rect x="15" y="60" width="120" height="28" rx="6" class="sub-node" />
+                        <text x="75" y="78" text-anchor="middle" class="node-subtitle">Plugin Registry</text>
+                        <rect x="15" y="105" width="120" height="28" rx="6" class="sub-node" />
+                        <text x="75" y="123" text-anchor="middle" class="node-subtitle">PluginContext</text>
+                        <rect x="15" y="150" width="120" height="28" rx="6" class="sub-node" />
+                        <text x="75" y="168" text-anchor="middle" class="node-subtitle">Singleton API</text>
+                        <rect width="150" height="200" rx="16" class="node-border" />
+                    </g>
+
+                    <!-- Plugins (Height adjusted to 60px for compact layout without UIPlugin text) -->
+                    <g class="node interactive-node" transform="translate(550, 60)" data-arch="logs">
+                        <rect width="150" height="60" rx="12" class="node-bg" />
+                        <text x="75" y="26" text-anchor="middle" class="node-title">LogPlugin</text>
+                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-logs</text>
+                        <rect width="150" height="60" rx="12" class="node-border" />
+                    </g>
+                    <g class="node interactive-node" transform="translate(550, 150)" data-arch="crashes">
+                        <rect width="150" height="60" rx="12" class="node-bg" />
+                        <text x="75" y="26" text-anchor="middle" class="node-title">CrashPlugin</text>
+                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-crashes</text>
+                        <rect width="150" height="60" rx="12" class="node-border" />
+                    </g>
+                    <g class="node interactive-node" transform="translate(550, 240)" data-arch="analytics">
+                        <rect width="150" height="60" rx="12" class="node-bg" />
+                        <text x="75" y="26" text-anchor="middle" class="node-title">AnalyticsPlugin</text>
+                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-analytics</text>
+                        <rect width="150" height="60" rx="12" class="node-border" />
+                    </g>
+                    <g class="node interactive-node network-highlight" transform="translate(550, 330)" data-arch="network">
+                        <rect width="150" height="60" rx="12" class="node-bg" />
+                        <text x="75" y="26" text-anchor="middle" class="node-title">NetworkPlugin</text>
+                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-network</text>
+                        <rect width="150" height="60" rx="12" class="node-border" />
+                    </g>
+
+                    <!-- Two Types of Storage (Clearly Segmented) -->
+                    <!-- 1. In-Memory RAM Caches -->
+                    <g class="node interactive-node" transform="translate(800, 80)" data-arch="ram">
+                        <rect width="180" height="115" rx="16" class="node-bg" stroke="rgba(59, 130, 246, 0.3)" />
+                        <text x="90" y="30" text-anchor="middle" class="node-title" fill="#6ee7b7">RAM Storage</text>
+                        <text x="90" y="52" text-anchor="middle" class="node-subtitle">(In-Memory Cache)</text>
+
+                        <rect x="15" y="70" width="150" height="26" rx="6" class="sub-node" />
+                        <text x="90" y="87" text-anchor="middle" class="node-subtitle">RingBuffer</text>
+
+                        <rect width="180" height="115" rx="16" class="node-border" />
+                    </g>
+
+                    <!-- 2. Persistent Disk Caches -->
+                    <g class="node interactive-node" transform="translate(800, 310)" data-arch="disk">
+                        <rect width="180" height="115" rx="16" class="node-bg" stroke="rgba(245, 158, 11, 0.3)" />
+                        <text x="90" y="30" text-anchor="middle" class="node-title" fill="#fca5a5">Disk Storage</text>
+                        <text x="90" y="52" text-anchor="middle" class="node-subtitle">(Persistent Storage)</text>
+
+                        <rect x="15" y="70" width="150" height="26" rx="6" class="sub-node" />
+                        <text x="90" y="87" text-anchor="middle" class="node-subtitle">Jetpack DataStore</text>
+
+                        <rect width="180" height="115" rx="16" class="node-border" />
+                    </g>
+
+                    <!-- Interceptors -->
+                    <g class="node interactive-node network-highlight" transform="translate(550, 460)" data-arch="interceptors">
+                        <rect width="150" height="60" rx="12" class="node-bg" stroke="#3b82f6" stroke-width="1" stroke-dasharray="4,4" />
+                        <text x="75" y="26" text-anchor="middle" class="node-title" fill="#3b82f6">Interceptors</text>
+                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">Ktor / OkHttp</text>
+                        <rect width="150" height="60" rx="12" class="node-border" />
+                    </g>
+                </svg>
+
+                <!-- Hover Info Panel (Static Sidebar) -->
+                <div id="arch-info-panel" class="arch-info-panel glass-subtle">
+                    <div class="arch-panel-badge" id="arch-info-badge">Core Engine</div>
+                    <h4 id="arch-info-title" class="body-lg-strong">AELog Core</h4>
+                    <p id="arch-info-desc" class="body-sm mute-text">The heartbeat of the system. Manages Plugin
+                        Registry, PluginContext lifecycle, UI rendering loop, and the global Singleton API.</p>
+                    <pre><code id="arch-info-code" class="language-kotlin">// Install plugins & disable notch globally
+AELog.install(LogPlugin())
+AELog.showNotch = false</code></pre>
+                </div>
+            </div>
+
+
+            <div class="architecture-features grid-3">
+                <div class="feature-item fade-up">
+                    <div class="icon-wrapper glass-subtle pill">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Zero Overhead</h3>
+                    <p class="body-md mute-text">The internal RingBuffer stores logs efficiently in memory, preventing
+                        out-of-memory errors and ensuring logging never blocks your main UI thread.</p>
+                </div>
+                <div class="feature-item fade-up delay-1">
+                    <div class="icon-wrapper glass-subtle pill">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Pluggable Storage</h3>
+                    <p class="body-md mute-text">Store crashes and logs efficiently using file-based persistence that
+                        survives restarts.</p>
+                </div>
+                <div class="feature-item fade-up delay-2">
+                    <div class="icon-wrapper glass-subtle pill">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2" ry="2"></rect><line x1="22" y1="12" x2="18" y2="12"></line><line x1="12" y1="2" x2="12" y2="7"></line><line x1="12" y1="17" x2="12" y2="22"></line></svg>
+                    </div>
+                    <h3 class="body-lg-strong">Modular Plugins</h3>
+                    <p class="body-md mute-text">Feature-agnostic core with independent modules for Network, Crashes,
+                        and Sinks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Summary Showcase Section -->
+    <section id="docs-showcase" class="section">
+        <div class="container">
+            <div class="section-header text-center fade-up">
+                <div class="badge glass-subtle pill">Documentation</div>
+                <h2 class="display-xl">Complete Developer <span class="gradient-text">Reference</span></h2>
+                <p class="body-lg mute-text">Everything you need to integrate, configure, and extend AELog in your
+                    Kotlin Multiplatform apps.</p>
+            </div>
+
+            <div class="grid-2 fade-up delay-1">
+                <!-- Getting Started Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Getting Started</h3>
+                        <p class="body-md mute-text mt-2">Learn the minimum dependencies, setup procedures, and complete
+                            a 5-minute integration for Android & iOS platforms.</p>
+                        <a href="docs.html#installation" class="btn-text mt-4">Read Setup Guide →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Custom Configuration Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Custom Configuration</h3>
+                        <p class="body-md mute-text mt-2">Configure custom background threads, thread-safety, custom
+                            capacity limits, and custom diagnostic error streams.</p>
+                        <a href="docs.html#configuration" class="btn-text mt-4">View Configuration Guide →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Custom Plugins Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                            <rect x="9" y="9" width="6" height="6"></rect>
+                            <line x1="9" y1="1" x2="9" y2="4"></line>
+                            <line x1="15" y1="1" x2="15" y2="4"></line>
+                            <line x1="9" y1="20" x2="9" y2="23"></line>
+                            <line x1="15" y1="20" x2="15" y2="23"></line>
+                            <line x1="20" y1="9" x2="23" y2="9"></line>
+                            <line x1="20" y1="15" x2="23" y2="15"></line>
+                            <line x1="1" y1="9" x2="4" y2="9"></line>
+                            <line x1="1" y1="15" x2="4" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Creating Custom Plugins</h3>
+                        <p class="body-md mute-text mt-2">Extend AELog by building decoupled background collectors or
+                            custom interactive UI panels in Compose.</p>
+                        <a href="docs.html#custom-plugins" class="btn-text mt-4">Explore Plugin APIs →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+
+                <!-- Integrations Card -->
+                <div class="glass-panel card-xl magic-card docs-showcase-card">
+                    <div class="docs-showcase-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                    </div>
+                    <div class="docs-showcase-content">
+                        <h3 class="display-sm">Logging Bridges</h3>
+                        <p class="body-md mute-text mt-2">Forward messages seamlessly from third-party ecosystems
+                            including Napier, Kermit, Timber, and Ktor logging.</p>
+                        <a href="docs.html#integrations" class="btn-text mt-4">View Logging Bridges →</a>
+                    </div>
+                    <div class="glow-border"></div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 fade-up delay-2">
+                <a href="docs.html" class="btn btn-primary pill">Visit Full Documentation Portal</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Meet the Developer Section -->
+    <section id="developer" class="section">
+        <div class="container text-center">
+            <div class="section-header fade-up">
+                <div class="badge glass-subtle pill">Meet the Creator</div>
+                <h2 class="display-xl">Behind the <span class="gradient-text">Project</span></h2>
+                <p class="body-lg mute-text">The engineer crafting open-source developer tooling for modern mobile
+                    teams.</p>
+            </div>
+
+            <div class="developer-profile-card glass-panel card-xl magic-card fade-up delay-1">
+                <div class="developer-info">
+                    <h3 class="display-md">
+                        <a href="https://abdo-essam.github.io/" target="_blank"
+                            style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">Abdo
+                            Essam</a>
+                    </h3>
+                    <p class="body-md-strong mute-text">Mobile Infrastructure Engineer & KMP Enthusiast</p>
+                    <p class="body-md developer-bio mt-4">
+                        I build tools that help developers ship faster, cleaner, and with complete confidence. AELog was
+                        born out of the frustration of constantly connecting cables, dealing with bloated IDE consoles,
+                        and fighting with unstable developer overlays. I designed AELog to be a lightweight,
+                        zero-dependency, and deeply extensible companion for Kotlin Multiplatform developers.
+                    </p>
+                    <div class="developer-badges mt-4">
+                        <span class="tech-chip glass-subtle pill">Kotlin</span>
+                        <span class="tech-chip glass-subtle pill">Android</span>
+                        <span class="tech-chip glass-subtle pill">iOS</span>
+                        <span class="tech-chip glass-subtle pill">Compose Multiplatform</span>
+                    </div>
+                    <div class="developer-actions mt-4">
+                        <a href="https://abdo-essam.github.io/" target="_blank" class="btn btn-primary pill">Visit Portfolio</a>
+                        <a href="https://github.com/abdo-essam" target="_blank" class="btn btn-secondary pill glass-subtle">GitHub Profile</a>
+                        <a href="https://github.com/abdo-essam/AELog" target="_blank" class="btn btn-secondary pill glass-subtle">Support AELog</a>
+                    </div>
+                </div>
+                <div class="glow-border"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                            <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+                            <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
+                            <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+                        </svg>
+                        <span class="logo-text">AELog</span>
+                    </a>
+                    <p class="body-sm mute-text mt-4">The enterprise-grade logging and crash tracking library designed
+                        for modern mobile teams.</p>
+                </div>
+                <div class="footer-links">
+                    <h4 class="body-md-strong text-white">Resources</h4>
+                    <ul>
+                        <li><a href="docs.html" class="link-mute">Documentation</a></li>
+                        <li><a href="docs.html" class="link-mute">API Reference</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/tree/main/sample" class="link-mute"
+                                target="_blank">Sample Apps</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4 class="body-md-strong text-white">Community</h4>
+                    <ul>
+                        <li><a href="https://github.com/abdo-essam/AELog" class="link-mute" target="_blank">GitHub
+                                Repo</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/discussions" class="link-mute"
+                                target="_blank">Discussions</a></li>
+                        <li><a href="https://github.com/abdo-essam/AELog/issues" class="link-mute" target="_blank">Issue
+                                Tracker</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4 class="body-md-strong text-white">Legal</h4>
+                    <ul>
+                        <li><a href="https://github.com/abdo-essam/AELog/blob/main/LICENSE" class="link-mute"
+                                target="_blank">Apache 2.0 License</a></li>
+                        <li><a href="privacy.html" class="link-mute">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="body-sm mute-text">© 2026 AELog Contributors. Released under the Apache 2.0 License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/theme.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

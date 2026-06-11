@@ -1,4 +1,4 @@
-﻿package com.ae.log.network.ui.components
+package com.ae.log.network.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -16,16 +16,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /** Horizontally-scrollable monospaced body block with an inline copy button. */
 @Composable
@@ -42,14 +43,14 @@ internal fun NetworkBodySection(
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary,
+                style = LogTheme.typography.labelSmall,
+                color = LogTheme.colors.primary,
             )
             IconButton(onClick = { onCopy(body) }, modifier = Modifier.size(36.dp)) {
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
                     contentDescription = "Copy $label",
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = LogTheme.colors.primary,
                     modifier = Modifier.size(LogSpacing.x4 + 2.dp),
                 )
             }
@@ -59,7 +60,7 @@ internal fun NetworkBodySection(
                 Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(LogSpacing.x2))
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(Color.White)
                     .padding(LogSpacing.x2)
                     .horizontalScroll(rememberScrollState()),
         ) {
@@ -69,7 +70,7 @@ internal fun NetworkBodySection(
                     fontFamily = FontFamily.Monospace,
                     fontSize = 11.sp,
                     lineHeight = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = Color.Black,
                 )
             }
         }

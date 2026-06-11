@@ -1,0 +1,313 @@
+/*
+ * base.css
+ * Design system foundation: CSS custom properties, reset, typography, and utility classes.
+ * Single Source of Truth for all design tokens.
+ */
+
+/* ==========================================================================
+   Design Tokens
+   ========================================================================== */
+:root {
+    /* Surfaces */
+    --color-primary:          #0a0a0c;
+    --color-surface:          #111115;
+    --color-surface-raised:   #1a1a22;
+
+    /* Text */
+    --color-text-primary:     #f0f0f5;
+    --color-text-secondary:   #a0a0b0;
+    --color-text-mute:        #606070;
+
+    /* Borders */
+    --color-border:           rgba(255, 255, 255, 0.08);
+
+    /* Accents */
+    --accent-blue:    #3b82f6;
+    --accent-purple:  #8b5cf6;
+    --accent-cyan:    #06b6d4;
+    --accent-emerald: #10b981;
+    --accent-red:     #ef4444;
+    --accent-yellow:  #f59e0b;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    --gradient-glow:    linear-gradient(90deg, rgba(59,130,246,0.5), rgba(139,92,246,0.5));
+
+    /* Typography */
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Spacing scale */
+    --spacing-xs:  4px;
+    --spacing-sm:  8px;
+    --spacing-md:  16px;
+    --spacing-lg:  24px;
+    --spacing-xl:  32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+    --spacing-4xl: 96px;
+
+    /* Border radii */
+    --radius-sm:   8px;
+    --radius-md:   12px;
+    --radius-lg:   16px;
+    --radius-xl:   24px;
+    --radius-pill: 9999px;
+    --radius-full: 50%;
+
+    /* Elevation */
+    --shadow-soft:  0 8px 32px rgba(0, 0, 0, 0.4);
+    --glow-subtle:  0 0 20px rgba(139, 92, 246, 0.15);
+    --glow-strong:  0 0 40px rgba(139, 92, 246, 0.3);
+
+    /* Semantic color aliases (Single Source of Truth for repeated values) */
+    --color-code-text:          #e2e8f0;
+    --color-code-accent:        #93c5fd;
+    --color-btn-primary-hover:  #e2e2e2;
+    --color-link-primary-hover: #60a5fa;
+    --color-mockup-bg:          #1e1e24;
+
+    /* Accent blue — alpha variants (avoids repeating raw rgba() across CSS files) */
+    --accent-blue-10: rgba(59, 130, 246, 0.10);
+    --accent-blue-12: rgba(59, 130, 246, 0.12);
+    --accent-blue-15: rgba(59, 130, 246, 0.15);
+    --accent-blue-22: rgba(59, 130, 246, 0.22);
+    --accent-blue-25: rgba(59, 130, 246, 0.25);
+}
+
+/* ==========================================================================
+   Light Mode Tokens  (data-theme="light")
+   Only the values that differ from the dark defaults need to be listed here.
+   ========================================================================== */
+[data-theme="light"] {
+    /* Surfaces */
+    --color-primary:         #f0f2f7;
+    --color-surface:         #e8ebf2;
+    --color-surface-raised:  #ffffff;
+
+    /* Text */
+    --color-text-primary:    #0f1117;
+    --color-text-secondary:  #4a4a6a;
+    --color-text-mute:       #8888a8;
+
+    /* Borders */
+    --color-border:          rgba(0, 0, 0, 0.08);
+
+    /* Elevation */
+    --shadow-soft:   0 8px 32px rgba(0, 0, 0, 0.12);
+    --glow-subtle:   0 0 20px rgba(139, 92, 246, 0.08);
+    --glow-strong:   0 0 40px rgba(139, 92, 246, 0.15);
+
+    /* Semantic aliases */
+    --color-code-text:          #1e2233;
+    --color-code-accent:        #2563eb;
+    --color-btn-primary-hover:  #1a1a2e;
+    --color-link-primary-hover: #1d4ed8;
+    --color-mockup-bg:          #f0f2f7;
+
+    /* Accent blue — alpha variants */
+    --accent-blue-10: rgba(59, 130, 246, 0.08);
+    --accent-blue-12: rgba(59, 130, 246, 0.10);
+    --accent-blue-15: rgba(59, 130, 246, 0.13);
+    --accent-blue-22: rgba(59, 130, 246, 0.20);
+    --accent-blue-25: rgba(59, 130, 246, 0.23);
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    background-color: var(--color-primary);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body { overflow-x: hidden; position: relative; }
+
+/* Subtle noise texture overlay */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+a    { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+ul   { list-style: none; }
+img, svg { display: block; max-width: 100%; }
+
+/* ==========================================================================
+   Typography Scale
+   ========================================================================== */
+.display-xxl { font-size: clamp(40px, 5vw, 64px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+.display-xl  { font-size: clamp(32px, 4vw, 48px); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
+.display-lg  { font-size: clamp(28px, 3vw, 40px); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+.display-md  { font-size: clamp(24px, 2.5vw, 32px); font-weight: 600; line-height: 1.3; }
+.body-lg         { font-size: 18px; font-weight: 400; line-height: 1.6; }
+.body-lg-strong  { font-size: 18px; font-weight: 600; line-height: 1.5; }
+.body-md         { font-size: 16px; font-weight: 400; line-height: 1.6; }
+.body-md-strong  { font-size: 16px; font-weight: 500; line-height: 1.5; }
+.body-sm         { font-size: 14px; font-weight: 400; line-height: 1.5; }
+.body-sm-strong  { font-size: 14px; font-weight: 500; line-height: 1.5; }
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+.text-center { text-align: center; }
+.mute-text   { color: var(--color-text-secondary); }
+.text-white  { color: var(--color-text-primary); }
+.mt-1        { margin-top: var(--spacing-xs); }
+.mt-2        { margin-top: var(--spacing-sm); }
+.mt-4        { margin-top: var(--spacing-md); }
+.mt-5        { margin-top: var(--spacing-lg); }
+.mt-6        { margin-top: var(--spacing-xl); }
+
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.link-mute { color: var(--color-text-secondary); font-size: 14px; }
+.link-mute:hover { color: var(--color-text-primary); }
+
+.link-primary { color: var(--accent-blue); font-weight: 500; }
+.link-primary:hover { color: var(--color-link-primary-hover); }
+
+/* ==========================================================================
+   Visibility Utility
+   ========================================================================== */
+/* Use this class from JS instead of style.display — keeps presentation in CSS */
+.is-hidden { display: none !important; }
+
+/* ==========================================================================
+   Theme Toggle Button
+   ========================================================================== */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+    transform: rotate(15deg);
+}
+
+/* ==========================================================================
+   Light Mode — Global Overrides for hard-coded rgba() dark values
+   ========================================================================== */
+
+/* Noise texture: invisible in light mode */
+[data-theme="light"] body::before { opacity: 0.015; }
+
+/* Background grid lines */
+[data-theme="light"] .background-grid {
+    background-image:
+        linear-gradient(to right,  rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
+}
+
+/* Glow orbs — soften significantly in light mode */
+[data-theme="light"] .glow-orb { opacity: 0.12; }
+
+/* ==========================================================================
+   Light Mode Highlight.js (Code Syntax Highlighting) Overrides
+   ========================================================================== */
+[data-theme="light"] pre code.hljs {
+    color: #24292e !important;
+    background: transparent !important; /* Clear atom-one-dark's dark #282c34 bg */
+}
+
+[data-theme="light"] .hljs-comment,
+[data-theme="light"] .hljs-quote {
+    color: #6a737d !important;
+    font-style: italic !important;
+}
+
+[data-theme="light"] .hljs-keyword,
+[data-theme="light"] .hljs-selector-tag,
+[data-theme="light"] .hljs-subst {
+    color: #d73a49 !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="light"] .hljs-number,
+[data-theme="light"] .hljs-literal,
+[data-theme="light"] .hljs-variable,
+[data-theme="light"] .hljs-template-variable,
+[data-theme="light"] .hljs-tag .hljs-attr {
+    color: #005cc5 !important;
+}
+
+[data-theme="light"] .hljs-string,
+[data-theme="light"] .hljs-doctag,
+[data-theme="light"] .hljs-regexp {
+    color: #032f62 !important;
+}
+
+[data-theme="light"] .hljs-title,
+[data-theme="light"] .hljs-title.class_,
+[data-theme="light"] .hljs-title.function_,
+[data-theme="light"] .hljs-section,
+[data-theme="light"] .hljs-selector-id {
+    color: #6f42c1 !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="light"] .hljs-type,
+[data-theme="light"] .hljs-class .hljs-title {
+    color: #6f42c1 !important;
+}
+
+[data-theme="light"] .hljs-built_in,
+[data-theme="light"] .hljs-bullet,
+[data-theme="light"] .hljs-symbol,
+[data-theme="light"] .hljs-meta,
+[data-theme="light"] .hljs-meta .hljs-keyword,
+[data-theme="light"] .hljs-selector-class,
+[data-theme="light"] .hljs-selector-attr,
+[data-theme="light"] .hljs-selector-pseudo,
+[data-theme="light"] .hljs-addition {
+    color: #e36209 !important;
+}
+
+[data-theme="light"] .hljs-deletion {
+    color: #b31d28 !important;
+    background-color: #ffeef0 !important;
+}
+
+[data-theme="light"] .hljs-emphasis {
+    font-style: italic !important;
+}
+
+[data-theme="light"] .hljs-strong {
+    font-weight: bold !important;
+}
+

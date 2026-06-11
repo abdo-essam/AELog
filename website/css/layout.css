@@ -1,0 +1,496 @@
+/*
+ * layout.css
+ * Page-level structural layout: containers, sections, navbar, hero, footer, responsive grid.
+ */
+
+/* ==========================================================================
+   Container & Section
+   ========================================================================== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.container-wide {
+    max-width: 1400px;
+}
+
+.section {
+    padding: var(--spacing-4xl) 0;
+    position: relative;
+}
+
+.dark-band {
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.section-header { margin-bottom: var(--spacing-3xl); }
+
+/* ==========================================================================
+   Background Effects
+   ========================================================================== */
+.background-grid {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    background-size: 50px 50px;
+    background-image:
+        linear-gradient(to right,  rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Applied via JS classList.toggle — keeps presentation in CSS, not inline styles */
+.navbar.scrolled {
+    background: rgba(10, 10, 12, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.logo-icon {
+    color: var(--accent-blue);
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.nav-links { display: flex; gap: var(--spacing-xl); }
+
+.nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.nav-link:hover { color: var(--color-text-primary); }
+
+.nav-link-active {
+    color: var(--color-text-primary) !important;
+    font-weight: 600;
+}
+
+.nav-actions { display: flex; align-items: center; gap: var(--spacing-md); }
+
+.github-stars {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.github-stars:hover { background: rgba(255,255,255,0.1); }
+
+.mobile-menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 24px; height: 24px;
+    position: relative;
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 100%; height: 2px;
+    background: var(--color-text-primary);
+    position: absolute;
+    left: 0;
+    transition: 0.3s;
+}
+
+.mobile-menu-btn span:nth-child(1) { top: 4px; }
+.mobile-menu-btn span:nth-child(2) { top: 11px; }
+.mobile-menu-btn span:nth-child(3) { top: 18px; }
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 100px;
+}
+
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4xl);
+    align-items: center;
+}
+
+.hero-title    { margin-bottom: var(--spacing-md); }
+.hero-subtitle { margin-bottom: var(--spacing-xl); max-width: 90%; }
+
+.hero-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.hero-tech-stack {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: var(--spacing-lg);
+}
+
+.hero-tech-stack p { margin-bottom: var(--spacing-md); }
+
+.tech-logos { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); }
+
+.tech-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+/* ==========================================================================
+   Grid Utilities
+   ========================================================================== */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-xl);
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2xl);
+}
+
+@media (max-width: 900px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-3 {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+}
+
+/* ==========================================================================
+   Open Source Section
+   ========================================================================== */
+.open-source-container { max-width: 900px; margin: 0 auto; }
+
+.github-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-2xl);
+    margin: var(--spacing-3xl) 0;
+}
+
+.stat-card {
+    text-align: center;
+    padding: var(--spacing-xl) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-md);
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+    background: var(--gradient-primary);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.stat-svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.2;
+}
+
+.stat-heading { margin-bottom: var(--spacing-sm); }
+
+[data-theme="light"] .stat-icon-wrapper {
+    background: rgba(139, 92, 246, 0.08);
+}
+
+.open-source-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.footer {
+    background: var(--color-primary);
+    padding: var(--spacing-4xl) 0 var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--spacing-2xl);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.footer-links h4 { margin-bottom: var(--spacing-lg); }
+
+.footer-links ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.footer-bottom {
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 992px) {
+    .hero-container { grid-template-columns: 1fr; }
+    .hero-content   { text-align: center; }
+    .hero-subtitle  { margin: 0 auto var(--spacing-xl); }
+    .hero-actions   { justify-content: center; }
+    .tech-logos     { justify-content: center; }
+    .grid-3         { grid-template-columns: 1fr; }
+    .footer-grid    { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+    .nav-links, .nav-actions .btn { display: none; }
+    .mobile-menu-btn              { display: block; }
+
+    .github-stats  { grid-template-columns: 1fr; gap: var(--spacing-lg); }
+    .stat-divider  { width: 100%; height: 1px; }
+    .footer-grid   { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Vertical Timeline Component
+   ========================================================================== */
+.timeline-section {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--color-border);
+}
+
+.timeline-container {
+    position: relative;
+    max-width: 900px;
+    margin: var(--spacing-3xl) auto 0;
+    padding-left: 60px;
+}
+
+.timeline-progress-line {
+    position: absolute;
+    left: 19px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.timeline-progress-fill {
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple), var(--accent-red));
+    border-radius: inherit;
+    transition: height 0.1s ease-out;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: var(--spacing-4xl);
+}
+
+.timeline-bullet-wrapper {
+    position: absolute;
+    left: -60px;
+    top: 20px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.timeline-bullet {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    z-index: 5;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-item.active .timeline-bullet {
+    border-color: var(--accent-purple);
+    background: var(--accent-purple);
+    box-shadow: 0 0 12px var(--accent-purple);
+    transform: scale(1.2);
+}
+
+.timeline-content {
+    padding: var(--spacing-xl);
+    transform: translateY(30px);
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-item.visible .timeline-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.timeline-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-primary);
+}
+
+.timeline-date {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    margin-left: 8px;
+}
+
+.timeline-media {
+    margin-top: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    max-width: 480px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timeline-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.timeline-content:hover .timeline-img {
+    transform: scale(1.04);
+}
+
+@media (max-width: 768px) {
+    .timeline-container {
+        padding-left: 40px;
+    }
+    .timeline-progress-line {
+        left: 9px;
+    }
+    .timeline-bullet-wrapper {
+        left: -40px;
+        width: 30px;
+    }
+}
+
+/* ==========================================================================
+   Light Mode Layout Overrides
+   ========================================================================== */
+
+[data-theme="light"] .navbar {
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .navbar.scrolled {
+    background: rgba(240, 242, 247, 0.88);
+}
+
+[data-theme="light"] .hero-tech-stack {
+    border-top-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .stat-divider {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .timeline-progress-line {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .timeline-bullet {
+    background: var(--color-surface);
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .timeline-media {
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .timeline-section {
+    border-top-color: var(--color-border);
+}
+
+[data-theme="light"] .dark-band {
+    background-color: var(--color-surface);
+    border-top-color: var(--color-border);
+    border-bottom-color: var(--color-border);
+}
+
+

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Usage: ./scripts/publish.sh 1.0.0
+# Usage: ./scripts/publish.sh 1.1.7
 
 VERSION=${1:?Usage: ./scripts/publish.sh <version>}
 
@@ -38,7 +38,8 @@ echo "🧪 Running tests..."
 # Clean iOS build dir manually to avoid Gradle symlink/configuration cache issues.
 # This must happen BEFORE gradlew starts.
 rm -rf sample/iosApp/build
-./gradlew clean check allTests
+./gradlew clean
+./gradlew check allTests
 
 # 6. Verify API compatibility
 echo "🔍 Checking API compatibility..."

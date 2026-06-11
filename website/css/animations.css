@@ -1,0 +1,135 @@
+/*
+ * animations.css
+ * All motion: scroll-reveal fade-up, glow orbs, SVG pulse keyframes, transition delays.
+ */
+
+/* ==========================================================================
+   Glow Orbs
+   ========================================================================== */
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.orb-primary {
+    top: -10%; left: -5%;
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, var(--accent-blue), transparent 60%);
+}
+
+.orb-secondary {
+    top: 20%; right: -10%;
+    width: 40vw; height: 40vw;
+    background: radial-gradient(circle, var(--accent-purple), transparent 60%);
+}
+
+/* ==========================================================================
+   Scroll Reveal
+   ========================================================================== */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+        opacity   0.8s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+
+/* ==========================================================================
+   SVG Diagram Pulse
+   ========================================================================== */
+@keyframes pulse {
+    0%   { filter: drop-shadow(0 0 5px  rgba(139, 92, 246, 0.5)); }
+    100% { filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.8)); }
+}
+
+.glow-border-svg {
+    stroke: url(#lineGrad);
+    stroke-width: 2;
+    filter: url(#glow);
+    animation: pulse 3s infinite alternate;
+}
+
+/* ==========================================================================
+   Layout Text Flip (Aceternity UI FlipWords Port)
+   ========================================================================== */
+.text-flip-container {
+    display: inline-block;
+    position: relative;
+    vertical-align: bottom;
+    height: 1.25em; /* Raised slightly to prevent vertical descender clipping (e.g. g, p, y) */
+    overflow: hidden;
+    margin: 0 2px 0 -4px; /* Offset left margin to align padded text perfectly */
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-flip-word {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    color: var(--accent-purple); /* Solid premium color to bypass Chromium text-clip fading render bugs */
+    font-weight: 700;
+    padding: 0 6px; /* Added horizontal padding to prevent edge glyph clipping */
+}
+
+.text-flip-word.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.text-flip-word.exit {
+    opacity: 0;
+    transform: translateY(-14px);
+}
+
+/* ==========================================================================
+   Aurora Text Animation (Magic UI Port)
+   ========================================================================== */
+.aurora-text {
+    background: linear-gradient(
+        90deg,
+        #3b82f6 0%,   /* Neon Blue */
+        #a855f7 25%,  /* Electric Purple */
+        #ec4899 50%,  /* Coral Pink */
+        #10b981 75%,  /* Emerald Green */
+        #3b82f6 100%  /* Loop back to Blue */
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    animation: aurora-flow 8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes aurora-flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+

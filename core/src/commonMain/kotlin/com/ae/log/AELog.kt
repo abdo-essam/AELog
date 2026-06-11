@@ -1,51 +1,98 @@
 package com.ae.log
 
-import com.ae.log.config.LogConfig
-import com.ae.log.event.EventBus
-import com.ae.log.plugin.Lifecycle
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginManager
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.jvm.JvmStatic
 
 public object AELog {
     @PublishedApi
-    internal val instanceAtomic: AtomicRef<LogInspector?> = atomic<LogInspector?>(null)
+    internal val instanceAtomic: AtomicRef<LogInspector?> = atomic(null)
 
     @PublishedApi
     internal val instance: LogInspector? get() = instanceAtomic.value
 
-    public val config: LogConfig? get() = instance?.config
-
+    /**
+     * Installs a new plugin into AELog.
+     *
+     * Use this to add a brand-new feature or custom plugin that doesn't exist
+     * in AELog by default — for example, a custom database viewer or live
+     * metrics tab:
+     * ```kotlin
+     * AELog.install(MyDatabasePlugin())
+     * AELog.install(LiveMetricsPlugin())
+     * ```
+     *
+     * Safe to call from multiple threads concurrently.
+     */
     @JvmStatic
-    public fun init(
-        vararg plugins: Plugin,
-        config: LogConfig = LogConfig(),
-    ) {
-        // Fast-path: already initialized
-        if (instanceAtomic.value != null) return
-        // Construct and install only if we win the CAS
-        val newInstance = LogInspector(config)
-        if (instanceAtomic.compareAndSet(null, newInstance)) {
-            plugins.forEach { newInstance.plugins.install(it) }
-        }
-        // If CAS lost, newInstance is abandoned — its SupervisorJob
-        // has no children yet, so it is immediately eligible for GC.
+    public fun install(plugin: Plugin) {
+        // Capture a single stable reference: create if absent, then use that exact instance.
+        // Avoids a TOCTOU race on iOS/Native where a second read of instanceAtomic.value
+        // could see a stale null after a successful CAS.
+        val inspector =
+            instanceAtomic.value
+                ?: run {
+                    val new = LogInspector()
+                    if (instanceAtomic.compareAndSet(null, new)) new else instanceAtomic.value!!
+                }
+        inspector.plugins.install(plugin)
     }
 
     @JvmStatic public fun export(): String = instance?.export() ?: ""
 
     @JvmStatic public fun clearAll(): Unit = instance?.clearAll() ?: Unit
 
-    private val enabledAtomic = atomic(true)
+    private val enabledStateFlow = MutableStateFlow(true)
 
     @JvmStatic
     public var isEnabled: Boolean
-        get() = enabledAtomic.value
+        get() = enabledStateFlow.value
         set(value) {
-            enabledAtomic.value = value
+            enabledStateFlow.value = value
         }
+
+    internal val isEnabledFlow: kotlinx.coroutines.flow.StateFlow<Boolean> =
+        enabledStateFlow.asStateFlow()
+
+    private val showNotchStateFlow = MutableStateFlow(true)
+
+    @JvmStatic
+    public var showNotch: Boolean
+        get() = showNotchStateFlow.value
+        set(value) {
+            showNotchStateFlow.value = value
+        }
+
+    internal val showNotchFlow: kotlinx.coroutines.flow.StateFlow<Boolean> =
+        showNotchStateFlow.asStateFlow()
+
+    /**
+     * Programmatically opens the AELog overlay panel.
+     *
+     * Can be called from anywhere — no composable context needed.
+     * Has no effect if no [AELogOverlay] is active in the UI.
+     *
+     * ```kotlin
+     * // From a shake gesture, debug menu, etc.
+     * AELog.show()
+     * ```
+     */
+    @JvmStatic
+    public fun show() {
+        instance?.overlayVisible?.value = true
+    }
+
+    /**
+     * Programmatically closes the AELog overlay panel.
+     */
+    @JvmStatic
+    public fun hide() {
+        instance?.overlayVisible?.value = false
+    }
 
     public inline fun <reified T : Plugin> getPlugin(): T? = instance?.plugins?.getPlugin(T::class)
 
@@ -60,22 +107,29 @@ public object AELog {
      */
     @AELogTestApi
     public fun resetForTesting() {
-        val current = instanceAtomic.value ?: return
-        current.lifecycle.notifyStop()
-        current.plugins.uninstallAll()
-        instanceAtomic.value = null
-        enabledAtomic.value = true
+        val current = instanceAtomic.value
+        if (current != null) {
+            current.plugins.uninstallAll()
+            current.overlayVisible.value = false
+            instanceAtomic.value = null
+        }
+        enabledStateFlow.value = true
+        showNotchStateFlow.value = true
     }
 }
 
-public class LogInspector internal constructor(
-    internal val config: LogConfig,
-) {
-    internal val eventBus: EventBus = EventBus()
-
+@PublishedApi
+internal class LogInspector internal constructor() {
     @PublishedApi
-    internal val plugins: PluginManager = PluginManager(config, eventBus)
-    internal val lifecycle: Lifecycle = Lifecycle(plugins, eventBus)
+    internal val plugins: PluginManager = PluginManager()
+
+    /**
+     * Backing state for the overlay panel visibility.
+     *
+     * Written by [AELog.show] / [AELog.hide] and observed by
+     * [com.ae.log.ui.AELogOverlay] via [LogController].
+     */
+    internal val overlayVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     internal fun export(): String {
         val sb = StringBuilder()
@@ -85,5 +139,5 @@ public class LogInspector internal constructor(
         return sb.toString().trim()
     }
 
-    internal fun clearAll(): Unit = lifecycle.clearAll()
+    internal fun clearAll() = plugins.forEach { it.onClear() }
 }

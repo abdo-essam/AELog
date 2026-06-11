@@ -1,0 +1,216 @@
+/*
+ * architecture.css
+ * SVG interactive diagram, info panel, node styles, and layer labels.
+ */
+
+/* ==========================================================================
+   Architecture Section Layout
+   ========================================================================== */
+.architecture-section { position: relative; }
+
+.architecture-diagram {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    align-items: stretch;
+    min-height: 550px;
+}
+
+@media (max-width: 992px) {
+    .architecture-diagram { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   SVG Diagram
+   ========================================================================== */
+.diagram-svg {
+    width: 100%;
+    height: auto;
+    min-height: 500px;
+    display: block;
+    align-self: center;
+}
+
+/* Node base styles */
+.node-bg {
+    fill: rgba(30, 30, 36, 0.8);
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 1;
+}
+
+.node-border {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 1.5;
+}
+
+.node-title {
+    fill: #fff;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.node-subtitle {
+    fill: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+}
+
+.sub-node {
+    fill: rgba(255, 255, 255, 0.05);
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 1;
+}
+
+/* Interactive node hover */
+.interactive-node { cursor: pointer; }
+
+.interactive-node:hover .node-border {
+    stroke: var(--accent-blue);
+    stroke-width: 2px;
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+}
+
+/* Diagram layer labels */
+.layer-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    fill: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Info Panel
+   ========================================================================== */
+.arch-info-panel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 10, 12, 0.45);
+    border: 1px solid var(--color-border);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.arch-info-panel h4 {
+    color: var(--accent-blue);
+    margin-bottom: 8px;
+}
+
+.arch-info-panel pre {
+    margin-top: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #e2e8f0;
+    overflow-x: auto;
+}
+
+.arch-panel-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   Architecture Features Grid (below diagram)
+   ========================================================================== */
+.architecture-features {
+    margin-top: var(--spacing-3xl);
+}
+
+/* ==========================================================================
+   Light Mode Architecture Overrides
+   ========================================================================== */
+
+[data-theme="light"] .node-bg {
+    fill: rgba(255, 255, 255, 0.85);
+    stroke: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .node-border {
+    stroke: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .node-title {
+    fill: #0f1117;
+}
+
+[data-theme="light"] .node-subtitle {
+    fill: #4a4a6a;
+}
+
+[data-theme="light"] .sub-node {
+    fill: rgba(0, 0, 0, 0.04);
+    stroke: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .layer-label {
+    fill: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] .arch-info-panel {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .arch-info-panel pre {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-code-text);
+}
+
+/* Connection lines responsive stroke */
+.diagram-svg path,
+.diagram-svg line {
+    transition: stroke 0.3s ease;
+}
+
+[data-theme="light"] .diagram-svg path:not([stroke="#3b82f6"]):not([stroke="url(#lineGrad)"]),
+[data-theme="light"] .diagram-svg line:not([stroke="#3b82f6"]):not([stroke="url(#lineGrad)"]) {
+    stroke: rgba(15, 17, 23, 0.22);
+}
+}
+[data-theme="light"] .diagram-svg path[stroke-dasharray="4,4"] {
+    stroke: rgba(15, 17, 23, 0.45);
+}
+
+/* Network Highlight Subsystem Styling */
+.network-highlight .node-border {
+    stroke: rgba(59, 130, 246, 0.65) !important;
+    stroke-width: 2px !important;
+}
+[data-theme="light"] .network-highlight .node-border {
+    stroke: rgba(29, 78, 216, 0.65) !important;
+}
+.network-highlight .node-title {
+    fill: #60a5fa !important;
+}
+[data-theme="light"] .network-highlight .node-title {
+    fill: #1d4ed8 !important;
+}
+.network-highlight .sub-node {
+    stroke: rgba(59, 130, 246, 0.35) !important;
+}
+
+.node-subtitle-sm {
+    font-size: 11px !important;
+}

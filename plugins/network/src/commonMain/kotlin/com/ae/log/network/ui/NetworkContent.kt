@@ -1,4 +1,4 @@
-﻿
+
 package com.ae.log.network.ui
 
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -60,6 +60,14 @@ internal fun NetworkContent(
             }
         }
 
+    val onCopyAllEvent =
+        remember(clipboard, entries) {
+            {
+                val text = entries.joinToString(separator = "\n\n---\n\n") { it.toClipboardText() }
+                clipboard.setText(AnnotatedString(text))
+            }
+        }
+
     LogList(
         items = entries,
         itemLabel = "requests",
@@ -73,7 +81,7 @@ internal fun NetworkContent(
             viewModel.setFilter(newFilter)
         },
         onClearAll = { viewModel.clear() },
-        onCopyAll = null,
+        onCopyAll = onCopyAllEvent,
         emptyMessage = "No requests recorded yet",
         emptyQueryMessage = "No results for \"$query\"",
         listState = listState,

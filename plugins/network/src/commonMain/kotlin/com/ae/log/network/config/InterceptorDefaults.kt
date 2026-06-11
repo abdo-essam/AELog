@@ -37,6 +37,7 @@ public object InterceptorDefaults {
             "Accept-Language",
             "Connection",
             "Content-Type",
+            "Content-Length",
             "Host",
             "User-Agent",
             // Noisy system response headers
@@ -52,6 +53,7 @@ public object InterceptorDefaults {
             "X-Frame-Options",
             "X-Powered-By",
             "X-XSS-Protection",
+            "content-disposition",
         )
 
     /**

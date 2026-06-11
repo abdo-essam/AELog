@@ -2,9 +2,9 @@ package com.ae.log.network
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.network.storage.NetworkStorage
 import com.ae.log.network.ui.NetworkContent
 import com.ae.log.network.ui.NetworkViewModel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  *
  * ## Installation
  * ```kotlin
- * AELog.init(NetworkPlugin())
+ * AELog.configure { plugin(NetworkPlugin()) }
  * ```
  *
  * ## Recording — Ktor (zero boilerplate)
@@ -50,17 +50,15 @@ import kotlinx.coroutines.launch
  * recorder.response(id, statusCode = 200, durationMs = elapsed)
  * ```
  */
-public class NetworkPlugin(
-    maxEntries: Int = 200,
-) : UIPlugin {
+public class NetworkPlugin : UIPlugin {
     override val id: String = ID
     override val name: String = "Network"
-    override val icon: ImageVector = Icons.Default.Wifi
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Wifi, contentDescription = null) }
 
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    private val storage = NetworkStorage(capacity = maxEntries)
+    internal val storage = NetworkStorage(capacity = 200)
 
     @kotlin.concurrent.Volatile private var viewModel: NetworkViewModel? = null
 

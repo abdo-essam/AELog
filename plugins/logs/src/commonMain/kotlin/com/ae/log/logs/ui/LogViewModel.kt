@@ -1,9 +1,9 @@
-﻿package com.ae.log.logs.ui
+package com.ae.log.logs.ui
 
-import com.ae.log.logs.LogStorage
 import com.ae.log.logs.model.LogEntry
 import com.ae.log.logs.model.LogSeverityFilter
 import com.ae.log.logs.model.LogSeverityFilters
+import com.ae.log.logs.storage.LogStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,7 +24,7 @@ internal class LogViewModel(
 
     val filteredLogs: StateFlow<List<LogEntry>> =
         combine(
-            logStorage.dataFlow,
+            logStorage.entries,
             _searchQuery,
             _selectedFilter,
         ) { logs: List<LogEntry>, query: String, filter: LogSeverityFilter ->

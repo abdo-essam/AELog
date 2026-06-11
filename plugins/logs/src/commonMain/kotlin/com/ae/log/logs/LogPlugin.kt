@@ -1,22 +1,19 @@
-﻿package com.ae.log.logs
+package com.ae.log.logs
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.ae.log.logs.model.LogEntry
 import com.ae.log.logs.model.LogSeverity
+import com.ae.log.logs.storage.LogStorage
 import com.ae.log.logs.ui.LogContent
 import com.ae.log.logs.ui.LogViewModel
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
-import com.ae.log.storage.PluginStorage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
-public typealias LogStorage = PluginStorage<LogEntry>
 
 /**
  * Built-in logs plugin for AELog.
@@ -25,7 +22,7 @@ public typealias LogStorage = PluginStorage<LogEntry>
  *
  * ## Installation
  * ```kotlin
- * AELog.init(LogPlugin())
+ * AELog.configure { plugin(LogPlugin()) }
  * ```
  *
  * ## Logging
@@ -38,26 +35,23 @@ public typealias LogStorage = PluginStorage<LogEntry>
  * AELog.log.wtf("MyTag", "Should never happen", throwable)
  * ```
  *
- * All calls are **silent no-ops** if [AELog.init] has not been called yet.
+ * All calls are **silent no-ops** if [AELog.configure] has not been called yet.
  */
-public class LogPlugin(
-    public val maxEntries: Int = 500,
-    public val minSeverity: LogSeverity = LogSeverity.VERBOSE,
-    public val platformLogSink: PlatformLogSink = PlatformLogSink.Default,
-) : UIPlugin,
+public class LogPlugin :
+    UIPlugin,
     LogRecordSink {
     override val id: String = ID
     override val name: String = "Logs"
-    override val icon: ImageVector = Icons.Default.Description
+    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Description, contentDescription = null) }
 
-    internal val logStorage = PluginStorage<LogEntry>(capacity = maxEntries)
+    internal val logStorage = LogStorage(capacity = 500)
 
     /** Public write API — use this to send logs directly to the viewer. */
     public val recorder: LogRecorder =
         LogRecorder(
             storage = logStorage,
-            minSeverity = minSeverity,
-            platformLogSink = platformLogSink,
+            minSeverity = LogSeverity.VERBOSE,
+            platformLogSink = PlatformLogSink.Default,
         )
 
     private val _badgeCount = MutableStateFlow(0)
@@ -69,7 +63,7 @@ public class LogPlugin(
         viewModel = LogViewModel(logStorage = logStorage, scope = context.scope)
 
         context.scope.launch {
-            logStorage.dataFlow.collect { logs ->
+            logStorage.entries.collect { logs ->
                 _badgeCount.value = logs.size
             }
         }
@@ -100,7 +94,7 @@ public class LogPlugin(
     }
 
     override fun export(): String =
-        logStorage.dataFlow.value.joinToString("\n") { log ->
+        logStorage.entries.value.joinToString("\n") { log ->
             "[${log.severity.label}] ${log.tag}: ${log.message}"
         }
 

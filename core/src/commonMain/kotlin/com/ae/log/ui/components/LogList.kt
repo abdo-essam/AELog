@@ -13,8 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 public fun <T> LogList(
@@ -35,72 +37,77 @@ public fun <T> LogList(
     modifier: Modifier = Modifier,
     itemContent: @Composable (index: Int, item: T) -> Unit,
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        LogHeader(
-            itemCount = items.size,
-            itemLabel = itemLabel,
-            onClearAll = onClearAll,
-            actions = {
-                if (onCopyAll != null) {
-                    Button(
-                        onClick = onCopyAll,
-                        contentPadding = PaddingValues(horizontal = LogSpacing.x3, vertical = LogSpacing.x1),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy all",
-                            modifier = Modifier.size(LogSpacing.x4),
-                        )
-                        Spacer(modifier = Modifier.width(LogSpacing.x1))
-                        Text("Copy All", style = MaterialTheme.typography.labelSmall)
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val isCompactHeight = maxHeight < 480.dp
+        val spacing = if (isCompactHeight) LogSpacing.x1_5 else LogSpacing.x3
+
+        Column(modifier = Modifier.fillMaxSize()) {
+            LogHeader(
+                itemCount = items.size,
+                itemLabel = itemLabel,
+                onClearAll = onClearAll,
+                actions = {
+                    if (onCopyAll != null) {
+                        TextButton(
+                            onClick = onCopyAll,
+                            contentPadding = PaddingValues(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = "Copy all",
+                                modifier = Modifier.size(LogSpacing.x4),
+                            )
+                            Spacer(modifier = Modifier.width(LogSpacing.x1))
+                            Text("Copy All", style = LogTheme.typography.labelSmall)
+                        }
                     }
-                }
-            },
-        )
+                },
+            )
 
-        Spacer(modifier = Modifier.height(LogSpacing.x3))
+            Spacer(modifier = Modifier.height(spacing))
 
-        LogSearchBar(
-            query = searchQuery,
-            onQueryChange = onSearchChange,
-            placeholder = searchPlaceholder,
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
+            LogSearchBar(
+                query = searchQuery,
+                onQueryChange = onSearchChange,
+                placeholder = searchPlaceholder,
+                modifier = Modifier.padding(horizontal = LogSpacing.x5),
+            )
 
-        Spacer(modifier = Modifier.height(LogSpacing.x3))
+            Spacer(modifier = Modifier.height(spacing))
 
-        LogFilterChips(
-            labels = filterLabels,
-            selectedIndex = selectedFilterIndex,
-            onSelect = onFilterSelect,
-            modifier = Modifier.padding(horizontal = LogSpacing.x5),
-        )
+            LogFilterChips(
+                labels = filterLabels,
+                selectedIndex = selectedFilterIndex,
+                onSelect = onFilterSelect,
+                modifier = Modifier.padding(horizontal = LogSpacing.x5),
+            )
 
-        Spacer(modifier = Modifier.height(LogSpacing.x3))
+            Spacer(modifier = Modifier.height(spacing))
 
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            if (items.isEmpty()) {
-                val msg = if (searchQuery.isNotEmpty()) emptyQueryMessage else emptyMessage
-                EmptyPlaceholder(msg)
-            } else {
-                Card(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = LogSpacing.x5),
-                    shape = RoundedCornerShape(LogSpacing.x3),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                ) {
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = LogSpacing.x2),
+            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                if (items.isEmpty()) {
+                    val msg = if (searchQuery.isNotEmpty()) emptyQueryMessage else emptyMessage
+                    EmptyPlaceholder(msg)
+                } else {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = LogSpacing.x5),
+                        shape = RoundedCornerShape(LogSpacing.x3),
+                        colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
                     ) {
-                        itemsIndexed(items = items, key = { _, i -> itemKey(i) }) { index, item ->
-                            itemContent(index, item)
-                            if (index < items.lastIndex) {
-                                HorizontalDivider(
-                                    modifier = Modifier.padding(horizontal = LogSpacing.x3),
-                                    color = MaterialTheme.colorScheme.outlineVariant,
-                                    thickness = LogDimens.listDividerThickness,
-                                )
+                        LazyColumn(
+                            state = listState,
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = LogSpacing.x2),
+                        ) {
+                            itemsIndexed(items = items, key = { _, i -> itemKey(i) }) { index, item ->
+                                itemContent(index, item)
+                                if (index < items.lastIndex) {
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(horizontal = LogSpacing.x3),
+                                        color = LogTheme.colors.outlineVariant,
+                                        thickness = LogDimens.listDividerThickness,
+                                    )
+                                }
                             }
                         }
                     }
@@ -115,8 +122,8 @@ public fun EmptyPlaceholder(message: String) {
     Box(Modifier.fillMaxSize().padding(LogSpacing.x8), Alignment.Center) {
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = LogTheme.typography.bodyMedium,
+            color = LogTheme.colors.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
     }
@@ -124,7 +131,7 @@ public fun EmptyPlaceholder(message: String) {
 
 @Composable
 public fun ExpandedDetails(
-    bgColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    bgColor: Color = LogTheme.colors.surfaceVariant,
     onCopy: () -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -149,14 +156,14 @@ public fun ExpandedDetails(
                 Icon(
                     imageVector = Icons.Default.ContentCopy,
                     contentDescription = "Copy",
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = LogTheme.colors.primary,
                     modifier = Modifier.size(LogSpacing.x4),
                 )
                 Spacer(modifier = Modifier.width(LogSpacing.x1))
                 Text(
                     text = "Copy",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    style = LogTheme.typography.labelSmall,
+                    color = LogTheme.colors.primary,
                 )
             }
         }

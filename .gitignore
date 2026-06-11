@@ -63,3 +63,11 @@ playground.xcworkspace
 # Xcode workspace user data (keep contents.xcworkspacedata)
 sample/iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
 sample/iosApp/iosApp.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
+# Node.js
+node_modules/
+**/node_modules/
+scripts/node_modules/
+package-lock.json
+*.log
+
