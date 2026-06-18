@@ -2,31 +2,17 @@ public final class com/ae/log/AELog {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/AELog;
 	public static final fun clearAll ()V
-	public static final fun configure (Lkotlin/jvm/functions/Function1;)V
 	public static final fun export ()Ljava/lang/String;
 	public final fun getInstance ()Lcom/ae/log/LogInspector;
 	public final fun getInstanceAtomic ()Lkotlinx/atomicfu/AtomicRef;
+	public static final fun getShowNotch ()Z
 	public static final fun hide ()V
 	public static final fun install (Lcom/ae/log/plugin/Plugin;)V
 	public static final fun isEnabled ()Z
 	public final fun resetForTesting ()V
 	public static final fun setEnabled (Z)V
+	public static final fun setShowNotch (Z)V
 	public static final fun show ()V
-}
-
-public final class com/ae/log/AELogBuilder {
-	public static final field $stable I
-	public fun <init> ()V
-	public final fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
-	public final fun getEnabled ()Z
-	public final fun getErrorHandler ()Lkotlin/jvm/functions/Function1;
-	public final fun getPlugins ()Ljava/util/List;
-	public final fun getShowNotch ()Z
-	public final fun plugin (Lcom/ae/log/plugin/Plugin;)V
-	public final fun setDispatcher (Lkotlinx/coroutines/CoroutineDispatcher;)V
-	public final fun setEnabled (Z)V
-	public final fun setErrorHandler (Lkotlin/jvm/functions/Function1;)V
-	public final fun setShowNotch (Z)V
 }
 
 public abstract interface annotation class com/ae/log/AELogTestApi : java/lang/annotation/Annotation {
@@ -38,26 +24,6 @@ public abstract interface annotation class com/ae/log/InternalAELogApi : java/la
 public final class com/ae/log/LogInspector {
 	public static final field $stable I
 	public final fun getPlugins ()Lcom/ae/log/plugin/PluginManager;
-}
-
-public final class com/ae/log/config/LogConfig {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun <init> (ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;Z)V
-	public synthetic fun <init> (ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Z
-	public final fun component2 ()Lkotlinx/coroutines/CoroutineDispatcher;
-	public final fun component3 ()Lkotlin/jvm/functions/Function1;
-	public final fun component4 ()Z
-	public final fun copy (ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;Z)Lcom/ae/log/config/LogConfig;
-	public static synthetic fun copy$default (Lcom/ae/log/config/LogConfig;ZLkotlinx/coroutines/CoroutineDispatcher;Lkotlin/jvm/functions/Function1;ZILjava/lang/Object;)Lcom/ae/log/config/LogConfig;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDispatcher ()Lkotlinx/coroutines/CoroutineDispatcher;
-	public final fun getEnabled ()Z
-	public final fun getErrorHandler ()Lkotlin/jvm/functions/Function1;
-	public final fun getShowNotch ()Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/ae/log/plugin/ComposableSingletons$UIPluginKt {
@@ -73,7 +39,6 @@ public abstract interface class com/ae/log/plugin/Plugin {
 	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
 	public fun onDetach ()V
-	public fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;)V
 }
 
 public final class com/ae/log/plugin/Plugin$DefaultImpls {
@@ -82,11 +47,9 @@ public final class com/ae/log/plugin/Plugin$DefaultImpls {
 	public static fun onAttach (Lcom/ae/log/plugin/Plugin;Lcom/ae/log/plugin/PluginContext;)V
 	public static fun onClear (Lcom/ae/log/plugin/Plugin;)V
 	public static fun onDetach (Lcom/ae/log/plugin/Plugin;)V
-	public static fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;Lcom/ae/log/plugin/Plugin;)V
 }
 
 public abstract interface class com/ae/log/plugin/PluginContext {
-	public abstract fun getConfig ()Lcom/ae/log/config/LogConfig;
 	public abstract fun getPlugin (Lkotlin/reflect/KClass;)Lcom/ae/log/plugin/Plugin;
 	public abstract fun getScope ()Lkotlinx/coroutines/CoroutineScope;
 }
@@ -126,7 +89,6 @@ public final class com/ae/log/plugin/UIPlugin$DefaultImpls {
 	public static fun onAttach (Lcom/ae/log/plugin/UIPlugin;Lcom/ae/log/plugin/PluginContext;)V
 	public static fun onClear (Lcom/ae/log/plugin/UIPlugin;)V
 	public static fun onDetach (Lcom/ae/log/plugin/UIPlugin;)V
-	public static fun onMigrateFrom (Lcom/ae/log/plugin/UIPlugin;Lcom/ae/log/plugin/Plugin;)V
 }
 
 public final class com/ae/log/storage/InMemoryPluginStorage : com/ae/log/storage/PluginStorage {
@@ -213,6 +175,32 @@ public abstract interface class com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public abstract fun Overlay (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
+public final class com/ae/log/ui/theme/LogColors {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/ui/theme/LogColors;
+	public final fun getBackground-0d7_KjU ()J
+	public final fun getError-0d7_KjU ()J
+	public final fun getErrorContainer-0d7_KjU ()J
+	public final fun getInverseOnSurface-0d7_KjU ()J
+	public final fun getInverseSurface-0d7_KjU ()J
+	public final fun getOnBackground-0d7_KjU ()J
+	public final fun getOnError-0d7_KjU ()J
+	public final fun getOnErrorContainer-0d7_KjU ()J
+	public final fun getOnPrimary-0d7_KjU ()J
+	public final fun getOnPrimaryContainer-0d7_KjU ()J
+	public final fun getOnSecondary-0d7_KjU ()J
+	public final fun getOnSurface-0d7_KjU ()J
+	public final fun getOnSurfaceVariant-0d7_KjU ()J
+	public final fun getOutline-0d7_KjU ()J
+	public final fun getOutlineVariant-0d7_KjU ()J
+	public final fun getPrimary-0d7_KjU ()J
+	public final fun getPrimaryContainer-0d7_KjU ()J
+	public final fun getScrim-0d7_KjU ()J
+	public final fun getSecondary-0d7_KjU ()J
+	public final fun getSurface-0d7_KjU ()J
+	public final fun getSurfaceVariant-0d7_KjU ()J
+}
+
 public final class com/ae/log/ui/theme/LogDimens {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/theme/LogDimens;
@@ -235,6 +223,24 @@ public final class com/ae/log/ui/theme/LogSpacing {
 	public final fun getX5-D9Ej5fM ()F
 	public final fun getX6-D9Ej5fM ()F
 	public final fun getX8-D9Ej5fM ()F
+}
+
+public final class com/ae/log/ui/theme/LogTheme {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/ui/theme/LogTheme;
+	public final fun getColors ()Lcom/ae/log/ui/theme/LogColors;
+	public final fun getTypography ()Lcom/ae/log/ui/theme/LogTypography;
+}
+
+public final class com/ae/log/ui/theme/LogTypography {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/ui/theme/LogTypography;
+	public final fun getBodyLarge ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getBodySmall ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLabelLarge ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLabelMedium ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getLabelSmall ()Landroidx/compose/ui/text/TextStyle;
 }
 
 public final class com/ae/log/utils/CallerTagKt {

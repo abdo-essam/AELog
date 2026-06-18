@@ -177,3 +177,40 @@
     background: rgba(0, 0, 0, 0.04);
     color: var(--color-code-text);
 }
+
+/* Connection lines responsive stroke */
+.diagram-svg path,
+.diagram-svg line {
+    transition: stroke 0.3s ease;
+}
+
+[data-theme="light"] .diagram-svg path:not([stroke="#3b82f6"]):not([stroke="url(#lineGrad)"]),
+[data-theme="light"] .diagram-svg line:not([stroke="#3b82f6"]):not([stroke="url(#lineGrad)"]) {
+    stroke: rgba(15, 17, 23, 0.22);
+}
+}
+[data-theme="light"] .diagram-svg path[stroke-dasharray="4,4"] {
+    stroke: rgba(15, 17, 23, 0.45);
+}
+
+/* Network Highlight Subsystem Styling */
+.network-highlight .node-border {
+    stroke: rgba(59, 130, 246, 0.65) !important;
+    stroke-width: 2px !important;
+}
+[data-theme="light"] .network-highlight .node-border {
+    stroke: rgba(29, 78, 216, 0.65) !important;
+}
+.network-highlight .node-title {
+    fill: #60a5fa !important;
+}
+[data-theme="light"] .network-highlight .node-title {
+    fill: #1d4ed8 !important;
+}
+.network-highlight .sub-node {
+    stroke: rgba(59, 130, 246, 0.35) !important;
+}
+
+.node-subtitle-sm {
+    font-size: 11px !important;
+}

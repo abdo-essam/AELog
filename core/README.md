@@ -15,9 +15,6 @@ core/
 ├── src/
 │   ├── commonMain/kotlin/com/ae/log/
 │   │   ├── AELog.kt         # The main facade and LogInspector controller
-│   │   ├── AELogLifecycle.kt # Library-wide lifecycle manager
-│   │   ├── config/          # SDK global configurations (LogConfig)
-│   │   ├── event/           # Central EventBus and standard event payloads
 │   │   ├── plugin/          # Plugin contracts and managers
 │   │   ├── storage/         # High-level memory & file persistence layers
 │   │   ├── ui/              # Compose Multiplatform core layout & overlays
@@ -44,17 +41,9 @@ Every plugin can hook into the following lifecycle hooks:
 
 | Lifecycle Method | Description |
 |:---|:---|
-| `onAttach(context: PluginContext)` | Invoked when the plugin is registered. The plugin receives a local `CoroutineScope` and access to the shared `EventBus` and `LogConfig`. |
+| `onAttach(context: PluginContext)` | Invoked when the plugin is registered. The plugin receives a local `CoroutineScope` and access to sibling plugins. |
 | `onDetach()` | Called when the plugin is uninstalled; its local coroutine scope is cancelled automatically. |
 | `onClear()` | Triggered when `AELog.clearAll()` is executed. The plugin must clear its stored records/caches. |
-| `onMigrateFrom(oldPlugin: Plugin)` | Triggered during `AELog.configure` hot-swaps, allowing you to transfer accumulated state from the previous instance of this plugin. |
-
-> [!TIP]
-> **Reactive Lifecycles**: Stale, imperative lifecycles like `onStart`, `onOpen`, and `onClose` are removed to favor a reactive approach. If your plugin needs to respond to overlay or app state changes, simply observe them from the `EventBus` in `onAttach`:
-> ```kotlin
-> context.collectEvents<PanelOpenedEvent> { /* Overlay opened */ }
-> context.collectEvents<PanelClosedEvent> { /* Overlay closed */ }
-> ```
 
 ---
 
@@ -124,24 +113,7 @@ class CustomUiPlugin : UIPlugin {
 
 ---
 
-## 4. Internal Decoupled Communication (`EventBus`)
-
-To pass events safely between decoupled plugins without cross-dependencies, AELog utilizes a reactive `EventBus`.
-
-### Subscribing to Events
-Inside a plugin, you can subscribe to specific events through the `PluginContext`'s helper method:
-
-```kotlin
-override fun onAttach(context: PluginContext) {
-    context.collectEvents<PanelOpenedEvent> { event ->
-        println("The AELog panel was opened on screen!")
-    }
-}
-```
-
----
-
-## 5. Extensible Persistence Layer
+## 4. Extensible Persistence Layer
 
 If your plugin needs to persist records across application restarts, AELog core provides a thread-safe, file-backed storage utility: `PersistentPluginStorage`.
 

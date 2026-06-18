@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Usage: ./scripts/publish.sh 1.0.0
+# Usage: ./scripts/publish.sh 1.1.7
 
 VERSION=${1:?Usage: ./scripts/publish.sh <version>}
 

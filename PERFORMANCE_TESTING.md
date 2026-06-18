@@ -17,7 +17,6 @@ Every strategy focuses on the same critical paths. This table is your ground tru
 | `LogRecorder.log()` + `callerTag()` | < 200µs | `LogPipelineBenchmark` |
 | `AELog.isEnabled = false` fast-path | < 100ns | `LogPipelineBenchmark` |
 | `AELog.getPlugin<T>()` lookup | < 1µs | `LogPipelineBenchmark` |
-| `EventBus.publish()` (tryEmit) | < 5µs | `EventBusPerformanceTest` |
 | `NetworkRecorder.logRequest()` | < 50µs | `NetworkPipelineBenchmark` |
 | Full network request+response pair | < 100µs | `NetworkPipelineBenchmark` |
 | `IdGenerator.next()` (UUID) | < 10µs | `NetworkPipelineBenchmark` |
@@ -70,7 +69,6 @@ Results are printed to stdout and saved under `benchmarks/build/reports/benchmar
 | Module | File | What it covers |
 |---|---|---|
 | `:core` | `StoragePerformanceTest` | RingBuffer 100k/1M adds, toList ×10k, PluginStorage 10k adds + updateFirst + addOrReplace |
-| `:core` | `EventBusPerformanceTest` | EventBus 50k publishes, zero-drop burst, concurrent coroutine publishers |
 | `:plugins:logs` | `LogRecorderPerformanceTest` | LogRecorder 5k entries, severity filter fast-path, ring eviction correctness, export |
 | `:plugins:network` | `NetworkRecorderPerformanceTest` | 1k req/resp pairs, 500 pending requests, body patching, ring eviction, 10k UUID gen |
 
@@ -200,11 +198,7 @@ Understanding these design decisions helps interpret benchmark results:
 
 **Recommendation**: Always use `AELog.log.d("MyTag", "msg")` (explicit tag) in performance-sensitive code. Use the auto-tag overload (`AELog.log.d("msg")`) only in one-off or infrequent call sites.
 
-### Why `EventBus.publish()` uses `tryEmit` (not `emit`)
 
-`tryEmit` is non-suspending and lock-free. It can drop events if the buffer is full (capacity = 64), but AELog only publishes lifecycle events (panel open/close, app start/stop) — never per-log events. These are low-frequency by design, so 64 slots is more than sufficient and the non-blocking nature is critical for call-site safety.
-
----
 
 ## CI Integration
 
@@ -222,7 +216,6 @@ After each run, a **"Extract Performance Timings"** step parses the XML test rep
 |-----------------------------------------------|------------|
 | RingBuffer.add ×100k (capacity=500)           | 12.6ms     |
 | PluginStorage.add ×10k [lock+toList+StateFlow]| 22.9ms     |
-| EventBus.publish ×50k                         | 5.8ms      |
 | LogRecorder.log ×5k                           | 25.7ms     |
 | NetworkRecorder req+resp ×1000                | 35.9ms     |
 | AELog.export (500 entries)                    | 4.6ms      |

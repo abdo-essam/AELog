@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import com.ae.log.network.storage.NetworkStorage
 import com.ae.log.network.ui.NetworkContent
 import com.ae.log.network.ui.NetworkViewModel
-import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,9 +50,7 @@ import kotlinx.coroutines.launch
  * recorder.response(id, statusCode = 200, durationMs = elapsed)
  * ```
  */
-public class NetworkPlugin(
-    maxEntries: Int = 200,
-) : UIPlugin {
+public class NetworkPlugin : UIPlugin {
     override val id: String = ID
     override val name: String = "Network"
     override val icon: @Composable () -> Unit = { Icon(Icons.Default.Wifi, contentDescription = null) }
@@ -61,7 +58,7 @@ public class NetworkPlugin(
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    internal val storage = NetworkStorage(capacity = maxEntries)
+    internal val storage = NetworkStorage(capacity = 200)
 
     @kotlin.concurrent.Volatile private var viewModel: NetworkViewModel? = null
 
@@ -80,12 +77,6 @@ public class NetworkPlugin(
 
     override fun onClear() {
         storage.clear()
-    }
-
-    override fun onMigrateFrom(oldPlugin: Plugin) {
-        if (oldPlugin is NetworkPlugin) {
-            storage.import(oldPlugin.storage.entries.value)
-        }
     }
 
     override fun export(): String =

@@ -9,7 +9,6 @@ import com.ae.log.logs.model.LogSeverity
 import com.ae.log.logs.storage.LogStorage
 import com.ae.log.logs.ui.LogContent
 import com.ae.log.logs.ui.LogViewModel
-import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,24 +37,21 @@ import kotlinx.coroutines.launch
  *
  * All calls are **silent no-ops** if [AELog.configure] has not been called yet.
  */
-public class LogPlugin(
-    public val maxEntries: Int = 500,
-    public val minSeverity: LogSeverity = LogSeverity.VERBOSE,
-    public val platformLogSink: PlatformLogSink = PlatformLogSink.Default,
-) : UIPlugin,
+public class LogPlugin :
+    UIPlugin,
     LogRecordSink {
     override val id: String = ID
     override val name: String = "Logs"
     override val icon: @Composable () -> Unit = { Icon(Icons.Default.Description, contentDescription = null) }
 
-    internal val logStorage = LogStorage(capacity = maxEntries)
+    internal val logStorage = LogStorage(capacity = 500)
 
     /** Public write API — use this to send logs directly to the viewer. */
     public val recorder: LogRecorder =
         LogRecorder(
             storage = logStorage,
-            minSeverity = minSeverity,
-            platformLogSink = platformLogSink,
+            minSeverity = LogSeverity.VERBOSE,
+            platformLogSink = PlatformLogSink.Default,
         )
 
     private val _badgeCount = MutableStateFlow(0)
@@ -89,12 +85,6 @@ public class LogPlugin(
 
     override fun onDetach() {
         viewModel = null
-    }
-
-    override fun onMigrateFrom(oldPlugin: Plugin) {
-        if (oldPlugin is LogPlugin) {
-            logStorage.import(oldPlugin.logStorage.entries.value)
-        }
     }
 
     @Composable

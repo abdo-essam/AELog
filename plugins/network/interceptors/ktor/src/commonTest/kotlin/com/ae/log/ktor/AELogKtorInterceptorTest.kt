@@ -20,8 +20,11 @@ class AELogKtorInterceptorTest {
 
     @BeforeTest
     fun setUp() {
+        // On iOS, @EagerInitialization auto-installs a NetworkPlugin before the test runs.
+        // Reset first so the test's own plugin instance is the one that gets registered.
+        AELog.resetForTesting()
         networkPlugin = NetworkPlugin()
-        AELog.configure { plugin(networkPlugin) }
+        AELog.install(networkPlugin)
     }
 
     @AfterTest
@@ -222,6 +225,82 @@ class AELogKtorInterceptorTest {
             client.close()
 
             assertTrue(!networkPlugin.export().contains("binary-data"))
+        }
+
+    // ── Error response body capture ───────────────────────────────────────
+
+    @Test
+    fun `captures response body for 401 error even when caller never reads it`() =
+        runTest {
+            // Ktor's default expectSuccess=true throws ResponseException for 4xx,
+            // so the caller never gets a chance to call bodyAsText().
+            // The interceptor must still capture the error body eagerly.
+            val errorBody = """{"errorCode":"AUTH002","errorDescription":"Invalid credentials"}"""
+            val client =
+                HttpClient(MockEngine) {
+                    install(AELogKtorInterceptor)
+                    // expectSuccess = true is the default — Ktor throws on 4xx
+                    engine {
+                        addHandler {
+                            respond(
+                                content = errorBody,
+                                status = HttpStatusCode.Unauthorized,
+                                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                            )
+                        }
+                    }
+                }
+
+            // The request throws — we intentionally ignore it.
+            runCatching { client.get("https://api.example.com/protected") }
+            client.close()
+
+            val export = networkPlugin.export()
+            assertTrue(
+                export.contains("AUTH002"),
+                "Expected 401 error body to be captured. Export was:\n$export",
+            )
+            assertTrue(export.contains("401"))
+        }
+
+    @Test
+    fun `captures response body for 500 server error`() =
+        runTest {
+            val errorBody = """{"error":"Internal Server Error"}"""
+            val client =
+                HttpClient(MockEngine) {
+                    install(AELogKtorInterceptor)
+                    engine {
+                        addHandler {
+                            respond(
+                                content = errorBody,
+                                status = HttpStatusCode.InternalServerError,
+                                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+                            )
+                        }
+                    }
+                }
+
+            runCatching { client.get("https://api.example.com/crash") }
+            client.close()
+
+            val export = networkPlugin.export()
+            assertTrue(
+                export.contains("Internal Server Error"),
+                "Expected 500 error body to be captured. Export was:\n$export",
+            )
+        }
+
+    @Test
+    fun `body is still readable by caller after interception for success response`() =
+        runTest {
+            val client = mockClient(responseBody = """{"data":"hello"}""")
+            val response = client.get("https://api.example.com/data")
+            val text = response.bodyAsText()
+            client.close()
+
+            assertTrue(text.contains("hello"), "App should still be able to read the response body")
+            assertTrue(networkPlugin.export().contains("hello"), "Interceptor should also have captured it")
         }
 
     // ── Multiple requests ─────────────────────────────────────────────────

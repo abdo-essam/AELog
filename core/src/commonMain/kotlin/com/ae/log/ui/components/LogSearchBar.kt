@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /**
  * Shared search bar used across all AELog plugin panels.
@@ -40,15 +40,15 @@ public fun LogSearchBar(
         placeholder = {
             Text(
                 text = placeholder,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = LogTheme.typography.bodySmall,
+                color = LogTheme.colors.onSurfaceVariant,
             )
         },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = LogTheme.colors.onSurfaceVariant,
             )
         },
         trailingIcon = {
@@ -57,7 +57,7 @@ public fun LogSearchBar(
                     Icon(
                         imageVector = Icons.Default.Clear,
                         contentDescription = "Clear search",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = LogTheme.colors.onSurfaceVariant,
                     )
                 }
             }
@@ -66,12 +66,12 @@ public fun LogSearchBar(
         shape = RoundedCornerShape(LogSpacing.x3),
         colors =
             OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedBorderColor = LogTheme.colors.primary,
+                unfocusedBorderColor = LogTheme.colors.outline,
+                focusedContainerColor = LogTheme.colors.surface,
+                unfocusedContainerColor = LogTheme.colors.surface,
             ),
-        textStyle = MaterialTheme.typography.bodySmall,
+        textStyle = LogTheme.typography.bodySmall,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions =
             KeyboardActions(onSearch = {

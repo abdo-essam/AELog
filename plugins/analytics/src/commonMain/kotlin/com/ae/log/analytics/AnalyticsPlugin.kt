@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import com.ae.log.analytics.storage.AnalyticsStorage
 import com.ae.log.analytics.ui.AnalyticsContent
 import com.ae.log.analytics.ui.AnalyticsViewModel
-import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginContext
 import com.ae.log.plugin.UIPlugin
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,9 +29,7 @@ import kotlinx.coroutines.launch
  * analytics?.screen("ProductDetail", mapOf("productId" to "123"))
  * ```
  */
-public class AnalyticsPlugin(
-    maxEntries: Int = 500,
-) : UIPlugin {
+public class AnalyticsPlugin : UIPlugin {
     override val id: String = ID
     override val name: String = "Analytics"
     override val icon: @Composable () -> Unit = { Icon(Icons.Default.Analytics, contentDescription = null) }
@@ -40,7 +37,7 @@ public class AnalyticsPlugin(
     private val _badgeCount = MutableStateFlow(0)
     override val badgeCount: StateFlow<Int> = _badgeCount
 
-    internal val storage = AnalyticsStorage(capacity = maxEntries)
+    internal val storage = AnalyticsStorage(capacity = 500)
 
     @kotlin.concurrent.Volatile private var viewModel: AnalyticsViewModel? = null
 
@@ -60,12 +57,6 @@ public class AnalyticsPlugin(
 
     override fun onClear() {
         storage.clear()
-    }
-
-    override fun onMigrateFrom(oldPlugin: Plugin) {
-        if (oldPlugin is AnalyticsPlugin) {
-            storage.import(oldPlugin.storage.events.value)
-        }
     }
 
     override fun export(): String =

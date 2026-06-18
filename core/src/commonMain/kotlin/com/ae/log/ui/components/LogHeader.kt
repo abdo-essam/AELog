@@ -12,13 +12,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /**
  * Shared panel header used across all AELog plugin panels.
@@ -44,8 +44,8 @@ public fun LogHeader(
     ) {
         Text(
             text = "$itemCount $itemLabel",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = LogTheme.typography.labelSmall,
+            color = LogTheme.colors.onSurfaceVariant,
         )
 
         Row(
@@ -56,7 +56,7 @@ public fun LogHeader(
 
             TextButton(
                 onClick = onClearAll,
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
+                colors = ButtonDefaults.textButtonColors(contentColor = LogTheme.colors.error),
                 contentPadding =
                     PaddingValues(
                         horizontal = LogSpacing.x2,
@@ -69,7 +69,7 @@ public fun LogHeader(
                     modifier = Modifier.size(LogSpacing.x4),
                 )
                 Spacer(modifier = Modifier.width(LogSpacing.x1))
-                Text("Clear", style = MaterialTheme.typography.labelSmall)
+                Text("Clear", style = LogTheme.typography.labelSmall)
             }
         }
     }

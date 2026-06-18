@@ -11,15 +11,11 @@ import com.ae.log.InternalAELogApi
  * [LogPlugin] with AELog automatically (zero-config, same as the Android ContentProvider initializer).
  *
  * ## Zero-config usage
- * Just add the dependency — no `AELog.configure { }` call required:
+ * Just add the dependency — no setup required:
  * ```kotlin
  * // build.gradle.kts
  * implementation("io.github.abdo-essam:ae-log-logs:<version>")
  * ```
- *
- * ## Opt-out / custom config
- * Call `AELog.configure { plugin(LogPlugin(maxEntries = 1_000)) }` yourself and the
- * idempotent install guard will skip the eager-init instance.
  */
 @OptIn(InternalAELogApi::class, ExperimentalStdlibApi::class)
 @Suppress("DEPRECATION") // @EagerInitialization is the only zero-config iOS init mechanism.

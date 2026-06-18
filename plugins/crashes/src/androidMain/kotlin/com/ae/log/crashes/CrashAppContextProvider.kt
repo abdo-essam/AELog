@@ -16,24 +16,10 @@ import com.ae.log.InternalAELogApi
  * registering [CrashPlugin] with AELog.
  *
  * ## Zero-config usage
- * Just add the dependency — no `AELog.configure { }` call required:
+ * Just add the dependency — no setup required:
  * ```kotlin
  * // build.gradle.kts
  * implementation("io.github.abdo-essam:ae-log-crashes:1.0.5")
- * ```
- *
- * ## Opt-out / custom config
- * Remove the auto-initializer via manifest merger and call `AELog.configure { }` yourself:
- * ```xml
- * <!-- AndroidManifest.xml -->
- * <provider
- *     android:name="com.ae.log.crashes.CrashAppContextProvider"
- *     android:authorities="${applicationId}.ae_log_crash_init"
- *     tools:node="remove" />
- * ```
- * ```kotlin
- * // Application.onCreate()
- * AELog.configure { plugin(CrashPlugin(this)) }
  * ```
  */
 internal class CrashAppContextProvider : ContentProvider() {

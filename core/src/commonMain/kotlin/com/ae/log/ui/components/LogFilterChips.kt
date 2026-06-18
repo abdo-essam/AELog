@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 /**
  * Shared horizontally-scrollable filter chip row for AELog panels.
@@ -42,24 +42,24 @@ public fun LogFilterChips(
                 label = {
                     Text(
                         text = label,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = LogTheme.typography.labelSmall,
                         color =
                             if (isSelected) {
-                                MaterialTheme.colorScheme.onPrimary
+                                LogTheme.colors.onPrimary
                             } else {
-                                MaterialTheme.colorScheme.onSurfaceVariant
+                                LogTheme.colors.onSurfaceVariant
                             },
                     )
                 },
                 colors =
                     FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primary,
-                        containerColor = MaterialTheme.colorScheme.surface,
+                        selectedContainerColor = LogTheme.colors.primary,
+                        containerColor = LogTheme.colors.surface,
                     ),
                 border =
                     FilterChipDefaults.filterChipBorder(
-                        borderColor = MaterialTheme.colorScheme.outline,
-                        selectedBorderColor = MaterialTheme.colorScheme.primary,
+                        borderColor = LogTheme.colors.outline,
+                        selectedBorderColor = LogTheme.colors.primary,
                         enabled = true,
                         selected = isSelected,
                     ),

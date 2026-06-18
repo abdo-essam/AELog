@@ -1,6 +1,5 @@
 <h1 align="center">
-  <img src="website/img/lens_logo.svg" width="48" height="48" alt="AELog Logo" style="vertical-align: middle; margin-right: 8px; position: relative; top: -3px;" />
-  AELog
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" />AELog
 </h1>
 
 <p align="center">
@@ -42,9 +41,13 @@
 ---
 
 <p align="center">
-  <img src="docs/assets/demo-light.gif" width="280" alt="Light Mode Demo" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="docs/assets/demo-dark.gif" width="280" alt="Dark Mode Demo" />
+  <img src="website/img/aelog_logs.png" width="190" alt="Logs Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_network.png" width="190" alt="Network Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_analytics.png" width="190" alt="Analytics Plugin" />
+  &nbsp;
+  <img src="website/img/aelog_crashes.png" width="190" alt="Crashes Plugin" />
 </p>
 
 ## ✨ Features
@@ -71,7 +74,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.1.4"
+aelog = "1.1.7"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -111,33 +114,29 @@ kotlin {
 ## 🚀 Quick Start
 
 ### 1. Zero-Config (Automatic Setup)
-AELog features **zero-config auto-initialisation** on Android! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with default settings when your app launches. **No setup or initialization code is required.**
+AELog features **zero-config auto-initialisation** on Android! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with sensible defaults when your app launches. **No setup, configuration, or initialization code is required.**
 
-### 2. Custom Configuration (Optional)
-If you want to adjust global settings (like disabling the floating trigger notch globally) or configure capacity limits on built-in plugins, call `AELog.configure { }` from your platform entry point (e.g. `Application.onCreate()` for Android):
-
-```kotlin
-AELog.configure {
-    // Disable the floating notch globally across XML & Compose screens (defaults to true)
-    showNotch = false 
-    
-    // Customize capacity limits or other settings for specific plugins
-    plugin(LogPlugin(maxEntries = 2_000))
-    plugin(NetworkPlugin(maxEntries = 1_000))
-}
-```
-
-### 3. Drop in the Overlay
+### 2. Drop in the Overlay
 
 #### For Compose Apps (Android & iOS)
-Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required:
+Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required. By default, the floating notch trigger is disabled (`showNotch = false`), allowing you to control visibility programmatically via custom developer gestures or buttons:
 
 ```kotlin
 @Composable
 fun App() {
-    AELogOverlay() // ← Renders floating center-right notch + inspector panel as a Popup above your UI
+    // Renders the overlay container in the background
+    AELogOverlay() 
+    
     MaterialTheme {
-        YourAppContent()
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(onClick = { AELog.show() }) {
+                    Icon(Icons.Default.BugReport, contentDescription = "Open Inspector")
+                }
+            }
+        ) {
+            YourAppContent()
+        }
     }
 }
 ```
@@ -147,11 +146,9 @@ To **disable the library in release builds**, set:
 AELog.isEnabled = BuildConfig.DEBUG
 ```
 
-To **hide the floating notch trigger** locally but still open the panel programmatically:
+To **enable the floating notch trigger** on the edge of the screen:
 ```kotlin
-AELogOverlay(showNotch = false)
-// Then trigger from a custom button or shake gesture:
-AELog.show()
+AELogOverlay(showNotch = true)
 ```
 
 ### 4. Log — primary API (`AELog`)

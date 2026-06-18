@@ -1,4 +1,4 @@
-﻿package com.ae.log.network.ui.components
+package com.ae.log.network.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ae.log.network.model.NetworkEntry
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun NetworkEntryItem(
@@ -63,10 +63,10 @@ internal fun NetworkEntryItem(
 
                 Text(
                     text = displayUrl,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = LogTheme.typography.bodySmall,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = LogTheme.colors.onSurface,
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(LogSpacing.x2),
@@ -76,16 +76,16 @@ internal fun NetworkEntryItem(
                     entry.durationMs?.let {
                         Text(
                             text = "${it}ms",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = LogTheme.typography.labelSmall,
+                            color = LogTheme.colors.onSurfaceVariant,
                         )
                     }
                     Text(
                         text =
                             com.ae.log.utils.TimeUtils
                                 .formatTimestamp(entry.timestamp),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        style = LogTheme.typography.labelSmall,
+                        color = LogTheme.colors.onSurfaceVariant.copy(alpha = 0.7f),
                     )
                 }
             }
@@ -100,7 +100,7 @@ internal fun NetworkEntryItem(
                     },
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint = LogTheme.colors.onSurfaceVariant,
             )
         }
 

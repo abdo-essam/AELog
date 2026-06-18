@@ -3,7 +3,6 @@ package com.ae.log.benchmarks
 import com.ae.log.AELog
 import com.ae.log.AELogTestApi
 import com.ae.log.logs.LogPlugin
-import com.ae.log.logs.PlatformLogSink
 import com.ae.log.logs.log
 import com.ae.log.network.NetworkPlugin
 import kotlinx.benchmark.Benchmark
@@ -17,7 +16,6 @@ import kotlinx.benchmark.Setup
 import kotlinx.benchmark.State
 import kotlinx.benchmark.TearDown
 import kotlinx.benchmark.Warmup
-import kotlinx.coroutines.Dispatchers
 
 /**
  * JMH benchmarks for the full AELog log pipeline:
@@ -45,16 +43,15 @@ import kotlinx.coroutines.Dispatchers
 open class LogPipelineBenchmark {
     @Setup
     fun setup() {
-        AELog.configure {
-            dispatcher = Dispatchers.Unconfined
-            plugin(LogPlugin(platformLogSink = PlatformLogSink.None))
-            plugin(NetworkPlugin())
-        }
+        System.setProperty("aelog.benchmark", "true")
+        AELog.install(LogPlugin())
+        AELog.install(NetworkPlugin())
     }
 
     @TearDown
     fun teardown() {
         AELog.resetForTesting()
+        System.clearProperty("aelog.benchmark")
     }
 
     /**

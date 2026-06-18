@@ -36,13 +36,6 @@ public interface Plugin {
     public fun onClear() {}
 
     /**
-     * Called when this plugin is replacing a pre-existing plugin instance with the same [id]
-     * (e.g. during [com.ae.log.AELog.configure] hot-swap). Copy any accumulated runtime
-     * state or buffered entries from [oldPlugin] before the old instance is detached.
-     */
-    public fun onMigrateFrom(oldPlugin: Plugin) {}
-
-    /**
      * Returns a plain-text snapshot of this plugin's current data, used by
      * [com.ae.log.AELog.export]. Return an empty string if there is nothing to export.
      */

@@ -14,7 +14,6 @@ import kotlinx.benchmark.Setup
 import kotlinx.benchmark.State
 import kotlinx.benchmark.TearDown
 import kotlinx.benchmark.Warmup
-import kotlinx.coroutines.Dispatchers
 
 /**
  * JMH benchmarks for the network recording pipeline:
@@ -44,10 +43,7 @@ open class NetworkPipelineBenchmark {
 
     @Setup
     fun setup() {
-        AELog.configure {
-            dispatcher = Dispatchers.Unconfined
-            plugin(NetworkPlugin(maxEntries = 200))
-        }
+        AELog.install(NetworkPlugin())
         plugin = AELog.getPlugin<NetworkPlugin>()!!
     }
 

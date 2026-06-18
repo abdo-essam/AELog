@@ -1,4 +1,4 @@
-﻿package com.ae.log.logs
+package com.ae.log.logs
 
 import com.ae.log.logs.model.LogSeverity
 
@@ -9,6 +9,7 @@ internal actual class DefaultPlatformLogSink : PlatformLogSink {
         message: String,
         throwable: Throwable?,
     ) {
+        if (System.getProperty("aelog.benchmark") == "true") return
         val stream = if (severity == LogSeverity.ERROR || severity == LogSeverity.ASSERT) System.err else System.out
         stream.println("[$severity] $tag: $message")
         throwable?.printStackTrace(stream)

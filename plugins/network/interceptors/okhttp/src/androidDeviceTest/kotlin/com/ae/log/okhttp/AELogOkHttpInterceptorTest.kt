@@ -32,7 +32,7 @@ class AELogOkHttpInterceptorTest {
     @Before
     fun setUp() {
         plugin = NetworkPlugin()
-        AELog.configure { plugin(plugin) }
+        AELog.install(plugin)
         server = MockWebServer()
         server.start()
     }

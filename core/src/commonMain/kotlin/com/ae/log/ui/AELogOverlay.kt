@@ -47,8 +47,9 @@ import com.ae.log.ui.theme.LogTheme
  * @param showNotch Whether to display the default top-center floating notch trigger.
  */
 @Composable
-public fun AELogOverlay(showNotch: Boolean = AELog.config?.showNotch ?: true) {
+public fun AELogOverlay(showNotch: Boolean = true) {
     val isEnabled by AELog.isEnabledFlow.collectAsState()
+    val isNotchEnabledGlobal by AELog.showNotchFlow.collectAsState()
     val instance = AELog.instance
     if (!isEnabled || instance == null) return
 
@@ -64,7 +65,7 @@ public fun AELogOverlay(showNotch: Boolean = AELog.config?.showNotch ?: true) {
         LogTheme {
             // Notch pill — Dynamic Island-style trigger at the top of the screen.
             // Hidden while the panel is open so it doesn't overlap.
-            if (!isVisible && showNotch) {
+            if (!isVisible && showNotch && isNotchEnabledGlobal) {
                 Popup(
                     alignment = Alignment.CenterEnd,
                     properties = PopupProperties(focusable = false),

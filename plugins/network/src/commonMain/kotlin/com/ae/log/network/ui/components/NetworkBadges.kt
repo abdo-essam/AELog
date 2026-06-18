@@ -1,4 +1,4 @@
-﻿package com.ae.log.network.ui.components
+package com.ae.log.network.ui.components
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.ae.log.network.model.NetworkEntry
 import com.ae.log.network.ui.theme.NetworkColors
 import com.ae.log.ui.theme.LogSpacing
+import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun MethodBadge(label: String) {
@@ -35,7 +35,7 @@ internal fun MethodBadge(label: String) {
                 .background(color.copy(alpha = 0.15f), RoundedCornerShape(LogSpacing.x1))
                 .padding(horizontal = LogSpacing.x1_5, vertical = 2.dp),
     ) {
-        Text(label, style = MaterialTheme.typography.labelSmall, color = color)
+        Text(label, style = LogTheme.typography.labelSmall, color = color)
     }
 }
 
@@ -62,21 +62,21 @@ internal fun StatusBadge(entry: NetworkEntry) {
                     Modifier
                         .size(LogSpacing.x1_5)
                         .alpha(alpha)
-                        .background(MaterialTheme.colorScheme.primary, CircleShape),
+                        .background(LogTheme.colors.primary, CircleShape),
             )
             Text(
                 text = "Waiting…",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = alpha),
+                style = LogTheme.typography.labelSmall,
+                color = LogTheme.colors.primary.copy(alpha = alpha),
             )
         }
     } else {
         val text = entry.statusLabel
         val color =
             when {
-                entry.isError -> MaterialTheme.colorScheme.error
+                entry.isError -> LogTheme.colors.error
                 else -> NetworkColors.getStatusCodeColor(entry.statusCode)
             }
-        Text(text = text, style = MaterialTheme.typography.labelSmall, color = color)
+        Text(text = text, style = LogTheme.typography.labelSmall, color = color)
     }
 }

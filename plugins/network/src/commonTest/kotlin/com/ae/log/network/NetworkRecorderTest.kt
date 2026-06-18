@@ -18,7 +18,8 @@ class NetworkRecorderTest {
 
     @BeforeTest
     fun setUp() {
-        AELog.configure { plugin(NetworkPlugin()) }
+        AELog.resetForTesting()
+        AELog.install(NetworkPlugin())
         storage = NetworkStorage()
         recorder = NetworkRecorder(storage)
     }

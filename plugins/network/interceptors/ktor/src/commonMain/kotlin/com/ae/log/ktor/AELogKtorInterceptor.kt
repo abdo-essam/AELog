@@ -21,11 +21,21 @@ import kotlin.time.Clock
 /**
  * Ktor 3.x interceptor that records HTTP traffic to AELog.
  *
- * Uses a two-phase approach:
- *  1. **Request pipeline** – records URL, method, headers, and body.
- *  2. **Receive pipeline** – records status, response headers, and duration.
- *  3. **Response pipeline** – patches the body once the app reads it,
- *     without consuming it (bytes are re-injected via a fresh [ByteReadChannel]).
+ * Ktor 3.x always installs a **SaveBody** plugin in `receivePipeline.Before`.
+ * SaveBody drains the raw network channel and replaces it with a [SavedHttpResponse]
+ * whose `rawContent` property creates a fresh [ByteReadChannel] from buffered bytes
+ * **every time it is accessed** (Ktor KDoc: *“This property produces a new channel
+ * every time it’s accessed”*). This makes it safe to read `rawContent` in later
+ * receive-pipeline phases without exhausting the stream.
+ *
+ * Pipeline phases used:
+ *  1. **Request/State** – records URL, method, and headers.
+ *  2. **Request/Render** – captures the serialized request body.
+ *  3. **Receive/State** – records status, headers, duration **and eagerly reads the
+ *     response body** from `rawContent` (safe because SaveBody has already buffered
+ *     it). Works for ALL responses including 4xx/5xx error responses.
+ *  4. **Response/Receive** – re-injects the stored bytes as a fresh [ByteReadChannel]
+ *     so the app can still call `bodyAsText()` / `body<T>()` normally.
  *
  * ## Usage
  * ```kotlin
@@ -45,6 +55,9 @@ public class AELogKtorInterceptor internal constructor(
 
         private val RequestIdKey = AttributeKey<String>("AELogRequestId")
         private val StartTimeKey = AttributeKey<Long>("AELogStartTime")
+
+        /** Bytes buffered eagerly in receivePipeline so responsePipeline can re-inject them. */
+        private val BufferedBodyKey = AttributeKey<ByteArray>("AELogBufferedBody")
 
         override fun prepare(block: Config.() -> Unit): AELogKtorInterceptor {
             val config = Config().apply(block)
@@ -183,13 +196,33 @@ public class AELogKtorInterceptor internal constructor(
             }
         }
 
+        // ── Response loggers ────────────────────────────────────────────────
+
         private fun installResponseLoggers(
             scope: HttpClient,
             clock: Clock,
             excludeHeaders: Set<String>,
             maxBodyBytes: Int,
         ) {
-            // 1. Record metadata (Status Code, Duration, Headers)
+            // Phase 1 – Metadata + body capture in receivePipeline.State.
+            //
+            // By the time .State runs, Ktor's built-in SaveBody plugin (runs in
+            // receivePipeline.Before) has already:
+            //   • drained the raw network channel
+            //   • replaced the response subject with a SavedHttpResponse
+            //
+            // SavedHttpResponse.rawContent returns a FRESH ByteReadChannel from
+            // in-memory bytes on every access (Ktor KDoc guarantees this), so reading
+            // it here does NOT exhaust the stream and does NOT interfere with the app
+            // or with expectSuccess reading it later.
+            //
+            // This is the ONLY phase that reliably fires for ALL responses
+            // (including 4xx/5xx) before any exception is thrown.
+            //
+            // @OptIn(InternalAPI::class) is required because rawContent is marked
+            // @InternalAPI. Ktor's own SaveBody and SavedCall.save() also use @OptIn
+            // for the same property – this is the accepted pattern for deep integration.
+            @OptIn(InternalAPI::class)
             scope.receivePipeline.intercept(HttpReceivePipeline.State) { response ->
                 val recorder = recorder()
                 val id = response.call.attributes.getOrNull(RequestIdKey)
@@ -212,10 +245,39 @@ public class AELogKtorInterceptor internal constructor(
                             .exclude(excludeHeaders),
                     durationMs = clock.now().toEpochMilliseconds() - start,
                 )
+
+                // Eagerly capture the body.
+                // rawContent is safe to read here because SaveBody has already
+                // buffered the bytes; each access creates a fresh channel.
+                val contentType = response.headers["Content-Type"]
+                if (InterceptorDefaults.shouldCaptureBody(contentType, captureUnknown = false)) {
+                    runCatching {
+                        val bytes = response.rawContent.toByteArray()
+                        response.call.attributes.put(BufferedBodyKey, bytes)
+                        val bodyText =
+                            if (bytes.size > maxBodyBytes) {
+                                bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
+                            } else {
+                                bytes.decodeToString().trim().ifBlank { null }
+                            }
+                        recorder.updateResponseBody(id, bodyText)
+                    }.onFailure {
+                        // rawContent read failed (e.g. truly streaming response) — skip.
+                    }
+                }
+
                 proceed()
             }
 
-            // 2. Read and duplicate the response body stream for logging
+            // Phase 2 – Re-inject bytes in responsePipeline.Receive.
+            //
+            // When the app (or expectSuccess) calls bodyAsText() / body<T>(), Ktor
+            // invokes responsePipeline with the raw ByteReadChannel as subject. We
+            // replace it with a fresh channel from our already-buffered bytes so the
+            // caller gets a readable stream.
+            //
+            // If buffering in Phase 1 failed (BufferedBodyKey absent), we fall back to
+            // reading and capturing the body here.
             scope.responsePipeline.intercept(HttpResponsePipeline.Receive) { (info, body) ->
                 val recorder = recorder()
                 val id = context.attributes.getOrNull(RequestIdKey)
@@ -231,17 +293,25 @@ public class AELogKtorInterceptor internal constructor(
                 }
 
                 runCatching {
-                    val bytes = body.toByteArray()
-                    val bodyText =
-                        if (bytes.size > maxBodyBytes) {
-                            bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
-                        } else {
-                            bytes.decodeToString().trim().ifBlank { null }
-                        }
-                    recorder.updateResponseBody(id, bodyText)
+                    val buffered = context.attributes.getOrNull(BufferedBodyKey)
+                    val bytes = buffered ?: body.toByteArray()
+
+                    if (buffered == null) {
+                        // Fallback: body wasn’t captured in receivePipeline — capture now.
+                        context.attributes.put(BufferedBodyKey, bytes)
+                        val bodyText =
+                            if (bytes.size > maxBodyBytes) {
+                                bytes.decodeToString(endIndex = maxBodyBytes).trim() + "\n… [truncated]"
+                            } else {
+                                bytes.decodeToString().trim().ifBlank { null }
+                            }
+                        recorder.updateResponseBody(id, bodyText)
+                    }
+
+                    // Always re-wrap so the caller gets a readable channel.
                     proceedWith(HttpResponseContainer(info, ByteReadChannel(bytes)))
                 }.onFailure { cause ->
-                    recorder.logError(id, "Could not decode response body (possibly binary): ${cause.message}")
+                    recorder.logError(id, "Could not decode response body: ${cause.message}")
                     proceed()
                 }
             }

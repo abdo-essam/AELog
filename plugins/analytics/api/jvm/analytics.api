@@ -7,8 +7,6 @@ public final class com/ae/log/analytics/AnalyticsPlugin : com/ae/log/plugin/UIPl
 	public static final field Companion Lcom/ae/log/analytics/AnalyticsPlugin$Companion;
 	public static final field ID Ljava/lang/String;
 	public fun <init> ()V
-	public fun <init> (I)V
-	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun Content (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
 	public fun export ()Ljava/lang/String;
 	public fun getBadgeCount ()Lkotlinx/coroutines/flow/StateFlow;
@@ -19,7 +17,6 @@ public final class com/ae/log/analytics/AnalyticsPlugin : com/ae/log/plugin/UIPl
 	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
 	public fun onDetach ()V
-	public fun onMigrateFrom (Lcom/ae/log/plugin/Plugin;)V
 }
 
 public final class com/ae/log/analytics/AnalyticsPlugin$Companion {

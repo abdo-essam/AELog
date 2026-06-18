@@ -15,24 +15,10 @@ import com.ae.log.InternalAELogApi
  * registering [LogPlugin] with AELog automatically.
  *
  * ## Zero-config usage
- * Just add the dependency — no `AELog.configure { }` call required:
+ * Just add the dependency — no setup required:
  * ```kotlin
  * // build.gradle.kts
  * implementation("io.github.abdo-essam:ae-log-logs:1.0.5")
- * ```
- *
- * ## Opt-out / custom config
- * Remove the auto-initializer via manifest merger and call `AELog.configure { }` yourself:
- * ```xml
- * <!-- AndroidManifest.xml -->
- * <provider
- *     android:name="com.ae.log.logs.LogPluginInitializer"
- *     android:authorities="${applicationId}.ae_log_logs_init"
- *     tools:node="remove" />
- * ```
- * ```kotlin
- * // Application.onCreate()
- * AELog.configure { plugin(LogPlugin(maxEntries = 1_000)) }
  * ```
  */
 internal class LogPluginInitializer : ContentProvider() {
