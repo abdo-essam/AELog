@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" align="absmiddle" /> AELog
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" /><span style="vertical-align: middle; position: relative; top: 3px;">AELog</span>
 </h1>
 
 <p align="center">
@@ -50,19 +50,16 @@
   <img src="website/img/aelog_crashes.png" width="190" alt="Crashes Plugin" />
 </p>
 
-## ✨ Features
+## ✨ Core Plugins
 
-| Feature | Description |
-|---------|-------------|
-| 🔍 **Log Inspector** | Search, filter, and copy logs with syntax-highlighted JSON |
-| 🌐 **Network Viewer** | HTTP request/response inspection with method badges |
-| 📊 **Analytics Tracker** | Monitor analytics events in real-time |
-| 💥 **Crash Reporter** | Capture and persist fatal and non-fatal exceptions on device |
-| 🎨 **Beautiful UI** | Material3 design with light/dark mode support |
-| 🧩 **Plugin System** | Extend with custom debug panels through modular dependencies |
-| 📱 **Adaptive Layout** | Bottom sheet on phones, dialog on tablets |
-| 🔌 **Zero Release Overhead**| Disable with a single flag — no runtime cost |
-| 🍎 **Multiplatform** | Android, iOS, Desktop (JVM), Web (WASM) |
+AELog provides a suite of 4 core plugins, allowing you to select and install only what you need:
+
+| Plugin | Purpose | Key Capabilities |
+|:---|:---|:---|
+| 🔍 **Log Inspector** | On-Device Console Logs | Search queries, filter by severity level/tag, and copy or share logs with formatted, syntax-highlighted JSON preview. |
+| 🌐 **Network Viewer** | HTTP Traffic Inspector | Inspect HTTP requests and responses, full headers, status codes, and JSON payloads with automatic sensitive credential redaction. |
+| 📊 **Analytics Tracker** | Real-Time Event Monitor | Verify custom properties, event dispatches, and screen views instantly as they trigger in your app. |
+| 💥 **Crash Reporter** | Local Exception Manager | Intercept fatal exceptions and record non-fatal errors on-device so they survive app restarts and are viewable in the UI. |
 
 ## 📦 Installation
 
