@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" /><span style="vertical-align: middle; position: relative; top: 1px;">AELog</span>
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" /><span style="vertical-align: middle; position: relative; top: -2px;">AELog</span>
 </h1>
 
 <p align="center">
@@ -56,7 +56,7 @@ AELog provides a suite of 4 core plugins, allowing you to select and install onl
 
 | Plugin | Purpose | Key Capabilities |
 |:---|:---|:---|
-| 🔍 **Log Inspector** | On-Device Console Logs | Search queries, filter by severity level/tag, and copy or share logs easily. |
+| 🔍 **Log Inspector** | On-Device Log Viewer | Search queries, filter by severity level/tag, and copy or share logs easily. |
 | 🌐 **Network Viewer** | HTTP Traffic Inspector | Inspect HTTP requests and responses, full headers, status codes, and JSON payloads with automatic sensitive credential redaction. |
 | 📊 **Analytics Tracker** | Analytics Event Tracker | Verify custom properties, event dispatches, and screen views instantly as they trigger in your app. |
 | 💥 **Crash Reporter** | Local Exception Manager | Intercept fatal exceptions and record non-fatal errors on-device so they survive app restarts and are viewable in the UI. |
@@ -111,12 +111,12 @@ kotlin {
 ## 🚀 Quick Start
 
 ### 1. Zero-Config (Automatic Setup)
-AELog features **zero-config auto-initialisation** on Android! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with sensible defaults when your app launches. **No setup, configuration, or initialization code is required.**
+AELog features **zero-config auto-initialisation** on Android and iOS! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with sensible defaults when your app launches. **No setup, configuration, or initialization code is required.**
 
 ### 2. Drop in the Overlay
 
 #### For Compose Apps (Android & iOS)
-Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required. By default, the floating notch trigger is disabled (`showNotch = false`), allowing you to control visibility programmatically via custom developer gestures or buttons:
+Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required. By default, the floating notch trigger is enabled (`showNotch = true`), allowing you to tap it to open the inspector:
 
 ```kotlin
 @Composable
@@ -138,14 +138,16 @@ fun App() {
 }
 ```
 
-To **disable the library in release builds**, set:
+To **disable the floating notch trigger** globally or locally:
 ```kotlin
-AELog.isEnabled = BuildConfig.DEBUG
+AELog.showNotch = false // Disable globally (across all screens)
+// or
+AELogOverlay(showNotch = false) // Disable locally in this composable
 ```
 
-To **enable the floating notch trigger** on the edge of the screen:
+To **disable the library entirely in release builds**, set:
 ```kotlin
-AELogOverlay(showNotch = true)
+AELog.isEnabled = BuildConfig.DEBUG
 ```
 
 ### 4. Log — primary API (`AELog`)
@@ -245,11 +247,6 @@ Create your own debug panel (e.g., a Database Inspector or Feature Flags toggler
 ```kotlin
 class FeatureFlagsPlugin : UIPlugin {
     override val name = "Flags"
-    override val icon: @Composable () -> Unit = { Icon(Icons.Default.Flag, contentDescription = null) }
-
-    // Optional: Live badge count shown on the tab (omit if not needed)
-    private val _badgeCount = MutableStateFlow(0)
-    override val badgeCount: StateFlow<Int> = _badgeCount
 
     @Composable
     override fun Content(modifier: Modifier) {
