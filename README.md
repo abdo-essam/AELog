@@ -1,6 +1,6 @@
 <h1 align="center">
-  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" />
-  AELog
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" align="center" />
+  <span>AELog</span>
 </h1>
 
 <p align="center">
