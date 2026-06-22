@@ -1,7 +1,7 @@
-<h1 align="center">
-  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" align="center" />
-  <span>AELog</span>
-</h1>
+<p align="center">
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" />
+  <strong style="font-size:32px;">AELog</strong>
+</p>
 
 <p align="center">
   <strong>Extensible on-device dev tools for Kotlin Multiplatform</strong>
