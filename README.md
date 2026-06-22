@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" /><span style="vertical-align: middle; position: relative; top: 3px;">AELog</span>
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" /><span style="vertical-align: middle; position: relative; top: 1px;">AELog</span>
 </h1>
 
 <p align="center">
@@ -56,9 +56,9 @@ AELog provides a suite of 4 core plugins, allowing you to select and install onl
 
 | Plugin | Purpose | Key Capabilities |
 |:---|:---|:---|
-| 🔍 **Log Inspector** | On-Device Console Logs | Search queries, filter by severity level/tag, and copy or share logs with formatted, syntax-highlighted JSON preview. |
+| 🔍 **Log Inspector** | On-Device Console Logs | Search queries, filter by severity level/tag, and copy or share logs easily. |
 | 🌐 **Network Viewer** | HTTP Traffic Inspector | Inspect HTTP requests and responses, full headers, status codes, and JSON payloads with automatic sensitive credential redaction. |
-| 📊 **Analytics Tracker** | Real-Time Event Monitor | Verify custom properties, event dispatches, and screen views instantly as they trigger in your app. |
+| 📊 **Analytics Tracker** | Analytics Event Tracker | Verify custom properties, event dispatches, and screen views instantly as they trigger in your app. |
 | 💥 **Crash Reporter** | Local Exception Manager | Intercept fatal exceptions and record non-fatal errors on-device so they survive app restarts and are viewable in the UI. |
 
 ## 📦 Installation
