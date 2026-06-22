@@ -117,7 +117,7 @@ flowchart TD
         AELog --> HeadlessPlugin["Your Headless Plugin<br>(Plugin)"]
     end
     
-    LogPlugin --> Storage["LogStorage / DataStore<br>(Storage Layer)"]
+    LogPlugin --> Storage["LogStorage / File System<br>(Storage Layer)"]
     CustomPlugin --> Storage
     HeadlessPlugin --> Storage
 ```

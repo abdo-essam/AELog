@@ -81,7 +81,7 @@ AELog.log.d("Token refreshed")  // tag → "AuthViewModel"`,
     crashes: {
         badge: "ae-log-crashes",
         title: "CrashPlugin",
-        desc: "Intercepts uncaught exceptions globally. Persists crash reports to PersistentPluginStorage (DataStore) so they survive app restarts and appear on next launch.",
+        desc: "Intercepts uncaught exceptions globally. Persists crash reports to PersistentPluginStorage so they survive app restarts and appear on next launch.",
         code: `// Automatically captures all uncaught exceptions.
 // Record non-fatal exceptions manually:
 AELog.crashes.recordNonFatal(exception)
@@ -147,7 +147,7 @@ AELog.install(LogPlugin(
     disk: {
         badge: "Persistent Storage",
         title: "Disk Storage",
-        desc: "Robust local persistence backed by Jetpack DataStore / file streams. Used by CrashPlugin to ensure crash logs are stored safely and survive application restarts.",
+        desc: "Robust local persistence backed by platform-specific file systems (FileOperations). Used by CrashPlugin to ensure crash logs are stored safely and survive application restarts.",
         code: `// Stored locally in app Sandbox directory:
 // Android: /data/data/app/files/aelog/
 // iOS: Library/Application Support/aelog/`,

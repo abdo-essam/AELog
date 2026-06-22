@@ -84,7 +84,7 @@
             <p>AELog gathers logging, network requests, and crash dump information locally. Depending on how the library is configured, this data is stored in one of two ways:</p>
             <ul>
                 <li><strong>In-Memory (RAM):</strong> Transient log buffers (such as Ktor/OkHttp logs and system traces) are saved in memory and wiped entirely when the application is closed.</li>
-                <li><strong>Persistent Disk Storage:</strong> Specific plugins (such as <code>CrashPlugin</code>) write crash records and diagnostic data directly to the device's local file system or <code>Jetpack DataStore</code>. This ensures reports survive application restarts for debugging purposes.</li>
+                <li><strong>Persistent Disk Storage:</strong> Specific plugins (such as <code>CrashPlugin</code>) write crash records and diagnostic data directly to the device's local file system. This ensures reports survive application restarts for debugging purposes.</li>
             </ul>
 
             <h2>3. Third-Party Integrations</h2>
