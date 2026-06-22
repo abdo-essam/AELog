@@ -1,5 +1,5 @@
-<h1 style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" />
+<h1 align="center">
+  <img src="website/img/lens_logo.svg" width="38" height="35" alt="AELog Logo" align="center" />
   <span>AELog</span>
 </h1>
 
