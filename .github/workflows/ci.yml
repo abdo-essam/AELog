@@ -22,7 +22,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref || github.ref }}
 
@@ -53,7 +53,7 @@ jobs:
     needs: quality
     if: always() && (needs.quality.result == 'success' || needs.quality.result == 'skipped')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-java@v5
         with:
@@ -178,7 +178,7 @@ jobs:
     needs: quality
     if: always() && (needs.quality.result == 'success' || needs.quality.result == 'skipped')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-java@v5
         with:
@@ -260,7 +260,7 @@ jobs:
     needs: [build-android]
     if: always() && needs.build-android.result == 'success'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-java@v5
         with:
