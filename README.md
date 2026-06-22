@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" style="vertical-align: middle; margin-right: 10px;" /><span style="vertical-align: middle;">AELog</span>
+  <img src="website/img/lens_logo.svg" width="38" height="38" alt="AELog Logo" align="absmiddle" /> AELog
 </h1>
 
 <p align="center">
@@ -282,55 +282,6 @@ AELog.log.e("Database", "Failed to clear cache", exception)
 ```
 
 📖 See the [Logging Integrations Guide](https://abdo-essam.github.io/AELog/integrations) for adapter examples (Kermit, Napier, Timber, SLF4J).
-
-## 🏗️ Architecture
-
-The SDK follows an encapsulated `Model-Store-API-UI` pattern, making plugins 100% reactive, modular, and thread-safe.
-
-```mermaid
-graph TD
-    subgraph UI ["UI Layer"]
-        OV["AELogOverlay()\n(Popup — zero wrapping)"]
-    end
-
-    subgraph Core ["Core — ae-log-core"]
-        AE["AELog\n(singleton engine)"]
-    end
-
-    subgraph Plugins ["Plugins (optional, loaded on demand)"]
-        direction LR
-        LP1["LogPlugin\nae-log-logs"]
-        NP["NetworkPlugin\nae-log-network"]
-        AP["AnalyticsPlugin\nae-log-analytics"]
-        CP["CrashPlugin\nae-log-crashes"]
-    end
-
-    subgraph Storage ["Data Layer (StateFlow — thread-safe)"]
-        direction LR
-        LS[("LogStorage")]
-        NS[("NetworkStorage")]
-        AS[("AnalyticsStorage")]
-        CS[("CrashStorage")]
-    end
-
-    subgraph Interceptors ["Auto-interceptors (optional)"]
-        direction LR
-        KI["KtorInterceptor\nae-log-network-ktor"]
-        OI["OkHttpInterceptor\nae-log-network-okhttp"]
-    end
-
-    OV --> AE
-    AE --> LP1
-    AE --> NP
-    AE --> AP
-    AE --> CP
-    LP1 --> LS
-    NP --> NS
-    AP --> AS
-    CP --> CS
-    KI --> NP
-    OI --> NP
-```
 
 ## 🤝 Contributing
 
