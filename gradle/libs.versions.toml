@@ -17,6 +17,7 @@ kover = "0.9.8"
 androidx-test = "1.6.1"
 vanniktechPublish = "0.30.0"
 kotlinx-benchmark = "0.4.17"
+runtime = "1.11.3"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
@@ -38,6 +39,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = "androidx.activity:activity-compose:1.9.3"
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
+androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "runtime" }
 
 [plugins]
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
