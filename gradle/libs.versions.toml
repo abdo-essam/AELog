@@ -1,8 +1,8 @@
 [versions]
 agp = "8.11.1"
 
-kotlin = "2.3.0"
-compose-multiplatform = "1.9.3"
+kotlin = "2.4.0"
+compose-multiplatform = "1.11.1"
 android-compileSdk = "35"
 android-minSdk = "24"
 kotlinx-datetime = "0.8.0"
