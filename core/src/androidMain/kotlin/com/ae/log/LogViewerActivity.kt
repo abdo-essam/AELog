@@ -1,11 +1,15 @@
 package com.ae.log
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.ComposeView
 import com.ae.log.ui.AELogOverlay
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 
 /**
@@ -52,12 +56,12 @@ public fun AELog.launchViewer(context: android.content.Context) {
     val decorView = activity.window.decorView as android.view.ViewGroup
 
     // Check if we already added the viewer to avoid duplicates
-    if (decorView.findViewById<android.view.View>(VIEWER_ID) != null) {
+    if (decorView.findViewById<View>(VIEWER_ID) != null) {
         return
     }
 
     val composeView =
-        androidx.compose.ui.platform.ComposeView(activity).apply {
+        ComposeView(activity).apply {
             id = VIEWER_ID
             // Ensures the ComposeView can handle touches properly
             isClickable = true
@@ -67,7 +71,7 @@ public fun AELog.launchViewer(context: android.content.Context) {
                 AELogOverlay()
 
                 LaunchedEffect(Unit) {
-                    kotlinx.coroutines.delay(PANEL_SHOW_DELAY_MS)
+                    delay(PANEL_SHOW_DELAY_MS)
                     AELog.show()
 
                     // Wait until the state actually reflects that it is visible
@@ -87,9 +91,9 @@ public fun AELog.launchViewer(context: android.content.Context) {
     // Add to the top of the DecorView with full screen bounds
     decorView.addView(
         composeView,
-        android.view.ViewGroup.LayoutParams(
-            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+        ActionBar.LayoutParams(
+            ActionBar.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
         ),
     )
 }

@@ -43,11 +43,6 @@ fun LogScreen() {
                     ActionButton("Log ERROR (Red)", Color(0xFFF44336)) {
                         AELog.log.e("Database", "Failed to write record", RuntimeException("Disk Full"))
                     }
-                    Spacer(Modifier.height(8.dp))
-
-                    ActionButton("Show Overlay", Color(0xFF4CAF50)) {
-                        AELog.show()
-                    }
                 }
             }
 
