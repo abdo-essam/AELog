@@ -85,19 +85,19 @@
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            
+
             <div class="sidebar-category-group">
                 <h4>Getting Started</h4>
                 <a class="docs-nav-link active" data-section="introduction" href="#introduction">Introduction</a>
                 <a class="docs-nav-link" data-section="installation" href="#installation">Installation</a>
                 <a class="docs-nav-link" data-section="quick-start" href="#quick-start">Quick Start</a>
             </div>
-            
+
             <div class="sidebar-category-group">
                 <h4>Core Configuration</h4>
                 <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
             </div>
-            
+
             <!-- Logical Category Group Sidebar: Plugins & Architecture -->
             <div class="sidebar-category-group">
                 <h4>Architecture & Plugins</h4>
@@ -224,7 +224,7 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.1.7"
+aelog = "1.1.8"
 
 [libraries]
 aelog-logs      = { module = "io.github.abdo-essam:ae-log-logs", version.ref = "aelog" }
@@ -250,10 +250,10 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.1.7")
-            implementation("io.github.abdo-essam:ae-log-network:1.1.7")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.1.7")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.1.7")
+implementation("io.github.abdo-essam:ae-log-logs:1.1.8")
+            implementation("io.github.abdo-essam:ae-log-network:1.1.8")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.1.8")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.1.8")
         }
     }
 }</code></pre>
@@ -811,6 +811,24 @@ AELog.log.e("Auth", "Login failed", error)
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
                 </div>
 
+                <!-- Milestone -8: v1.1.8 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.1.8 <span class="timeline-date">— August 14, 2026</span></h3>
+
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Dark Mode Support:</strong> Full support for Dark and Light themes across the entire UI.</li>
+                            <li><strong>Settings Tab:</strong> A new dedicated tab for library configuration, including theme mode selection (System, Light, Dark).</li>
+                            <li><strong>Reactive Theming:</strong> Enhanced <code>LogTheme</code> to reactively update colors and typography across all plugins without requiring a manual panel restart.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
+                </div>
+
                 <!-- Milestone -7: v1.1.7 -->
                 <div class="timeline-item">
                     <div class="timeline-bullet-wrapper">
@@ -818,7 +836,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.1.7 <span class="timeline-date">— June 8, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Fixed</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Ktor Interceptor Response Capture:</strong> Fixed Ktor interceptor in <code>log-network-ktor</code> to correctly capture response body payloads on error responses (like HTTP 401). By intercepting the response body in <code>receivePipeline.State</code> after Ktor's <code>SaveBody</code> plugin has buffered it, we ensure <code>rawContent</code> can be read as a fresh channel and the response is safely logged without exhausting the stream or throwing exceptions.</li>
@@ -835,7 +853,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.1.6 <span class="timeline-date">— June 8, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Global Notch Toggle:</strong> Added static property <code>AELog.showNotch</code> to allow globally enabling/disabling the floating trigger notch across all screens.</li>
@@ -863,7 +881,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.1.5 <span class="timeline-date">— June 3, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Fixed</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>MaterialTheme Linkage Crash on iOS:</strong> Completely removed references to standard Compose MaterialTheme companion property accesses across core and plugins, replacing them with a custom static <code>LogTheme</code>. This prevents <code>IrLinkageError</code> crashes on iOS when linking AELog into applications using mismatched Compose Multiplatform versions.</li>
@@ -879,7 +897,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.1.4 <span class="timeline-date">— June 2, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Zero-Config iOS Auto-Initialization:</strong> Added auto-initialization for all four core plugins on iOS using <code>@EagerInitialization</code> in KMP shared modules. iOS consumers now enjoy completely zero-code plugin setup just like Android!</li>
@@ -901,7 +919,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.1.1 <span class="timeline-date">— June 1, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Request Body on Error:</strong> Network logs now capture and display the request body early in the request pipeline, ensuring it remains visible even when requests fail with client/server errors or network exceptions.</li>
@@ -924,7 +942,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.1.0 <span class="timeline-date">— June 1, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>DeviceInfo in crash reports:</strong> Crash events now capture a <code>DeviceInfo</code> snapshot at crash time (device model, OS version, app version, build number). When a QA tester taps <strong>Copy</strong> on any crash, the clipboard text now includes a <code>── Device Info ──</code> section with full context — no need to ask the developer which build or device was affected.</li>
@@ -941,7 +959,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.9 <span class="timeline-date">— May 31, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Removed</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>EventBus & lifecycle signals (YAGNI):</strong> The <code>EventBus</code>, <code>Event</code>, and <code>AELogLifecycle</code> classes have been deleted. None of the built-in plugins consumed these signals, so they were speculative plumbing that added unnecessary complexity. The <code>collectEvents</code> extension on <code>PluginContext</code> and the <code>eventBus</code> property are also gone.</li>
@@ -963,7 +981,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.8 <span class="timeline-date">— May 31, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Fixed</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Ktor request body not logged for JSON POST requests:</strong> When <code>ContentNegotiation</code> serializes a data class, Ktor produces a <code>WriteChannelContent</code> (stream). The interceptor now drains the stream into a byte array, logs the decoded JSON body, and re-wraps it as <code>ByteArrayContent</code> — so the actual HTTP request body is fully preserved.</li>
@@ -985,7 +1003,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.7 <span class="timeline-date">— May 29, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Simplified</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Unified Plugin Architecture:</strong> Consolidated the redundant <code>DataPlugin</code> marker interface and <code>UIPlugin</code> under a single, streamlined <code>Plugin</code> base contract.</li>
@@ -1004,7 +1022,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.6 <span class="timeline-date">— May 28, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Unified Configuration DSL:</strong> Replaced legacy, fragmented initialization methods (<code>configureCore</code>, <code>configurePlugin</code>) with a robust, type-safe, and atomic <code>AELog.configure { ... }</code> builder DSL.</li>
@@ -1028,7 +1046,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.5 <span class="timeline-date">— May 10, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><code>stability-config.conf</code> — targeted Compose compiler stability config.</li>
@@ -1056,7 +1074,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.4 <span class="timeline-date">— May 7, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Modular Subprojects:</strong> Completely reorganized and split the AELog project into independent sub-modules (e.g., <code>:core</code>, <code>:log-logs</code>, <code>:log-network</code>, <code>:log-network-ktor</code>, <code>:log-network-okhttp</code>, <code>:log-analytics</code>, <code>:log-crashes</code>).</li>
@@ -1079,7 +1097,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.3 <span class="timeline-date">— May 5, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li><strong>Pulsing Animation:</strong> Added a dynamic, pulsing status dot indicator for in-flight requests in the Network inspector list and detail view.</li>
@@ -1107,7 +1125,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.2 <span class="timeline-date">— May 3, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Fixed</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li>Fixed lint errors in <code>LogProvider</code> and <code>OkHttpInterceptor</code>.</li>
@@ -1124,7 +1142,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.1 <span class="timeline-date">— May 2, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li>Standardized <code>IdGenerator</code> across all modules.</li>
@@ -1141,7 +1159,7 @@ AELog.log.e("Auth", "Login failed", error)
                     </div>
                     <div class="timeline-content glass-panel card-xl">
                         <h3 class="timeline-title">v1.0.0 <span class="timeline-date">— May 1, 2026</span></h3>
-                        
+
                         <h4 class="changelog-section-title">Added</h4>
                         <ul class="body-sm mute-text bullet-list">
                             <li>🎉 Initial production release.</li>
@@ -1274,7 +1292,7 @@ ci: add iOS build to CI pipeline
             <rect width="170" height="40" rx="8" fill="rgba(59, 130, 246, 0.12)" stroke="var(--accent-blue)" stroke-width="1.5" />
             <text x="85" y="24" text-anchor="middle" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="#fff" class="flow-text">AELogProvider</text>
         </g>
-        
+
         <path d="M 275 50 L 275 70" stroke="var(--accent-blue)" stroke-width="1.5" fill="none" marker-end="url(#arch-arrow-main)" />
 
         <g transform="translate(190, 75)">
@@ -1330,7 +1348,7 @@ ci: add iOS build to CI pipeline
         <path d="M 75 205 L 75 230 L 160 230 L 160 265" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
         <path d="M 335 205 L 335 230 L 160 230" stroke="var(--color-border)" stroke-width="1" fill="none" />
         <path d="M 465 205 L 465 230 L 335 230" stroke="var(--color-border)" stroke-width="1" fill="none" />
-        
+
         <path d="M 205 205 L 205 240 L 390 240 L 390 265" stroke="var(--color-border)" stroke-width="1" fill="none" marker-end="url(#arch-arrow-main)" />
     </svg>
 </div>

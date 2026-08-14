@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.8] - 2026-08-14
+
+### Added
+- **Dark Mode Support**: Full support for Dark and Light themes across the entire UI.
+- **Settings Tab**: A new dedicated tab for library configuration, including theme mode selection (System, Light, Dark).
+- **Reactive Theming**: Enhanced `LogTheme` to reactively update colors and typography across all plugins without requiring a manual panel restart.
+
+---
+
 ## [1.1.7] - 2026-06-08
 
 ### Fixed
@@ -236,7 +245,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.7...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.8...HEAD
+[1.1.8]: https://github.com/abdo-essam/AELog/compare/v1.1.7...v1.1.8
 [1.1.7]: https://github.com/abdo-essam/AELog/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/abdo-essam/AELog/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/abdo-essam/AELog/compare/v1.1.4...v1.1.5

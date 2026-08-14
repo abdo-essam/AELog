@@ -51,6 +51,9 @@
   <img src="website/img/aelog_crashes.png" width="190" alt="Crashes Plugin" />
 </p>
 
+## 🎨 Dark Mode Support
+AELog now features full **Dark Mode** support! The UI automatically adapts to your system theme, or you can force Light/Dark mode via the new **Settings tab**.
+
 ## ✨ Core Plugins
 
 AELog provides a suite of 4 core plugins, allowing you to select and install only what you need:
@@ -72,7 +75,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.1.7"
+aelog = "1.1.8"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
