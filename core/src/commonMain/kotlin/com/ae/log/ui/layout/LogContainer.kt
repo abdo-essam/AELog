@@ -1,6 +1,8 @@
 package com.ae.log.ui.layout
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.ae.log.plugin.UIPlugin
 import com.ae.log.ui.LogController
 import com.ae.log.ui.layout.overlay.BottomSheetOverlay
@@ -21,8 +23,12 @@ internal fun LogContainer(
     onDismiss: () -> Unit,
 ) {
     val strategy: OverlayStrategy = if (isLargeScreen) DialogOverlay else BottomSheetOverlay
+    val themeMode by controller.themeMode.collectAsState()
 
-    strategy.Overlay(onDismiss = onDismiss) {
+    strategy.Overlay(
+        themeMode = themeMode,
+        onDismiss = onDismiss,
+    ) {
         LogContent(
             plugins = plugins,
             onDismiss = onDismiss,

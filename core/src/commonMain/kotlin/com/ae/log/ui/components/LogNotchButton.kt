@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.ae.log.ui.theme.LogTheme
+import com.ae.log.ui.theme.LogThemeMode
 
 /**
  * A sleek vertical pill docked snug against the right edge of the screen.
@@ -40,8 +41,9 @@ import com.ae.log.ui.theme.LogTheme
 internal fun LogNotchButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    themeMode: LogThemeMode = LogThemeMode.SYSTEM,
 ) {
-    LogTheme {
+    LogTheme(themeMode = themeMode) {
         Box(
             modifier =
                 modifier

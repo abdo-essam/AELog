@@ -15,6 +15,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogTheme
+import com.ae.log.ui.theme.LogThemeMode
 
 /**
  * Presents the AELog panel as a [ModalBottomSheet].
@@ -24,10 +25,11 @@ import com.ae.log.ui.theme.LogTheme
 public object BottomSheetOverlay : OverlayStrategy {
     @Composable
     override fun Overlay(
+        themeMode: LogThemeMode,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
-        LogTheme {
+        LogTheme(themeMode = themeMode) {
             val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             ModalBottomSheet(
                 onDismissRequest = onDismiss,

@@ -2,6 +2,7 @@ package com.ae.log
 
 import com.ae.log.plugin.Plugin
 import com.ae.log.plugin.PluginManager
+import com.ae.log.ui.theme.LogThemeMode
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -130,6 +131,8 @@ internal class LogInspector internal constructor() {
      * [com.ae.log.ui.AELogOverlay] via [LogController].
      */
     internal val overlayVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    internal val themeMode: MutableStateFlow<LogThemeMode> = MutableStateFlow(LogThemeMode.SYSTEM)
 
     internal fun export(): String {
         val sb = StringBuilder()

@@ -10,6 +10,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogTheme
+import com.ae.log.ui.theme.LogThemeMode
 
 /**
  * Presents the AELog panel as a centered [Dialog].
@@ -18,10 +19,11 @@ import com.ae.log.ui.theme.LogTheme
 public object DialogOverlay : OverlayStrategy {
     @Composable
     override fun Overlay(
+        themeMode: LogThemeMode,
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
-        LogTheme {
+        LogTheme(themeMode = themeMode) {
             Dialog(
                 onDismissRequest = onDismiss,
                 properties = DialogProperties(usePlatformDefaultWidth = false),

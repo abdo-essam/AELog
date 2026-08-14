@@ -12,6 +12,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+public enum class LogThemeMode {
+    SYSTEM, LIGHT, DARK
+}
+
 public object LogTheme {
     public val colors: ColorScheme
         @Composable
@@ -77,9 +81,14 @@ private object LogTypography {
 
 @Composable
 public fun LogTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: LogThemeMode = LogThemeMode.SYSTEM,
     content: @Composable () -> Unit
 ) {
+    val darkTheme = when (themeMode) {
+        LogThemeMode.SYSTEM -> isSystemInDarkTheme()
+        LogThemeMode.LIGHT -> false
+        LogThemeMode.DARK -> true
+    }
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
     val typography = Typography(
         bodyLarge = LogTypography.bodyLarge,

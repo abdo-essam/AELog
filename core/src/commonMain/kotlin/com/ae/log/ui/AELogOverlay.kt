@@ -53,35 +53,47 @@ public fun AELogOverlay(showNotch: Boolean = true) {
     val instance = AELog.instance
     if (!isEnabled || instance == null) return
 
-    val controller = remember { LogController(backing = instance.overlayVisible) }
+    val controller =
+        remember {
+            LogController(
+                backing = instance.overlayVisible,
+                themeBacking = instance.themeMode,
+            )
+        }
     val isVisible by controller.isVisible.collectAsState()
 
     val plugins by instance.plugins.plugins.collectAsState()
     val uiPlugins = remember(plugins) { plugins.filterIsInstance<UIPlugin>() }
+    val themeMode by controller.themeMode.collectAsState()
 
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint && maxHeight > 480.dp
+    CompositionLocalProvider(LocalLogController provides controller) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            val isLargeScreen = maxWidth > LogDimens.largeScreenBreakpoint && maxHeight > 480.dp
 
-        LogTheme {
-            // Notch pill — Dynamic Island-style trigger at the top of the screen.
-            // Hidden while the panel is open so it doesn't overlap.
-            if (!isVisible && showNotch && isNotchEnabledGlobal) {
-                Popup(
-                    alignment = Alignment.CenterEnd,
-                    properties = PopupProperties(focusable = false),
-                ) {
-                    LogNotchButton(onClick = { controller.show() })
+            LogTheme(themeMode = themeMode) {
+                // Notch pill — Dynamic Island-style trigger at the top of the screen.
+                // Hidden while the panel is open so it doesn't overlap.
+                if (!isVisible && showNotch && isNotchEnabledGlobal) {
+                    Popup(
+                        alignment = Alignment.CenterEnd,
+                        properties = PopupProperties(focusable = false),
+                    ) {
+                        LogNotchButton(
+                            onClick = { controller.show() },
+                            themeMode = themeMode,
+                        )
+                    }
                 }
-            }
 
-            // ModalBottomSheet / Dialog are already Popup-based — no layout parent needed.
-            if (isVisible) {
-                LogContainer(
-                    plugins = uiPlugins,
-                    isLargeScreen = isLargeScreen,
-                    controller = controller,
-                    onDismiss = { controller.hide() },
-                )
+                // ModalBottomSheet / Dialog are already Popup-based — no layout parent needed.
+                if (isVisible) {
+                    LogContainer(
+                        plugins = uiPlugins,
+                        isLargeScreen = isLargeScreen,
+                        controller = controller,
+                        onDismiss = { controller.hide() },
+                    )
+                }
             }
         }
     }

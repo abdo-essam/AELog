@@ -1,6 +1,8 @@
 package com.ae.log.ui.layout
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,52 +42,71 @@ internal fun LogContent(
     }
 
     val activeTabIndex by controller.activeTabIndex.collectAsState()
+    val isSettingsVisible by controller.isSettingsVisible.collectAsState()
 
     val safeIndex = activeTabIndex.coerceIn(0, plugins.lastIndex.coerceAtLeast(0))
     val selectedPlugin = plugins.getOrElse(safeIndex) { plugins.first() }
 
+    val currentTabIndex = if (isSettingsVisible) plugins.size else safeIndex
+
     Column(modifier = modifier.fillMaxSize()) {
-        if (plugins.size > 1) {
-            PrimaryScrollableTabRow(
-                selectedTabIndex = safeIndex,
-                containerColor = LogTheme.colors.surface,
-                contentColor = LogTheme.colors.primary,
-                edgePadding = LogSpacing.x4,
-            ) {
-                plugins.forEachIndexed { index, plugin ->
-                    val badgeCount by plugin.badgeCount.collectAsState()
-                    val count = badgeCount
-                    Tab(
-                        selected = index == safeIndex,
-                        onClick = { controller.selectTab(index) },
-                        text = {
-                            Text(plugin.name, style = LogTheme.typography.labelMedium)
-                        },
-                        icon = {
-                            if (count > 0) {
-                                BadgedBox(badge = {
-                                    Badge {
-                                        Text(
-                                            text = if (count > 99) "99+" else count.toString(),
-                                            style = LogTheme.typography.labelSmall,
-                                        )
-                                    }
-                                }) {
-                                    plugin.icon()
+        PrimaryScrollableTabRow(
+            selectedTabIndex = currentTabIndex,
+            containerColor = LogTheme.colors.surface,
+            contentColor = LogTheme.colors.primary,
+            edgePadding = LogSpacing.x4,
+        ) {
+            plugins.forEachIndexed { index, plugin ->
+                val badgeCount by plugin.badgeCount.collectAsState()
+                val count = badgeCount
+                Tab(
+                    selected = !isSettingsVisible && index == safeIndex,
+                    onClick = { controller.selectTab(index) },
+                    text = {
+                        Text(plugin.name, style = LogTheme.typography.labelMedium)
+                    },
+                    icon = {
+                        if (count > 0) {
+                            BadgedBox(badge = {
+                                Badge {
+                                    Text(
+                                        text = if (count > 99) "99+" else count.toString(),
+                                        style = LogTheme.typography.labelSmall,
+                                    )
                                 }
-                            } else {
+                            }) {
                                 plugin.icon()
                             }
-                        },
-                    )
-                }
+                        } else {
+                            plugin.icon()
+                        }
+                    },
+                )
             }
+
+            // Settings Tab
+            Tab(
+                selected = isSettingsVisible,
+                onClick = { controller.showSettings() },
+                text = {
+                    Text("Settings", style = LogTheme.typography.labelMedium)
+                },
+                icon = {
+                    Icon(Icons.Default.Settings, contentDescription = "Settings")
+                }
+            )
         }
 
-        // Active plugin content
-        PluginContent(
-            plugin = selectedPlugin,
-            modifier = Modifier.weight(1f),
-        )
+        if (isSettingsVisible) {
+            SettingsContent(
+                modifier = Modifier.weight(1f)
+            )
+        } else {
+            // Active plugin content
+            PluginContent(
+                plugin = selectedPlugin,
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
 }
