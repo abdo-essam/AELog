@@ -27,40 +27,42 @@ public object BottomSheetOverlay : OverlayStrategy {
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-        ModalBottomSheet(
-            onDismissRequest = onDismiss,
-            sheetState = sheetState,
-            containerColor = LogTheme.colors.surface,
-            shape =
-                RoundedCornerShape(
-                    topStart = LogDimens.overlayCornerRadius,
-                    topEnd = LogDimens.overlayCornerRadius,
-                ),
-        ) {
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.9f)
-                        .nestedScroll(
-                            remember {
-                                object : NestedScrollConnection {
-                                    override fun onPostScroll(
-                                        consumed: Offset,
-                                        available: Offset,
-                                        source: NestedScrollSource,
-                                    ): Offset = available
-
-                                    override suspend fun onPostFling(
-                                        consumed: Velocity,
-                                        available: Velocity,
-                                    ): Velocity = available
-                                }
-                            },
-                        ),
+        LogTheme {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            ModalBottomSheet(
+                onDismissRequest = onDismiss,
+                sheetState = sheetState,
+                containerColor = LogTheme.colors.surface,
+                shape =
+                    RoundedCornerShape(
+                        topStart = LogDimens.overlayCornerRadius,
+                        topEnd = LogDimens.overlayCornerRadius,
+                    ),
             ) {
-                content()
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.9f)
+                            .nestedScroll(
+                                remember {
+                                    object : NestedScrollConnection {
+                                        override fun onPostScroll(
+                                            consumed: Offset,
+                                            available: Offset,
+                                            source: NestedScrollSource,
+                                        ): Offset = available
+
+                                        override suspend fun onPostFling(
+                                            consumed: Velocity,
+                                            available: Velocity,
+                                        ): Velocity = available
+                                    }
+                                },
+                            ),
+                ) {
+                    content()
+                }
             }
         }
     }

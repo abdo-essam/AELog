@@ -23,11 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+import com.ae.log.ui.theme.LogTheme
 
 /**
  * A sleek vertical pill docked snug against the right edge of the screen.
@@ -40,61 +41,63 @@ internal fun LogNotchButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier =
-            modifier
-                .width(32.dp)
-                .height(120.dp)
-                .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
-                .background(Color(0xFF111111))
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClickLabel = "Open AELog panel",
-                    onClick = onClick,
-                ),
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
+    LogTheme {
+        Box(
+            modifier =
+                modifier
+                    .width(32.dp)
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
+                    .background(LogTheme.colors.primary)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClickLabel = "Open AELog panel",
+                        onClick = onClick,
+                    ),
         ) {
-            Box(
-                modifier =
-                    Modifier
-                        .padding(top = 10.dp)
-                        .size(20.dp),
-                contentAlignment = Alignment.Center,
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Open AELog",
-                    tint = Color.White,
-                    modifier = Modifier.size(16.dp),
-                )
-            }
+                Box(
+                    modifier =
+                        Modifier
+                            .padding(top = 10.dp)
+                            .size(20.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Open AELog",
+                        tint = LogTheme.colors.onPrimary,
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
 
-            Box(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = "AELOG",
-                    color = Color.White.copy(alpha = 0.9f),
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 2.sp,
-                    modifier = Modifier.rotate(-90f),
-                    textAlign = TextAlign.Center,
-                    maxLines = 1,
-                    softWrap = false,
-                )
-            }
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = "AELOG",
+                        color = LogTheme.colors.onPrimary.copy(alpha = 0.9f),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp,
+                        modifier = Modifier.rotate(-90f),
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
+                }
 
-            Box(modifier = Modifier.height(10.dp))
+                Box(modifier = Modifier.height(10.dp))
+            }
         }
     }
 }

@@ -21,20 +21,22 @@ public object DialogOverlay : OverlayStrategy {
         onDismiss: () -> Unit,
         content: @Composable () -> Unit,
     ) {
-        Dialog(
-            onDismissRequest = onDismiss,
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-        ) {
-            Surface(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(0.85f)
-                        .fillMaxHeight(0.8f),
-                shape = RoundedCornerShape(LogDimens.overlayCornerRadius),
-                color = LogTheme.colors.surface,
-                tonalElevation = LogDimens.dialogTonalElevation,
+        LogTheme {
+            Dialog(
+                onDismissRequest = onDismiss,
+                properties = DialogProperties(usePlatformDefaultWidth = false),
             ) {
-                content()
+                Surface(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(0.85f)
+                            .fillMaxHeight(0.8f),
+                    shape = RoundedCornerShape(LogDimens.overlayCornerRadius),
+                    color = LogTheme.colors.surface,
+                    tonalElevation = LogDimens.dialogTonalElevation,
+                ) {
+                    content()
+                }
             }
         }
     }
