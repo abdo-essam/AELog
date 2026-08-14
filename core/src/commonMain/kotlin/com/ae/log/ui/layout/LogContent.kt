@@ -93,13 +93,13 @@ internal fun LogContent(
                 },
                 icon = {
                     Icon(Icons.Default.Settings, contentDescription = "Settings")
-                }
+                },
             )
         }
 
         if (isSettingsVisible) {
             SettingsContent(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
         } else {
             // Active plugin content

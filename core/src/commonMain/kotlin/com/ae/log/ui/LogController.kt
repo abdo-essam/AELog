@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.update
 /**
  * CompositionLocal for the [LogController].
  */
-internal val LocalLogController = staticCompositionLocalOf<LogController> {
-    error("No LogController provided")
-}
+internal val LocalLogController =
+    staticCompositionLocalOf<LogController> {
+        error("No LogController provided")
+    }
 
 /**
  * Controls the visibility of the AELog UI overlay internally.

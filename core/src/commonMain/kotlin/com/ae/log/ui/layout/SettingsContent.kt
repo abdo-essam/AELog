@@ -20,23 +20,21 @@ import com.ae.log.ui.theme.LogTheme
 import com.ae.log.ui.theme.LogThemeMode
 
 @Composable
-internal fun SettingsContent(
-    modifier: Modifier = Modifier,
-) {
+internal fun SettingsContent(modifier: Modifier = Modifier) {
     val controller = LocalLogController.current
     val themeMode by controller.themeMode.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(LogSpacing.x4)
+            contentPadding = PaddingValues(LogSpacing.x4),
         ) {
             item {
                 Text(
                     text = "Appearance",
                     style = LogTheme.typography.labelSmall,
                     color = LogTheme.colors.primary,
-                    modifier = Modifier.padding(bottom = LogSpacing.x2)
+                    modifier = Modifier.padding(bottom = LogSpacing.x2),
                 )
             }
 
@@ -45,7 +43,7 @@ internal fun SettingsContent(
                     title = "System",
                     icon = Icons.Default.SettingsBrightness,
                     selected = themeMode == LogThemeMode.SYSTEM,
-                    onClick = { controller.setThemeMode(LogThemeMode.SYSTEM) }
+                    onClick = { controller.setThemeMode(LogThemeMode.SYSTEM) },
                 )
             }
 
@@ -54,7 +52,7 @@ internal fun SettingsContent(
                     title = "Light",
                     icon = Icons.Default.LightMode,
                     selected = themeMode == LogThemeMode.LIGHT,
-                    onClick = { controller.setThemeMode(LogThemeMode.LIGHT) }
+                    onClick = { controller.setThemeMode(LogThemeMode.LIGHT) },
                 )
             }
 
@@ -63,7 +61,7 @@ internal fun SettingsContent(
                     title = "Dark",
                     icon = Icons.Default.DarkMode,
                     selected = themeMode == LogThemeMode.DARK,
-                    onClick = { controller.setThemeMode(LogThemeMode.DARK) }
+                    onClick = { controller.setThemeMode(LogThemeMode.DARK) },
                 )
             }
         }
@@ -80,32 +78,34 @@ private fun ThemeOption(
     Surface(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
-        color = Color.Transparent
+        color = Color.Transparent,
     ) {
         Row(
-            modifier = Modifier
-                .padding(vertical = LogSpacing.x3),
+            modifier =
+                Modifier
+                    .padding(vertical = LogSpacing.x3),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(LogSpacing.x3)
+            horizontalArrangement = Arrangement.spacedBy(LogSpacing.x3),
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = if (selected) LogTheme.colors.primary else LogTheme.colors.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(20.dp),
             )
             Text(
                 text = title,
                 style = LogTheme.typography.bodyMedium,
                 color = if (selected) LogTheme.colors.primary else LogTheme.colors.onSurface,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             RadioButton(
                 selected = selected,
                 onClick = null,
-                colors = RadioButtonDefaults.colors(
-                    selectedColor = LogTheme.colors.primary
-                )
+                colors =
+                    RadioButtonDefaults.colors(
+                        selectedColor = LogTheme.colors.primary,
+                    ),
             )
         }
     }
