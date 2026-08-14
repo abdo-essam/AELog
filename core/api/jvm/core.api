@@ -159,46 +159,33 @@ public final class com/ae/log/ui/components/LogSearchBarKt {
 	public static final fun LogSearchBar (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class com/ae/log/ui/layout/ComposableSingletons$LogContentKt {
+	public static final field INSTANCE Lcom/ae/log/ui/layout/ComposableSingletons$LogContentKt;
+	public fun <init> ()V
+	public final fun getLambda$-16784565$core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1742575306$core ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/ae/log/ui/layout/ComposableSingletons$SettingsContentKt {
+	public static final field INSTANCE Lcom/ae/log/ui/layout/ComposableSingletons$SettingsContentKt;
+	public fun <init> ()V
+	public final fun getLambda$-1467307761$core ()Lkotlin/jvm/functions/Function3;
+}
+
 public final class com/ae/log/ui/layout/overlay/BottomSheetOverlay : com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/layout/overlay/BottomSheetOverlay;
-	public fun Overlay (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public fun Overlay (Lcom/ae/log/ui/theme/LogThemeMode;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/ae/log/ui/layout/overlay/DialogOverlay : com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/layout/overlay/DialogOverlay;
-	public fun Overlay (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public fun Overlay (Lcom/ae/log/ui/theme/LogThemeMode;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public abstract interface class com/ae/log/ui/layout/overlay/OverlayStrategy {
-	public abstract fun Overlay (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
-}
-
-public final class com/ae/log/ui/theme/LogColors {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/ui/theme/LogColors;
-	public final fun getBackground-0d7_KjU ()J
-	public final fun getError-0d7_KjU ()J
-	public final fun getErrorContainer-0d7_KjU ()J
-	public final fun getInverseOnSurface-0d7_KjU ()J
-	public final fun getInverseSurface-0d7_KjU ()J
-	public final fun getOnBackground-0d7_KjU ()J
-	public final fun getOnError-0d7_KjU ()J
-	public final fun getOnErrorContainer-0d7_KjU ()J
-	public final fun getOnPrimary-0d7_KjU ()J
-	public final fun getOnPrimaryContainer-0d7_KjU ()J
-	public final fun getOnSecondary-0d7_KjU ()J
-	public final fun getOnSurface-0d7_KjU ()J
-	public final fun getOnSurfaceVariant-0d7_KjU ()J
-	public final fun getOutline-0d7_KjU ()J
-	public final fun getOutlineVariant-0d7_KjU ()J
-	public final fun getPrimary-0d7_KjU ()J
-	public final fun getPrimaryContainer-0d7_KjU ()J
-	public final fun getScrim-0d7_KjU ()J
-	public final fun getSecondary-0d7_KjU ()J
-	public final fun getSurface-0d7_KjU ()J
-	public final fun getSurfaceVariant-0d7_KjU ()J
+	public abstract fun Overlay (Lcom/ae/log/ui/theme/LogThemeMode;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/ae/log/ui/theme/LogDimens {
@@ -228,19 +215,21 @@ public final class com/ae/log/ui/theme/LogSpacing {
 public final class com/ae/log/ui/theme/LogTheme {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/theme/LogTheme;
-	public final fun getColors ()Lcom/ae/log/ui/theme/LogColors;
-	public final fun getTypography ()Lcom/ae/log/ui/theme/LogTypography;
+	public final fun getColors (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/ColorScheme;
+	public final fun getTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
 }
 
-public final class com/ae/log/ui/theme/LogTypography {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/ui/theme/LogTypography;
-	public final fun getBodyLarge ()Landroidx/compose/ui/text/TextStyle;
-	public final fun getBodyMedium ()Landroidx/compose/ui/text/TextStyle;
-	public final fun getBodySmall ()Landroidx/compose/ui/text/TextStyle;
-	public final fun getLabelLarge ()Landroidx/compose/ui/text/TextStyle;
-	public final fun getLabelMedium ()Landroidx/compose/ui/text/TextStyle;
-	public final fun getLabelSmall ()Landroidx/compose/ui/text/TextStyle;
+public final class com/ae/log/ui/theme/LogThemeKt {
+	public static final fun LogTheme (Lcom/ae/log/ui/theme/LogThemeMode;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/ae/log/ui/theme/LogThemeMode : java/lang/Enum {
+	public static final field DARK Lcom/ae/log/ui/theme/LogThemeMode;
+	public static final field LIGHT Lcom/ae/log/ui/theme/LogThemeMode;
+	public static final field SYSTEM Lcom/ae/log/ui/theme/LogThemeMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/ui/theme/LogThemeMode;
+	public static fun values ()[Lcom/ae/log/ui/theme/LogThemeMode;
 }
 
 public final class com/ae/log/utils/CallerTagKt {
