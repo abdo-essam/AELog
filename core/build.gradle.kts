@@ -17,6 +17,7 @@ group = "io.github.abdo-essam"
 version = project.findProperty("VERSION_NAME")?.toString() ?: "0.0.1-SNAPSHOT"
 
 kotlin {
+    jvmToolchain(21)
     explicitApi()
     compilerOptions {
         freeCompilerArgs.addAll(
@@ -76,14 +77,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.runtime)
         }
-    }
-}
-
-// Scope JVM toolchain to JVM/Android compilation tasks only.
-// Wasm and Native targets use their own toolchains and do not need this.
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
-    compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
