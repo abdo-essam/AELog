@@ -34,12 +34,17 @@ class InterceptorDefaultsTest {
     }
 
     @Test
-    fun `DEFAULT_EXCLUDED - contains security-sensitive headers`() {
+    fun `DEFAULT_EXCLUDED - is empty`() {
+        assertTrue(InterceptorDefaults.DEFAULT_EXCLUDED.isEmpty())
+    }
+
+    @Test
+    fun `COMMON_EXCLUDED - contains security-sensitive headers`() {
         val sensitive = listOf("Authorization", "Cookie", "Set-Cookie", "Proxy-Authorization", "X-Api-Key")
         sensitive.forEach { header ->
             assertTrue(
-                InterceptorDefaults.DEFAULT_EXCLUDED.any { it.equals(header, ignoreCase = true) },
-                "Expected DEFAULT_EXCLUDED to contain $header",
+                InterceptorDefaults.COMMON_EXCLUDED.any { it.equals(header, ignoreCase = true) },
+                "Expected COMMON_EXCLUDED to contain $header",
             )
         }
     }

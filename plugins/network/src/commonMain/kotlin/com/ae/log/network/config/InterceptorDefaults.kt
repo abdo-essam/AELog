@@ -18,12 +18,19 @@ public object InterceptorDefaults {
     /**
      * Headers excluded from the UI by default.
      *
+     * In AELog, all headers are shown by default to provide maximum debugging visibility.
+     * Pass [COMMON_EXCLUDED] to hide security-sensitive and noisy system headers,
+     * or provide your own custom set of header names.
+     */
+    public val DEFAULT_EXCLUDED: Set<String> = emptySet()
+
+    /**
+     * A common set of headers to exclude for better privacy and reduced noise.
+     *
      * Includes security-sensitive headers (Authorization, Cookie, Set-Cookie)
      * and verbose system headers that add noise without debugging value.
-     *
-     * Pass an empty set to show all headers, or override with your own list.
      */
-    public val DEFAULT_EXCLUDED: Set<String> =
+    public val COMMON_EXCLUDED: Set<String> =
         setOf(
             // Security — never log raw tokens/cookies
             "Authorization",

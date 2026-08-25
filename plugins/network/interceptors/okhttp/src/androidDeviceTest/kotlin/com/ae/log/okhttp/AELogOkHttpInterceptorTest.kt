@@ -160,7 +160,7 @@ class AELogOkHttpInterceptorTest {
     // ── Header exclusion ──────────────────────────────────────────────────
 
     @Test
-    fun excludes_default_sensitive_headers() {
+    fun shows_sensitive_headers_by_default() {
         enqueue()
         val request =
             Request
@@ -170,20 +170,20 @@ class AELogOkHttpInterceptorTest {
                 .header("X-Custom", "visible-value")
                 .build()
         client().newCall(request).execute().close()
-        assertTrue(!export().contains("secret-token"))
+        assertTrue(export().contains("secret-token"))
     }
 
     @Test
-    fun includes_headers_when_exclude_set_is_empty() {
+    fun excludes_headers_when_explicitly_configured() {
         enqueue()
         val request =
             Request
                 .Builder()
                 .url(baseUrl())
-                .header("Authorization", "Bearer visible-token")
+                .header("Authorization", "Bearer secret-token")
                 .build()
-        client(AELogOkHttpInterceptor(excludeHeaders = emptySet())).newCall(request).execute().close()
-        assertTrue(export().contains("Bearer visible-token"))
+        client(AELogOkHttpInterceptor(excludeHeaders = setOf("Authorization"))).newCall(request).execute().close()
+        assertTrue(!export().contains("secret-token"))
     }
 
     // ── Body truncation ───────────────────────────────────────────────────

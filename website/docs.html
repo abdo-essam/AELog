@@ -370,12 +370,12 @@ AELog.isEnabled = BuildConfig.DEBUG
 <h1>Network Interceptors</h1>
 <p>AELog provides high-fidelity interceptors for both Ktor and OkHttp to capture HTTP traffic automatically.</p>
 
-<h2>Security by Default</h2>
-<p>Both interceptors automatically redact sensitive headers like <code>Authorization</code> and <code>Cookie</code> from the UI to prevent credentials from appearing in logs.</p>
-<pre><code class="language-kotlin">// Extend default exclusions if needed
+<h2>Security and Header Exclusion</h2>
+<p>Both interceptors show <strong>all headers by default</strong> to provide maximum debugging visibility. To redact sensitive headers like <code>Authorization</code> and <code>Cookie</code> from the UI, pass <code>InterceptorDefaults.COMMON_EXCLUDED</code> to the configuration.</p>
+<pre><code class="language-kotlin">// Exclude common sensitive headers
 val client = HttpClient {
     install(AELogKtorInterceptor) {
-        excludeHeaders = setOf("X-Api-Key")
+        excludeHeaders = InterceptorDefaults.COMMON_EXCLUDED
     }
 }</code></pre>
 

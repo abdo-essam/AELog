@@ -22,6 +22,12 @@ import okio.Buffer
 public class AELogOkHttpInterceptor(
     public val maxRequestBodyBytes: Long = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES,
     public val maxResponseBodyBytes: Long = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES,
+    /**
+     * Headers excluded from the UI.
+     *
+     * Defaults to an empty set, showing all headers. Pass [InterceptorDefaults.COMMON_EXCLUDED]
+     * to hide security-sensitive headers, or provide a custom set.
+     */
     public val excludeHeaders: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

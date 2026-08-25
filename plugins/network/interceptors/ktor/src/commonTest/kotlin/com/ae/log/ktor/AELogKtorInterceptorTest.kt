@@ -180,7 +180,7 @@ class AELogKtorInterceptorTest {
     // ── Header exclusion ──────────────────────────────────────────────────
 
     @Test
-    fun `excludes default sensitive headers`() =
+    fun `shows sensitive headers by default`() =
         runTest {
             val client = mockClient()
             client.get("https://api.example.com/users") {
@@ -189,7 +189,21 @@ class AELogKtorInterceptorTest {
             }
             client.close()
 
-            // Authorization is excluded by InterceptorDefaults.DEFAULT_EXCLUDED
+            // Authorization is shown by default (DEFAULT_EXCLUDED is empty)
+            assertTrue(networkPlugin.export().contains("secret-token"))
+        }
+
+    @Test
+    fun `excludes headers when explicitly configured`() =
+        runTest {
+            val client = mockClient {
+                excludeHeaders = setOf("Authorization")
+            }
+            client.get("https://api.example.com/users") {
+                header("Authorization", "Bearer secret-token")
+            }
+            client.close()
+
             assertTrue(!networkPlugin.export().contains("secret-token"))
         }
 

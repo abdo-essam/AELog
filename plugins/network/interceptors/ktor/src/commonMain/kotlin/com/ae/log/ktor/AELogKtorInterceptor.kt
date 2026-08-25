@@ -360,7 +360,12 @@ public class AELogKtorInterceptor internal constructor(
          */
         public var maxBodyBytes: Int = InterceptorDefaults.DEFAULT_MAX_BODY_BYTES.toInt()
 
-        /** Headers excluded from the UI by default. Delegates to [InterceptorDefaults.DEFAULT_EXCLUDED]. */
+        /**
+         * Headers excluded from the UI by default.
+         *
+         * Defaults to an empty set, showing all headers. Pass [InterceptorDefaults.COMMON_EXCLUDED]
+         * to hide security-sensitive headers, or provide a custom set.
+         */
         public var excludeHeaders: Set<String> = InterceptorDefaults.DEFAULT_EXCLUDED
     }
 }

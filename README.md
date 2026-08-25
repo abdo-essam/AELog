@@ -204,18 +204,19 @@ try {
 AELog provides first-class interceptors for OkHttp and Ktor.
 
 #### Security (Header Exclusion)
-Both interceptors are **secure by default**. They automatically exclude sensitive headers like `Authorization` and `Cookie` to prevent credentials from appearing in logs.
+Both interceptors show **all headers by default** to provide maximum debugging visibility. To hide sensitive headers like `Authorization` or `Cookie`, pass `InterceptorDefaults.COMMON_EXCLUDED` (or your own custom set) to the interceptor configuration.
 
 ```kotlin
 // OkHttp
 val interceptor = AELogOkHttpInterceptor(
-    excludeHeaders = setOf("X-Sensitive-Header") // Extends default exclusions
+    excludeHeaders = InterceptorDefaults.COMMON_EXCLUDED // Hide common sensitive headers
 )
 
 // Ktor
 val client = HttpClient {
     install(AELogKtorInterceptor) {
-        excludeHeaders = setOf("X-Api-Key")
+        // Hide common sensitive headers + custom ones
+        excludeHeaders = InterceptorDefaults.COMMON_EXCLUDED + "X-Custom-Secret"
     }
 }
 ```
