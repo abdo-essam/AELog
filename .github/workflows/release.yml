@@ -71,6 +71,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           body: ${{ steps.changelog.outputs.changelog }}
+          allowUpdates: true
           draft: false
           prerelease: ${{ contains(steps.version.outputs.VERSION, 'alpha') || contains(steps.version.outputs.VERSION, 'beta') }}
           token: ${{ secrets.GITHUB_TOKEN }}

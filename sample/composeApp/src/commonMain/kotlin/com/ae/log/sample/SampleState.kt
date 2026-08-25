@@ -1,15 +1,13 @@
 package com.ae.log.sample
 
-import com.ae.log.AELog
-import com.ae.log.analytics.AnalyticsPlugin
-import com.ae.log.crashes.CrashPlugin
 import com.ae.log.ktor.AELogKtorInterceptor
-import com.ae.log.logs.LogPlugin
-import com.ae.log.network.NetworkPlugin
 import io.ktor.client.HttpClient
 
 /**
  * Simplified state management for the sample app.
+ *
+ * Plugins (Logs, Crashes, Network, Analytics) are auto-initialized
+ * by AELog's platform initializers on Android, iOS, and Wasm.
  */
 object SampleState {
     var httpClient: HttpClient? = null
@@ -17,11 +15,6 @@ object SampleState {
 
     fun initialize() {
         if (httpClient != null) return
-
-        AELog.install(LogPlugin())
-        AELog.install(NetworkPlugin())
-        AELog.install(AnalyticsPlugin())
-        AELog.install(CrashPlugin())
 
         httpClient =
             HttpClient {
