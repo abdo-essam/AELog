@@ -7,7 +7,7 @@
         android:name=".SampleApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
-        android:label="AELog Sample"
+        android:label="AELog"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity

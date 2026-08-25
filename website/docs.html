@@ -96,6 +96,7 @@
             <div class="sidebar-category-group">
                 <h4>Core Configuration</h4>
                 <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
+                <a class="docs-nav-link" data-section="network-interceptors" href="#network-interceptors">Network Interceptors</a>
             </div>
 
             <!-- Logical Category Group Sidebar: Plugins & Architecture -->
@@ -363,6 +364,49 @@ AELog.hide()
 AELog.isEnabled = BuildConfig.DEBUG
 </code></pre>
 
+</div>
+
+<div id="network-interceptors" class="docs-section">
+<h1>Network Interceptors</h1>
+<p>AELog provides high-fidelity interceptors for both Ktor and OkHttp to capture HTTP traffic automatically.</p>
+
+<h2>Security by Default</h2>
+<p>Both interceptors automatically redact sensitive headers like <code>Authorization</code> and <code>Cookie</code> from the UI to prevent credentials from appearing in logs.</p>
+<pre><code class="language-kotlin">// Extend default exclusions if needed
+val client = HttpClient {
+    install(AELogKtorInterceptor) {
+        excludeHeaders = setOf("X-Api-Key")
+    }
+}</code></pre>
+
+<h2>Supabase Integration</h2>
+<p>Since the Supabase Kotlin SDK is built on top of Ktor, you can easily inspect all database, auth, and storage traffic by installing the AELog interceptor in the <code>httpConfig</code> block:</p>
+<pre><code class="language-kotlin">val supabase = createSupabaseClient(
+    supabaseUrl = "https://your-project.supabase.co",
+    supabaseKey = "your-anon-key"
+) {
+    install(Auth)
+    // ... other modules
+
+    httpConfig {
+        install(AELogKtorInterceptor) {
+            maxBodyBytes = 100_000 // Limit capture size
+        }
+    }
+}</code></pre>
+
+<h2>Ktor Body Capture</h2>
+<p>For non-destructive inspection of response bodies in Ktor, it is recommended to install the <code>DoubleReceive</code> plugin. AELog includes a fallback mechanism that attempts to capture the body using Ktor's internal stream handlers, but <code>DoubleReceive</code> is the safest approach for complex applications.</p>
+<pre><code class="language-kotlin">val client = HttpClient {
+    install(DoubleReceive)
+    install(AELogKtorInterceptor)
+}</code></pre>
+
+<h2>OkHttp (Android Only)</h2>
+<p>For Android apps using OkHttp directly:</p>
+<pre><code class="language-kotlin">val client = OkHttpClient.Builder()
+    .addInterceptor(AELogOkHttpInterceptor())
+    .build()</code></pre>
 </div>
 <div id="plugins-overview" class="docs-section ">
 <h1>Plugins Overview</h1>

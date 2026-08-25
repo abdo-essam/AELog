@@ -115,7 +115,12 @@ kotlin {
 ## 🚀 Quick Start
 
 ### 1. Zero-Config (Automatic Setup)
-AELog features **zero-config auto-initialisation** on Android and iOS! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with sensible defaults when your app launches. **No setup, configuration, or initialization code is required.**
+AELog features **zero-config auto-initialisation** on Android and iOS! Just add the Gradle dependencies for the plugins you want, and AELog automatically boots up with sensible defaults when your app launches.
+
+- **Android:** Uses a `ContentProvider` to register plugins before `Application.onCreate`.
+- **iOS:** Uses `@EagerInitialization` to register plugins when the Kotlin/Native framework is loaded.
+
+**No setup, configuration, or initialization code is required.**
 
 ### 2. Drop in the Overlay
 
@@ -234,6 +239,20 @@ By default, Ktor response streams can only be read once. To enable non-destructi
 val client = HttpClient {
     install(DoubleReceive) // Recommended for Network Plugin
     install(AELogKtorInterceptor)
+}
+```
+
+#### Supabase Integration
+Since Supabase Kotlin uses Ktor under the hood, you can easily inspect all database, auth, and storage traffic by installing the interceptor in the `httpConfig` block:
+
+```kotlin
+val supabase = createSupabaseClient(url, key) {
+    install(Auth)
+    // ... other modules
+    
+    httpConfig {
+        install(AELogKtorInterceptor)
+    }
 }
 ```
 
