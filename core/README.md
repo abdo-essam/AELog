@@ -22,6 +22,7 @@ core/
 │   ├── androidMain/         # Android specific integrations (LogViewerActivity)
 │   ├── iosMain/             # iOS file system and native integrations
 │   ├── jvmMain/             # JVM file system integrations
+│   ├── wasmJsMain/          # Wasm/JS browser in-memory and interop integrations
 │   └── commonTest/          # Multiplatform unit & integration tests
 ```
 

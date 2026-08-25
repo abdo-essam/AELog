@@ -196,9 +196,10 @@ class AELogKtorInterceptorTest {
     @Test
     fun `excludes headers when explicitly configured`() =
         runTest {
-            val client = mockClient {
-                excludeHeaders = setOf("Authorization")
-            }
+            val client =
+                mockClient {
+                    excludeHeaders = setOf("Authorization")
+                }
             client.get("https://api.example.com/users") {
                 header("Authorization", "Bearer secret-token")
             }

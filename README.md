@@ -26,7 +26,7 @@
     <img src="https://img.shields.io/github/license/abdo-essam/AELog?style=flat-square" alt="License" />
   </a>
   <a href="https://kotlinlang.org">
-    <img src="https://img.shields.io/badge/Kotlin-2.2.0-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin" />
+    <img src="https://img.shields.io/badge/Kotlin-2.3.20-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin" />
   </a>
 </p>
 
@@ -50,6 +50,9 @@
   &nbsp;
   <img src="website/img/aelog_crashes.png" width="190" alt="Crashes Plugin" />
 </p>
+
+## 🌐 Kotlin/Wasm & Multiplatform Support
+AELog supports **Android**, **iOS**, **JVM / Desktop**, and **WebAssembly (`wasmJs`)**! Run your in-app developer tools seamlessly across mobile, desktop, and browser targets with zero platform-specific boilerplate.
 
 ## 🎨 Dark Mode Support
 AELog now features full **Dark Mode** support! The UI automatically adapts to your system theme, or you can force Light/Dark mode via the new **Settings tab**.
@@ -75,7 +78,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.1.8"
+aelog = "1.1.9"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -124,7 +127,7 @@ AELog features **zero-config auto-initialisation** on Android and iOS! Just add 
 
 ### 2. Drop in the Overlay
 
-#### For Compose Apps (Android & iOS)
+#### For Compose Apps (Android, iOS, Desktop & WebAssembly)
 Add `AELogOverlay()` as a **sibling** anywhere in your root composable — no wrapping required. By default, the floating notch trigger is enabled (`showNotch = true`), allowing you to tap it to open the inspector:
 
 ```kotlin

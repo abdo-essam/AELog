@@ -1,6 +1,11 @@
 package com.ae.log.sample
 
+import com.ae.log.AELog
+import com.ae.log.analytics.AnalyticsPlugin
+import com.ae.log.crashes.CrashPlugin
 import com.ae.log.ktor.AELogKtorInterceptor
+import com.ae.log.logs.LogPlugin
+import com.ae.log.network.NetworkPlugin
 import io.ktor.client.HttpClient
 
 /**
@@ -12,6 +17,11 @@ object SampleState {
 
     fun initialize() {
         if (httpClient != null) return
+
+        AELog.install(LogPlugin())
+        AELog.install(NetworkPlugin())
+        AELog.install(AnalyticsPlugin())
+        AELog.install(CrashPlugin())
 
         httpClient =
             HttpClient {

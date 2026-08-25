@@ -13,6 +13,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.unit.dp
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogTheme
 import com.ae.log.ui.theme.LogThemeMode
@@ -35,11 +36,18 @@ public object BottomSheetOverlay : OverlayStrategy {
                 onDismissRequest = onDismiss,
                 sheetState = sheetState,
                 containerColor = LogTheme.colors.surface,
+                tonalElevation = 0.dp,
+                scrimColor = LogTheme.colors.scrim,
                 shape =
                     RoundedCornerShape(
                         topStart = LogDimens.overlayCornerRadius,
                         topEnd = LogDimens.overlayCornerRadius,
                     ),
+                dragHandle = {
+                    BottomSheetDefaults.DragHandle(
+                        color = LogTheme.colors.outlineVariant,
+                    )
+                },
             ) {
                 Box(
                     modifier =

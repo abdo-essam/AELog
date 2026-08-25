@@ -3,6 +3,8 @@ import com.vanniktech.maven.publish.SonatypeHost
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
+    alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.vanniktechPublish)
     `maven-publish`
     signing
@@ -41,12 +43,18 @@ kotlin {
 
     jvm()
 
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
         commonMain.dependencies {
             // Brings in logs-network (and transitively logs core)
             api(projects.plugins.network)
             // Ktor is a required dep here — consumers of this module need it
             api(libs.ktor.client.core)
+            implementation(compose.runtime)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

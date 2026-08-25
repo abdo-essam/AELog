@@ -26,7 +26,7 @@ public object LogDimens {
     public val overlayCornerRadius: Dp = LogSpacing.x6
 
     /** Tonal elevation for the dialog overlay surface. */
-    public val dialogTonalElevation: Dp = 6.dp
+    public val dialogTonalElevation: Dp = 0.dp
 
     /** Thickness of the divider between list items. */
     public val listDividerThickness: Dp = 1.dp

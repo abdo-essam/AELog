@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+ 
+## [1.1.9] - 2026-08-25
+
+### Added
+- **Kotlin/Wasm (`wasmJsMain`) Support**: Added full `wasmJs` browser target support across `core`, `logs`, `crashes`, `analytics`, `network`, and `network-ktor`.
+  - **Browser Log Sink**: Routes log output with severity preservation to `console.log`, `console.warn`, and `console.error` via `@JsFun` interop.
+  - **Browser Crash Capture**: Captures uncaught browser errors via `window.onerror` and safely wraps them into Kotlin runtime exceptions.
+  - **Browser Device Metadata**: Inspects `navigator.platform` and `navigator.userAgent` for browser platform info.
+  - **In-Memory File Operations**: Provides a non-filesystem in-memory storage fallback for web browser sessions.
+  - **Web Sample App**: Added a WebAssembly entry point and webpack build setup for the Compose Multiplatform sample app.
+
+### Changed
+- **Dialog Overlay Dimensions**: Increased Dialog Overlay size on large screens from 85% width / 80% height to 94% width / 90% height for a more spacious, productive debugging view.
+- **Dependency & Toolchain Upgrades**: Upgraded Kotlin to `2.3.20` matching Compose Multiplatform 1.9.3's Wasm standard library.
+
+### Fixed
+- **Overlay Color Consistency**: Fixed color and tint differences between `ModalBottomSheet` and `Dialog` by setting `tonalElevation = 0.dp` across both containers, eliminating Material 3 surface elevation tint distortion and ensuring clean, identical `#FFFFFF` (Light) and `#1E1E1E` (Dark) backgrounds.
+- **SOLID (Interface Segregation)**: Provided a default no-op implementation for `ensureDirectoryExists()` in `FileOperations` so in-memory and non-filesystem targets are not forced to override meaningless methods.
+
+---
 
 ## [1.1.8] - 2026-08-15
 
@@ -245,7 +265,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.8...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.1.9...HEAD
+[1.1.9]: https://github.com/abdo-essam/AELog/compare/v1.1.8...v1.1.9
 [1.1.8]: https://github.com/abdo-essam/AELog/compare/v1.1.7...v1.1.8
 [1.1.7]: https://github.com/abdo-essam/AELog/compare/v1.1.6...v1.1.7
 [1.1.6]: https://github.com/abdo-essam/AELog/compare/v1.1.5...v1.1.6

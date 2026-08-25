@@ -178,6 +178,12 @@ public final class com/ae/log/ui/layout/overlay/BottomSheetOverlay : com/ae/log/
 	public fun Overlay (Lcom/ae/log/ui/theme/LogThemeMode;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
+public final class com/ae/log/ui/layout/overlay/ComposableSingletons$BottomSheetOverlayKt {
+	public static final field INSTANCE Lcom/ae/log/ui/layout/overlay/ComposableSingletons$BottomSheetOverlayKt;
+	public fun <init> ()V
+	public final fun getLambda$586721848$core ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/ae/log/ui/layout/overlay/DialogOverlay : com/ae/log/ui/layout/overlay/OverlayStrategy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/layout/overlay/DialogOverlay;
@@ -238,9 +244,13 @@ public final class com/ae/log/utils/CallerTagKt {
 
 public abstract interface class com/ae/log/utils/FileOperations {
 	public abstract fun deleteAllFiles ()V
-	public abstract fun ensureDirectoryExists ()V
+	public fun ensureDirectoryExists ()V
 	public abstract fun readAllFiles ()Ljava/util/List;
 	public abstract fun writeFile (Ljava/lang/String;)V
+}
+
+public final class com/ae/log/utils/FileOperations$DefaultImpls {
+	public static fun ensureDirectoryExists (Lcom/ae/log/utils/FileOperations;)V
 }
 
 public final class com/ae/log/utils/FileOperationsKt {

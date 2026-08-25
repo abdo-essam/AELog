@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.ae.log.ui.theme.LogDimens
@@ -31,11 +32,11 @@ public object DialogOverlay : OverlayStrategy {
                 Surface(
                     modifier =
                         Modifier
-                            .fillMaxWidth(0.85f)
-                            .fillMaxHeight(0.8f),
+                            .fillMaxWidth(0.94f)
+                            .fillMaxHeight(0.90f),
                     shape = RoundedCornerShape(LogDimens.overlayCornerRadius),
                     color = LogTheme.colors.surface,
-                    tonalElevation = LogDimens.dialogTonalElevation,
+                    tonalElevation = 0.dp,
                 ) {
                     content()
                 }

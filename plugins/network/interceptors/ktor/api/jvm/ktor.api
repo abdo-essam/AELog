@@ -1,8 +1,10 @@
 public final class com/ae/log/ktor/AELogKtorInterceptor {
+	public static final field $stable I
 	public static final field Plugin Lcom/ae/log/ktor/AELogKtorInterceptor$Plugin;
 }
 
 public final class com/ae/log/ktor/AELogKtorInterceptor$Config {
+	public static final field $stable I
 	public fun <init> ()V
 	public final fun getExcludeHeaders ()Ljava/util/Set;
 	public final fun getMaxBodyBytes ()I
