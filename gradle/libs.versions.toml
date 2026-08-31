@@ -13,10 +13,10 @@ dokka = "2.2.0"
 spotless = "8.10.0"
 binary-compatibility = "0.18.1"
 turbine = "1.2.1"
-kover = "0.9.8"
+kover = "0.9.9"
 androidx-test = "1.6.1"
 vanniktechPublish = "0.30.0"
-kotlinx-benchmark = "0.4.17"
+kotlinx-benchmark = "0.4.19"
 runtime = "1.11.3"
 
 [libraries]
