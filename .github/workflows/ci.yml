@@ -31,7 +31,7 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@v6.2.0
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
@@ -60,7 +60,7 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@v6.2.0
 
       # ── Generate Debug Keystore (CI workaround for AGP 8.11+) ──────────────
       - name: Generate Debug Keystore
@@ -185,7 +185,7 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@v6.2.0
 
       - name: Build iOS Framework
         run: ./gradlew compileKotlinIosArm64
@@ -267,7 +267,7 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@v6.2.0
 
       - name: Generate Debug Keystore
         run: |

@@ -28,7 +28,7 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@v6.2.0
 
       - name: Generate API Docs (Dokka)
         run: ./gradlew :core:dokkaGeneratePublicationHtml
