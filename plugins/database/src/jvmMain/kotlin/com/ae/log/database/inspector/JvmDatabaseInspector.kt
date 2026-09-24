@@ -1,0 +1,132 @@
+package com.ae.log.database.inspector
+
+import com.ae.log.database.config.DatabasePluginConfig
+import com.ae.log.database.model.DbInfo
+import com.ae.log.database.model.DbTable
+import com.ae.log.database.model.QueryResult
+import java.io.File
+import java.io.FileInputStream
+
+internal class JvmDatabaseInspector(
+    private val config: DatabasePluginConfig,
+) : DatabaseInspector {
+    private val registeredDatabases = mutableListOf<DbInfo>()
+
+    override fun registerDatabase(dbInfo: DbInfo) {
+        if (registeredDatabases.none { it.path == dbInfo.path }) {
+            registeredDatabases.add(dbInfo)
+        }
+    }
+
+    override fun listDatabases(): List<DbInfo> {
+        val result = mutableListOf<DbInfo>()
+
+        // 1. Scan user.home/.ae_databases and working directory
+        val searchDirs =
+            listOf(
+                File(System.getProperty("user.home"), ".ae_databases"),
+                File(System.getProperty("user.dir"), "databases"),
+                File(System.getProperty("user.dir")),
+            )
+
+        searchDirs.forEach { dir ->
+            if (dir.exists() && dir.isDirectory) {
+                dir.listFiles()?.forEach { file ->
+                    if (isSqliteFile(file) &&
+                        !isAuxiliaryFile(file.name) &&
+                        result.none { it.path == file.absolutePath }
+                    ) {
+                        result.add(
+                            DbInfo(
+                                name = file.name,
+                                path = file.absolutePath,
+                                isEncrypted = isEncryptedSqliteFile(file),
+                                sizeBytes = file.length(),
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+
+        // 2. Scan additional search paths
+        config.additionalSearchPaths.forEach { path ->
+            val dir = File(path)
+            if (dir.exists() && dir.isDirectory) {
+                dir.listFiles()?.forEach { file ->
+                    if (isSqliteFile(file) &&
+                        !isAuxiliaryFile(file.name) &&
+                        result.none { it.path == file.absolutePath }
+                    ) {
+                        result.add(
+                            DbInfo(
+                                name = file.name,
+                                path = file.absolutePath,
+                                isEncrypted = isEncryptedSqliteFile(file),
+                                sizeBytes = file.length(),
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+
+        // 3. Registered databases
+        registeredDatabases.forEach { reg ->
+            if (result.none { it.path == reg.path }) {
+                result.add(reg)
+            }
+        }
+
+        return result
+    }
+
+    override fun listTables(dbInfo: DbInfo): List<DbTable> = emptyList()
+
+    override fun query(
+        dbInfo: DbInfo,
+        sql: String,
+        args: List<String>,
+        allowWrite: Boolean,
+    ): QueryResult {
+        try {
+            validateSqlSafety(sql, allowWrite)
+        } catch (e: IllegalArgumentException) {
+            return QueryResult.error(e.message ?: "Write operation disallowed")
+        }
+
+        val file = File(dbInfo.path)
+        if (!file.exists()) {
+            return QueryResult.error("Database file not found: ${dbInfo.path}")
+        }
+
+        return QueryResult.error(
+            "JVM runtime database inspector requires JDBC or a custom DatabaseInspector implementation.",
+        )
+    }
+
+    private fun isSqliteFile(file: File): Boolean {
+        if (!file.isFile) return false
+        val ext = file.extension.lowercase()
+        return ext == "db" || ext == "sqlite" || ext == "sqlite3"
+    }
+
+    private fun isAuxiliaryFile(name: String): Boolean =
+        name.endsWith("-wal") || name.endsWith("-shm") || name.endsWith("-journal")
+
+    private fun isEncryptedSqliteFile(file: File): Boolean {
+        if (!file.exists() || file.length() < 16) return false
+        return try {
+            FileInputStream(file).use { fis ->
+                val header = ByteArray(16)
+                val read = fis.read(header)
+                if (read < 16) false else !header.toString(Charsets.UTF_8).startsWith("SQLite format 3")
+            }
+        } catch (_: Exception) {
+            false
+        }
+    }
+}
+
+internal actual fun createPlatformDatabaseInspector(config: DatabasePluginConfig): DatabaseInspector =
+    JvmDatabaseInspector(config)
