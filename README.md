@@ -284,7 +284,7 @@ val supabase = createSupabaseClient(url, key) {
 ### 5. Open AELog
 
 Three ways to open the inspector:
-1. Tap the **floating notch** at the top of the screen (Dynamic Island-style)
+1. Drag or tap the **floating notch** anywhere on the screen (movable floating trigger that remembers its position)
 2. Programmatically from anywhere: `AELog.show()` / `AELog.hide()`
 3. Wire it to any custom trigger (shake gesture, debug menu button, etc.)
 
