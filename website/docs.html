@@ -167,17 +167,21 @@
 <td><code>CrashPlugin</code></td>
 <td>Intercepts, records and persists fatal and non-fatal exceptions on device</td>
 </tr>
+<tr>
+<td><code>DatabasePlugin</code></td>
+<td>Inspects SQLite databases, Room tables, schemas, and interactive SQL queries</td>
+</tr>
 </tbody></table>
-<p>You can write your own plugins for anything else (database inspector, feature flag toggler, etc.).</p>
 <h2>Features</h2>
 <ul class="clean-bullet-list" style="margin: 20px 0 20px 24px; padding-left: 0; line-height: 1.8; color: var(--color-text-secondary); display: flex; flex-direction: column; gap: 8px;">
   <li><strong>Log Viewer</strong> — Real-time log inspection with severity filtering</li>
   <li><strong>Network Inspector</strong> — Detailed view of HTTP traffic and JSON payloads</li>
   <li><strong>Analytics Tracker</strong> — Monitor properties across app flow</li>
   <li><strong>Crash Reporter</strong> — Capture and persist fatal and non-fatal exceptions on device</li>
+  <li><strong>Database Inspector</strong> — Auto-discover databases, browse tables, search rows, and execute SQL queries on-device</li>
   <li><strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or headless <code>Plugin</code></li>
   <li><strong>Compose UI</strong> — Material 3 themed overlay with dark/light mode support</li>
-  <li><strong>Multiplatform</strong> — Works seamlessly across Android, iOS, and Desktop</li>
+  <li><strong>Multiplatform</strong> — Works seamlessly across Android, iOS, Desktop (JVM), and WebAssembly (WasmJs)</li>
 </ul>
 <h2>Quick Links</h2>
 <ul>
@@ -207,12 +211,20 @@
 <td>15.0</td>
 </tr>
 <tr>
+<td>Desktop (JVM)</td>
+<td>Java 11+</td>
+</tr>
+<tr>
+<td>Web (WasmJs)</td>
+<td>Browser with WebAssembly support</td>
+</tr>
+<tr>
 <td>Kotlin</td>
-<td>2.2.0</td>
+<td>2.3.20</td>
 </tr>
 <tr>
 <td>Compose Multiplatform</td>
-<td>1.7.3</td>
+<td>1.9.3</td>
 </tr>
 </tbody></table>
 <h2>Installation</h2>
