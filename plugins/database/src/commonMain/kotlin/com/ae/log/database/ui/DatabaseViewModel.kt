@@ -157,7 +157,7 @@ internal class DatabaseViewModel(
             allLogs.filter { entry ->
                 val matchesFilter = when (filter) {
                     DatabaseLogFilter.ALL -> true
-                    DatabaseLogFilter.QUERIES -> entry.operation == "SELECT"
+                    DatabaseLogFilter.QUERIES -> entry.operation in listOf("SELECT", "PRAGMA", "TRANSACTION", "OTHER") && entry.isSuccess
                     DatabaseLogFilter.WRITES -> entry.operation in listOf(
                         "INSERT", "UPDATE", "DELETE", "REPLACE", "CREATE", "DROP", "ALTER",
                     )

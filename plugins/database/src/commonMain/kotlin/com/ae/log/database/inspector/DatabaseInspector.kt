@@ -162,14 +162,15 @@ public fun isWriteStatement(sql: String): Boolean {
 public fun detectOperation(sql: String): String {
     val clean = sql.trimStart().uppercase()
     return when {
-        clean.startsWith("SELECT") -> "SELECT"
-        clean.startsWith("INSERT") -> "INSERT"
+        clean.startsWith("SELECT") || clean.startsWith("WITH") || clean.startsWith("EXPLAIN") -> "SELECT"
+        clean.startsWith("INSERT") || clean.startsWith("REPLACE") -> "INSERT"
         clean.startsWith("UPDATE") -> "UPDATE"
         clean.startsWith("DELETE") -> "DELETE"
         clean.startsWith("CREATE") -> "CREATE"
         clean.startsWith("DROP") -> "DROP"
         clean.startsWith("ALTER") -> "ALTER"
         clean.startsWith("PRAGMA") -> "PRAGMA"
+        clean.startsWith("BEGIN") || clean.startsWith("COMMIT") || clean.startsWith("ROLLBACK") || clean.startsWith("SAVEPOINT") || clean.startsWith("RELEASE") -> "TRANSACTION"
         else -> "OTHER"
     }
 }

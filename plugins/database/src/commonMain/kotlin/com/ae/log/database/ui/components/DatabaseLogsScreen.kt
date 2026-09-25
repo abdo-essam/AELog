@@ -117,7 +117,7 @@ internal fun DatabaseLogsScreen(
             DatabaseLogFilter.entries.map { filter ->
                 val count = when (filter) {
                     DatabaseLogFilter.ALL -> relevantLogs.size
-                    DatabaseLogFilter.QUERIES -> relevantLogs.count { it.operation == "SELECT" }
+                    DatabaseLogFilter.QUERIES -> relevantLogs.count { it.operation in listOf("SELECT", "PRAGMA", "TRANSACTION", "OTHER") && it.isSuccess }
                     DatabaseLogFilter.WRITES -> relevantLogs.count {
                         it.operation in listOf("INSERT", "UPDATE", "DELETE", "REPLACE", "CREATE", "DROP", "ALTER")
                     }
