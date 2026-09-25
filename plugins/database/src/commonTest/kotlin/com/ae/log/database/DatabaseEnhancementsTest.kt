@@ -79,6 +79,15 @@ class DatabaseEnhancementsTest {
                         ),
                 )
             }
+            if (sql.contains("PRAGMA foreign_key_list(\"products\")")) {
+                return QueryResult.success(
+                    columns = listOf("id", "seq", "table", "from", "to", "on_update", "on_delete", "match"),
+                    rows =
+                        listOf(
+                            listOf("0", "0", "categories", "category_id", "id", "NO ACTION", "CASCADE", "NONE"),
+                        ),
+                )
+            }
             if (sql.startsWith("SELECT * FROM \"products\"")) {
                 return QueryResult.success(
                     columns = listOf("id", "name", "price", "stock"),
@@ -202,6 +211,13 @@ class DatabaseEnhancementsTest {
         assertEquals("sqlite_autoindex_products_1", idx.name)
         assertTrue(idx.isUnique)
         assertEquals(listOf("name"), idx.columns)
+
+        assertEquals(1, schema.foreignKeys.size)
+        val fk = schema.foreignKeys.first()
+        assertEquals("category_id", fk.fromColumn)
+        assertEquals("categories", fk.targetTable)
+        assertEquals("id", fk.targetColumn)
+        assertEquals("CASCADE", fk.onDelete)
     }
 
     @Test

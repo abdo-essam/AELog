@@ -199,6 +199,8 @@ private fun TableDataTabContent(
                 else -> {
                     SpreadsheetDataGrid(
                         result = result,
+                        page = page,
+                        pageSize = pageSize,
                         sortColumn = sortColumn,
                         sortAscending = sortAscending,
                         onToggleSort = onToggleSort,
@@ -227,6 +229,8 @@ private fun TableDataTabContent(
 @Composable
 private fun SpreadsheetDataGrid(
     result: QueryResult,
+    page: Int,
+    pageSize: Int,
     sortColumn: String?,
     sortAscending: Boolean,
     onToggleSort: (String) -> Unit,
@@ -261,6 +265,16 @@ private fun SpreadsheetDataGrid(
                                 .padding(vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
+                        Text(
+                            text = "#",
+                            modifier =
+                                Modifier
+                                    .width(44.dp)
+                                    .padding(horizontal = 10.dp),
+                            style = LogTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = LogTheme.colors.primary,
+                        )
                         result.columns.forEach { colName ->
                             val isSorted = sortColumn == colName
                             Row(
@@ -319,6 +333,18 @@ private fun SpreadsheetDataGrid(
                                 .padding(vertical = LogSpacing.x3),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
+                        val recordNumber = (page * pageSize) + rowIndex + 1
+                        Text(
+                            text = "$recordNumber",
+                            modifier =
+                                Modifier
+                                    .width(44.dp)
+                                    .padding(horizontal = 10.dp),
+                            style = LogTheme.typography.labelSmall,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Medium,
+                            color = LogTheme.colors.onSurfaceVariant,
+                        )
                         result.columns.indices.forEach { colIndex ->
                             val value = row.getOrNull(colIndex)
                             Text(

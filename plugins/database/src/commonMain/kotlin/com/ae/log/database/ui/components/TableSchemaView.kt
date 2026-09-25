@@ -133,6 +133,8 @@ internal fun TableSchemaView(
             ) {
                 Column(modifier = Modifier.fillMaxWidth().padding(vertical = LogSpacing.x2)) {
                     schema.columns.forEachIndexed { index, col ->
+                        val matchingFk = schema.foreignKeys.firstOrNull { it.fromColumn == col.name }
+
                         Row(
                             modifier =
                                 Modifier
@@ -163,6 +165,9 @@ internal fun TableSchemaView(
                                 if (col.isPrimaryKey) {
                                     PrimaryKeyBadge()
                                 }
+                                if (matchingFk != null) {
+                                    ForeignKeyBadge(target = matchingFk.targetTable)
+                                }
                                 if (col.isNotNull) {
                                     NotNullBadge()
                                 }
@@ -174,6 +179,54 @@ internal fun TableSchemaView(
                                 modifier = Modifier.padding(horizontal = LogSpacing.x4),
                                 color = LogTheme.colors.outlineVariant,
                                 thickness = LogDimens.listDividerThickness,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        // ── Section: Foreign Keys ─────────────────────────────────────
+        if (schema.foreignKeys.isNotEmpty()) {
+            item {
+                Text(
+                    text = "Foreign Keys",
+                    style = LogTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = LogTheme.colors.onSurface,
+                    modifier = Modifier.padding(top = LogSpacing.x2),
+                )
+            }
+
+            items(schema.foreignKeys, key = { "${it.fromColumn}_${it.targetTable}_${it.targetColumn}_${it.id}" }) { fk ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(LogSpacing.x3),
+                    colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
+                ) {
+                    Column(modifier = Modifier.padding(LogSpacing.x4)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = "${fk.fromColumn} → ${fk.targetTable}(${fk.targetColumn})",
+                                style = LogTheme.typography.bodySmall,
+                                fontWeight = FontWeight.SemiBold,
+                                fontFamily = FontFamily.Monospace,
+                                color = LogTheme.colors.onSurface,
+                            )
+                            ForeignKeyBadge()
+                        }
+
+                        if (fk.onUpdate != "NO ACTION" || fk.onDelete != "NO ACTION") {
+                            Spacer(Modifier.height(LogSpacing.x1))
+                            Text(
+                                text = "ON UPDATE ${fk.onUpdate} • ON DELETE ${fk.onDelete}",
+                                style = LogTheme.typography.labelSmall,
+                                fontFamily = FontFamily.Monospace,
+                                color = LogTheme.colors.onSurfaceVariant,
                             )
                         }
                     }

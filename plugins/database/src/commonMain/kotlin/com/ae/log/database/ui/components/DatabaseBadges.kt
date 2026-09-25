@@ -61,3 +61,17 @@ internal fun UniqueIndexBadge(modifier: Modifier = Modifier) {
         modifier = modifier,
     )
 }
+
+@Composable
+internal fun ForeignKeyBadge(
+    target: String? = null,
+    modifier: Modifier = Modifier,
+) {
+    LogBadge(
+        text = if (target.isNullOrBlank()) "FK" else "FK → $target",
+        containerColor = Color(0xFFF3E5F5),
+        contentColor = Color(0xFF7B1FA2),
+        modifier = modifier,
+    )
+}
+

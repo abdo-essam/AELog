@@ -4,6 +4,7 @@ import com.ae.log.database.model.DbInfo
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.QueryResult
 import com.ae.log.database.model.TableColumn
+import com.ae.log.database.model.TableForeignKey
 import com.ae.log.database.model.TableIndex
 import com.ae.log.database.model.TableSchema
 
@@ -105,10 +106,38 @@ public interface DatabaseInspector {
                 emptyList()
             }
 
+        val fkResult = query(dbInfo, "PRAGMA foreign_key_list(\"$tableName\")", allowWrite = false)
+        val foreignKeys =
+            if (fkResult.isSuccess) {
+                val idIdx = fkResult.columns.indexOf("id").takeIf { it >= 0 } ?: 0
+                val tableIdx = fkResult.columns.indexOf("table").takeIf { it >= 0 } ?: 2
+                val fromIdx = fkResult.columns.indexOf("from").takeIf { it >= 0 } ?: 3
+                val toIdx = fkResult.columns.indexOf("to").takeIf { it >= 0 } ?: 4
+                val onUpdateIdx = fkResult.columns.indexOf("on_update").takeIf { it >= 0 } ?: 5
+                val onDeleteIdx = fkResult.columns.indexOf("on_delete").takeIf { it >= 0 } ?: 6
+
+                fkResult.rows.mapNotNull { row ->
+                    val fromCol = row.getOrNull(fromIdx) ?: return@mapNotNull null
+                    val targetTab = row.getOrNull(tableIdx) ?: return@mapNotNull null
+                    val targetCol = row.getOrNull(toIdx) ?: ""
+                    TableForeignKey(
+                        id = row.getOrNull(idIdx)?.toIntOrNull() ?: 0,
+                        fromColumn = fromCol,
+                        targetTable = targetTab,
+                        targetColumn = targetCol,
+                        onUpdate = row.getOrNull(onUpdateIdx) ?: "NO ACTION",
+                        onDelete = row.getOrNull(onDeleteIdx) ?: "NO ACTION",
+                    )
+                }
+            } else {
+                emptyList()
+            }
+
         return TableSchema(
             tableName = tableName,
             columns = columns,
             indexes = indexes,
+            foreignKeys = foreignKeys,
         )
     }
 
