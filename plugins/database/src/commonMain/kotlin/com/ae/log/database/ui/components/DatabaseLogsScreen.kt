@@ -41,6 +41,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -74,7 +75,6 @@ import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.ui.components.EmptyPlaceholder
 import com.ae.log.ui.components.ExpandedDetails
-import com.ae.log.ui.components.LogFilterChips
 import com.ae.log.ui.components.LogKeyValueItem
 import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
@@ -93,6 +93,55 @@ private const val OP_ALTER = "ALTER"
 
 private val EDIT_OPERATIONS = listOf(OP_INSERT, OP_UPDATE, OP_REPLACE, OP_CREATE, OP_ALTER)
 private val REMOVE_OPERATIONS = listOf(OP_DELETE, OP_DROP)
+
+@Composable
+internal fun ScrollableSegmentedTabRow(
+    tabs: List<String>,
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val scrollState = rememberScrollState()
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
+        shape = RoundedCornerShape(10.dp),
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(scrollState)
+                    .padding(3.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            tabs.forEachIndexed { index, title ->
+                val isSelected = index == selectedIndex
+                Box(
+                    modifier =
+                        Modifier
+                            .height(34.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(
+                                if (isSelected) LogTheme.colors.surface else Color.Transparent,
+                            )
+                            .clickable { onTabSelected(index) }
+                            .padding(horizontal = 14.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = title,
+                        style = LogTheme.typography.labelMedium,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isSelected) LogTheme.colors.onSurface else LogTheme.colors.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 internal fun DatabaseLogsScreen(
@@ -191,10 +240,11 @@ internal fun DatabaseLogsScreen(
                 }
             }
 
-        LogFilterChips(
-            labels = chipLabels,
+        // ── Filter Tabs ───────────────────────────────────────────────
+        ScrollableSegmentedTabRow(
+            tabs = chipLabels,
             selectedIndex = activeFilter.ordinal,
-            onSelect = { viewModel.setLogFilter(DatabaseLogFilter.entries[it]) },
+            onTabSelected = { viewModel.setLogFilter(DatabaseLogFilter.entries[it]) },
             modifier = Modifier.padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
         )
 

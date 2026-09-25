@@ -100,11 +100,11 @@ internal fun TableDataScreen(
             onBackClick = { viewModel.popBack() },
         )
 
-        // ── Filter Chips: Data | Schema | Query ──────────────────────
-        LogFilterChips(
-            labels = TableDataTab.entries.map { it.label },
+        // ── Tabs: Data | Schema | Query ──────────────────────────────
+        SegmentedTabRow(
+            tabs = TableDataTab.entries.map { it.label },
             selectedIndex = activeTab.ordinal,
-            onSelect = { viewModel.setTableDataTab(TableDataTab.entries[it]) },
+            onTabSelected = { viewModel.setTableDataTab(TableDataTab.entries[it]) },
             modifier = Modifier.padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
         )
 

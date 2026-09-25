@@ -169,7 +169,7 @@ internal class JvmDatabaseInspector(
             FileInputStream(file).use { fis ->
                 val header = ByteArray(16)
                 val read = fis.read(header)
-                if (read < 16) false else !header.toString(Charsets.UTF_8).startsWith("SQLite format 3")
+                read >= 16 && !header.toString(Charsets.UTF_8).startsWith("SQLite format 3")
             }
         } catch (_: Exception) {
             false

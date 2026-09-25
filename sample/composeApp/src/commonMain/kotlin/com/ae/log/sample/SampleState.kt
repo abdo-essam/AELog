@@ -10,17 +10,14 @@ import io.ktor.client.HttpClient
  * by AELog's platform initializers on Android, iOS, and Wasm.
  */
 object SampleState {
-    var httpClient: HttpClient? = null
-        private set
+    val httpClient: HttpClient by lazy {
+        HttpClient {
+            install(AELogKtorInterceptor)
+        }
+    }
 
     fun initialize() {
         runCatching { ensureSampleDatabaseExists() }
-
-        if (httpClient != null) return
-
-        httpClient =
-            HttpClient {
-                install(AELogKtorInterceptor)
-            }
+        httpClient
     }
 }

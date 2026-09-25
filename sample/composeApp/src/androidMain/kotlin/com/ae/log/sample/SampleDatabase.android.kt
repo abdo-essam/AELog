@@ -99,94 +99,73 @@ public actual fun ensureSampleDatabaseExists(): String {
             }
 
         if (userCount == 0) {
-            val categorySeeds =
-                listOf(
-                    "INSERT INTO categories (name, slug) VALUES ('Hardware', 'hardware');",
-                    "INSERT INTO categories (name, slug) VALUES ('Accessories', 'accessories');",
-                    "INSERT INTO categories (name, slug) VALUES ('Monitors', 'monitors');",
-                )
-            categorySeeds.forEach { sql ->
-                db.execSQL(sql)
-                AELog.database.logInsert("shop_sample.db", sql, durationMs = 2L, tableName = "categories")
+            db.beginTransaction()
+            try {
+                // Seed 5 Categories
+                val categories = listOf("Hardware", "Accessories", "Monitors", "Audio", "Storage")
+                categories.forEachIndexed { i, name ->
+                    val slug = name.lowercase()
+                    db.execSQL("INSERT INTO categories (name, slug) VALUES ('$name', '$slug');")
+                }
+
+                // Seed 120 Users
+                val roles = listOf("Admin", "Developer", "Designer", "Manager", "Engineer", "User")
+                val names = listOf("Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack")
+                val surnames = listOf("Smith", "Jones", "Brown", "Prince", "Adams", "Miller", "Davis", "Wilson", "Taylor", "Evans")
+                for (i in 1..120) {
+                    val fn = names[(i - 1) % names.size]
+                    val sn = surnames[(i / names.size) % surnames.size]
+                    val role = roles[i % roles.size]
+                    val email = "${fn.lowercase()}.${sn.lowercase()}$i@example.com"
+                    db.execSQL("INSERT INTO users (name, email, role) VALUES ('$fn $sn #$i', '$email', '$role');")
+                }
+
+                // Seed 100 Products
+                val productTypes = listOf("Laptop", "Mouse", "Keyboard", "Display", "Headphones", "SSD Drive", "USB Hub", "Webcam", "Speaker", "Monitor Arm")
+                for (i in 1..100) {
+                    val pName = "${productTypes[i % productTypes.size]} Pro #$i"
+                    val price = 29.99 + (i * 18.5)
+                    val stock = (i * 7) % 80
+                    val catId = (i % 5) + 1
+                    db.execSQL("INSERT INTO products (title, price, stock, category_id) VALUES ('$pName', $price, $stock, $catId);")
+                }
+
+                // Seed 150 Orders
+                val statuses = listOf("Delivered", "Shipped", "Processing", "Pending", "Cancelled")
+                for (i in 1..150) {
+                    val userId = (i % 120) + 1
+                    val total = 49.99 + (i * 24.5)
+                    val status = statuses[i % statuses.size]
+                    db.execSQL("INSERT INTO orders (user_id, total, status) VALUES ($userId, $total, '$status');")
+                }
+
+                // Seed 200 Order Items
+                for (i in 1..200) {
+                    val orderId = (i % 150) + 1
+                    val productId = (i % 100) + 1
+                    val qty = (i % 4) + 1
+                    val unitPrice = 29.99 + (productId * 12.0)
+                    db.execSQL("INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES ($orderId, $productId, $qty, $unitPrice);")
+                }
+
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
             }
 
-            val userSeeds =
-                listOf(
-                    "INSERT INTO users (name, email, role) VALUES ('Alice Smith', 'alice@example.com', 'Admin');",
-                    "INSERT INTO users (name, email, role) VALUES ('Bob Jones', 'bob@example.com', 'Developer');",
-                    "INSERT INTO users (name, email, role) VALUES ('Charlie Brown', 'charlie@example.com', 'Designer');",
-                    "INSERT INTO users (name, email, role) VALUES ('Diana Prince', 'diana@example.com', 'Manager');",
-                )
-            userSeeds.forEach { sql ->
-                db.execSQL(sql)
-                AELog.database.logInsert("shop_sample.db", sql, durationMs = 3L, tableName = "users")
-            }
-
-            val productSeeds =
-                listOf(
-                    "INSERT INTO products (title, price, stock, category_id) VALUES ('MacBook Pro 16\"', 2499.00, 15, 1);",
-                    "INSERT INTO products (title, price, stock, category_id) VALUES ('Ergonomic Mouse', 59.99, 45, 2);",
-                    "INSERT INTO products (title, price, stock, category_id) VALUES ('Mechanical Keyboard', 129.50, 20, 2);",
-                    "INSERT INTO products (title, price, stock, category_id) VALUES ('4K UltraSharp Display', 599.00, 8, 3);",
-                )
-            productSeeds.forEach { sql ->
-                db.execSQL(sql)
-                AELog.database.logInsert("shop_sample.db", sql, durationMs = 3L, tableName = "products")
-            }
-
-            val orderSeeds =
-                listOf(
-                    "INSERT INTO orders (user_id, total, status) VALUES (1, 2558.99, 'Delivered');",
-                    "INSERT INTO orders (user_id, total, status) VALUES (2, 129.50, 'Shipped');",
-                    "INSERT INTO orders (user_id, total, status) VALUES (3, 59.99, 'Processing');",
-                )
-            orderSeeds.forEach { sql ->
-                db.execSQL(sql)
-                AELog.database.logInsert("shop_sample.db", sql, durationMs = 3L, tableName = "orders")
-            }
-
-            val orderItemSeeds =
-                listOf(
-                    "INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (1, 1, 1, 2499.00);",
-                    "INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (1, 2, 1, 59.99);",
-                    "INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES (2, 3, 1, 129.50);",
-                )
-            orderItemSeeds.forEach { sql ->
-                db.execSQL(sql)
-                AELog.database.logInsert("shop_sample.db", sql, durationMs = 2L, tableName = "order_items")
-            }
-
-            AELog.database.logSelect(
-                "shop_sample.db",
-                "SELECT * FROM products WHERE stock > 10;",
-                durationMs = 2L,
-                tableName = "products",
-                rowCount = 3L,
-            )
-            AELog.database.logSelect(
-                "shop_sample.db",
-                "SELECT * FROM orders WHERE status = 'Shipped';",
-                durationMs = 1L,
-                tableName = "orders",
-                rowCount = 1L,
-            )
-
-            val updateSql = "UPDATE products SET stock = stock - 1 WHERE id = 1;"
-            db.execSQL(updateSql)
-            AELog.database.logUpdate("shop_sample.db", updateSql, durationMs = 4L, tableName = "products", affectedRows = 1L)
-
+            // Log representative queries to showcase the Database Logs panel
+            AELog.database.logInsert("shop_sample.db", "INSERT INTO users (name, email, role) VALUES ('Alice Smith #121', 'alice121@example.com', 'Admin');", durationMs = 3L, tableName = "users")
+            AELog.database.logInsert("shop_sample.db", "INSERT INTO products (title, price, stock, category_id) VALUES ('UltraWide Monitor 34\"', 899.00, 12, 3);", durationMs = 2L, tableName = "products")
+            AELog.database.logSelect("shop_sample.db", "SELECT * FROM users WHERE role = 'Admin' ORDER BY id DESC LIMIT 50;", durationMs = 2L, tableName = "users", rowCount = 50L)
+            AELog.database.logSelect("shop_sample.db", "SELECT * FROM products WHERE stock > 10 ORDER BY price DESC LIMIT 50;", durationMs = 3L, tableName = "products", rowCount = 50L)
+            AELog.database.logSelect("shop_sample.db", "SELECT * FROM orders WHERE status = 'Delivered' LIMIT 50;", durationMs = 2L, tableName = "orders", rowCount = 50L)
+            AELog.database.logUpdate("shop_sample.db", "UPDATE products SET stock = stock - 1 WHERE id = 1;", durationMs = 4L, tableName = "products", affectedRows = 1L)
             AELog.database.logDelete("shop_sample.db", "DELETE FROM order_items WHERE id = 999;", durationMs = 2L, tableName = "order_items", affectedRows = 0L)
-
-            AELog.database.logError(
-                databaseName = "shop_sample.db",
-                sql = "SELECT * FROM non_existing_table;",
-                error = IllegalStateException("no such table: non_existing_table"),
-                durationMs = 1L,
-            )
+            AELog.database.logError("shop_sample.db", "SELECT * FROM non_existing_table;", IllegalStateException("no such table: non_existing_table"), durationMs = 1L)
         }
 
         db.close()
-        "Ready: shop_sample.db created with categories, users, products, orders, order_items, and FK constraints."
+        "Ready: shop_sample.db created with 120 users, 100 products, 150 orders, 200 order_items, and FK constraints."
     } catch (e: Exception) {
         AELog.database.logError(
             databaseName = "shop_sample.db",

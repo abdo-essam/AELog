@@ -143,21 +143,33 @@ internal class IosDatabaseInspector(
         if (dbInfo.name == SAMPLE_DB_NAME || dbInfo.name == "shop_sample.db") {
             return listOf(
                 DbTable(
+                    name = "categories",
+                    rowCount = 5L,
+                    columns = listOf("id", "name", "slug"),
+                    isSystemTable = false,
+                ),
+                DbTable(
                     name = "users",
-                    rowCount = 4L,
+                    rowCount = 120L,
                     columns = listOf("id", "name", "email", "role"),
                     isSystemTable = false,
                 ),
                 DbTable(
                     name = "products",
-                    rowCount = 4L,
-                    columns = listOf("id", "title", "price", "stock", "category"),
+                    rowCount = 100L,
+                    columns = listOf("id", "title", "price", "stock", "category_id"),
                     isSystemTable = false,
                 ),
                 DbTable(
                     name = "orders",
-                    rowCount = 3L,
+                    rowCount = 150L,
                     columns = listOf("id", "user_id", "total", "status"),
+                    isSystemTable = false,
+                ),
+                DbTable(
+                    name = "order_items",
+                    rowCount = 200L,
+                    columns = listOf("id", "order_id", "product_id", "quantity", "unit_price"),
                     isSystemTable = false,
                 ),
             )

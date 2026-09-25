@@ -239,7 +239,7 @@ internal class AndroidDatabaseInspector(
 
         val queryResult =
             try {
-                var executionTime = 0L
+                val executionTime: Long
                 if (isWrite) {
                     var affected = 0L
                     executionTime =
@@ -396,7 +396,7 @@ internal class AndroidDatabaseInspector(
             FileInputStream(file).use { fis ->
                 val header = ByteArray(16)
                 val read = fis.read(header)
-                if (read < 16) false else !header.toString(Charsets.UTF_8).startsWith(SQLITE_HEADER_PREFIX)
+                read >= 16 && !header.toString(Charsets.UTF_8).startsWith(SQLITE_HEADER_PREFIX)
             }
         } catch (_: Exception) {
             false
