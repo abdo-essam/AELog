@@ -355,8 +355,6 @@ val result = AELog.database.query("app.db", "SELECT * FROM users LIMIT 10")`;
         }
         usageCodeBlock.textContent = snippet.trim();
     }
-        usageCodeBlock.textContent = snippet.trim();
-    }
 
     // Re-apply highlightJS styling
     highlightCurrentStepCode();
