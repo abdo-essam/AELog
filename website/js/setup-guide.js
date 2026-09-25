@@ -14,7 +14,8 @@ const state = {
         logs: true,
         network: true,
         analytics: false,
-        crashes: false
+        crashes: false,
+        database: false
     },
     client: "ktor", // "ktor" or "okhttp"
     ui: "compose",  // "compose" or "xml"
@@ -209,7 +210,7 @@ function updateGeneratedCodes() {
     const usageCodeBlock = document.getElementById("usage-code");
 
     // Empty state: check if no features are active
-    const noFeaturesActive = !state.features.logs && !state.features.network && !state.features.analytics && !state.features.crashes;
+    const noFeaturesActive = !state.features.logs && !state.features.network && !state.features.analytics && !state.features.crashes && !state.features.database;
     if (noFeaturesActive) {
         const msg = `// Please select at least one feature above to generate custom setup code!`;
         if (depCodeBlock) depCodeBlock.textContent = msg;
@@ -242,6 +243,9 @@ aelog = "${AELOG_VERSION}"
             if (state.features.crashes) {
                 snippet += `aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }\n`;
             }
+            if (state.features.database) {
+                snippet += `aelog-database-room    = { module = "io.github.abdo-essam:ae-log-database-room",  version.ref = "aelog" }\n`;
+            }
             depCodeBlock.textContent = snippet;
             depCodeBlock.className = "language-toml";
         } else {
@@ -262,6 +266,9 @@ kotlin {
             }
             if (state.features.crashes) {
                 snippet += `            implementation("io.github.abdo-essam:ae-log-crashes:${AELOG_VERSION}")\n`;
+            }
+            if (state.features.database) {
+                snippet += `            implementation("io.github.abdo-essam:ae-log-database-room:${AELOG_VERSION}")\n`;
             }
 
             snippet += `        }\n`;
@@ -285,6 +292,7 @@ kotlin {
         if (state.features.network) snippet += `import com.ae.log.network.NetworkPlugin\n`;
         if (state.features.analytics) snippet += `import com.ae.log.analytics.AnalyticsPlugin\n`;
         if (state.features.crashes) snippet += `import com.ae.log.crashes.CrashPlugin\n`;
+        if (state.features.database) snippet += `import com.ae.log.database.DatabasePlugin\n`;
 
         snippet += `
 // AELog boots up automatically with zero-config on Android & iOS!
@@ -297,6 +305,7 @@ AELog.showNotch = false // (defaults to true)
         if (state.features.network) snippet += `AELog.install(NetworkPlugin())\n`;
         if (state.features.analytics) snippet += `AELog.install(AnalyticsPlugin())\n`;
         if (state.features.crashes) snippet += `AELog.install(CrashPlugin())\n`;
+        if (state.features.database) snippet += `AELog.install(DatabasePlugin())\n`;
 
         configCodeBlock.textContent = snippet.trim();
     }
@@ -336,8 +345,16 @@ try {
     performDangerousTask()
 } catch (t: Throwable) {
     AELog.crashes.recordNonFatal(t) // persisted on-device
-}`;
+}\n\n`;
         }
+        if (state.features.database) {
+            snippet += `// 5. Database Inspection
+val databases = AELog.database.listDatabases()
+val tables = AELog.database.listTables("app.db")
+val result = AELog.database.query("app.db", "SELECT * FROM users LIMIT 10")`;
+        }
+        usageCodeBlock.textContent = snippet.trim();
+    }
         usageCodeBlock.textContent = snippet.trim();
     }
 

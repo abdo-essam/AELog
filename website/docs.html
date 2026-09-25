@@ -225,22 +225,24 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.1.9"
+aelog = "1.2.0"
 
 [libraries]
-aelog-logs      = { module = "io.github.abdo-essam:ae-log-logs", version.ref = "aelog" }
-aelog-network   = { module = "io.github.abdo-essam:ae-log-network", version.ref = "aelog" }
-aelog-analytics = { module = "io.github.abdo-essam:ae-log-analytics", version.ref = "aelog" }
-aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref = "aelog" }</code></pre>
+aelog-logs          = { module = "io.github.abdo-essam:ae-log-logs",          version.ref = "aelog" }
+aelog-network-ktor  = { module = "io.github.abdo-essam:ae-log-network-ktor",  version.ref = "aelog" }
+aelog-analytics     = { module = "io.github.abdo-essam:ae-log-analytics",     version.ref = "aelog" }
+aelog-crashes       = { module = "io.github.abdo-essam:ae-log-crashes",       version.ref = "aelog" }
+aelog-database-room = { module = "io.github.abdo-essam:ae-log-database-room", version.ref = "aelog" }</code></pre>
 
     <div class="code-file-label">shared/build.gradle.kts</div>
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.aelog.logs)
-            implementation(libs.aelog.network)
+            implementation(libs.aelog.network.ktor)
             implementation(libs.aelog.analytics)
             implementation(libs.aelog.crashes)
+            implementation(libs.aelog.database.room)
         }
     }
 }</code></pre>
@@ -251,10 +253,11 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-implementation("io.github.abdo-essam:ae-log-logs:1.1.9")
-            implementation("io.github.abdo-essam:ae-log-network:1.1.9")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.1.9")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.1.9")
+            implementation("io.github.abdo-essam:ae-log-logs:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-network-ktor:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-database-room:1.2.0")
         }
     }
 }</code></pre>
@@ -853,6 +856,25 @@ AELog.log.e("Auth", "Login failed", error)
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone -9: v1.2.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.2.0 <span class="timeline-date">— September 26, 2026</span></h3>
+
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Database Inspector Plugin (<code>plugins:database</code>):</strong> On-device SQLite database inspection for Compose Multiplatform (Android, iOS, JVM, WasmJs) with auto-discovery, table list, schema browser, paginated data grid, and interactive SQL console.</li>
+                            <li><strong>Room Database Adapter (<code>plugins:database:adapters:room</code>):</strong> <code>AELogRoomAdapter</code> for direct integration with <code>androidx.room</code> databases.</li>
+                            <li><strong>Movable Floating Notch View:</strong> Freeform 2D dragging for the notch button anywhere on screen with position retention across overlay open/close actions.</li>
+                            <li><strong>Modern Navigation & UI Components:</strong> Material 3 underline tabs, solid filter chips without ripples, and vertical scrollbars.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
                 </div>
 
                 <!-- Milestone -8: v1.1.9 -->
