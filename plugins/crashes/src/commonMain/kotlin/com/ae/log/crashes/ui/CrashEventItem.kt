@@ -41,7 +41,7 @@ internal fun CrashEventItem(
                     indication = null,
                     onClickLabel = if (isExpanded) "Collapse crash details" else "Expand crash details",
                 ) { onToggleExpand(event.id) }
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3_5),
     ) {
         CrashEventHeader(event = event, isExpanded = isExpanded)
 

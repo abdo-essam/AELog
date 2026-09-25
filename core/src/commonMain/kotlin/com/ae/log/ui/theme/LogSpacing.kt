@@ -5,10 +5,13 @@ import androidx.compose.ui.unit.dp
 
 /** Common spacing scale used throughout the AELog UI. */
 public object LogSpacing {
+    public val x0_5: Dp = 2.dp
     public val x1: Dp = 4.dp
     public val x1_5: Dp = 6.dp
     public val x2: Dp = 8.dp
+    public val x2_5: Dp = 10.dp
     public val x3: Dp = 12.dp
+    public val x3_5: Dp = 14.dp
     public val x4: Dp = 16.dp
     public val x5: Dp = 20.dp
     public val x6: Dp = 24.dp
@@ -24,6 +27,12 @@ public object LogDimens {
 
     /** Corner radius used on dialog and bottom-sheet overlays. */
     public val overlayCornerRadius: Dp = LogSpacing.x6
+
+    /** Corner radius used for cards and grouped content throughout the UI. */
+    public val cardCornerRadius: Dp = LogSpacing.x3
+
+    /** Corner radius used for tags, badges, and small chips. */
+    public val badgeCornerRadius: Dp = LogSpacing.x1
 
     /** Tonal elevation for the dialog overlay surface. */
     public val dialogTonalElevation: Dp = 0.dp

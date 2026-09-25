@@ -56,6 +56,7 @@ import com.ae.log.database.model.DbInfo
 import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.ui.components.EmptyPlaceholder
+import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
@@ -89,41 +90,19 @@ internal fun DatabaseLogsScreen(
     ) {
         // ── Top Bar ───────────────────────────────────────────────────
         if (showBackButton) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = LogSpacing.x3, vertical = LogSpacing.x2),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { viewModel.popBack() }) {
+            LogScreenHeader(
+                title = "Database Logs",
+                onBackClick = { viewModel.popBack() },
+                actions = {
+                    IconButton(onClick = { viewModel.clearLogs() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = LogTheme.colors.onSurface,
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Clear logs",
+                            tint = LogTheme.colors.onSurfaceVariant,
                         )
                     }
-
-                    Spacer(Modifier.width(LogSpacing.x1))
-
-                    Text(
-                        text = "Database Logs",
-                        style = LogTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = LogTheme.colors.onSurface,
-                    )
-                }
-
-                IconButton(onClick = { viewModel.clearLogs() }) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Clear logs",
-                        tint = LogTheme.colors.onSurfaceVariant,
-                    )
-                }
-            }
+                },
+            )
         }
 
         // ── Filter Tabs: All | Queries | Writes | Errors ──────────────

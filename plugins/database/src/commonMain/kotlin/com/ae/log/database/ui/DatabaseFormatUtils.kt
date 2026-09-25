@@ -12,9 +12,9 @@ internal object DatabaseFormatUtils {
         val mb = kb / 1024.0
         val gb = mb / 1024.0
         return when {
-            gb >= 1.0 -> "${(gb * 10).toLong() / 10.0} GB"
-            mb >= 1.0 -> "${(mb * 10).toLong() / 10.0} MB"
-            kb >= 1.0 -> "${(kb * 10).toLong() / 10.0} KB"
+            gb >= 1.0 -> "${kotlin.math.round(gb * 10) / 10.0} GB"
+            mb >= 1.0 -> "${kotlin.math.round(mb * 10) / 10.0} MB"
+            kb >= 1.0 -> "${kotlin.math.round(kb * 10) / 10.0} KB"
             else -> "$bytes B"
         }
     }

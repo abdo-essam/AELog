@@ -44,7 +44,7 @@ internal fun NetworkEntryItem(
                     indication = null,
                     onClickLabel = if (isExpanded) "Collapse network entry" else "Expand network entry",
                 ) { onToggleExpand(entry.id) }
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3_5),
     ) {
         // ── Summary row ───────────────────────────────────────────────────
         Row(

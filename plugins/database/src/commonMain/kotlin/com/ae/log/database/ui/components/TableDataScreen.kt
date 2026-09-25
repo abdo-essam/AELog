@@ -59,6 +59,8 @@ import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.database.ui.TableDataTab
 import com.ae.log.ui.components.EmptyPlaceholder
+import com.ae.log.ui.components.LogPaginationBar
+import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
@@ -94,39 +96,13 @@ internal fun TableDataScreen(
             .background(LogTheme.colors.background),
     ) {
         // ── Top Header ────────────────────────────────────────────────
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = LogSpacing.x3, vertical = LogSpacing.x2),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            IconButton(onClick = { viewModel.popBack() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = LogTheme.colors.onSurface,
-                )
-            }
-
-            Spacer(Modifier.width(LogSpacing.x1))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = table.name,
-                    style = LogTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = LogTheme.colors.onSurface,
-                )
-                val rowsMeta = if (table.rowCount >= 0) "${table.rowCount} rows" else "Table"
-                val sizeMeta = DatabaseFormatUtils.formatBytes(table.sizeBytes.takeIf { it > 0 } ?: db.sizeBytes)
-                Text(
-                    text = "$rowsMeta • $sizeMeta",
-                    style = LogTheme.typography.labelSmall,
-                    color = LogTheme.colors.onSurfaceVariant,
-                )
-            }
-        }
+        val rowsMeta = if (table.rowCount >= 0) "${table.rowCount} rows" else "Table"
+        val sizeMeta = DatabaseFormatUtils.formatBytes(table.sizeBytes.takeIf { it > 0 } ?: db.sizeBytes)
+        LogScreenHeader(
+            title = table.name,
+            subtitle = "$rowsMeta • $sizeMeta",
+            onBackClick = { viewModel.popBack() },
+        )
 
         // ── Tabs: Data | Schema | Query ───────────────────────────────
         PrimaryTabRow(
@@ -255,14 +231,15 @@ private fun TableDataTabContent(
 
         // ── Pagination Footer: < 1/16 >  Rows per page: 10 ▾ ─────────
         if (result != null && result.columns.isNotEmpty()) {
-            TablePaginationBar(
+            LogPaginationBar(
                 page = page,
+                pageSize = pageSize,
                 rowCount = result.rows.size,
                 totalRowCount = table.rowCount,
-                pageSize = pageSize,
                 onPreviousPage = onPreviousPage,
                 onNextPage = onNextPage,
                 onPageSizeChange = onPageSizeChange,
+                availablePageSizes = listOf(8, 10, 20, 50),
             )
         }
     }
@@ -378,95 +355,3 @@ private fun SpreadsheetDataGrid(
     }
 }
 
-@Composable
-private fun TablePaginationBar(
-    page: Int,
-    rowCount: Int,
-    totalRowCount: Long,
-    pageSize: Int,
-    onPreviousPage: () -> Unit,
-    onNextPage: () -> Unit,
-    onPageSizeChange: (Int) -> Unit,
-) {
-    var sizeMenuExpanded by remember { mutableStateOf(false) }
-
-    val totalPages = if (totalRowCount > 0) {
-        ((totalRowCount + pageSize - 1) / pageSize).toInt().coerceAtLeast(1)
-    } else {
-        (page + 1).coerceAtLeast(1)
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        // Prev < page/total > Next
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onPreviousPage, enabled = page > 0) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = "Previous page",
-                    tint = if (page > 0) LogTheme.colors.primary else LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f),
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-
-            Text(
-                text = "${page + 1}/$totalPages",
-                style = LogTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = LogTheme.colors.onSurface,
-                modifier = Modifier.padding(horizontal = LogSpacing.x1),
-            )
-
-            IconButton(onClick = onNextPage, enabled = rowCount >= pageSize) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Next page",
-                    tint = if (rowCount >= pageSize) LogTheme.colors.primary else LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f),
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-        }
-
-        // Rows per page dropdown
-        Box {
-            Row(
-                modifier = Modifier
-                    .clickable { sizeMenuExpanded = true }
-                    .padding(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Rows per page: $pageSize",
-                    style = LogTheme.typography.labelSmall,
-                    color = LogTheme.colors.onSurfaceVariant,
-                )
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = null,
-                    tint = LogTheme.colors.onSurfaceVariant,
-                    modifier = Modifier.size(18.dp),
-                )
-            }
-
-            DropdownMenu(
-                expanded = sizeMenuExpanded,
-                onDismissRequest = { sizeMenuExpanded = false },
-            ) {
-                listOf(8, 10, 20, 50).forEach { s ->
-                    DropdownMenuItem(
-                        text = { Text("$s") },
-                        onClick = {
-                            onPageSizeChange(s)
-                            sizeMenuExpanded = false
-                        },
-                    )
-                }
-            }
-        }
-    }
-}

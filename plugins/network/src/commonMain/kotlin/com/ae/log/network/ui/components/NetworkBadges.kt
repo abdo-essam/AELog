@@ -26,17 +26,16 @@ import com.ae.log.network.ui.theme.NetworkColors
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 
+import com.ae.log.ui.components.LogBadge
+
 @Composable
 internal fun MethodBadge(label: String) {
     val color = NetworkColors.getMethodColor(label)
-    Box(
-        modifier =
-            Modifier
-                .background(color.copy(alpha = 0.15f), RoundedCornerShape(LogSpacing.x1))
-                .padding(horizontal = LogSpacing.x1_5, vertical = 2.dp),
-    ) {
-        Text(label, style = LogTheme.typography.labelSmall, color = color)
-    }
+    LogBadge(
+        text = label,
+        containerColor = color.copy(alpha = 0.15f),
+        contentColor = color,
+    )
 }
 
 @Composable

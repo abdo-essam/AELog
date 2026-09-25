@@ -1,10 +1,7 @@
 package com.ae.log.database.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,7 +17,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Security
@@ -31,10 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,6 +38,10 @@ import com.ae.log.database.ui.DatabaseDestination
 import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.ui.components.EmptyPlaceholder
+import com.ae.log.ui.components.LogItemCard
+import com.ae.log.ui.components.LogScreenHeader
+import com.ae.log.ui.components.LogSectionHeader
+import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 
@@ -59,37 +57,20 @@ internal fun DatabaseListScreen(
             .background(LogTheme.colors.background),
     ) {
         // ── Top Bar ───────────────────────────────────────────────────
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x3),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column {
-                Text(
-                    text = "Database",
-                    style = LogTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = LogTheme.colors.onSurface,
-                )
-                Text(
-                    text = "Inspect SQLite & Room databases",
-                    style = LogTheme.typography.labelSmall,
-                    color = LogTheme.colors.onSurfaceVariant,
-                )
-            }
-
-            IconButton(onClick = { viewModel.refreshDatabases() }) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = "Refresh databases",
-                    tint = LogTheme.colors.primary,
-                    modifier = Modifier.size(LogSpacing.x5),
-                )
-            }
-        }
+        LogScreenHeader(
+            title = "Database",
+            subtitle = "Inspect SQLite & Room databases",
+            actions = {
+                IconButton(onClick = { viewModel.refreshDatabases() }) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh databases",
+                        tint = LogTheme.colors.primary,
+                        modifier = Modifier.size(LogSpacing.x5),
+                    )
+                }
+            },
+        )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -98,27 +79,17 @@ internal fun DatabaseListScreen(
         ) {
             // ── Section: Connected Databases ──────────────────────────
             item {
-                Column(modifier = Modifier.fillMaxWidth().padding(top = LogSpacing.x1)) {
-                    Text(
-                        text = "Connected Databases",
-                        style = LogTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = LogTheme.colors.onSurface,
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = "Tap a database to view tables and inspect data.",
-                        style = LogTheme.typography.bodySmall,
-                        color = LogTheme.colors.onSurfaceVariant,
-                    )
-                }
+                LogSectionHeader(
+                    title = "Connected Databases",
+                    subtitle = "Tap a database to view tables and inspect data.",
+                )
             }
 
             if (databases.isEmpty()) {
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(LogSpacing.x3),
+                        shape = RoundedCornerShape(LogDimens.cardCornerRadius),
                         colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
                     ) {
                         EmptyPlaceholder("No SQLite or Room databases found on device.")
@@ -126,8 +97,21 @@ internal fun DatabaseListScreen(
                 }
             } else {
                 items(databases, key = { it.path }) { db ->
-                    DatabaseCardItem(
-                        db = db,
+                    val tablesMeta = if (db.tableCount >= 0) "${db.tableCount} tables" else "Tables"
+                    val sizeMeta = DatabaseFormatUtils.formatBytes(db.sizeBytes)
+                    LogItemCard(
+                        title = db.name,
+                        subtitle = db.engine,
+                        meta = "$tablesMeta • $sizeMeta",
+                        icon = {
+                            Icon(
+                                imageVector = if (db.isEncrypted) Icons.Default.Lock else Icons.Default.Storage,
+                                contentDescription = null,
+                                tint = Color(0xFF1976D2),
+                                modifier = Modifier.size(24.dp),
+                            )
+                        },
+                        iconContainerColor = Color(0xFFE3F2FD),
                         onClick = { viewModel.selectDatabase(db, navigate = true) },
                     )
                 }
@@ -136,64 +120,20 @@ internal fun DatabaseListScreen(
             // ── Database Logs Entry Card ──────────────────────────────
             item {
                 Spacer(Modifier.height(LogSpacing.x1))
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(LogSpacing.x3))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                        ) {
-                            viewModel.navigateTo(DatabaseDestination.DatabaseLogs(null))
-                        },
-                    shape = RoundedCornerShape(LogSpacing.x3),
-                    colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(LogSpacing.x4),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(44.dp)
-                                .background(Color(0xFFE8EAF6), RoundedCornerShape(12.dp)),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.MenuBook,
-                                contentDescription = null,
-                                tint = Color(0xFF3F51B5),
-                                modifier = Modifier.size(24.dp),
-                            )
-                        }
-
-                        Spacer(Modifier.width(14.dp))
-
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Database Logs",
-                                style = LogTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.SemiBold,
-                                color = LogTheme.colors.onSurface,
-                            )
-                            Spacer(Modifier.height(2.dp))
-                            Text(
-                                text = "View recent queries, writes, and operations.",
-                                style = LogTheme.typography.bodySmall,
-                                color = LogTheme.colors.onSurfaceVariant,
-                            )
-                        }
-
+                LogItemCard(
+                    title = "Database Logs",
+                    subtitle = "View recent queries, writes, and operations.",
+                    icon = {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                            imageVector = Icons.AutoMirrored.Filled.MenuBook,
                             contentDescription = null,
-                            tint = LogTheme.colors.onSurfaceVariant,
-                            modifier = Modifier.size(LogSpacing.x5),
+                            tint = Color(0xFF3F51B5),
+                            modifier = Modifier.size(24.dp),
                         )
-                    }
-                }
+                    },
+                    iconContainerColor = Color(0xFFE8EAF6),
+                    onClick = { viewModel.navigateTo(DatabaseDestination.DatabaseLogs(null)) },
+                )
             }
 
             // ── Security Notice Banner ────────────────────────────────
@@ -201,7 +141,7 @@ internal fun DatabaseListScreen(
                 Spacer(Modifier.height(LogSpacing.x1))
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(LogSpacing.x3),
+                    shape = RoundedCornerShape(LogDimens.cardCornerRadius),
                     colors = CardDefaults.cardColors(
                         containerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
                     ),
@@ -239,77 +179,6 @@ internal fun DatabaseListScreen(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun DatabaseCardItem(
-    db: DbInfo,
-    onClick: () -> Unit,
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(LogSpacing.x3))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-            ) { onClick() },
-        shape = RoundedCornerShape(LogSpacing.x3),
-        colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(LogSpacing.x4),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(Color(0xFFE3F2FD), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = if (db.isEncrypted) Icons.Default.Lock else Icons.Default.Storage,
-                    contentDescription = null,
-                    tint = Color(0xFF1976D2),
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-
-            Spacer(Modifier.width(14.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = db.name,
-                    style = LogTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = LogTheme.colors.onSurface,
-                )
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = db.engine,
-                    style = LogTheme.typography.bodySmall,
-                    color = LogTheme.colors.onSurfaceVariant,
-                )
-                Spacer(Modifier.height(2.dp))
-                val tablesMeta = if (db.tableCount >= 0) "${db.tableCount} tables" else "Tables"
-                val sizeMeta = DatabaseFormatUtils.formatBytes(db.sizeBytes)
-                Text(
-                    text = "$tablesMeta • $sizeMeta",
-                    style = LogTheme.typography.labelSmall,
-                    color = LogTheme.colors.onSurfaceVariant.copy(alpha = 0.8f),
-                )
-            }
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = LogTheme.colors.onSurfaceVariant,
-                modifier = Modifier.size(LogSpacing.x5),
-            )
         }
     }
 }

@@ -97,7 +97,7 @@ public fun <T> LogList(
                         LazyColumn(
                             state = listState,
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(vertical = LogSpacing.x2),
+                            contentPadding = PaddingValues(vertical = LogSpacing.x3),
                         ) {
                             itemsIndexed(items = items, key = { _, i -> itemKey(i) }) { index, item ->
                                 itemContent(index, item)

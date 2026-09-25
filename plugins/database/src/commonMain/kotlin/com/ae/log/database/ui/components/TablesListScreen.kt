@@ -2,9 +2,7 @@ package com.ae.log.database.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,25 +12,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,7 +40,10 @@ import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.database.ui.TablesTab
 import com.ae.log.ui.components.EmptyPlaceholder
+import com.ae.log.ui.components.LogItemCard
+import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
+import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 
@@ -67,37 +63,11 @@ internal fun TablesListScreen(
             .background(LogTheme.colors.background),
     ) {
         // ── Header ────────────────────────────────────────────────────
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = LogSpacing.x3, vertical = LogSpacing.x2),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            IconButton(onClick = { viewModel.popBack() }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = LogTheme.colors.onSurface,
-                )
-            }
-
-            Spacer(Modifier.width(LogSpacing.x1))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = db.name,
-                    style = LogTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = LogTheme.colors.onSurface,
-                )
-                Text(
-                    text = "${db.engine} • ${DatabaseFormatUtils.formatBytes(db.sizeBytes)}",
-                    style = LogTheme.typography.labelSmall,
-                    color = LogTheme.colors.onSurfaceVariant,
-                )
-            }
-        }
+        LogScreenHeader(
+            title = db.name,
+            subtitle = "${db.engine} • ${DatabaseFormatUtils.formatBytes(db.sizeBytes)}",
+            onBackClick = { viewModel.popBack() },
+        )
 
         // ── Tabs ──────────────────────────────────────────────────────
         PrimaryTabRow(
@@ -182,7 +152,7 @@ private fun TablesTabContent(
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(LogSpacing.x3),
+                        shape = RoundedCornerShape(LogDimens.cardCornerRadius),
                         colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
                     ) {
                         EmptyPlaceholder(
@@ -193,8 +163,20 @@ private fun TablesTabContent(
                 }
             } else {
                 items(filtered, key = { it.name }) { table ->
-                    TableCardItem(
-                        table = table,
+                    val rowsText = if (table.rowCount >= 0) "${table.rowCount} rows" else "— rows"
+                    val metaText = if (table.isSystemTable) "$rowsText • system table" else rowsText
+                    LogItemCard(
+                        title = table.name,
+                        subtitle = metaText,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.TableChart,
+                                contentDescription = null,
+                                tint = Color(0xFF1976D2),
+                                modifier = Modifier.size(22.dp),
+                            )
+                        },
+                        iconContainerColor = Color(0xFFE3F2FD),
                         onClick = { onSelectTable(table) },
                     )
                 }
@@ -205,7 +187,7 @@ private fun TablesTabContent(
                 Spacer(Modifier.height(LogSpacing.x2))
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(LogSpacing.x3),
+                    shape = RoundedCornerShape(LogDimens.cardCornerRadius),
                     colors = CardDefaults.cardColors(
                         containerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
                     ),
@@ -241,70 +223,6 @@ private fun TablesTabContent(
 }
 
 @Composable
-private fun TableCardItem(
-    table: DbTable,
-    onClick: () -> Unit,
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(LogSpacing.x3))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-            ) { onClick() },
-        shape = RoundedCornerShape(LogSpacing.x3),
-        colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(Color(0xFFE3F2FD), RoundedCornerShape(10.dp)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.TableChart,
-                    contentDescription = null,
-                    tint = Color(0xFF1976D2),
-                    modifier = Modifier.size(22.dp),
-                )
-            }
-
-            Spacer(Modifier.width(LogSpacing.x3))
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = table.name,
-                    style = LogTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = LogTheme.colors.onSurface,
-                )
-                Spacer(Modifier.height(2.dp))
-                val rowsText = if (table.rowCount >= 0) "${table.rowCount} rows" else "— rows"
-                Text(
-                    text = if (table.isSystemTable) "$rowsText • system table" else rowsText,
-                    style = LogTheme.typography.labelSmall,
-                    color = LogTheme.colors.onSurfaceVariant,
-                )
-            }
-
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                tint = LogTheme.colors.onSurfaceVariant,
-                modifier = Modifier.size(LogSpacing.x5),
-            )
-        }
-    }
-}
-
-@Composable
 private fun DatabaseSchemaOverview(
     tables: List<DbTable>,
     onSelectTable: (DbTable) -> Unit,
@@ -318,9 +236,9 @@ private fun DatabaseSchemaOverview(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(LogSpacing.x3))
+                    .clip(RoundedCornerShape(LogDimens.cardCornerRadius))
                     .clickable { onSelectTable(table) },
-                shape = RoundedCornerShape(LogSpacing.x3),
+                shape = RoundedCornerShape(LogDimens.cardCornerRadius),
                 colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
             ) {
                 Column(modifier = Modifier.padding(LogSpacing.x4)) {
