@@ -20,9 +20,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -218,7 +225,7 @@ private fun TableDataTabContent(
             }
         }
 
-        // ── Pagination Footer: < 1/16 >  Rows per page: 10 ▾ ─────────
+        // ── Pagination Footer: Rows per page: 10 ▾ ─────────
         if (result != null && result.columns.isNotEmpty()) {
             LogPaginationBar(
                 page = page,
@@ -228,7 +235,7 @@ private fun TableDataTabContent(
                 onPreviousPage = onPreviousPage,
                 onNextPage = onNextPage,
                 onPageSizeChange = onPageSizeChange,
-                availablePageSizes = listOf(8, 10, 20, 50),
+                availablePageSizes = listOf(10, 20, 50, 100, 200),
             )
         }
     }
@@ -295,12 +302,19 @@ private fun SpreadsheetDataGrid(
         }
 
         // ── Main Spreadsheet Card ─────────────────────────────────────────
+        val listState = rememberLazyListState()
+
         Card(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             shape = RoundedCornerShape(LogSpacing.x3),
             colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .drawVerticalScrollbar(listState, color = LogTheme.colors.primary.copy(alpha = 0.5f)),
+            ) {
                 Box(
                     modifier =
                         Modifier
@@ -308,6 +322,7 @@ private fun SpreadsheetDataGrid(
                             .horizontalScroll(hScroll),
                 ) {
                     LazyColumn(
+                        state = listState,
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(bottom = LogSpacing.x2),
                     ) {
@@ -464,3 +479,36 @@ private fun SpreadsheetDataGrid(
         }
     }
 }
+
+private fun Modifier.drawVerticalScrollbar(
+    state: LazyListState,
+    color: Color,
+): Modifier =
+    this.drawWithContent {
+        drawContent()
+
+        val visibleItemsInfo = state.layoutInfo.visibleItemsInfo
+        val totalItems = state.layoutInfo.totalItemsCount
+
+        if (visibleItemsInfo.isNotEmpty() && totalItems > 0) {
+            val firstVisibleItem = visibleItemsInfo.first()
+            val visibleItemsCount = visibleItemsInfo.size
+            val viewportHeight = size.height
+
+            val thumbHeight =
+                (viewportHeight * (visibleItemsCount.toFloat() / totalItems.toFloat())).coerceAtLeast(28.dp.toPx())
+            val maxScrollableItems = (totalItems.toFloat() - visibleItemsCount.toFloat()).coerceAtLeast(1f)
+            val scrollFraction = (firstVisibleItem.index.toFloat() / maxScrollableItems).coerceIn(0f, 1f)
+            val thumbOffsetY = ((viewportHeight - thumbHeight) * scrollFraction).coerceIn(0f, viewportHeight - thumbHeight)
+
+            val trackX = size.width - 5.dp.toPx()
+            val thumbWidth = 3.5.dp.toPx()
+
+            drawRoundRect(
+                color = color,
+                topLeft = Offset(trackX, thumbOffsetY),
+                size = Size(thumbWidth, thumbHeight),
+                cornerRadius = CornerRadius(2.dp.toPx(), 2.dp.toPx()),
+            )
+        }
+    }
