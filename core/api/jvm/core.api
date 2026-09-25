@@ -134,11 +134,21 @@ public final class com/ae/log/ui/components/ComposableSingletons$LogListKt {
 	public final fun getLambda$-1485173173$core ()Lkotlin/jvm/functions/Function3;
 }
 
+public final class com/ae/log/ui/components/ComposableSingletons$LogScreenHeaderKt {
+	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogScreenHeaderKt;
+	public fun <init> ()V
+	public final fun getLambda$1275269579$core ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/ae/log/ui/components/ComposableSingletons$LogSearchBarKt {
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogSearchBarKt;
 	public fun <init> ()V
 	public final fun getLambda$-2063243949$core ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$671898765$core ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/ae/log/ui/components/LogBadgeKt {
+	public static final fun LogBadge-eopBjH0 (Ljava/lang/String;JJLandroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/ae/log/ui/components/LogFilterChipsKt {
@@ -149,14 +159,34 @@ public final class com/ae/log/ui/components/LogHeaderKt {
 	public static final fun LogHeader (ILjava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class com/ae/log/ui/components/LogItemCardKt {
+	public static final fun LogItemCard-NpZTi58 (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;JLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/ae/log/ui/components/LogKeyValueItemKt {
+	public static final fun LogKeyValueItem-osbwsH8 (Ljava/lang/String;Ljava/lang/String;FLkotlin/jvm/functions/Function0;ZLandroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/ae/log/ui/components/LogListKt {
 	public static final fun EmptyPlaceholder (Ljava/lang/String;Landroidx/compose/runtime/Composer;I)V
 	public static final fun ExpandedDetails-KTwxG1Y (JLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 	public static final fun LogList (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/foundation/lazy/LazyListState;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;III)V
 }
 
+public final class com/ae/log/ui/components/LogPaginationBarKt {
+	public static final fun LogPaginationBar (IIIJLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Ljava/util/List;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/ae/log/ui/components/LogScreenHeaderKt {
+	public static final fun LogScreenHeader (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/ae/log/ui/components/LogSearchBarKt {
 	public static final fun LogSearchBar (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/ae/log/ui/components/LogSectionHeaderKt {
+	public static final fun LogSectionHeader (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/ae/log/ui/layout/ComposableSingletons$LogContentKt {
@@ -197,6 +227,8 @@ public abstract interface class com/ae/log/ui/layout/overlay/OverlayStrategy {
 public final class com/ae/log/ui/theme/LogDimens {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/theme/LogDimens;
+	public final fun getBadgeCornerRadius-D9Ej5fM ()F
+	public final fun getCardCornerRadius-D9Ej5fM ()F
 	public final fun getDialogTonalElevation-D9Ej5fM ()F
 	public final fun getLargeScreenBreakpoint-D9Ej5fM ()F
 	public final fun getListDividerThickness-D9Ej5fM ()F
@@ -206,12 +238,15 @@ public final class com/ae/log/ui/theme/LogDimens {
 public final class com/ae/log/ui/theme/LogSpacing {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/ui/theme/LogSpacing;
+	public final fun getX0_5-D9Ej5fM ()F
 	public final fun getX1-D9Ej5fM ()F
 	public final fun getX10-D9Ej5fM ()F
 	public final fun getX12-D9Ej5fM ()F
 	public final fun getX1_5-D9Ej5fM ()F
 	public final fun getX2-D9Ej5fM ()F
+	public final fun getX2_5-D9Ej5fM ()F
 	public final fun getX3-D9Ej5fM ()F
+	public final fun getX3_5-D9Ej5fM ()F
 	public final fun getX4-D9Ej5fM ()F
 	public final fun getX5-D9Ej5fM ()F
 	public final fun getX6-D9Ej5fM ()F
