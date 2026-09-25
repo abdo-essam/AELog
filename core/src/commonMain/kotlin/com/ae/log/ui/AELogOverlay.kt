@@ -35,7 +35,7 @@ private data class OverlayNotchDimensions(
  * above your content without needing to be a layout parent.
  *
  * The floating notch trigger can be dragged and positioned anywhere on screen,
- * staying in place wherever it is dropped.
+ * staying in place wherever it is dropped across sheet open/close states.
  *
  * ## Hiding the Notch / Custom Triggers
  * If you want to hide the floating notch trigger (e.g. to avoid overlapping with
@@ -85,40 +85,41 @@ public fun AELogOverlay(showNotch: Boolean = true) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             val isLargeScreen = (maxWidth > LogDimens.largeScreenBreakpoint) && (maxHeight > 480.dp)
 
+            // Saved notch position state retained outside `if (!isVisible)` so position survives sheet toggling
+            val density = LocalDensity.current
+
+            val dim =
+                remember(maxWidth, maxHeight, density) {
+                    val screenWidthPx = with(density) { maxWidth.toPx() }
+                    val screenHeightPx = with(density) { maxHeight.toPx() }
+                    val buttonWidthPx = with(density) { 36.dp.toPx() }
+                    val buttonHeightPx = with(density) { 120.dp.toPx() }
+
+                    val maxX = (screenWidthPx - buttonWidthPx).coerceAtLeast(0f)
+                    val maxY = (screenHeightPx - buttonHeightPx).coerceAtLeast(0f)
+
+                    OverlayNotchDimensions(
+                        maxX = maxX,
+                        maxY = maxY,
+                        defaultX = maxX,
+                        defaultY = (maxY / 2f).coerceAtLeast(0f),
+                    )
+                }
+
+            val animX = remember { Animatable(dim.defaultX) }
+            val animY = remember { Animatable(dim.defaultY) }
+            val coroutineScope = rememberCoroutineScope()
+
+            // Ensure position stays within screen boundaries on screen resize / rotation
+            LaunchedEffect(dim) {
+                if (animX.value > dim.maxX) animX.snapTo(dim.maxX)
+                if (animY.value > dim.maxY) animY.snapTo(dim.maxY)
+            }
+
             LogTheme(themeMode = themeMode) {
                 // Notch pill — floating trigger movable anywhere on the screen.
                 // Hidden while the panel is open so it doesn't overlap.
                 if (!isVisible && showNotch && isNotchEnabledGlobal) {
-                    val density = LocalDensity.current
-
-                    val dim =
-                        remember(maxWidth, maxHeight, density) {
-                            val screenWidthPx = with(density) { maxWidth.toPx() }
-                            val screenHeightPx = with(density) { maxHeight.toPx() }
-                            val buttonWidthPx = with(density) { 36.dp.toPx() }
-                            val buttonHeightPx = with(density) { 120.dp.toPx() }
-
-                            val maxX = (screenWidthPx - buttonWidthPx).coerceAtLeast(0f)
-                            val maxY = (screenHeightPx - buttonHeightPx).coerceAtLeast(0f)
-
-                            OverlayNotchDimensions(
-                                maxX = maxX,
-                                maxY = maxY,
-                                defaultX = maxX,
-                                defaultY = (maxY / 2f).coerceAtLeast(0f),
-                            )
-                        }
-
-                    val animX = remember { Animatable(dim.defaultX) }
-                    val animY = remember { Animatable(dim.defaultY) }
-                    val coroutineScope = rememberCoroutineScope()
-
-                    // Ensure position stays within screen boundaries on screen resize / rotation
-                    LaunchedEffect(dim) {
-                        if (animX.value > dim.maxX) animX.snapTo(dim.maxX)
-                        if (animY.value > dim.maxY) animY.snapTo(dim.maxY)
-                    }
-
                     val clampedX = animX.value.coerceIn(0f, dim.maxX)
                     val clampedY = animY.value.coerceIn(0f, dim.maxY)
 

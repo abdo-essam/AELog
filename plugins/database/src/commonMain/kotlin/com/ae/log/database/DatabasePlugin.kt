@@ -36,8 +36,13 @@ import kotlinx.coroutines.launch
  */
 public class DatabasePlugin(
     public val config: DatabasePluginConfig = DatabasePluginConfig(),
-    public val inspector: DatabaseInspector = createPlatformDatabaseInspector(config),
+    inspector: DatabaseInspector = createPlatformDatabaseInspector(config),
 ) : UIPlugin {
+    public var inspector: DatabaseInspector = inspector
+        set(value) {
+            field = value
+            viewModel?.updateInspector(value)
+        }
     override val id: String = ID
     override val name: String = "Database"
     override val icon: @Composable () -> Unit = { Icon(Icons.Default.Storage, contentDescription = null) }

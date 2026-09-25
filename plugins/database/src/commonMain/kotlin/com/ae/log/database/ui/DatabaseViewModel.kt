@@ -73,10 +73,18 @@ internal enum class TableDataTab(
 }
 
 internal class DatabaseViewModel(
-    val inspector: DatabaseInspector,
+    var inspector: DatabaseInspector,
     val config: DatabasePluginConfig,
     private val scope: CoroutineScope,
 ) {
+    fun updateInspector(newInspector: DatabaseInspector) {
+        this.inspector = newInspector
+        val db = _selectedDatabase.value
+        val table = _selectedTable.value
+        if (db != null && table != null) {
+            loadTableData(db, table, page = 0)
+        }
+    }
     // ── Navigation Stack ──────────────────────────────────────────────
     private val _navigationStack = MutableStateFlow<List<DatabaseDestination>>(listOf(DatabaseDestination.DatabaseList))
     val navigationStack: StateFlow<List<DatabaseDestination>> = _navigationStack.asStateFlow()

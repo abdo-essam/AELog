@@ -12,14 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +34,8 @@ import com.ae.log.ui.theme.LogTheme
 
 /**
  * Standard pagination bar used at the bottom of data grids and paged lists.
+ *
+ * Displays a simple rows selection dropdown on the right.
  *
  * @param page Current 0-based page index.
  * @param pageSize Number of rows per page.
@@ -56,69 +55,19 @@ public fun LogPaginationBar(
     onPreviousPage: () -> Unit,
     onNextPage: () -> Unit,
     onPageSizeChange: ((Int) -> Unit)? = null,
-    availablePageSizes: List<Int> = listOf(10, 20, 50),
+    availablePageSizes: List<Int> = listOf(10, 20, 50, 100),
     modifier: Modifier = Modifier,
 ) {
     var sizeMenuExpanded by remember { mutableStateOf(false) }
-
-    val totalPages =
-        if (totalRowCount > 0) {
-            ((totalRowCount + pageSize - 1) / pageSize).toInt().coerceAtLeast(1)
-        } else {
-            (page + 1).coerceAtLeast(1)
-        }
 
     Row(
         modifier =
             modifier
                 .fillMaxWidth()
                 .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Prev < page/total > Next
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = onPreviousPage, enabled = page > 0) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = "Previous page",
-                    tint =
-                        if (page >
-                            0
-                        ) {
-                            LogTheme.colors.primary
-                        } else {
-                            LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f)
-                        },
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-
-            Text(
-                text = "${page + 1}/$totalPages",
-                style = LogTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = LogTheme.colors.onSurface,
-                modifier = Modifier.padding(horizontal = LogSpacing.x1),
-            )
-
-            IconButton(onClick = onNextPage, enabled = rowCount >= pageSize) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Next page",
-                    tint =
-                        if (rowCount >=
-                            pageSize
-                        ) {
-                            LogTheme.colors.primary
-                        } else {
-                            LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f)
-                        },
-                    modifier = Modifier.size(24.dp),
-                )
-            }
-        }
-
         // Rows per page dropdown
         if (onPageSizeChange != null) {
             Box {

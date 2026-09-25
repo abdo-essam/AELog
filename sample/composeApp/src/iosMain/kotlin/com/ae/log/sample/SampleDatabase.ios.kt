@@ -1,13 +1,14 @@
 package com.ae.log.sample
 
 import com.ae.log.AELog
+import com.ae.log.database.DatabasePlugin
 import com.ae.log.database.database
 import com.ae.log.database.model.DbInfo
 
 private const val DB_NAME = "shop_sample.db"
 
 public actual fun ensureSampleDatabaseExists(): String {
-    AELog.database.registerDatabase(
+    val dbInfo =
         DbInfo(
             name = DB_NAME,
             path = DB_NAME,
@@ -15,7 +16,16 @@ public actual fun ensureSampleDatabaseExists(): String {
             tableCount = 5,
             sizeBytes = 204800L,
         )
-    )
+
+    val dbPlugin = AELog.getPlugin<DatabasePlugin>()
+    if (dbPlugin != null) {
+        if (dbPlugin.inspector !is SampleIosDatabaseInspector) {
+            dbPlugin.inspector = SampleIosDatabaseInspector(dbPlugin.inspector)
+        }
+        dbPlugin.inspector.registerDatabase(dbInfo)
+    } else {
+        AELog.database.registerDatabase(dbInfo)
+    }
 
     AELog.database.logQuery(
         databaseName = DB_NAME,

@@ -43,6 +43,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.ui.draw.shadow
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -103,33 +104,28 @@ internal fun ScrollableSegmentedTabRow(
 ) {
     val scrollState = rememberScrollState()
 
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
-        shape = RoundedCornerShape(10.dp),
-    ) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .horizontalScroll(scrollState)
-                    .padding(3.dp),
+                    .padding(horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             tabs.forEachIndexed { index, title ->
                 val isSelected = index == selectedIndex
-                Box(
+                Column(
                     modifier =
                         Modifier
-                            .height(34.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(
-                                if (isSelected) LogTheme.colors.surface else Color.Transparent,
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = { onTabSelected(index) },
                             )
-                            .clickable { onTabSelected(index) }
-                            .padding(horizontal = 14.dp),
-                    contentAlignment = Alignment.Center,
+                            .padding(horizontal = 8.dp, vertical = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = title,
@@ -137,9 +133,21 @@ internal fun ScrollableSegmentedTabRow(
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                         color = if (isSelected) LogTheme.colors.onSurface else LogTheme.colors.onSurfaceVariant,
                     )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Box(
+                        modifier =
+                            Modifier
+                                .height(2.5.dp)
+                                .width(if (isSelected) 32.dp else 0.dp)
+                                .clip(RoundedCornerShape(1.25.dp))
+                                .background(
+                                    if (isSelected) LogTheme.colors.onSurface else Color.Transparent,
+                                ),
+                    )
                 }
             }
         }
+        HorizontalDivider(color = LogTheme.colors.outlineVariant.copy(alpha = 0.3f), thickness = 1.dp)
     }
 }
 
