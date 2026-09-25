@@ -41,6 +41,7 @@ public fun LogBadge(
             fontWeight = FontWeight.Bold,
             color = contentColor,
             letterSpacing = 0.5.sp,
+            maxLines = 1,
         )
     }
 }

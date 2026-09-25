@@ -4,12 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -237,142 +243,214 @@ private fun SpreadsheetDataGrid(
     onRowClick: (List<String?>, Int) -> Unit,
 ) {
     val hScroll = rememberScrollState()
+    val isScrollable = hScroll.maxValue > 0
 
-    Card(
+    Column(
         modifier =
             Modifier
                 .fillMaxSize()
                 .padding(horizontal = LogSpacing.x5),
-        shape = RoundedCornerShape(LogSpacing.x3),
-        colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
     ) {
-        Box(
+        // ── Scroll Indicator & Metadata Bar ──────────────────────────────
+        Row(
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .horizontalScroll(hScroll),
+                    .fillMaxWidth()
+                    .padding(bottom = LogSpacing.x2),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = LogSpacing.x2),
-            ) {
-                // Header row with sorting
-                item {
-                    Row(
-                        modifier =
-                            Modifier
-                                .background(LogTheme.colors.surfaceVariant.copy(alpha = 0.7f))
-                                .padding(vertical = 10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+            Text(
+                text = "${result.columns.size} columns • ${result.rows.size} rows",
+                style = LogTheme.typography.labelSmall,
+                color = LogTheme.colors.onSurfaceVariant,
+            )
+
+            if (isScrollable) {
+                Row(
+                    modifier =
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(LogTheme.colors.primaryContainer.copy(alpha = 0.6f))
+                            .padding(horizontal = LogSpacing.x2, vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SwapHoriz,
+                        contentDescription = "Scroll horizontally",
+                        tint = LogTheme.colors.onPrimaryContainer,
+                        modifier = Modifier.size(14.dp),
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "Scrollable",
+                        style = LogTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = LogTheme.colors.onPrimaryContainer,
+                    )
+                }
+            }
+        }
+
+        // ── Main Spreadsheet Card ─────────────────────────────────────────
+        Card(
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            shape = RoundedCornerShape(LogSpacing.x3),
+            colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .horizontalScroll(hScroll),
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = LogSpacing.x2),
                     ) {
-                        Text(
-                            text = "#",
-                            modifier =
-                                Modifier
-                                    .width(44.dp)
-                                    .padding(horizontal = 10.dp),
-                            style = LogTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = LogTheme.colors.primary,
-                        )
-                        result.columns.forEach { colName ->
-                            val isSorted = sortColumn == colName
+                        // Header row with sorting
+                        item {
                             Row(
                                 modifier =
                                     Modifier
-                                        .width(130.dp)
-                                        .clickable { onToggleSort(colName) }
-                                        .padding(horizontal = 10.dp),
+                                        .background(LogTheme.colors.surfaceVariant.copy(alpha = 0.7f))
+                                        .padding(vertical = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
-                                    text = colName,
+                                    text = "#",
+                                    modifier =
+                                        Modifier
+                                            .width(44.dp)
+                                            .padding(horizontal = 10.dp),
                                     style = LogTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color =
-                                        if (isSorted) {
-                                            LogTheme.colors.primary
-                                        } else {
-                                            LogTheme.colors.onSurfaceVariant
-                                        },
-                                    modifier = Modifier.weight(1f, fill = false),
+                                    color = LogTheme.colors.primary,
                                 )
-                                if (isSorted) {
-                                    Icon(
-                                        imageVector =
-                                            if (sortAscending) {
-                                                Icons.Default.ArrowDropUp
+                                result.columns.forEach { colName ->
+                                    val isSorted = sortColumn == colName
+                                    Row(
+                                        modifier =
+                                            Modifier
+                                                .width(130.dp)
+                                                .clickable { onToggleSort(colName) }
+                                                .padding(horizontal = 10.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Text(
+                                            text = colName,
+                                            style = LogTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            color =
+                                                if (isSorted) {
+                                                    LogTheme.colors.primary
+                                                } else {
+                                                    LogTheme.colors.onSurfaceVariant
+                                                },
+                                            modifier = Modifier.weight(1f, fill = false),
+                                        )
+                                        if (isSorted) {
+                                            Icon(
+                                                imageVector =
+                                                    if (sortAscending) {
+                                                        Icons.Default.ArrowDropUp
+                                                    } else {
+                                                        Icons.Default.ArrowDropDown
+                                                    },
+                                                contentDescription = null,
+                                                tint = LogTheme.colors.primary,
+                                                modifier = Modifier.size(16.dp),
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            HorizontalDivider(
+                                color = LogTheme.colors.outlineVariant,
+                                thickness = LogDimens.listDividerThickness,
+                            )
+                        }
+
+                        // Data rows
+                        itemsIndexed(result.rows) { rowIndex, row ->
+                            Row(
+                                modifier =
+                                    Modifier
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = null,
+                                        ) { onRowClick(row, rowIndex) }
+                                        .padding(vertical = LogSpacing.x3),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                val recordNumber = (page * pageSize) + rowIndex + 1
+                                Text(
+                                    text = "$recordNumber",
+                                    modifier =
+                                        Modifier
+                                            .width(44.dp)
+                                            .padding(horizontal = 10.dp),
+                                    style = LogTheme.typography.labelSmall,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.Medium,
+                                    color = LogTheme.colors.onSurfaceVariant,
+                                )
+                                result.columns.indices.forEach { colIndex ->
+                                    val value = row.getOrNull(colIndex)
+                                    Text(
+                                        text = value ?: "null",
+                                        modifier =
+                                            Modifier
+                                                .width(130.dp)
+                                                .padding(horizontal = 10.dp),
+                                        style = LogTheme.typography.bodySmall,
+                                        fontFamily = FontFamily.Monospace,
+                                        fontStyle = if (value == null) FontStyle.Italic else FontStyle.Normal,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        color =
+                                            if (value == null) {
+                                                LogTheme.colors.error.copy(alpha = 0.6f)
                                             } else {
-                                                Icons.Default.ArrowDropDown
+                                                LogTheme.colors.onSurface
                                             },
-                                        contentDescription = null,
-                                        tint = LogTheme.colors.primary,
-                                        modifier = Modifier.size(16.dp),
                                     )
                                 }
                             }
+
+                            if (rowIndex < result.rows.lastIndex) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(horizontal = LogSpacing.x2),
+                                    color = LogTheme.colors.outlineVariant.copy(alpha = 0.4f),
+                                    thickness = LogDimens.listDividerThickness,
+                                )
+                            }
                         }
                     }
-                    HorizontalDivider(
-                        color = LogTheme.colors.outlineVariant,
-                        thickness = LogDimens.listDividerThickness,
-                    )
                 }
 
-                // Data rows
-                itemsIndexed(result.rows) { rowIndex, row ->
-                    Row(
+                // ── Horizontal Scroll Progress Track ─────────────────────
+                if (isScrollable) {
+                    val scrollRatio = (hScroll.value.toFloat() / hScroll.maxValue.toFloat()).coerceIn(0f, 1f)
+                    Box(
                         modifier =
                             Modifier
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                ) { onRowClick(row, rowIndex) }
-                                .padding(vertical = LogSpacing.x3),
-                        verticalAlignment = Alignment.CenterVertically,
+                                .align(Alignment.BottomStart)
+                                .fillMaxWidth()
+                                .height(3.dp)
+                                .background(LogTheme.colors.outlineVariant.copy(alpha = 0.3f)),
                     ) {
-                        val recordNumber = (page * pageSize) + rowIndex + 1
-                        Text(
-                            text = "$recordNumber",
+                        Box(
                             modifier =
                                 Modifier
-                                    .width(44.dp)
-                                    .padding(horizontal = 10.dp),
-                            style = LogTheme.typography.labelSmall,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Medium,
-                            color = LogTheme.colors.onSurfaceVariant,
-                        )
-                        result.columns.indices.forEach { colIndex ->
-                            val value = row.getOrNull(colIndex)
-                            Text(
-                                text = value ?: "null",
-                                modifier =
-                                    Modifier
-                                        .width(130.dp)
-                                        .padding(horizontal = 10.dp),
-                                style = LogTheme.typography.bodySmall,
-                                fontFamily = FontFamily.Monospace,
-                                fontStyle = if (value == null) FontStyle.Italic else FontStyle.Normal,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                color =
-                                    if (value == null) {
-                                        LogTheme.colors.error.copy(alpha = 0.6f)
-                                    } else {
-                                        LogTheme.colors.onSurface
-                                    },
-                            )
-                        }
-                    }
-
-                    if (rowIndex < result.rows.lastIndex) {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = LogSpacing.x2),
-                            color = LogTheme.colors.outlineVariant.copy(alpha = 0.4f),
-                            thickness = LogDimens.listDividerThickness,
+                                    .fillMaxHeight()
+                                    .fillMaxWidth(0.3f)
+                                    .align(Alignment.CenterStart)
+                                    .padding(start = (scrollRatio * 0.7f * 100).dp)
+                                    .background(LogTheme.colors.primary, RoundedCornerShape(2.dp)),
                         )
                     }
                 }

@@ -306,8 +306,8 @@ class DatabaseEnhancementsTest {
         vm.setLogFilter(DatabaseLogFilter.ALL)
         assertEquals(5, vm.filteredLogs.value.size)
 
-        // QUERIES
-        vm.setLogFilter(DatabaseLogFilter.QUERIES)
+        // SELECTS
+        vm.setLogFilter(DatabaseLogFilter.SELECTS)
         assertEquals(1, vm.filteredLogs.value.size)
         assertEquals(
             "SELECT",
@@ -316,9 +316,13 @@ class DatabaseEnhancementsTest {
                 .operation,
         )
 
-        // WRITES (includes INSERT, CREATE, DROP)
-        vm.setLogFilter(DatabaseLogFilter.WRITES)
-        assertEquals(3, vm.filteredLogs.value.size)
+        // INSERTS
+        vm.setLogFilter(DatabaseLogFilter.INSERTS)
+        assertEquals(1, vm.filteredLogs.value.size)
+
+        // SCHEMA (includes CREATE, DROP)
+        vm.setLogFilter(DatabaseLogFilter.SCHEMA)
+        assertEquals(2, vm.filteredLogs.value.size)
 
         // ERRORS
         vm.setLogFilter(DatabaseLogFilter.ERRORS)

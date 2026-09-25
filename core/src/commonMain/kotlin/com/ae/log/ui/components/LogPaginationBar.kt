@@ -1,20 +1,26 @@
 package com.ae.log.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ae.log.ui.theme.LogSpacing
@@ -118,19 +125,23 @@ public fun LogPaginationBar(
                 Row(
                     modifier =
                         Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(LogTheme.colors.surfaceVariant.copy(alpha = 0.6f))
                             .clickable { sizeMenuExpanded = true }
-                            .padding(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
+                            .padding(horizontal = LogSpacing.x2_5, vertical = LogSpacing.x1_5),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Rows per page: $pageSize",
+                        text = "Rows: $pageSize",
                         style = LogTheme.typography.labelSmall,
-                        color = LogTheme.colors.onSurfaceVariant,
+                        fontWeight = FontWeight.SemiBold,
+                        color = LogTheme.colors.onSurface,
                     )
+                    Spacer(Modifier.width(LogSpacing.x1))
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = null,
-                        tint = LogTheme.colors.onSurfaceVariant,
+                        contentDescription = "Change rows per page",
+                        tint = LogTheme.colors.primary,
                         modifier = Modifier.size(18.dp),
                     )
                 }
@@ -138,14 +149,38 @@ public fun LogPaginationBar(
                 DropdownMenu(
                     expanded = sizeMenuExpanded,
                     onDismissRequest = { sizeMenuExpanded = false },
+                    modifier = Modifier.background(LogTheme.colors.surfaceVariant),
+                    shape = RoundedCornerShape(12.dp),
                 ) {
                     availablePageSizes.forEach { s ->
+                        val isSelected = s == pageSize
                         DropdownMenuItem(
-                            text = { Text("$s") },
+                            text = {
+                                Text(
+                                    text = "$s rows per page",
+                                    style = LogTheme.typography.labelMedium,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) LogTheme.colors.primary else LogTheme.colors.onSurface,
+                                )
+                            },
+                            trailingIcon = {
+                                if (isSelected) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = LogTheme.colors.primary,
+                                        modifier = Modifier.size(16.dp),
+                                    )
+                                }
+                            },
                             onClick = {
                                 onPageSizeChange(s)
                                 sizeMenuExpanded = false
                             },
+                            colors =
+                                MenuDefaults.itemColors(
+                                    textColor = LogTheme.colors.onSurface,
+                                ),
                         )
                     }
                 }

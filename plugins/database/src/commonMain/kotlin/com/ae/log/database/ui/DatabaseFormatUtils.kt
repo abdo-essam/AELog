@@ -22,17 +22,11 @@ internal object DatabaseFormatUtils {
     }
 
     /**
-     * Formats an epoch timestamp into time-of-day (HH:mm:ss).
+     * Formats an epoch timestamp into time-of-day (HH:mm:ss AM/PM).
      */
     fun formatTime(timestampMs: Long): String {
         if (timestampMs <= 0) return ""
-        val formatted = TimeUtils.formatTimestamp(timestampMs)
-        // Extract time portion if full datetime is returned
-        return if (formatted.contains(" ")) {
-            formatted.substringAfter(" ")
-        } else {
-            formatted
-        }
+        return TimeUtils.formatTimestamp(timestampMs)
     }
 
     /**
@@ -80,4 +74,25 @@ internal object DatabaseFormatUtils {
             }
         return "INSERT INTO \"$tableName\" ($cols) VALUES ($vals);"
     }
+
+    /**
+     * Formats a single database log entry into a plain-text representation for clipboard copying.
+     */
+    fun formatDatabaseLogForCopy(log: com.ae.log.database.model.DatabaseLogEntry): String =
+        buildString {
+            append("[${formatTime(log.timestamp)}] ")
+            append("${log.operation} ")
+            if (!log.tableName.isNullOrBlank()) append("table: ${log.tableName} ")
+            append("(${log.durationMs}ms)\n")
+            append(log.sql)
+            if (!log.isSuccess && !log.errorMessage.isNullOrBlank()) {
+                append("\nError: ${log.errorMessage}")
+            }
+        }
+
+    /**
+     * Formats multiple database log entries into a plain-text representation for clipboard copying.
+     */
+    fun formatDatabaseLogsForCopy(logs: List<com.ae.log.database.model.DatabaseLogEntry>): String =
+        logs.joinToString("\n\n") { formatDatabaseLogForCopy(it) }
 }

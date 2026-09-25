@@ -144,6 +144,16 @@ public class AELogSQLiteStatement(
     }
 
     private fun logQuery() {
+        val lowerSql = sql.lowercase()
+        if (lowerSql.contains("room_table_modification_log") ||
+            lowerSql.contains("room_master_table") ||
+            lowerSql.contains("sqlite_master") ||
+            lowerSql.contains("sqlite_schema") ||
+            lowerSql.contains("sqlite_sequence")
+        ) {
+            return
+        }
+
         val argsList =
             if (boundArgs.isEmpty()) {
                 emptyList()

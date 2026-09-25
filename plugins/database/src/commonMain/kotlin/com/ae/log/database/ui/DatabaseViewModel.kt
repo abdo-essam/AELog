@@ -59,9 +59,9 @@ private const val SCHEMA_TAB_LABEL = "Schema"
 internal enum class TablesTab(
     val label: String,
 ) {
+    LOGS("Logs"),
     TABLES("Tables"),
     SCHEMA(SCHEMA_TAB_LABEL),
-    LOGS("Logs"),
 }
 
 internal enum class TableDataTab(
@@ -115,7 +115,7 @@ internal class DatabaseViewModel(
     private val _tablesSearchQuery = MutableStateFlow("")
     val tablesSearchQuery: StateFlow<String> = _tablesSearchQuery.asStateFlow()
 
-    private val _tablesTab = MutableStateFlow(TablesTab.TABLES)
+    private val _tablesTab = MutableStateFlow(TablesTab.LOGS)
     val tablesTab: StateFlow<TablesTab> = _tablesTab.asStateFlow()
 
     // ── Table Data State ──────────────────────────────────────────────
@@ -183,20 +183,13 @@ internal class DatabaseViewModel(
                 val matchesFilter =
                     when (filter) {
                         DatabaseLogFilter.ALL -> true
-                        DatabaseLogFilter.QUERIES ->
-                            entry.operation in listOf("SELECT", "PRAGMA", "TRANSACTION", "OTHER") &&
+                        DatabaseLogFilter.SELECTS -> entry.operation == "SELECT" && entry.isSuccess
+                        DatabaseLogFilter.INSERTS -> entry.operation == "INSERT" && entry.isSuccess
+                        DatabaseLogFilter.UPDATES -> entry.operation == "UPDATE" && entry.isSuccess
+                        DatabaseLogFilter.DELETES -> entry.operation == "DELETE" && entry.isSuccess
+                        DatabaseLogFilter.SCHEMA ->
+                            entry.operation in listOf("CREATE", "DROP", "ALTER", "REPLACE") &&
                                 entry.isSuccess
-                        DatabaseLogFilter.WRITES ->
-                            entry.operation in
-                                listOf(
-                                    "INSERT",
-                                    "UPDATE",
-                                    "DELETE",
-                                    "REPLACE",
-                                    "CREATE",
-                                    "DROP",
-                                    "ALTER",
-                                )
                         DatabaseLogFilter.ERRORS -> !entry.isSuccess || entry.operation == "ERROR"
                     }
                 val matchesSearch =
@@ -222,7 +215,7 @@ internal class DatabaseViewModel(
 
     // ── Database Actions ──────────────────────────────────────────────
     fun refreshDatabases() {
-        scope.launch(Dispatchers.Default) {
+        scope.launch {
             val list = inspector.listDatabases()
             _databases.value = list
             val current = _selectedDatabase.value

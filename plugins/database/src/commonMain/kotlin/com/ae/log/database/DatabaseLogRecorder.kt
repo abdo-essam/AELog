@@ -30,6 +30,10 @@ public object DatabaseLogRecorder {
         affectedRows: Long? = null,
         engine: String = "SQLite",
     ) {
+        if (isInternalSystemQuery(sql)) {
+            return
+        }
+
         val now = Clock.System.now().toEpochMilliseconds()
         val entry =
             DatabaseLogEntry(
@@ -83,5 +87,23 @@ public object DatabaseLogRecorder {
             return words[tableIdx + 1].trim('\"', '`', '\'', ';', '(')
         }
         return null
+    }
+
+    private fun isInternalSystemQuery(sql: String): Boolean {
+        val trimmed = sql.trim().uppercase()
+        if (trimmed.startsWith("PRAGMA") ||
+            trimmed.startsWith("BEGIN") ||
+            trimmed.startsWith("COMMIT") ||
+            trimmed.startsWith("END TRANSACTION") ||
+            trimmed.startsWith("END;")
+        ) {
+            return true
+        }
+        val lower = sql.lowercase()
+        return lower.contains("room_table_modification_log") ||
+            lower.contains("room_master_table") ||
+            lower.contains("sqlite_master") ||
+            lower.contains("sqlite_schema") ||
+            lower.contains("sqlite_sequence")
     }
 }

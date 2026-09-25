@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.TableSchema
@@ -148,6 +149,8 @@ internal fun TableSchemaView(
                                 fontWeight = FontWeight.SemiBold,
                                 color = LogTheme.colors.onSurface,
                                 modifier = Modifier.weight(1f),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                             )
 
                             Text(
@@ -207,7 +210,6 @@ internal fun TableSchemaView(
                     Column(modifier = Modifier.padding(LogSpacing.x4)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
@@ -216,7 +218,11 @@ internal fun TableSchemaView(
                                 fontWeight = FontWeight.SemiBold,
                                 fontFamily = FontFamily.Monospace,
                                 color = LogTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                             )
+                            Spacer(Modifier.width(LogSpacing.x2))
                             ForeignKeyBadge()
                         }
 
@@ -255,7 +261,6 @@ internal fun TableSchemaView(
                     Column(modifier = Modifier.padding(LogSpacing.x4)) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(
@@ -264,8 +269,12 @@ internal fun TableSchemaView(
                                 fontWeight = FontWeight.SemiBold,
                                 fontFamily = FontFamily.Monospace,
                                 color = LogTheme.colors.onSurface,
+                                modifier = Modifier.weight(1f),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
                             )
                             if (idx.isUnique) {
+                                Spacer(Modifier.width(LogSpacing.x2))
                                 UniqueIndexBadge()
                             }
                         }

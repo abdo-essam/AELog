@@ -39,7 +39,10 @@ public enum class DatabaseLogFilter(
     public val label: String,
 ) {
     ALL("All"),
-    QUERIES("Queries"),
-    WRITES("Writes"),
+    SELECTS("Selects"),
+    INSERTS("Inserts"),
+    UPDATES("Updates"),
+    DELETES("Deletes"),
+    SCHEMA("Schema/DDL"),
     ERRORS("Errors"),
 }
