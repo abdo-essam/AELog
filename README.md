@@ -109,8 +109,12 @@ kotlin {
             implementation(libs.aelog.analytics)
             implementation(libs.aelog.crashes)
 
-            // For Room database users: 'aelog-database-room' transitively includes 'aelog-database'
+            // Database Inspector (Choose one based on your stack):
+            // 1. Room Users: Use 'aelog-database-room' (transitively includes 'aelog-database')
             implementation(libs.aelog.database.room)
+
+            // 2. SQLDelight / Raw SQLite Users: Use 'aelog-database' directly
+            // implementation(libs.aelog.database)
         }
         androidMain.dependencies {
             // Add only if your Android target uses OkHttp
@@ -119,6 +123,13 @@ kotlin {
     }
 }
 ```
+
+#### 🗄️ Database Plugin Selection
+
+| Your Stack | Dependency to Add | Transitive Inclusions |
+|:---|:---|:---|
+| **androidx.room** | `libs.aelog.database.room` | Includes `aelog-database` & `ae-log-core` automatically. |
+| **SQLDelight / Raw SQLite / Custom** | `libs.aelog.database` | Lightweight inspector without `androidx.room` dependencies. |
 
 ---
 
