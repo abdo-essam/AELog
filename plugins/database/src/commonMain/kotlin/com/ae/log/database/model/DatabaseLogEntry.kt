@@ -15,6 +15,7 @@ import kotlinx.serialization.Serializable
  * @property isSuccess Whether the query succeeded without error.
  * @property errorMessage Error details if [isSuccess] is `false`.
  * @property affectedRows Number of affected rows for write statements.
+ * @property engine Database engine that executed the operation (e.g. `"SQLite"`, `"SQLCipher"`, `"Realm"`).
  */
 @Serializable
 public data class DatabaseLogEntry(
@@ -28,12 +29,15 @@ public data class DatabaseLogEntry(
     public val isSuccess: Boolean = true,
     public val errorMessage: String? = null,
     public val affectedRows: Long? = null,
+    public val engine: String = "SQLite",
 )
 
 /**
  * Filter categories for database log entries.
  */
-public enum class DatabaseLogFilter(public val label: String) {
+public enum class DatabaseLogFilter(
+    public val label: String,
+) {
     ALL("All"),
     QUERIES("Queries"),
     WRITES("Writes"),

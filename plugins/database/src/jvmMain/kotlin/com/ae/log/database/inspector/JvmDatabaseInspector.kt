@@ -7,6 +7,9 @@ import com.ae.log.database.model.QueryResult
 import java.io.File
 import java.io.FileInputStream
 
+private const val PRAGMA_KEYWORD = "PRAGMA"
+private const val PROP_USER_DIR = "user.dir"
+
 internal class JvmDatabaseInspector(
     private val config: DatabasePluginConfig,
 ) : DatabaseInspector {
@@ -25,8 +28,8 @@ internal class JvmDatabaseInspector(
         val searchDirs =
             listOf(
                 File(System.getProperty("user.home"), ".ae_databases"),
-                File(System.getProperty("user.dir"), "databases"),
-                File(System.getProperty("user.dir")),
+                File(System.getProperty(PROP_USER_DIR), "databases"),
+                File(System.getProperty(PROP_USER_DIR)),
             )
 
         searchDirs.forEach { dir ->
@@ -93,7 +96,7 @@ internal class JvmDatabaseInspector(
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
             val err = QueryResult.error(e.message ?: "Write operation disallowed")
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -108,7 +111,7 @@ internal class JvmDatabaseInspector(
         val file = File(dbInfo.path)
         if (!file.exists()) {
             val err = QueryResult.error("Database file not found: ${dbInfo.path}")
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -120,10 +123,11 @@ internal class JvmDatabaseInspector(
             return err
         }
 
-        val err = QueryResult.error(
-            "JVM runtime database inspector requires JDBC or a custom DatabaseInspector implementation.",
-        )
-        if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+        val err =
+            QueryResult.error(
+                "JVM runtime database inspector requires JDBC or a custom DatabaseInspector implementation.",
+            )
+        if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
             com.ae.log.database.DatabaseLogRecorder.record(
                 databaseName = dbInfo.name,
                 sql = sql,

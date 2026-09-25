@@ -12,6 +12,11 @@ import java.io.File
 import java.io.FileInputStream
 import kotlin.system.measureTimeMillis
 
+private const val PRAGMA_KEYWORD = "PRAGMA"
+private const val SQLITE_SYSTEM_PREFIX = "sqlite_"
+private const val ANDROID_METADATA_TABLE = "android_metadata"
+private const val SQLITE_HEADER_PREFIX = "SQLite format 3"
+
 internal class AndroidDatabaseInspector(
     private val context: Context?,
     private val config: DatabasePluginConfig,
@@ -97,10 +102,11 @@ internal class AndroidDatabaseInspector(
     }
 
     private fun buildDbInfo(file: File): DbInfo {
-        var engine = "SQLite"
+        val isEncrypted = isEncryptedSqliteFile(file)
+        val engine = if (isEncrypted) "SQLCipher" else "SQLite"
+        var framework: String? = null
         var tableCount = -1
         var version = ""
-        val isEncrypted = isEncryptedSqliteFile(file)
 
         if (!isEncrypted && file.exists() && file.canRead()) {
             try {
@@ -110,9 +116,9 @@ internal class AndroidDatabaseInspector(
                         var count = 0
                         while (c.moveToNext()) {
                             val name = c.getString(0) ?: ""
-                            if (name == "room_master_table") engine = "Room"
-                            if (name.startsWith("sqldelight_")) engine = "SQLDelight"
-                            if (!name.startsWith("sqlite_") && name != "android_metadata") {
+                            if (name == "room_master_table") framework = "Room"
+                            if (name.startsWith("sqldelight_")) framework = "SQLDelight"
+                            if (!name.startsWith(SQLITE_SYSTEM_PREFIX) && name != ANDROID_METADATA_TABLE) {
                                 count++
                             }
                         }
@@ -134,6 +140,7 @@ internal class AndroidDatabaseInspector(
             isEncrypted = isEncrypted,
             sizeBytes = file.length(),
             engine = engine,
+            framework = framework,
             tableCount = tableCount,
             version = version,
         )
@@ -147,7 +154,7 @@ internal class AndroidDatabaseInspector(
             db.rawQuery(query, null).use { cursor ->
                 while (cursor.moveToNext()) {
                     val tableName = cursor.getString(0) ?: continue
-                    val isSystem = tableName.startsWith("sqlite_") || tableName == "android_metadata"
+                    val isSystem = tableName.startsWith(SQLITE_SYSTEM_PREFIX) || tableName == ANDROID_METADATA_TABLE
 
                     // Retrieve columns for table via PRAGMA table_info
                     val columns = mutableListOf<String>()
@@ -202,7 +209,7 @@ internal class AndroidDatabaseInspector(
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
             val err = QueryResult.error(e.message ?: "Write operation disallowed")
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -217,7 +224,7 @@ internal class AndroidDatabaseInspector(
         val db = openDatabase(dbInfo)
         if (db == null) {
             val err = QueryResult.error("Failed to open database: ${dbInfo.name}")
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -230,51 +237,52 @@ internal class AndroidDatabaseInspector(
         }
         val isWrite = isWriteStatement(sql)
 
-        val queryResult = try {
-            var executionTime = 0L
-            if (isWrite) {
-                var affected = 0L
-                executionTime =
-                    measureTimeMillis {
-                        val statement = db.compileStatement(sql)
-                        try {
-                            args.forEachIndexed { index, arg ->
-                                statement.bindString(index + 1, arg)
+        val queryResult =
+            try {
+                var executionTime = 0L
+                if (isWrite) {
+                    var affected = 0L
+                    executionTime =
+                        measureTimeMillis {
+                            val statement = db.compileStatement(sql)
+                            try {
+                                args.forEachIndexed { index, arg ->
+                                    statement.bindString(index + 1, arg)
+                                }
+                                val result = statement.executeUpdateDelete()
+                                affected = result.toLong()
+                            } finally {
+                                statement.close()
                             }
-                            val result = statement.executeUpdateDelete()
-                            affected = result.toLong()
-                        } finally {
-                            statement.close()
                         }
-                    }
-                QueryResult.writeSuccess(affectedRows = affected, durationMs = executionTime)
-            } else {
-                var res: QueryResult
-                executionTime =
-                    measureTimeMillis {
-                        val rawArgs = if (args.isEmpty()) null else args.toTypedArray()
-                        db.rawQuery(sql, rawArgs).use { cursor ->
-                            val colNames = cursor.columnNames.toList()
-                            val rows = mutableListOf<List<String?>>()
-                            while (cursor.moveToNext()) {
-                                val row =
-                                    (0 until cursor.columnCount).map { i ->
-                                        if (cursor.isNull(i)) null else cursor.getString(i)
-                                    }
-                                rows.add(row)
+                    QueryResult.writeSuccess(affectedRows = affected, durationMs = executionTime)
+                } else {
+                    var res: QueryResult
+                    executionTime =
+                        measureTimeMillis {
+                            val rawArgs = if (args.isEmpty()) null else args.toTypedArray()
+                            db.rawQuery(sql, rawArgs).use { cursor ->
+                                val colNames = cursor.columnNames.toList()
+                                val rows = mutableListOf<List<String?>>()
+                                while (cursor.moveToNext()) {
+                                    val row =
+                                        (0 until cursor.columnCount).map { i ->
+                                            if (cursor.isNull(i)) null else cursor.getString(i)
+                                        }
+                                    rows.add(row)
+                                }
+                                res = QueryResult.success(columns = colNames, rows = rows, durationMs = 0L)
                             }
-                            res = QueryResult.success(columns = colNames, rows = rows, durationMs = 0L)
                         }
-                    }
-                res.copy(executionDurationMs = executionTime)
+                    res.copy(executionDurationMs = executionTime)
+                }
+            } catch (e: Exception) {
+                QueryResult.error(e.message ?: "SQL execution error")
+            } finally {
+                closeQuietly(db)
             }
-        } catch (e: Exception) {
-            QueryResult.error(e.message ?: "SQL execution error")
-        } finally {
-            closeQuietly(db)
-        }
 
-        if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+        if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
             DatabaseLogRecorder.record(
                 databaseName = dbInfo.name,
                 sql = sql,
@@ -360,7 +368,7 @@ internal class AndroidDatabaseInspector(
             FileInputStream(file).use { fis ->
                 val header = ByteArray(16)
                 val read = fis.read(header)
-                read >= 16 && header.toString(Charsets.UTF_8).startsWith("SQLite format 3")
+                read >= 16 && header.toString(Charsets.UTF_8).startsWith(SQLITE_HEADER_PREFIX)
             }
         } catch (_: Exception) {
             false
@@ -373,7 +381,7 @@ internal class AndroidDatabaseInspector(
             FileInputStream(file).use { fis ->
                 val header = ByteArray(16)
                 val read = fis.read(header)
-                if (read < 16) false else !header.toString(Charsets.UTF_8).startsWith("SQLite format 3")
+                if (read < 16) false else !header.toString(Charsets.UTF_8).startsWith(SQLITE_HEADER_PREFIX)
             }
         } catch (_: Exception) {
             false

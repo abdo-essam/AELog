@@ -54,16 +54,18 @@ public fun LogPaginationBar(
 ) {
     var sizeMenuExpanded by remember { mutableStateOf(false) }
 
-    val totalPages = if (totalRowCount > 0) {
-        ((totalRowCount + pageSize - 1) / pageSize).toInt().coerceAtLeast(1)
-    } else {
-        (page + 1).coerceAtLeast(1)
-    }
+    val totalPages =
+        if (totalRowCount > 0) {
+            ((totalRowCount + pageSize - 1) / pageSize).toInt().coerceAtLeast(1)
+        } else {
+            (page + 1).coerceAtLeast(1)
+        }
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -73,7 +75,14 @@ public fun LogPaginationBar(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                     contentDescription = "Previous page",
-                    tint = if (page > 0) LogTheme.colors.primary else LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f),
+                    tint =
+                        if (page >
+                            0
+                        ) {
+                            LogTheme.colors.primary
+                        } else {
+                            LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f)
+                        },
                     modifier = Modifier.size(24.dp),
                 )
             }
@@ -90,7 +99,14 @@ public fun LogPaginationBar(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Next page",
-                    tint = if (rowCount >= pageSize) LogTheme.colors.primary else LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f),
+                    tint =
+                        if (rowCount >=
+                            pageSize
+                        ) {
+                            LogTheme.colors.primary
+                        } else {
+                            LogTheme.colors.onSurfaceVariant.copy(alpha = 0.4f)
+                        },
                     modifier = Modifier.size(24.dp),
                 )
             }
@@ -100,9 +116,10 @@ public fun LogPaginationBar(
         if (onPageSizeChange != null) {
             Box {
                 Row(
-                    modifier = Modifier
-                        .clickable { sizeMenuExpanded = true }
-                        .padding(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
+                    modifier =
+                        Modifier
+                            .clickable { sizeMenuExpanded = true }
+                            .padding(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(

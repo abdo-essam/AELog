@@ -7,6 +7,17 @@ import com.ae.log.database.model.TableColumn
 import com.ae.log.database.model.TableIndex
 import com.ae.log.database.model.TableSchema
 
+private const val COLUMN_NAME = "name"
+private const val OP_SELECT = "SELECT"
+private const val OP_INSERT = "INSERT"
+private const val OP_UPDATE = "UPDATE"
+private const val OP_DELETE = "DELETE"
+private const val OP_DROP = "DROP"
+private const val OP_CREATE = "CREATE"
+private const val OP_ALTER = "ALTER"
+private const val OP_REPLACE = "REPLACE"
+private const val OP_PRAGMA = "PRAGMA"
+
 /**
  * Common abstraction for inspecting SQLite databases across platforms.
  */
@@ -44,52 +55,55 @@ public interface DatabaseInspector {
         tableName: String,
     ): TableSchema {
         val colResult = query(dbInfo, "PRAGMA table_info(\"$tableName\")", allowWrite = false)
-        val columns = if (colResult.isSuccess) {
-            val nameIdx = colResult.columns.indexOf("name").takeIf { it >= 0 } ?: 1
-            val typeIdx = colResult.columns.indexOf("type").takeIf { it >= 0 } ?: 2
-            val notNullIdx = colResult.columns.indexOf("notnull").takeIf { it >= 0 } ?: 3
-            val dfltIdx = colResult.columns.indexOf("dflt_value").takeIf { it >= 0 } ?: 4
-            val pkIdx = colResult.columns.indexOf("pk").takeIf { it >= 0 } ?: 5
+        val columns =
+            if (colResult.isSuccess) {
+                val nameIdx = colResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 1
+                val typeIdx = colResult.columns.indexOf("type").takeIf { it >= 0 } ?: 2
+                val notNullIdx = colResult.columns.indexOf("notnull").takeIf { it >= 0 } ?: 3
+                val dfltIdx = colResult.columns.indexOf("dflt_value").takeIf { it >= 0 } ?: 4
+                val pkIdx = colResult.columns.indexOf("pk").takeIf { it >= 0 } ?: 5
 
-            colResult.rows.map { row ->
-                TableColumn(
-                    name = row.getOrNull(nameIdx) ?: "",
-                    type = row.getOrNull(typeIdx) ?: "TEXT",
-                    isPrimaryKey = (row.getOrNull(pkIdx)?.toIntOrNull() ?: 0) > 0,
-                    isNotNull = row.getOrNull(notNullIdx) == "1",
-                    defaultValue = row.getOrNull(dfltIdx),
-                )
+                colResult.rows.map { row ->
+                    TableColumn(
+                        name = row.getOrNull(nameIdx) ?: "",
+                        type = row.getOrNull(typeIdx) ?: "TEXT",
+                        isPrimaryKey = (row.getOrNull(pkIdx)?.toIntOrNull() ?: 0) > 0,
+                        isNotNull = row.getOrNull(notNullIdx) == "1",
+                        defaultValue = row.getOrNull(dfltIdx),
+                    )
+                }
+            } else {
+                emptyList()
             }
-        } else {
-            emptyList()
-        }
 
         val indexResult = query(dbInfo, "PRAGMA index_list(\"$tableName\")", allowWrite = false)
-        val indexes = if (indexResult.isSuccess) {
-            val nameIdx = indexResult.columns.indexOf("name").takeIf { it >= 0 } ?: 1
-            val uniqueIdx = indexResult.columns.indexOf("unique").takeIf { it >= 0 } ?: 2
+        val indexes =
+            if (indexResult.isSuccess) {
+                val nameIdx = indexResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 1
+                val uniqueIdx = indexResult.columns.indexOf("unique").takeIf { it >= 0 } ?: 2
 
-            indexResult.rows.mapNotNull { row ->
-                val idxName = row.getOrNull(nameIdx) ?: return@mapNotNull null
-                val isUnique = row.getOrNull(uniqueIdx) == "1"
+                indexResult.rows.mapNotNull { row ->
+                    val idxName = row.getOrNull(nameIdx) ?: return@mapNotNull null
+                    val isUnique = row.getOrNull(uniqueIdx) == "1"
 
-                val idxInfoResult = query(dbInfo, "PRAGMA index_info(\"$idxName\")", allowWrite = false)
-                val colNameIdx = idxInfoResult.columns.indexOf("name").takeIf { it >= 0 } ?: 2
-                val indexCols = if (idxInfoResult.isSuccess) {
-                    idxInfoResult.rows.mapNotNull { it.getOrNull(colNameIdx) }
-                } else {
-                    emptyList()
+                    val idxInfoResult = query(dbInfo, "PRAGMA index_info(\"$idxName\")", allowWrite = false)
+                    val colNameIdx = idxInfoResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 2
+                    val indexCols =
+                        if (idxInfoResult.isSuccess) {
+                            idxInfoResult.rows.mapNotNull { it.getOrNull(colNameIdx) }
+                        } else {
+                            emptyList()
+                        }
+
+                    TableIndex(
+                        name = idxName,
+                        isUnique = isUnique,
+                        columns = indexCols,
+                    )
                 }
-
-                TableIndex(
-                    name = idxName,
-                    isUnique = isUnique,
-                    columns = indexCols,
-                )
+            } else {
+                emptyList()
             }
-        } else {
-            emptyList()
-        }
 
         return TableSchema(
             tableName = tableName,
@@ -111,28 +125,31 @@ public interface DatabaseInspector {
         searchQuery: String? = null,
     ): QueryResult {
         val escapedTable = "\"$tableName\""
-        val whereClause = if (!searchQuery.isNullOrBlank()) {
-            val safeSearch = searchQuery.replace("'", "''")
-            val schema = getSchema(dbInfo, tableName)
-            val textCols = schema.columns.map { it.name }
-            if (textCols.isNotEmpty()) {
-                val conditions = textCols.joinToString(" OR ") { col ->
-                    "\"$col\" LIKE '%$safeSearch%'"
+        val whereClause =
+            if (!searchQuery.isNullOrBlank()) {
+                val safeSearch = searchQuery.replace("'", "''")
+                val schema = getSchema(dbInfo, tableName)
+                val textCols = schema.columns.map { it.name }
+                if (textCols.isNotEmpty()) {
+                    val conditions =
+                        textCols.joinToString(" OR ") { col ->
+                            "\"$col\" LIKE '%$safeSearch%'"
+                        }
+                    " WHERE $conditions"
+                } else {
+                    ""
                 }
-                " WHERE $conditions"
             } else {
                 ""
             }
-        } else {
-            ""
-        }
 
-        val orderClause = if (!sortColumn.isNullOrBlank()) {
-            val dir = if (sortAscending) "ASC" else "DESC"
-            " ORDER BY \"$sortColumn\" $dir"
-        } else {
-            ""
-        }
+        val orderClause =
+            if (!sortColumn.isNullOrBlank()) {
+                val dir = if (sortAscending) "ASC" else "DESC"
+                " ORDER BY \"$sortColumn\" $dir"
+            } else {
+                ""
+            }
 
         return query(
             dbInfo = dbInfo,
@@ -152,7 +169,8 @@ public interface DatabaseInspector {
  */
 public fun isWriteStatement(sql: String): Boolean {
     val cleanSql = sql.trimStart().uppercase()
-    val writeKeywords = listOf("INSERT", "UPDATE", "DELETE", "DROP", "CREATE", "ALTER", "REPLACE", "TRUNCATE", "VACUUM")
+    val writeKeywords =
+        listOf(OP_INSERT, OP_UPDATE, OP_DELETE, OP_DROP, OP_CREATE, OP_ALTER, OP_REPLACE, "TRUNCATE", "VACUUM")
     return writeKeywords.any { cleanSql.startsWith(it) }
 }
 
@@ -162,15 +180,19 @@ public fun isWriteStatement(sql: String): Boolean {
 public fun detectOperation(sql: String): String {
     val clean = sql.trimStart().uppercase()
     return when {
-        clean.startsWith("SELECT") || clean.startsWith("WITH") || clean.startsWith("EXPLAIN") -> "SELECT"
-        clean.startsWith("INSERT") || clean.startsWith("REPLACE") -> "INSERT"
-        clean.startsWith("UPDATE") -> "UPDATE"
-        clean.startsWith("DELETE") -> "DELETE"
-        clean.startsWith("CREATE") -> "CREATE"
-        clean.startsWith("DROP") -> "DROP"
-        clean.startsWith("ALTER") -> "ALTER"
-        clean.startsWith("PRAGMA") -> "PRAGMA"
-        clean.startsWith("BEGIN") || clean.startsWith("COMMIT") || clean.startsWith("ROLLBACK") || clean.startsWith("SAVEPOINT") || clean.startsWith("RELEASE") -> "TRANSACTION"
+        clean.startsWith(OP_SELECT) || clean.startsWith("WITH") || clean.startsWith("EXPLAIN") -> OP_SELECT
+        clean.startsWith(OP_INSERT) || clean.startsWith(OP_REPLACE) -> OP_INSERT
+        clean.startsWith(OP_UPDATE) -> OP_UPDATE
+        clean.startsWith(OP_DELETE) -> OP_DELETE
+        clean.startsWith(OP_CREATE) -> OP_CREATE
+        clean.startsWith(OP_DROP) -> OP_DROP
+        clean.startsWith(OP_ALTER) -> OP_ALTER
+        clean.startsWith(OP_PRAGMA) -> OP_PRAGMA
+        clean.startsWith("BEGIN") ||
+            clean.startsWith("COMMIT") ||
+            clean.startsWith("ROLLBACK") ||
+            clean.startsWith("SAVEPOINT") ||
+            clean.startsWith("RELEASE") -> "TRANSACTION"
         else -> "OTHER"
     }
 }

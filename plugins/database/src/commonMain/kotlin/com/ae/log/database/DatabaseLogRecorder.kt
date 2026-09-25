@@ -2,11 +2,11 @@ package com.ae.log.database
 
 import com.ae.log.database.inspector.detectOperation
 import com.ae.log.database.model.DatabaseLogEntry
-import kotlin.random.Random
-import kotlin.time.Clock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.random.Random
+import kotlin.time.Clock
 
 /**
  * Thread-safe in-memory ring-buffer for capturing database query operations and errors.
@@ -28,20 +28,23 @@ public object DatabaseLogRecorder {
         isSuccess: Boolean = true,
         errorMessage: String? = null,
         affectedRows: Long? = null,
+        engine: String = "SQLite",
     ) {
         val now = Clock.System.now().toEpochMilliseconds()
-        val entry = DatabaseLogEntry(
-            id = generateLogId(now),
-            databaseName = databaseName,
-            tableName = tableName ?: extractTableName(sql),
-            sql = sql,
-            operation = if (!isSuccess) "ERROR" else detectOperation(sql),
-            durationMs = durationMs,
-            timestamp = now,
-            isSuccess = isSuccess,
-            errorMessage = errorMessage,
-            affectedRows = affectedRows,
-        )
+        val entry =
+            DatabaseLogEntry(
+                id = generateLogId(now),
+                databaseName = databaseName,
+                tableName = tableName ?: extractTableName(sql),
+                sql = sql,
+                operation = if (!isSuccess) "ERROR" else detectOperation(sql),
+                durationMs = durationMs,
+                timestamp = now,
+                isSuccess = isSuccess,
+                errorMessage = errorMessage,
+                affectedRows = affectedRows,
+                engine = engine,
+            )
 
         val current = _logs.value.toMutableList()
         current.add(0, entry)
@@ -59,8 +62,7 @@ public object DatabaseLogRecorder {
         _logs.value = emptyList()
     }
 
-    private fun generateLogId(timestamp: Long): String =
-        "db_${timestamp}_${Random.nextInt(1000, 9999)}"
+    private fun generateLogId(timestamp: Long): String = "db_${timestamp}_${Random.nextInt(1000, 9999)}"
 
     private fun extractTableName(sql: String): String? {
         val words = sql.trim().split(Regex("\\s+"))

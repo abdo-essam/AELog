@@ -1,0 +1,49 @@
+public final class com/ae/log/database/room/AELogRoomAdapterKt {
+	public static final fun setAELogDriver (Landroidx/room/RoomDatabase$Builder;Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;)Landroidx/room/RoomDatabase$Builder;
+	public static synthetic fun setAELogDriver$default (Landroidx/room/RoomDatabase$Builder;Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;ILjava/lang/Object;)Landroidx/room/RoomDatabase$Builder;
+	public static final fun withAELog (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;)Landroidx/sqlite/SQLiteDriver;
+	public static synthetic fun withAELog$default (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;ILjava/lang/Object;)Landroidx/sqlite/SQLiteDriver;
+}
+
+public final class com/ae/log/database/room/AELogSQLiteConnection : androidx/sqlite/SQLiteConnection {
+	public fun <init> (Landroidx/sqlite/SQLiteConnection;Ljava/lang/String;)V
+	public fun close ()V
+	public fun inTransaction ()Z
+	public fun prepare (Ljava/lang/String;)Landroidx/sqlite/SQLiteStatement;
+}
+
+public final class com/ae/log/database/room/AELogSQLiteDriver : androidx/sqlite/SQLiteDriver {
+	public fun <init> (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;)V
+	public synthetic fun <init> (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun hasConnectionPool ()Z
+	public fun open (Ljava/lang/String;)Landroidx/sqlite/SQLiteConnection;
+}
+
+public final class com/ae/log/database/room/AELogSQLiteStatement : androidx/sqlite/SQLiteStatement {
+	public fun <init> (Landroidx/sqlite/SQLiteStatement;Ljava/lang/String;Ljava/lang/String;)V
+	public fun bindBlob (I[B)V
+	public fun bindBoolean (IZ)V
+	public fun bindDouble (ID)V
+	public fun bindFloat (IF)V
+	public fun bindInt (II)V
+	public fun bindLong (IJ)V
+	public fun bindNull (I)V
+	public fun bindText (ILjava/lang/String;)V
+	public fun clearBindings ()V
+	public fun close ()V
+	public fun getBlob (I)[B
+	public fun getBoolean (I)Z
+	public fun getColumnCount ()I
+	public fun getColumnName (I)Ljava/lang/String;
+	public fun getColumnNames ()Ljava/util/List;
+	public fun getColumnType (I)I
+	public fun getDouble (I)D
+	public fun getFloat (I)F
+	public fun getInt (I)I
+	public fun getLong (I)J
+	public fun getText (I)Ljava/lang/String;
+	public fun isNull (I)Z
+	public fun reset ()V
+	public fun step ()Z
+}
+

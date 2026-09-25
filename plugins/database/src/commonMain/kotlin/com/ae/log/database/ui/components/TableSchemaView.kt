@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.TableSchema
 import com.ae.log.database.ui.DatabaseFormatUtils
@@ -72,15 +71,17 @@ internal fun TableSchemaView(
                 colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(LogSpacing.x4),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(LogSpacing.x4),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier = Modifier
-                            .size(44.dp)
-                            .background(Color(0xFFE3F2FD), RoundedCornerShape(12.dp)),
+                        modifier =
+                            Modifier
+                                .size(44.dp)
+                                .background(Color(0xFFE3F2FD), RoundedCornerShape(12.dp)),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -133,9 +134,10 @@ internal fun TableSchemaView(
                 Column(modifier = Modifier.fillMaxWidth().padding(vertical = LogSpacing.x2)) {
                     schema.columns.forEachIndexed { index, col ->
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = LogSpacing.x4, vertical = 10.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = LogSpacing.x4, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(

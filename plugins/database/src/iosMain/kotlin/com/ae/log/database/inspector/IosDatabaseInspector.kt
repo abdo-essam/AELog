@@ -1,4 +1,5 @@
 @file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+@file:Suppress("ktlint:standard:max-line-length")
 
 package com.ae.log.database.inspector
 
@@ -18,6 +19,32 @@ import platform.Foundation.stringByAppendingPathComponent
 import platform.posix.fclose
 import platform.posix.fopen
 import platform.posix.fread
+
+private const val SAMPLE_DB_NAME = "ios_sample.db"
+private const val PRAGMA_KEYWORD = "PRAGMA"
+private const val SQLITE_HEADER_PREFIX = "SQLite format 3"
+private const val TYPE_INTEGER = "INTEGER"
+private const val TYPE_TEXT = "TEXT"
+private const val TYPE_REAL = "REAL"
+private const val COL_ID = "id"
+private const val COL_NAME = "name"
+private const val COL_EMAIL = "email"
+private const val COL_ROLE = "role"
+private const val COL_TITLE = "title"
+private const val COL_PRICE = "price"
+private const val COL_STOCK = "stock"
+private const val COL_CATEGORY = "category"
+private const val COL_USER_ID = "user_id"
+private const val COL_TOTAL = "total"
+private const val COL_STATUS = "status"
+private const val CATEGORY_ACCESSORIES = "Accessories"
+private const val SAMPLE_PRICE_MOUSE = "59.99"
+private const val SAMPLE_PRICE_KEYBOARD = "129.50"
+
+private val TABLE_INFO_COLUMNS = listOf("cid", COL_NAME, "type", "notnull", "dflt_value", "pk")
+private val USERS_COLUMNS = listOf(COL_ID, COL_NAME, COL_EMAIL, COL_ROLE)
+private val PRODUCTS_COLUMNS = listOf(COL_ID, COL_TITLE, COL_PRICE, COL_STOCK, COL_CATEGORY)
+private val ORDERS_COLUMNS = listOf(COL_ID, COL_USER_ID, COL_TOTAL, COL_STATUS)
 
 @OptIn(BetaInteropApi::class)
 internal class IosDatabaseInspector(
@@ -113,7 +140,7 @@ internal class IosDatabaseInspector(
             return virtual
         }
 
-        if (dbInfo.name == "ios_sample.db") {
+        if (dbInfo.name == SAMPLE_DB_NAME) {
             return listOf(
                 DbTable(name = "users", rowCount = 4L, columns = emptyList(), isSystemTable = false),
                 DbTable(name = "products", rowCount = 4L, columns = emptyList(), isSystemTable = false),
@@ -155,7 +182,7 @@ internal class IosDatabaseInspector(
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
             val err = QueryResult.error(e.message ?: "Write operation disallowed")
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -167,100 +194,113 @@ internal class IosDatabaseInspector(
             return err
         }
 
-        if (dbInfo.name == "ios_sample.db") {
+        if (dbInfo.name == SAMPLE_DB_NAME) {
             val clean = sql.trim().uppercase()
-            val queryResult = when {
-                clean.startsWith("PRAGMA TABLE_INFO(\"USERS\")") || clean.startsWith("PRAGMA TABLE_INFO('USERS')") || clean.contains("TABLE_INFO(\"USERS\")") ->
-                    QueryResult.success(
-                        columns = listOf("cid", "name", "type", "notnull", "dflt_value", "pk"),
-                        rows = listOf(
-                            listOf("0", "id", "INTEGER", "1", null, "1"),
-                            listOf("1", "name", "TEXT", "1", null, "0"),
-                            listOf("2", "email", "TEXT", "1", null, "0"),
-                            listOf("3", "role", "TEXT", "1", null, "0"),
-                        ),
-                        durationMs = 1L,
-                    )
+            val queryResult =
+                when {
+                    clean.contains("TABLE_INFO") && clean.contains("USERS") ->
+                        QueryResult.success(
+                            columns = TABLE_INFO_COLUMNS,
+                            rows =
+                                listOf(
+                                    listOf("0", COL_ID, TYPE_INTEGER, "1", null, "1"),
+                                    listOf("1", COL_NAME, TYPE_TEXT, "1", null, "0"),
+                                    listOf("2", COL_EMAIL, TYPE_TEXT, "1", null, "0"),
+                                    listOf("3", COL_ROLE, TYPE_TEXT, "1", null, "0"),
+                                ),
+                            durationMs = 1L,
+                        )
 
-                clean.startsWith("PRAGMA TABLE_INFO(\"PRODUCTS\")") || clean.startsWith("PRAGMA TABLE_INFO('PRODUCTS')") || clean.contains("TABLE_INFO(\"PRODUCTS\")") ->
-                    QueryResult.success(
-                        columns = listOf("cid", "name", "type", "notnull", "dflt_value", "pk"),
-                        rows = listOf(
-                            listOf("0", "id", "INTEGER", "1", null, "1"),
-                            listOf("1", "title", "TEXT", "1", null, "0"),
-                            listOf("2", "price", "REAL", "1", null, "0"),
-                            listOf("3", "stock", "INTEGER", "1", null, "0"),
-                            listOf("4", "category", "TEXT", "1", null, "0"),
-                        ),
-                        durationMs = 1L,
-                    )
+                    clean.contains("TABLE_INFO") && clean.contains("PRODUCTS") ->
+                        QueryResult.success(
+                            columns = TABLE_INFO_COLUMNS,
+                            rows =
+                                listOf(
+                                    listOf("0", COL_ID, TYPE_INTEGER, "1", null, "1"),
+                                    listOf("1", COL_TITLE, TYPE_TEXT, "1", null, "0"),
+                                    listOf("2", COL_PRICE, TYPE_REAL, "1", null, "0"),
+                                    listOf("3", COL_STOCK, TYPE_INTEGER, "1", null, "0"),
+                                    listOf("4", COL_CATEGORY, TYPE_TEXT, "1", null, "0"),
+                                ),
+                            durationMs = 1L,
+                        )
 
-                clean.startsWith("PRAGMA TABLE_INFO(\"ORDERS\")") || clean.startsWith("PRAGMA TABLE_INFO('ORDERS')") || clean.contains("TABLE_INFO(\"ORDERS\")") ->
-                    QueryResult.success(
-                        columns = listOf("cid", "name", "type", "notnull", "dflt_value", "pk"),
-                        rows = listOf(
-                            listOf("0", "id", "INTEGER", "1", null, "1"),
-                            listOf("1", "user_id", "INTEGER", "1", null, "0"),
-                            listOf("2", "total", "REAL", "1", null, "0"),
-                            listOf("3", "status", "TEXT", "1", null, "0"),
-                        ),
-                        durationMs = 1L,
-                    )
+                    clean.contains("TABLE_INFO") && clean.contains("ORDERS") ->
+                        QueryResult.success(
+                            columns = TABLE_INFO_COLUMNS,
+                            rows =
+                                listOf(
+                                    listOf("0", COL_ID, TYPE_INTEGER, "1", null, "1"),
+                                    listOf("1", COL_USER_ID, TYPE_INTEGER, "1", null, "0"),
+                                    listOf("2", COL_TOTAL, TYPE_REAL, "1", null, "0"),
+                                    listOf("3", COL_STATUS, TYPE_TEXT, "1", null, "0"),
+                                ),
+                            durationMs = 1L,
+                        )
 
-                clean.startsWith("PRAGMA INDEX_LIST") ->
-                    QueryResult.success(
-                        columns = listOf("seq", "name", "unique", "origin", "partial"),
-                        rows = emptyList(),
-                        durationMs = 1L,
-                    )
+                    clean.startsWith("PRAGMA INDEX_LIST") ->
+                        QueryResult.success(
+                            columns = listOf("seq", COL_NAME, "unique", "origin", "partial"),
+                            rows = emptyList(),
+                            durationMs = 1L,
+                        )
 
-                clean.contains("FROM \"USERS\"") || clean.contains("FROM USERS") ->
-                    QueryResult.success(
-                        columns = listOf("id", "name", "email", "role"),
-                        rows = listOf(
-                            listOf("1", "Alice Smith", "alice@example.com", "Admin"),
-                            listOf("2", "Bob Jones", "bob@example.com", "Developer"),
-                            listOf("3", "Charlie Brown", "charlie@example.com", "Designer"),
-                            listOf("4", "Diana Prince", "diana@example.com", "Manager"),
-                        ),
-                        durationMs = 2L,
-                    )
+                    clean.contains("FROM \"USERS\"") || clean.contains("FROM USERS") ->
+                        QueryResult.success(
+                            columns = USERS_COLUMNS,
+                            rows =
+                                listOf(
+                                    listOf("1", "Alice Smith", "alice@example.com", "Admin"),
+                                    listOf("2", "Bob Jones", "bob@example.com", "Developer"),
+                                    listOf("3", "Charlie Brown", "charlie@example.com", "Designer"),
+                                    listOf("4", "Diana Prince", "diana@example.com", "Manager"),
+                                ),
+                            durationMs = 2L,
+                        )
 
-                clean.contains("FROM \"PRODUCTS\"") || clean.contains("FROM PRODUCTS") ->
-                    QueryResult.success(
-                        columns = listOf("id", "title", "price", "stock", "category"),
-                        rows = listOf(
-                            listOf("1", "MacBook Pro 16\"", "2499.00", "15", "Hardware"),
-                            listOf("2", "Ergonomic Mouse", "59.99", "45", "Accessories"),
-                            listOf("3", "Mechanical Keyboard", "129.50", "20", "Accessories"),
-                            listOf("4", "4K UltraSharp Display", "599.00", "8", "Monitors"),
-                        ),
-                        durationMs = 2L,
-                    )
+                    clean.contains("FROM \"PRODUCTS\"") || clean.contains("FROM PRODUCTS") ->
+                        QueryResult.success(
+                            columns = PRODUCTS_COLUMNS,
+                            rows =
+                                listOf(
+                                    listOf("1", "MacBook Pro 16\"", "2499.00", "15", "Hardware"),
+                                    listOf("2", "Ergonomic Mouse", SAMPLE_PRICE_MOUSE, "45", CATEGORY_ACCESSORIES),
+                                    listOf(
+                                        "3",
+                                        "Mechanical Keyboard",
+                                        SAMPLE_PRICE_KEYBOARD,
+                                        "20",
+                                        CATEGORY_ACCESSORIES,
+                                    ),
+                                    listOf("4", "4K UltraSharp Display", "599.00", "8", "Monitors"),
+                                ),
+                            durationMs = 2L,
+                        )
 
-                clean.contains("FROM \"ORDERS\"") || clean.contains("FROM ORDERS") ->
-                    QueryResult.success(
-                        columns = listOf("id", "user_id", "total", "status"),
-                        rows = listOf(
-                            listOf("1", "1", "2558.99", "Delivered"),
-                            listOf("2", "2", "129.50", "Shipped"),
-                            listOf("3", "3", "59.99", "Processing"),
-                        ),
-                        durationMs = 2L,
-                    )
+                    clean.contains("FROM \"ORDERS\"") || clean.contains("FROM ORDERS") ->
+                        QueryResult.success(
+                            columns = ORDERS_COLUMNS,
+                            rows =
+                                listOf(
+                                    listOf("1", "1", "2558.99", "Delivered"),
+                                    listOf("2", "2", SAMPLE_PRICE_KEYBOARD, "Shipped"),
+                                    listOf("3", "3", SAMPLE_PRICE_MOUSE, "Processing"),
+                                ),
+                            durationMs = 2L,
+                        )
 
-                isWriteStatement(sql) ->
-                    QueryResult.writeSuccess(affectedRows = 1L, durationMs = 3L)
+                    isWriteStatement(sql) ->
+                        QueryResult.writeSuccess(affectedRows = 1L, durationMs = 3L)
 
-                else ->
-                    QueryResult.success(
-                        columns = listOf("result"),
-                        rows = listOf(listOf("OK")),
-                        durationMs = 1L,
-                    )
-            }
+                    else ->
+                        QueryResult.success(
+                            columns = listOf("result"),
+                            rows = listOf(listOf("OK")),
+                            durationMs = 1L,
+                        )
+                }
 
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -277,7 +317,7 @@ internal class IosDatabaseInspector(
         // Check if file exists in the iOS sandbox
         if (!fileManager.fileExistsAtPath(dbInfo.path)) {
             val err = QueryResult.error("Database file not found: ${dbInfo.path}")
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -291,7 +331,7 @@ internal class IosDatabaseInspector(
 
         if (dbInfo.isEncrypted && config.passphraseProvider?.getPassphrase(dbInfo.name) == null) {
             val err = QueryResult.error("Database is encrypted. Please configure a PassphraseProvider.")
-            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -303,10 +343,12 @@ internal class IosDatabaseInspector(
             return err
         }
 
-        val err = QueryResult.error(
-            "SQLite runtime query engine is available on Android / JVM. On iOS, connect a custom DatabaseInspector or registered snapshot.",
-        )
-        if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+        val err =
+            QueryResult.error(
+                "SQLite runtime query engine is available on Android / JVM. " +
+                    "On iOS, connect a custom DatabaseInspector or registered snapshot.",
+            )
+        if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
             com.ae.log.database.DatabaseLogRecorder.record(
                 databaseName = dbInfo.name,
                 sql = sql,
@@ -335,7 +377,7 @@ internal class IosDatabaseInspector(
         fclose(file)
         if (read < 16u) return false
         val prefix = header.take(15).map { it.toInt().toChar() }.joinToString("")
-        return !prefix.startsWith("SQLite format 3")
+        return !prefix.startsWith(SQLITE_HEADER_PREFIX)
     }
 }
 

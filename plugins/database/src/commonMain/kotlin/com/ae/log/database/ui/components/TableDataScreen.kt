@@ -4,15 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,35 +18,26 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ae.log.database.model.DbInfo
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.QueryResult
@@ -90,9 +78,10 @@ internal fun TableDataScreen(
     val isWriteModeEnabled by viewModel.isWriteModeEnabled.collectAsState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LogTheme.colors.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(LogTheme.colors.background),
     ) {
         // ── Top Header ────────────────────────────────────────────────
         val rowsMeta = if (table.rowCount >= 0) "${table.rowCount} rows" else "Table"
@@ -199,8 +188,11 @@ private fun TableDataTabContent(
 
                 result == null || (result.columns.isEmpty() && result.rows.isEmpty()) -> {
                     EmptyPlaceholder(
-                        if (searchQuery.isNotBlank()) "No records matching \"$searchQuery\""
-                        else "No rows found in ${table.name}",
+                        if (searchQuery.isNotBlank()) {
+                            "No records matching \"$searchQuery\""
+                        } else {
+                            "No rows found in ${table.name}"
+                        },
                     )
                 }
 
@@ -243,16 +235,18 @@ private fun SpreadsheetDataGrid(
     val hScroll = rememberScrollState()
 
     Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = LogSpacing.x5),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = LogSpacing.x5),
         shape = RoundedCornerShape(LogSpacing.x3),
         colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .horizontalScroll(hScroll),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .horizontalScroll(hScroll),
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -261,18 +255,20 @@ private fun SpreadsheetDataGrid(
                 // Header row with sorting
                 item {
                     Row(
-                        modifier = Modifier
-                            .background(LogTheme.colors.surfaceVariant.copy(alpha = 0.7f))
-                            .padding(vertical = 10.dp),
+                        modifier =
+                            Modifier
+                                .background(LogTheme.colors.surfaceVariant.copy(alpha = 0.7f))
+                                .padding(vertical = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         result.columns.forEach { colName ->
                             val isSorted = sortColumn == colName
                             Row(
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .clickable { onToggleSort(colName) }
-                                    .padding(horizontal = 10.dp),
+                                modifier =
+                                    Modifier
+                                        .width(130.dp)
+                                        .clickable { onToggleSort(colName) }
+                                        .padding(horizontal = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
@@ -281,12 +277,22 @@ private fun SpreadsheetDataGrid(
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    color = if (isSorted) LogTheme.colors.primary else LogTheme.colors.onSurfaceVariant,
+                                    color =
+                                        if (isSorted) {
+                                            LogTheme.colors.primary
+                                        } else {
+                                            LogTheme.colors.onSurfaceVariant
+                                        },
                                     modifier = Modifier.weight(1f, fill = false),
                                 )
                                 if (isSorted) {
                                     Icon(
-                                        imageVector = if (sortAscending) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                                        imageVector =
+                                            if (sortAscending) {
+                                                Icons.Default.ArrowDropUp
+                                            } else {
+                                                Icons.Default.ArrowDropDown
+                                            },
                                         contentDescription = null,
                                         tint = LogTheme.colors.primary,
                                         modifier = Modifier.size(16.dp),
@@ -295,36 +301,43 @@ private fun SpreadsheetDataGrid(
                             }
                         }
                     }
-                    HorizontalDivider(color = LogTheme.colors.outlineVariant, thickness = LogDimens.listDividerThickness)
+                    HorizontalDivider(
+                        color = LogTheme.colors.outlineVariant,
+                        thickness = LogDimens.listDividerThickness,
+                    )
                 }
 
                 // Data rows
                 itemsIndexed(result.rows) { rowIndex, row ->
                     Row(
-                        modifier = Modifier
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                            ) { onRowClick(row, rowIndex) }
-                            .padding(vertical = LogSpacing.x3),
+                        modifier =
+                            Modifier
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                ) { onRowClick(row, rowIndex) }
+                                .padding(vertical = LogSpacing.x3),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         result.columns.indices.forEach { colIndex ->
                             val value = row.getOrNull(colIndex)
                             Text(
                                 text = value ?: "null",
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .padding(horizontal = 10.dp),
+                                modifier =
+                                    Modifier
+                                        .width(130.dp)
+                                        .padding(horizontal = 10.dp),
                                 style = LogTheme.typography.bodySmall,
                                 fontFamily = FontFamily.Monospace,
                                 fontStyle = if (value == null) FontStyle.Italic else FontStyle.Normal,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                color = if (value == null)
-                                    LogTheme.colors.error.copy(alpha = 0.6f)
-                                else
-                                    LogTheme.colors.onSurface,
+                                color =
+                                    if (value == null) {
+                                        LogTheme.colors.error.copy(alpha = 0.6f)
+                                    } else {
+                                        LogTheme.colors.onSurface
+                                    },
                             )
                         }
                     }
@@ -341,4 +354,3 @@ private fun SpreadsheetDataGrid(
         }
     }
 }
-

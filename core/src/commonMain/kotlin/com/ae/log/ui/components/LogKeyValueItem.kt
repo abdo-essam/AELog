@@ -42,16 +42,16 @@ public fun LogKeyValueItem(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (onCopy != null) {
-                        Modifier.clickable { onCopy() }
-                    } else {
-                        Modifier
-                    },
-                )
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x2_5),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .then(
+                        if (onCopy != null) {
+                            Modifier.clickable { onCopy() }
+                        } else {
+                            Modifier
+                        },
+                    ).padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x2_5),
             verticalAlignment = Alignment.Top,
         ) {
             Text(
@@ -71,11 +71,12 @@ public fun LogKeyValueItem(
                 style = LogTheme.typography.bodySmall,
                 fontFamily = FontFamily.Monospace,
                 fontStyle = if (value == null) FontStyle.Italic else FontStyle.Normal,
-                color = if (value == null) {
-                    LogTheme.colors.error.copy(alpha = 0.7f)
-                } else {
-                    LogTheme.colors.onSurface
-                },
+                color =
+                    if (value == null) {
+                        LogTheme.colors.error.copy(alpha = 0.7f)
+                    } else {
+                        LogTheme.colors.onSurface
+                    },
                 modifier = Modifier.weight(1f),
             )
         }

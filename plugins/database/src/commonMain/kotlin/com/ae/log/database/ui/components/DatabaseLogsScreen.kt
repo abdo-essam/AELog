@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.Edit
@@ -62,6 +61,19 @@ import com.ae.log.ui.theme.LogTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+private const val OP_INSERT = "INSERT"
+private const val OP_UPDATE = "UPDATE"
+private const val OP_DELETE = "DELETE"
+private const val OP_REPLACE = "REPLACE"
+private const val OP_CREATE = "CREATE"
+private const val OP_DROP = "DROP"
+private const val OP_ALTER = "ALTER"
+
+private val QUERY_OPERATIONS = listOf("SELECT", "PRAGMA", "TRANSACTION", "OTHER")
+private val WRITE_OPERATIONS = listOf(OP_INSERT, OP_UPDATE, OP_DELETE, OP_REPLACE, OP_CREATE, OP_DROP, OP_ALTER)
+private val EDIT_OPERATIONS = listOf(OP_INSERT, OP_UPDATE, OP_REPLACE, OP_CREATE, OP_ALTER)
+private val REMOVE_OPERATIONS = listOf(OP_DELETE, OP_DROP)
+
 @Composable
 internal fun DatabaseLogsScreen(
     viewModel: DatabaseViewModel,
@@ -76,16 +88,18 @@ internal fun DatabaseLogsScreen(
     val scope = rememberCoroutineScope()
     var copyToast by remember { mutableStateOf<String?>(null) }
 
-    val displayedLogs = if (targetDb != null) {
-        logs.filter { it.databaseName == targetDb.name }
-    } else {
-        logs
-    }
+    val displayedLogs =
+        if (targetDb != null) {
+            logs.filter { it.databaseName == targetDb.name }
+        } else {
+            logs
+        }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LogTheme.colors.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(LogTheme.colors.background),
     ) {
         // ── Top Bar ───────────────────────────────────────────────────
         if (showBackButton) {
@@ -106,26 +120,29 @@ internal fun DatabaseLogsScreen(
         }
 
         // ── Filter Chips: All | Queries | Writes | Errors ─────────────
-        val allLogsForCounts by com.ae.log.database.DatabaseLogRecorder.logs.collectAsState()
-        val relevantLogs = if (targetDb != null) {
-            allLogsForCounts.filter { it.databaseName == targetDb.name }
-        } else {
-            allLogsForCounts
-        }
-
-        val chipLabels = remember(relevantLogs.size, activeFilter) {
-            DatabaseLogFilter.entries.map { filter ->
-                val count = when (filter) {
-                    DatabaseLogFilter.ALL -> relevantLogs.size
-                    DatabaseLogFilter.QUERIES -> relevantLogs.count { it.operation in listOf("SELECT", "PRAGMA", "TRANSACTION", "OTHER") && it.isSuccess }
-                    DatabaseLogFilter.WRITES -> relevantLogs.count {
-                        it.operation in listOf("INSERT", "UPDATE", "DELETE", "REPLACE", "CREATE", "DROP", "ALTER")
-                    }
-                    DatabaseLogFilter.ERRORS -> relevantLogs.count { !it.isSuccess || it.operation == "ERROR" }
-                }
-                "${filter.label} ($count)"
+        val allLogsForCounts by com.ae.log.database.DatabaseLogRecorder.logs
+            .collectAsState()
+        val relevantLogs =
+            if (targetDb != null) {
+                allLogsForCounts.filter { it.databaseName == targetDb.name }
+            } else {
+                allLogsForCounts
             }
-        }
+
+        val chipLabels =
+            remember(relevantLogs.size, activeFilter) {
+                DatabaseLogFilter.entries.map { filter ->
+                    val count =
+                        when (filter) {
+                            DatabaseLogFilter.ALL -> relevantLogs.size
+                            DatabaseLogFilter.QUERIES ->
+                                relevantLogs.count { it.operation in QUERY_OPERATIONS && it.isSuccess }
+                            DatabaseLogFilter.WRITES -> relevantLogs.count { it.operation in WRITE_OPERATIONS }
+                            DatabaseLogFilter.ERRORS -> relevantLogs.count { !it.isSuccess || it.operation == "ERROR" }
+                        }
+                    "${filter.label} ($count)"
+                }
+            }
 
         LogFilterChips(
             labels = chipLabels,
@@ -136,29 +153,18 @@ internal fun DatabaseLogsScreen(
 
         // ── Search bar + Clear action ─────────────────────────────────
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             LogSearchBar(
                 query = searchQuery,
                 onQueryChange = { viewModel.setLogSearchQuery(it) },
                 placeholder = "Search SQL, tables, errors…",
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxWidth(),
             )
-
-            if (!showBackButton) {
-                Spacer(Modifier.width(LogSpacing.x2))
-                IconButton(onClick = { viewModel.clearLogs() }) {
-                    Icon(
-                        imageVector = Icons.Default.DeleteSweep,
-                        contentDescription = "Clear logs",
-                        tint = LogTheme.colors.onSurfaceVariant,
-                        modifier = Modifier.size(LogSpacing.x5),
-                    )
-                }
-            }
         }
 
         if (copyToast != null) {
@@ -174,11 +180,12 @@ internal fun DatabaseLogsScreen(
         // ── Logs List ─────────────────────────────────────────────────
         if (displayedLogs.isEmpty()) {
             EmptyPlaceholder(
-                message = if (searchQuery.isBlank()) {
-                    "No database operations recorded yet.\nQueries from tables, searches, query editor, or AELog.database.logQuery() will appear here in real-time."
-                } else {
-                    "No matching logs for \"$searchQuery\""
-                },
+                message =
+                    if (searchQuery.isBlank()) {
+                        "No database operations recorded yet.\nQueries from tables, searches, query editor, or AELog.database.logQuery() will appear here in real-time."
+                    } else {
+                        "No matching logs for \"$searchQuery\""
+                    },
             )
         } else {
             LazyColumn(
@@ -210,10 +217,11 @@ private fun DatabaseLogItem(
     onCopy: () -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(LogSpacing.x3))
-            .clickable { onCopy() },
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(LogSpacing.x3))
+                .clickable { onCopy() },
         shape = RoundedCornerShape(LogSpacing.x3),
         colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
     ) {
@@ -224,19 +232,21 @@ private fun DatabaseLogItem(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Status icon circle
-                val (statusBg, statusTint, statusIcon) = when {
-                    !entry.isSuccess -> Triple(Color(0xFFFFEBEE), Color(0xFFD32F2F), Icons.Default.Error)
-                    entry.operation in listOf("INSERT", "UPDATE", "REPLACE", "CREATE", "ALTER") ->
-                        Triple(Color(0xFFFFF3E0), Color(0xFFE65100), Icons.Default.Edit)
-                    entry.operation in listOf("DELETE", "DROP") ->
-                        Triple(Color(0xFFFFEBEE), Color(0xFFC62828), Icons.Default.RemoveCircleOutline)
-                    else -> Triple(Color(0xFFE8F5E9), Color(0xFF2E7D32), Icons.Default.Check)
-                }
+                val (statusBg, statusTint, statusIcon) =
+                    when {
+                        !entry.isSuccess -> Triple(Color(0xFFFFEBEE), Color(0xFFD32F2F), Icons.Default.Error)
+                        entry.operation in EDIT_OPERATIONS ->
+                            Triple(Color(0xFFFFF3E0), Color(0xFFE65100), Icons.Default.Edit)
+                        entry.operation in REMOVE_OPERATIONS ->
+                            Triple(Color(0xFFFFEBEE), Color(0xFFC62828), Icons.Default.RemoveCircleOutline)
+                        else -> Triple(Color(0xFFE8F5E9), Color(0xFF2E7D32), Icons.Default.Check)
+                    }
 
                 Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .background(statusBg, CircleShape),
+                    modifier =
+                        Modifier
+                            .size(20.dp)
+                            .background(statusBg, CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(

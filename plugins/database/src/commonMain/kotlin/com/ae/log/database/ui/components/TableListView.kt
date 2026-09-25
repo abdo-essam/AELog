@@ -39,9 +39,10 @@ internal fun TableListView(
     onSelectTable: (com.ae.log.database.model.DbTable) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val filtered = tables.filter {
-        searchQuery.isBlank() || it.name.contains(searchQuery, ignoreCase = true)
-    }
+    val filtered =
+        tables.filter {
+            searchQuery.isBlank() || it.name.contains(searchQuery, ignoreCase = true)
+        }
 
     Column(modifier = modifier.fillMaxSize()) {
         // Use AELog's shared LogSearchBar — consistent with logs/network plugins
@@ -49,16 +50,21 @@ internal fun TableListView(
             query = searchQuery,
             onQueryChange = onSearchChange,
             placeholder = "Search tables…",
-            modifier = Modifier.padding(
-                horizontal = LogSpacing.x3,
-                vertical = LogSpacing.x2,
-            ),
+            modifier =
+                Modifier.padding(
+                    horizontal = LogSpacing.x3,
+                    vertical = LogSpacing.x2,
+                ),
         )
 
         if (filtered.isEmpty()) {
             EmptyPlaceholder(
-                message = if (searchQuery.isBlank()) "No tables found"
-                else "No match for \"$searchQuery\"",
+                message =
+                    if (searchQuery.isBlank()) {
+                        "No tables found"
+                    } else {
+                        "No match for \"$searchQuery\""
+                    },
             )
         } else {
             LazyColumn(
@@ -94,15 +100,16 @@ private fun TableListItem(
     onSelect: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClickLabel = "Select table ${table.name}",
-            ) { onSelect() }
-            // Match AELog item padding: x4 horizontal, x3 vertical
-            .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClickLabel = "Select table ${table.name}",
+                ) { onSelect() }
+                // Match AELog item padding: x4 horizontal, x3 vertical
+                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(

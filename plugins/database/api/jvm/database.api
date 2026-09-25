@@ -1,4 +1,5 @@
 public final class com/ae/log/database/AELogDatabaseKt {
+	public static final field DEFAULT_ERROR_MESSAGE Ljava/lang/String;
 	public static final fun getDatabase (Lcom/ae/log/AELog;)Lcom/ae/log/database/DatabaseProxy;
 }
 
@@ -6,6 +7,15 @@ public final class com/ae/log/database/ComposableSingletons$DatabasePluginKt {
 	public static final field INSTANCE Lcom/ae/log/database/ComposableSingletons$DatabasePluginKt;
 	public fun <init> ()V
 	public final fun getLambda$-1031757371$database ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/ae/log/database/DatabaseLogRecorder {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/database/DatabaseLogRecorder;
+	public final fun clear ()V
+	public final fun getLogs ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun record (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;)V
+	public static synthetic fun record$default (Lcom/ae/log/database/DatabaseLogRecorder;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)V
 }
 
 public final class com/ae/log/database/DatabasePlugin : com/ae/log/plugin/UIPlugin {
@@ -34,13 +44,35 @@ public final class com/ae/log/database/DatabasePlugin$Companion {
 public final class com/ae/log/database/DatabaseProxy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/database/DatabaseProxy;
+	public final fun createQueryInterceptor (Ljava/lang/String;)Lcom/ae/log/database/DatabaseQueryInterceptor;
+	public final fun getLogs ()Lkotlinx/coroutines/flow/StateFlow;
 	public final fun listDatabases ()Ljava/util/List;
 	public final fun listTables (Ljava/lang/String;)Ljava/util/List;
+	public final fun logDelete (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;)V
+	public static synthetic fun logDelete$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;ILjava/lang/Object;)V
+	public final fun logError (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;JLjava/lang/String;Ljava/util/List;)V
+	public static synthetic fun logError$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;JLjava/lang/String;Ljava/util/List;ILjava/lang/Object;)V
+	public final fun logInsert (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;)V
+	public static synthetic fun logInsert$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;ILjava/lang/Object;)V
+	public final fun logQuery (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/util/List;Ljava/lang/String;)V
+	public static synthetic fun logQuery$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun logSelect (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;)V
+	public static synthetic fun logSelect$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;ILjava/lang/Object;)V
+	public final fun logUpdate (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;)V
+	public static synthetic fun logUpdate$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Ljava/lang/Long;Ljava/util/List;ILjava/lang/Object;)V
 	public final fun query (Ljava/lang/String;Ljava/lang/String;Z)Lcom/ae/log/database/model/QueryResult;
 	public static synthetic fun query$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 	public final fun registerDatabase (Lcom/ae/log/database/model/DbInfo;)V
 	public final fun registerDatabase (Ljava/lang/String;Ljava/lang/String;Z)V
 	public static synthetic fun registerDatabase$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)V
+	public final fun sqlDelightLogger (Ljava/lang/String;)Lkotlin/jvm/functions/Function1;
+	public static synthetic fun sqlDelightLogger$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;ILjava/lang/Object;)Lkotlin/jvm/functions/Function1;
+	public final fun trace (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public static synthetic fun trace$default (Lcom/ae/log/database/DatabaseProxy;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class com/ae/log/database/DatabaseQueryInterceptor {
+	public abstract fun onQuery (Ljava/lang/String;Ljava/util/List;)V
 }
 
 public final class com/ae/log/database/config/DatabasePluginConfig {
@@ -70,8 +102,9 @@ public abstract interface class com/ae/log/database/config/PassphraseProvider {
 }
 
 public abstract interface class com/ae/log/database/inspector/DatabaseInspector {
-	public fun getTableData (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;II)Lcom/ae/log/database/model/QueryResult;
-	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IIILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
+	public fun getSchema (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Lcom/ae/log/database/model/TableSchema;
+	public fun getTableData (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;)Lcom/ae/log/database/model/QueryResult;
+	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 	public abstract fun listDatabases ()Ljava/util/List;
 	public abstract fun listTables (Lcom/ae/log/database/model/DbInfo;)Ljava/util/List;
 	public abstract fun query (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;Z)Lcom/ae/log/database/model/QueryResult;
@@ -80,32 +113,103 @@ public abstract interface class com/ae/log/database/inspector/DatabaseInspector 
 }
 
 public final class com/ae/log/database/inspector/DatabaseInspector$DefaultImpls {
-	public static fun getTableData (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;II)Lcom/ae/log/database/model/QueryResult;
-	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IIILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
+	public static fun getSchema (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Lcom/ae/log/database/model/TableSchema;
+	public static fun getTableData (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;)Lcom/ae/log/database/model/QueryResult;
+	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 	public static synthetic fun query$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;ZILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 	public static fun registerDatabase (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;)V
 }
 
 public final class com/ae/log/database/inspector/DatabaseInspectorKt {
+	public static final fun detectOperation (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun isWriteStatement (Ljava/lang/String;)Z
 	public static final fun validateSqlSafety (Ljava/lang/String;Z)V
+}
+
+public final class com/ae/log/database/model/DatabaseLogEntry {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/database/model/DatabaseLogEntry$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JJZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JJZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/lang/Long;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()J
+	public final fun component7 ()J
+	public final fun component8 ()Z
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JJZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;)Lcom/ae/log/database/model/DatabaseLogEntry;
+	public static synthetic fun copy$default (Lcom/ae/log/database/model/DatabaseLogEntry;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;JJZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/DatabaseLogEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAffectedRows ()Ljava/lang/Long;
+	public final fun getDatabaseName ()Ljava/lang/String;
+	public final fun getDurationMs ()J
+	public final fun getEngine ()Ljava/lang/String;
+	public final fun getErrorMessage ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getOperation ()Ljava/lang/String;
+	public final fun getSql ()Ljava/lang/String;
+	public final fun getTableName ()Ljava/lang/String;
+	public final fun getTimestamp ()J
+	public fun hashCode ()I
+	public final fun isSuccess ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/ae/log/database/model/DatabaseLogEntry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/database/model/DatabaseLogEntry$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/ae/log/database/model/DatabaseLogEntry;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/ae/log/database/model/DatabaseLogEntry;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/database/model/DatabaseLogEntry$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/database/model/DatabaseLogFilter : java/lang/Enum {
+	public static final field ALL Lcom/ae/log/database/model/DatabaseLogFilter;
+	public static final field ERRORS Lcom/ae/log/database/model/DatabaseLogFilter;
+	public static final field QUERIES Lcom/ae/log/database/model/DatabaseLogFilter;
+	public static final field WRITES Lcom/ae/log/database/model/DatabaseLogFilter;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getLabel ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/ae/log/database/model/DatabaseLogFilter;
+	public static fun values ()[Lcom/ae/log/database/model/DatabaseLogFilter;
 }
 
 public final class com/ae/log/database/model/DbInfo {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/database/model/DbInfo$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZJ)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Ljava/lang/String;ILjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Ljava/lang/String;ILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Z
 	public final fun component4 ()J
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZJ)Lcom/ae/log/database/model/DbInfo;
-	public static synthetic fun copy$default (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/lang/String;ZJILjava/lang/Object;)Lcom/ae/log/database/model/DbInfo;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()I
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Ljava/lang/String;ILjava/lang/String;)Lcom/ae/log/database/model/DbInfo;
+	public static synthetic fun copy$default (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Ljava/lang/String;ILjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/DbInfo;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEngine ()Ljava/lang/String;
+	public final fun getFramework ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getPath ()Ljava/lang/String;
 	public final fun getSizeBytes ()J
+	public final fun getTableCount ()I
+	public final fun getVersion ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isEncrypted ()Z
 	public fun toString ()Ljava/lang/String;
@@ -130,18 +234,20 @@ public final class com/ae/log/database/model/DbInfo$Companion {
 public final class com/ae/log/database/model/DbTable {
 	public static final field $stable I
 	public static final field Companion Lcom/ae/log/database/model/DbTable$Companion;
-	public fun <init> (Ljava/lang/String;JLjava/util/List;Z)V
-	public synthetic fun <init> (Ljava/lang/String;JLjava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;JLjava/util/List;ZJ)V
+	public synthetic fun <init> (Ljava/lang/String;JLjava/util/List;ZJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()J
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Z
-	public final fun copy (Ljava/lang/String;JLjava/util/List;Z)Lcom/ae/log/database/model/DbTable;
-	public static synthetic fun copy$default (Lcom/ae/log/database/model/DbTable;Ljava/lang/String;JLjava/util/List;ZILjava/lang/Object;)Lcom/ae/log/database/model/DbTable;
+	public final fun component5 ()J
+	public final fun copy (Ljava/lang/String;JLjava/util/List;ZJ)Lcom/ae/log/database/model/DbTable;
+	public static synthetic fun copy$default (Lcom/ae/log/database/model/DbTable;Ljava/lang/String;JLjava/util/List;ZJILjava/lang/Object;)Lcom/ae/log/database/model/DbTable;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getColumns ()Ljava/util/List;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getRowCount ()J
+	public final fun getSizeBytes ()J
 	public fun hashCode ()I
 	public final fun isSystemTable ()Z
 	public fun toString ()Ljava/lang/String;
@@ -209,31 +315,158 @@ public final class com/ae/log/database/model/QueryResult$Companion {
 	public static synthetic fun writeSuccess$default (Lcom/ae/log/database/model/QueryResult$Companion;JJILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 }
 
-public final class com/ae/log/database/ui/ComposableSingletons$DatabaseContentKt {
-	public static final field INSTANCE Lcom/ae/log/database/ui/ComposableSingletons$DatabaseContentKt;
-	public fun <init> ()V
-	public final fun getLambda$-159694920$database ()Lkotlin/jvm/functions/Function2;
+public final class com/ae/log/database/model/TableColumn {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/database/model/TableColumn$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;)Lcom/ae/log/database/model/TableColumn;
+	public static synthetic fun copy$default (Lcom/ae/log/database/model/TableColumn;Ljava/lang/String;Ljava/lang/String;ZZLjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/TableColumn;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDefaultValue ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isNotNull ()Z
+	public final fun isPrimaryKey ()Z
+	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/ae/log/database/ui/components/ComposableSingletons$SqlConsoleViewKt {
-	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$SqlConsoleViewKt;
-	public fun <init> ()V
-	public final fun getLambda$-764302141$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$2067027138$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$670498315$database ()Lkotlin/jvm/functions/Function2;
+public final synthetic class com/ae/log/database/model/TableColumn$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/database/model/TableColumn$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/ae/log/database/model/TableColumn;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/ae/log/database/model/TableColumn;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
 }
 
-public final class com/ae/log/database/ui/components/ComposableSingletons$TableDataGridKt {
-	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$TableDataGridKt;
-	public fun <init> ()V
-	public final fun getLambda$-561210791$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1364776272$database ()Lkotlin/jvm/functions/Function2;
+public final class com/ae/log/database/model/TableColumn$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public final class com/ae/log/database/ui/components/ComposableSingletons$TableListViewKt {
-	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$TableListViewKt;
+public final class com/ae/log/database/model/TableIndex {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/database/model/TableIndex$Companion;
+	public fun <init> (Ljava/lang/String;ZLjava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;ZLjava/util/List;)Lcom/ae/log/database/model/TableIndex;
+	public static synthetic fun copy$default (Lcom/ae/log/database/model/TableIndex;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/ae/log/database/model/TableIndex;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumns ()Ljava/util/List;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isUnique ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/ae/log/database/model/TableIndex$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/database/model/TableIndex$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/ae/log/database/model/TableIndex;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/ae/log/database/model/TableIndex;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/database/model/TableIndex$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/database/model/TableSchema {
+	public static final field $stable I
+	public static final field Companion Lcom/ae/log/database/model/TableSchema$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lcom/ae/log/database/model/TableSchema;
+	public static synthetic fun copy$default (Lcom/ae/log/database/model/TableSchema;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lcom/ae/log/database/model/TableSchema;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColumns ()Ljava/util/List;
+	public final fun getIndexes ()Ljava/util/List;
+	public final fun getTableName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/ae/log/database/model/TableSchema$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/database/model/TableSchema$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/ae/log/database/model/TableSchema;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/ae/log/database/model/TableSchema;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/database/model/TableSchema$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/database/ui/components/ComposableSingletons$DatabaseListScreenKt {
+	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$DatabaseListScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$1071517989$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1274040418$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-34537914$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-752847636$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1104217488$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1542918722$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$2134109725$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$601986905$database ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/ae/log/database/ui/components/ComposableSingletons$DatabaseLogsScreenKt {
+	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$DatabaseLogsScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$-530688036$database ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/ae/log/database/ui/components/ComposableSingletons$QueryEditorViewKt {
+	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$QueryEditorViewKt;
+	public fun <init> ()V
+	public final fun getLambda$-1054612139$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-642944271$database ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/ae/log/database/ui/components/ComposableSingletons$RowDetailsScreenKt {
+	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$RowDetailsScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$-2063571827$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1858353890$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2137616953$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$426016804$database ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/ae/log/database/ui/components/ComposableSingletons$TableSchemaViewKt {
+	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$TableSchemaViewKt;
+	public fun <init> ()V
+	public final fun getLambda$-708209184$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$269364924$database ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/ae/log/database/ui/components/ComposableSingletons$TablesListScreenKt {
+	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$TablesListScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$165474494$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1898623329$database ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/database/ui/components/ComposableSingletons$WriteConfirmDialogKt {

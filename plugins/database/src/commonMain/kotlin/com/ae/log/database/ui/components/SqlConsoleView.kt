@@ -51,9 +51,10 @@ internal fun SqlConsoleView(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x3),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x3),
     ) {
         // ── SQL input ─────────────────────────────────────────────────
         OutlinedTextField(
@@ -67,15 +68,18 @@ internal fun SqlConsoleView(
                 )
             },
             textStyle = LogTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(LogSpacing.x12 + LogSpacing.x12 + LogSpacing.x4), // ~112dp
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = LogTheme.colors.primary,
-                unfocusedBorderColor = LogTheme.colors.outline,
-                focusedContainerColor = LogTheme.colors.surface,
-                unfocusedContainerColor = LogTheme.colors.surface,
-            ),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(LogSpacing.x12 + LogSpacing.x12 + LogSpacing.x4),
+            // ~112dp
+            colors =
+                OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = LogTheme.colors.primary,
+                    unfocusedBorderColor = LogTheme.colors.outline,
+                    focusedContainerColor = LogTheme.colors.surface,
+                    unfocusedContainerColor = LogTheme.colors.surface,
+                ),
             shape = RoundedCornerShape(LogSpacing.x3),
         )
 
@@ -84,9 +88,10 @@ internal fun SqlConsoleView(
         // ── Quick snippet chips ────────────────────────────────────────
         if (selectedTableName != null) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(LogSpacing.x1_5),
             ) {
                 listOf(
@@ -121,23 +126,26 @@ internal fun SqlConsoleView(
                         fontWeight = FontWeight.SemiBold,
                     )
                 },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = LogTheme.colors.errorContainer,
-                    selectedLabelColor = LogTheme.colors.onErrorContainer,
-                ),
+                colors =
+                    FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = LogTheme.colors.errorContainer,
+                        selectedLabelColor = LogTheme.colors.onErrorContainer,
+                    ),
             )
 
             Button(
                 onClick = onRunQuery,
                 enabled = !isRunning && sqlQuery.isNotBlank(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = LogTheme.colors.primary,
-                ),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = LogTheme.colors.primary,
+                    ),
                 shape = RoundedCornerShape(LogSpacing.x2),
-                contentPadding = PaddingValues(
-                    horizontal = LogSpacing.x4,
-                    vertical = LogSpacing.x2,
-                ),
+                contentPadding =
+                    PaddingValues(
+                        horizontal = LogSpacing.x4,
+                        vertical = LogSpacing.x2,
+                    ),
             ) {
                 if (isRunning) {
                     CircularProgressIndicator(
@@ -174,9 +182,10 @@ internal fun SqlConsoleView(
 
                 !queryResult.isSuccess -> {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(LogSpacing.x4),
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(LogSpacing.x4),
                     ) {
                         Text(
                             text = "Query Error",
@@ -205,7 +214,9 @@ internal fun SqlConsoleView(
                             )
                             Spacer(Modifier.height(LogSpacing.x1))
                             Text(
-                                text = "${queryResult.affectedRows} row(s) affected · ${queryResult.executionDurationMs} ms",
+                                text =
+                                    "${queryResult.affectedRows} row(s) affected · " +
+                                        "${queryResult.executionDurationMs} ms",
                                 style = LogTheme.typography.labelSmall,
                                 color = LogTheme.colors.onSurfaceVariant,
                             )

@@ -39,12 +39,13 @@ public fun LogScreenHeader(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = if (onBackClick != null) LogSpacing.x3 else LogSpacing.x5,
-                vertical = LogSpacing.x2,
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = if (onBackClick != null) LogSpacing.x3 else LogSpacing.x5,
+                    vertical = LogSpacing.x2,
+                ),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

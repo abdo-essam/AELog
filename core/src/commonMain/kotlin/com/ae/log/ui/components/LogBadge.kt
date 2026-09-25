@@ -30,9 +30,10 @@ public fun LogBadge(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .background(containerColor, RoundedCornerShape(LogDimens.badgeCornerRadius))
-            .padding(horizontal = LogSpacing.x1_5, vertical = 2.dp),
+        modifier =
+            modifier
+                .background(containerColor, RoundedCornerShape(LogDimens.badgeCornerRadius))
+                .padding(horizontal = LogSpacing.x1_5, vertical = 2.dp),
     ) {
         Text(
             text = text,

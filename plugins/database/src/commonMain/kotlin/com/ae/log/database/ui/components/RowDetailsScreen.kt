@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -51,6 +50,11 @@ import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+private const val ID_KEY = "id"
+private const val ID_SUFFIX = "_id"
+private const val JSON_COPIED_NOTICE = "JSON copied to clipboard"
+private const val COPY_JSON_LABEL = "Copy JSON"
 
 @Composable
 internal fun RowDetailsScreen(
@@ -73,17 +77,26 @@ internal fun RowDetailsScreen(
         }
     }
 
-    val idKey = row.keys.firstOrNull { it.equals("id", ignoreCase = true) || it.endsWith("_id", ignoreCase = true) }
+    val idKey =
+        row.keys.firstOrNull {
+            it.equals(
+                ID_KEY,
+                ignoreCase = true,
+            ) || it.endsWith(ID_SUFFIX, ignoreCase = true)
+        }
     val idVal = if (idKey != null) row[idKey] else "${rowIndex + 1}"
 
-    val titleVal = row.entries.firstOrNull { (k, v) ->
-        !k.equals("id", ignoreCase = true) && !k.endsWith("_id", ignoreCase = true) && !v.isNullOrBlank()
-    }?.value ?: "${table.name} #${rowIndex + 1}"
+    val titleVal =
+        row.entries
+            .firstOrNull { (k, v) ->
+                !k.equals(ID_KEY, ignoreCase = true) && !k.endsWith(ID_SUFFIX, ignoreCase = true) && !v.isNullOrBlank()
+            }?.value ?: "${table.name} #${rowIndex + 1}"
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LogTheme.colors.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(LogTheme.colors.background),
     ) {
         // ── Top Bar ───────────────────────────────────────────────────
         LogScreenHeader(
@@ -93,12 +106,12 @@ internal fun RowDetailsScreen(
                 IconButton(
                     onClick = {
                         clipboard.setText(AnnotatedString(DatabaseFormatUtils.rowToJson(row)))
-                        showNotice("JSON copied to clipboard")
+                        showNotice(JSON_COPIED_NOTICE)
                     },
                 ) {
                     Icon(
                         imageVector = Icons.Default.ContentCopy,
-                        contentDescription = "Copy JSON",
+                        contentDescription = COPY_JSON_LABEL,
                         tint = LogTheme.colors.primary,
                     )
                 }
@@ -174,7 +187,7 @@ internal fun RowDetailsScreen(
                     OutlinedButton(
                         onClick = {
                             clipboard.setText(AnnotatedString(DatabaseFormatUtils.rowToJson(row)))
-                            showNotice("JSON copied to clipboard")
+                            showNotice(JSON_COPIED_NOTICE)
                         },
                         modifier = Modifier.weight(1f).height(44.dp),
                         shape = RoundedCornerShape(10.dp),
@@ -185,7 +198,7 @@ internal fun RowDetailsScreen(
                             modifier = Modifier.size(18.dp),
                         )
                         Spacer(Modifier.width(LogSpacing.x1_5))
-                        Text("Copy JSON", style = LogTheme.typography.labelMedium)
+                        Text(COPY_JSON_LABEL, style = LogTheme.typography.labelMedium)
                     }
 
                     OutlinedButton(
@@ -216,12 +229,15 @@ internal fun RowDetailsScreen(
                     },
                     modifier = Modifier.fillMaxWidth().height(48.dp),
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (viewModel.isWriteModeEnabled.value)
-                            LogTheme.colors.error
-                        else
-                            LogTheme.colors.primary,
-                    ),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor =
+                                if (viewModel.isWriteModeEnabled.value) {
+                                    LogTheme.colors.error
+                                } else {
+                                    LogTheme.colors.primary
+                                },
+                        ),
                 ) {
                     Text(
                         text = if (viewModel.isWriteModeEnabled.value) "Edit (Write Enabled)" else "Edit (Read Only)",

@@ -22,28 +22,53 @@ import kotlinx.coroutines.launch
 
 internal sealed interface DatabaseDestination {
     data object DatabaseList : DatabaseDestination
-    data class TablesList(val db: DbInfo) : DatabaseDestination
-    data class TableData(val db: DbInfo, val table: DbTable) : DatabaseDestination
+
+    data class TablesList(
+        val db: DbInfo,
+    ) : DatabaseDestination
+
+    data class TableData(
+        val db: DbInfo,
+        val table: DbTable,
+    ) : DatabaseDestination
+
     data class RowDetails(
         val db: DbInfo,
         val table: DbTable,
         val row: Map<String, String?>,
         val rowIndex: Int = 0,
     ) : DatabaseDestination
-    data class TableSchemaView(val db: DbInfo, val table: DbTable) : DatabaseDestination
-    data class QueryEditor(val db: DbInfo, val initialSql: String = "") : DatabaseDestination
-    data class DatabaseLogs(val db: DbInfo? = null) : DatabaseDestination
+
+    data class TableSchemaView(
+        val db: DbInfo,
+        val table: DbTable,
+    ) : DatabaseDestination
+
+    data class QueryEditor(
+        val db: DbInfo,
+        val initialSql: String = "",
+    ) : DatabaseDestination
+
+    data class DatabaseLogs(
+        val db: DbInfo? = null,
+    ) : DatabaseDestination
 }
 
-internal enum class TablesTab(val label: String) {
+private const val SCHEMA_TAB_LABEL = "Schema"
+
+internal enum class TablesTab(
+    val label: String,
+) {
     TABLES("Tables"),
-    SCHEMA("Schema"),
+    SCHEMA(SCHEMA_TAB_LABEL),
     LOGS("Logs"),
 }
 
-internal enum class TableDataTab(val label: String) {
+internal enum class TableDataTab(
+    val label: String,
+) {
     DATA("Data"),
-    SCHEMA("Schema"),
+    SCHEMA(SCHEMA_TAB_LABEL),
     QUERY("Query"),
 }
 
@@ -155,18 +180,30 @@ internal class DatabaseViewModel(
             _selectedDatabase,
         ) { allLogs, filter, search, currentDb ->
             allLogs.filter { entry ->
-                val matchesFilter = when (filter) {
-                    DatabaseLogFilter.ALL -> true
-                    DatabaseLogFilter.QUERIES -> entry.operation in listOf("SELECT", "PRAGMA", "TRANSACTION", "OTHER") && entry.isSuccess
-                    DatabaseLogFilter.WRITES -> entry.operation in listOf(
-                        "INSERT", "UPDATE", "DELETE", "REPLACE", "CREATE", "DROP", "ALTER",
-                    )
-                    DatabaseLogFilter.ERRORS -> !entry.isSuccess || entry.operation == "ERROR"
-                }
-                val matchesSearch = search.isBlank() ||
-                    entry.sql.contains(search, ignoreCase = true) ||
-                    (entry.tableName?.contains(search, ignoreCase = true) == true) ||
-                    (entry.errorMessage?.contains(search, ignoreCase = true) == true)
+                val matchesFilter =
+                    when (filter) {
+                        DatabaseLogFilter.ALL -> true
+                        DatabaseLogFilter.QUERIES ->
+                            entry.operation in listOf("SELECT", "PRAGMA", "TRANSACTION", "OTHER") &&
+                                entry.isSuccess
+                        DatabaseLogFilter.WRITES ->
+                            entry.operation in
+                                listOf(
+                                    "INSERT",
+                                    "UPDATE",
+                                    "DELETE",
+                                    "REPLACE",
+                                    "CREATE",
+                                    "DROP",
+                                    "ALTER",
+                                )
+                        DatabaseLogFilter.ERRORS -> !entry.isSuccess || entry.operation == "ERROR"
+                    }
+                val matchesSearch =
+                    search.isBlank() ||
+                        entry.sql.contains(search, ignoreCase = true) ||
+                        (entry.tableName?.contains(search, ignoreCase = true) == true) ||
+                        (entry.errorMessage?.contains(search, ignoreCase = true) == true)
 
                 matchesFilter && matchesSearch
             }
@@ -199,7 +236,10 @@ internal class DatabaseViewModel(
         }
     }
 
-    fun selectDatabase(dbInfo: DbInfo, navigate: Boolean = true) {
+    fun selectDatabase(
+        dbInfo: DbInfo,
+        navigate: Boolean = true,
+    ) {
         _selectedDatabase.value = dbInfo
         loadTables(dbInfo)
         if (navigate) {
@@ -225,7 +265,11 @@ internal class DatabaseViewModel(
     }
 
     // ── Table Data Actions ────────────────────────────────────────────
-    fun selectTable(dbInfo: DbInfo, table: DbTable, navigate: Boolean = true) {
+    fun selectTable(
+        dbInfo: DbInfo,
+        table: DbTable,
+        navigate: Boolean = true,
+    ) {
         _selectedDatabase.value = dbInfo
         _selectedTable.value = table
         _tablePage.value = 0
@@ -259,15 +303,16 @@ internal class DatabaseViewModel(
         scope.launch(Dispatchers.Default) {
             val limit = _tablePageSize.value
             val offset = page * limit
-            val result = inspector.getTableData(
-                dbInfo = targetDb,
-                tableName = targetTable.name,
-                offset = offset,
-                limit = limit,
-                sortColumn = sortColumn,
-                sortAscending = sortAscending,
-                searchQuery = searchQuery,
-            )
+            val result =
+                inspector.getTableData(
+                    dbInfo = targetDb,
+                    tableName = targetTable.name,
+                    offset = offset,
+                    limit = limit,
+                    sortColumn = sortColumn,
+                    sortAscending = sortAscending,
+                    searchQuery = searchQuery,
+                )
             _tableData.value = result
             _isTableLoading.value = false
         }
@@ -337,11 +382,12 @@ internal class DatabaseViewModel(
         rowValues: List<String?>,
         rowIndex: Int,
     ) {
-        val rowMap = columns.indices.associate { i ->
-            val col = columns[i]
-            val value = rowValues.getOrNull(i)
-            col to value
-        }
+        val rowMap =
+            columns.indices.associate { i ->
+                val col = columns[i]
+                val value = rowValues.getOrNull(i)
+                col to value
+            }
         navigateTo(DatabaseDestination.RowDetails(dbInfo, table, rowMap, rowIndex))
     }
 
@@ -357,9 +403,10 @@ internal class DatabaseViewModel(
 
         val isWrite = isWriteStatement(sql)
         if (isWrite && !_isWriteModeEnabled.value) {
-            _queryEditorResult.value = QueryResult.error(
-                "Write operations (INSERT, UPDATE, DELETE, etc.) are disabled. Enable Edit Mode to allow modifications.",
-            )
+            _queryEditorResult.value =
+                QueryResult.error(
+                    "Write operations (INSERT, UPDATE, DELETE, etc.) are disabled. Enable Edit Mode to allow modifications.",
+                )
             return
         }
 
@@ -372,11 +419,12 @@ internal class DatabaseViewModel(
         _isQueryEditorRunning.value = true
 
         scope.launch(Dispatchers.Default) {
-            val result = inspector.query(
-                dbInfo = db,
-                sql = sql,
-                allowWrite = _isWriteModeEnabled.value,
-            )
+            val result =
+                inspector.query(
+                    dbInfo = db,
+                    sql = sql,
+                    allowWrite = _isWriteModeEnabled.value,
+                )
             _queryEditorResult.value = result
             _isQueryEditorRunning.value = false
 

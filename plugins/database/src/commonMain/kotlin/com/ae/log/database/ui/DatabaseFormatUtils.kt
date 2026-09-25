@@ -2,6 +2,8 @@ package com.ae.log.database.ui
 
 import com.ae.log.utils.TimeUtils
 
+private const val COMMA_SEPARATOR = ", "
+
 internal object DatabaseFormatUtils {
     /**
      * Formats bytes into human-readable size (e.g. "12.4 MB", "850 KB").
@@ -61,13 +63,21 @@ internal object DatabaseFormatUtils {
     /**
      * Formats a row map into a standard SQL INSERT statement.
      */
-    fun rowToSqlInsert(tableName: String, row: Map<String, String?>): String {
-        val cols = row.keys.joinToString(", ") { "\"$it\"" }
-        val vals = row.values.joinToString(", ") { v ->
-            if (v == null) "NULL"
-            else if (v.toLongOrNull() != null || v.toDoubleOrNull() != null) v
-            else "'${v.replace("'", "''")}'"
-        }
+    fun rowToSqlInsert(
+        tableName: String,
+        row: Map<String, String?>,
+    ): String {
+        val cols = row.keys.joinToString(COMMA_SEPARATOR) { "\"$it\"" }
+        val vals =
+            row.values.joinToString(COMMA_SEPARATOR) { v ->
+                if (v == null) {
+                    "NULL"
+                } else if (v.toLongOrNull() != null || v.toDoubleOrNull() != null) {
+                    v
+                } else {
+                    "'${v.replace("'", "''")}'"
+                }
+            }
         return "INSERT INTO \"$tableName\" ($cols) VALUES ($vals);"
     }
 }

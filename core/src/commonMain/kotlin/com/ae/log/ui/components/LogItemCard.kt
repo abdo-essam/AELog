@@ -55,33 +55,36 @@ public fun LogItemCard(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(LogDimens.cardCornerRadius))
-            .then(
-                if (onClick != null) {
-                    Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = onClick,
-                    )
-                } else {
-                    Modifier
-                },
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(LogDimens.cardCornerRadius))
+                .then(
+                    if (onClick != null) {
+                        Modifier.clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = onClick,
+                        )
+                    } else {
+                        Modifier
+                    },
+                ),
         shape = RoundedCornerShape(LogDimens.cardCornerRadius),
         colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier
-                    .size(42.dp)
-                    .background(iconContainerColor, RoundedCornerShape(12.dp)),
+                modifier =
+                    Modifier
+                        .size(42.dp)
+                        .background(iconContainerColor, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 icon()

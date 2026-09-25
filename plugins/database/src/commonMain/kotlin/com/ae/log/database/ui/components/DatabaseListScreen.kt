@@ -50,10 +50,14 @@ import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 
-private enum class DatabaseHomeTab(val label: String) {
+private enum class DatabaseHomeTab(
+    val label: String,
+) {
     DATABASES("Databases"),
     LOGS("Logs"),
 }
+
+private fun pluralSuffix(count: Int): String = if (count == 1) "" else "s"
 
 @Composable
 internal fun DatabaseListScreen(
@@ -62,21 +66,24 @@ internal fun DatabaseListScreen(
     modifier: Modifier = Modifier,
 ) {
     var activeTab by remember { mutableStateOf(DatabaseHomeTab.DATABASES) }
-    val logs by com.ae.log.database.DatabaseLogRecorder.logs.collectAsState()
+    val logs by com.ae.log.database.DatabaseLogRecorder.logs
+        .collectAsState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LogTheme.colors.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(LogTheme.colors.background),
     ) {
         // ── Top Bar ───────────────────────────────────────────────────
         LogScreenHeader(
             title = "Database",
-            subtitle = if (activeTab == DatabaseHomeTab.DATABASES) {
-                "${databases.count()} database${if (databases.count() == 1) "" else "s"} discovered"
-            } else {
-                "${logs.count()} query operation${if (logs.count() == 1) "" else "s"} recorded"
-            },
+            subtitle =
+                if (activeTab == DatabaseHomeTab.DATABASES) {
+                    "${databases.count()} database${pluralSuffix(databases.count())} discovered"
+                } else {
+                    "${logs.count()} query operation${pluralSuffix(logs.count())} recorded"
+                },
             actions = {
                 if (activeTab == DatabaseHomeTab.DATABASES) {
                     IconButton(onClick = { viewModel.refreshDatabases() }) {
@@ -101,12 +108,13 @@ internal fun DatabaseListScreen(
         )
 
         // ── Filter Chips ──────────────────────────────────────────────
-        val chipLabels = remember(databases.count(), logs.count()) {
-            listOf(
-                "Databases (${databases.count()})",
-                "Logs (${logs.count()})",
-            )
-        }
+        val chipLabels =
+            remember(databases.count(), logs.count()) {
+                listOf(
+                    "Databases (${databases.count()})",
+                    "Logs (${logs.count()})",
+                )
+            }
         LogFilterChips(
             labels = chipLabels,
             selectedIndex = activeTab.ordinal,
@@ -145,7 +153,7 @@ internal fun DatabaseListScreen(
                             val sizeMeta = DatabaseFormatUtils.formatBytes(db.sizeBytes)
                             LogItemCard(
                                 title = db.name,
-                                subtitle = db.engine,
+                                subtitle = if (db.framework != null) "${db.engine} (${db.framework})" else db.engine,
                                 meta = "$tablesMeta • $sizeMeta",
                                 icon = {
                                     Icon(
@@ -167,14 +175,16 @@ internal fun DatabaseListScreen(
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(LogDimens.cardCornerRadius),
-                            colors = CardDefaults.cardColors(
-                                containerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
-                            ),
+                            colors =
+                                CardDefaults.cardColors(
+                                    containerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
+                                ),
                         ) {
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(LogSpacing.x4),
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(LogSpacing.x4),
                                 verticalAlignment = Alignment.Top,
                             ) {
                                 Icon(
@@ -195,7 +205,9 @@ internal fun DatabaseListScreen(
                                     )
                                     Spacer(Modifier.height(LogSpacing.x1))
                                     Text(
-                                        text = "Database inspection is active in debug mode. Sensitive columns and write operations can be locked or restricted in DatabasePluginConfig.",
+                                        text =
+                                            "Database inspection is active in debug mode. " +
+                                                "Sensitive columns and write operations can be locked or restricted in DatabasePluginConfig.",
                                         style = LogTheme.typography.bodySmall,
                                         color = LogTheme.colors.onSurfaceVariant,
                                         lineHeight = 16.sp,

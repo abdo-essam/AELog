@@ -28,6 +28,9 @@
   <a href="https://kotlinlang.org">
     <img src="https://img.shields.io/badge/Kotlin-2.3.20-7F52FF?style=flat-square&logo=kotlin" alt="Kotlin" />
   </a>
+  <a href="https://coderabbit.ai">
+    <img src="https://img.shields.io/coderabbit/prs/github/abdo-essam/AELog?style=flat-square&utm_source=oss&utm_medium=github&utm_campaign=abdo-essam%2FAELog&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews" alt="CodeRabbit Pull Request Reviews" />
+  </a>
 </p>
 
 <p align="center">

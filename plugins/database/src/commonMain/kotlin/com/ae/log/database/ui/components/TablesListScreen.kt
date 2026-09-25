@@ -59,14 +59,21 @@ internal fun TablesListScreen(
     val activeTab by viewModel.tablesTab.collectAsState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LogTheme.colors.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(LogTheme.colors.background),
     ) {
         // ── Header ────────────────────────────────────────────────────
         LogScreenHeader(
             title = db.name,
-            subtitle = "${db.engine} • ${DatabaseFormatUtils.formatBytes(db.sizeBytes)}",
+            subtitle =
+                buildString {
+                    append(db.engine)
+                    if (db.framework != null) append(" (${db.framework})")
+                    append(" • ")
+                    append(DatabaseFormatUtils.formatBytes(db.sizeBytes))
+                },
             onBackClick = { viewModel.popBack() },
             actions = {
                 if (activeTab == TablesTab.LOGS) {
@@ -132,9 +139,10 @@ private fun TablesTabContent(
     onSearchQueryChange: (String) -> Unit,
     onSelectTable: (DbTable) -> Unit,
 ) {
-    val filtered = tables.filter {
-        searchQuery.isBlank() || it.name.contains(searchQuery, ignoreCase = true)
-    }
+    val filtered =
+        tables.filter {
+            searchQuery.isBlank() || it.name.contains(searchQuery, ignoreCase = true)
+        }
 
     Column(modifier = Modifier.fillMaxSize()) {
         LogSearchBar(
@@ -157,8 +165,11 @@ private fun TablesTabContent(
                         colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
                     ) {
                         EmptyPlaceholder(
-                            if (searchQuery.isBlank()) "No tables found"
-                            else "No match for \"$searchQuery\"",
+                            if (searchQuery.isBlank()) {
+                                "No tables found"
+                            } else {
+                                "No match for \"$searchQuery\""
+                            },
                         )
                     }
                 }
@@ -189,9 +200,10 @@ private fun TablesTabContent(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(LogDimens.cardCornerRadius),
-                    colors = CardDefaults.cardColors(
-                        containerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
-                    ),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
+                        ),
                 ) {
                     Column(modifier = Modifier.padding(LogSpacing.x4)) {
                         Text(
@@ -235,10 +247,11 @@ private fun DatabaseSchemaOverview(
     ) {
         items(tables, key = { it.name }) { table ->
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(LogDimens.cardCornerRadius))
-                    .clickable { onSelectTable(table) },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(LogDimens.cardCornerRadius))
+                        .clickable { onSelectTable(table) },
                 shape = RoundedCornerShape(LogDimens.cardCornerRadius),
                 colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
             ) {

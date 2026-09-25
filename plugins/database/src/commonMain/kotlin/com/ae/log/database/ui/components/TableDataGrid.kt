@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,7 +34,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,6 +53,7 @@ import com.ae.log.ui.theme.LogTheme
 
 /** Switch to card layout when there are more columns than this */
 private const val CARD_THRESHOLD = 4
+private const val NULL_DISPLAY = "null"
 
 @Composable
 internal fun TableDataGrid(
@@ -89,9 +88,10 @@ internal fun TableDataGrid(
 
                 // Pagination — same style as LogHeader (labelSmall + TextButton)
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -106,8 +106,12 @@ internal fun TableDataGrid(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Previous page",
                                 modifier = Modifier.size(LogSpacing.x5),
-                                tint = if (page > 0) LogTheme.colors.primary
-                                else LogTheme.colors.onSurfaceVariant,
+                                tint =
+                                    if (page > 0) {
+                                        LogTheme.colors.primary
+                                    } else {
+                                        LogTheme.colors.onSurfaceVariant
+                                    },
                             )
                         }
                         Text(
@@ -121,8 +125,12 @@ internal fun TableDataGrid(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = "Next page",
                                 modifier = Modifier.size(LogSpacing.x5),
-                                tint = if (result.rows.size >= 50) LogTheme.colors.primary
-                                else LogTheme.colors.onSurfaceVariant,
+                                tint =
+                                    if (result.rows.size >= 50) {
+                                        LogTheme.colors.primary
+                                    } else {
+                                        LogTheme.colors.onSurfaceVariant
+                                    },
                             )
                         }
                     }
@@ -135,20 +143,25 @@ internal fun TableDataGrid(
 // ─── Compact horizontal table (≤ 4 columns) ──────────────────────────────────
 
 @Composable
-private fun CompactTableLayout(result: QueryResult, page: Int) {
+private fun CompactTableLayout(
+    result: QueryResult,
+    page: Int,
+) {
     val hScroll = rememberScrollState()
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = LogSpacing.x5),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = LogSpacing.x5),
         shape = RoundedCornerShape(LogSpacing.x3),
         colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .horizontalScroll(hScroll),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .horizontalScroll(hScroll),
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -157,15 +170,17 @@ private fun CompactTableLayout(result: QueryResult, page: Int) {
                 // Header row
                 item {
                     Row(
-                        modifier = Modifier
-                            .background(LogTheme.colors.surfaceVariant)
-                            .padding(vertical = LogSpacing.x2),
+                        modifier =
+                            Modifier
+                                .background(LogTheme.colors.surfaceVariant)
+                                .padding(vertical = LogSpacing.x2),
                     ) {
                         Text(
                             text = "#",
-                            modifier = Modifier
-                                .width(LogSpacing.x10)
-                                .padding(horizontal = LogSpacing.x2),
+                            modifier =
+                                Modifier
+                                    .width(LogSpacing.x10)
+                                    .padding(horizontal = LogSpacing.x2),
                             style = LogTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = LogTheme.colors.primary,
@@ -173,9 +188,10 @@ private fun CompactTableLayout(result: QueryResult, page: Int) {
                         result.columns.forEach { col ->
                             Text(
                                 text = col,
-                                modifier = Modifier
-                                    .width(LogSpacing.x12 * 2)
-                                    .padding(horizontal = LogSpacing.x2),
+                                modifier =
+                                    Modifier
+                                        .width(LogSpacing.x12 * 2)
+                                        .padding(horizontal = LogSpacing.x2),
                                 style = LogTheme.typography.labelSmall,
                                 fontWeight = FontWeight.SemiBold,
                                 maxLines = 1,
@@ -199,9 +215,10 @@ private fun CompactTableLayout(result: QueryResult, page: Int) {
                         val absoluteRow = (page * 50) + rowIndex + 1
                         Text(
                             text = "$absoluteRow",
-                            modifier = Modifier
-                                .width(LogSpacing.x10)
-                                .padding(horizontal = LogSpacing.x2),
+                            modifier =
+                                Modifier
+                                    .width(LogSpacing.x10)
+                                    .padding(horizontal = LogSpacing.x2),
                             style = LogTheme.typography.labelSmall,
                             fontFamily = FontFamily.Monospace,
                             color = LogTheme.colors.onSurfaceVariant,
@@ -209,19 +226,22 @@ private fun CompactTableLayout(result: QueryResult, page: Int) {
                         result.columns.indices.forEach { colIndex ->
                             val value = row.getOrNull(colIndex)
                             Text(
-                                text = value ?: "null",
-                                modifier = Modifier
-                                    .width(LogSpacing.x12 * 2)
-                                    .padding(horizontal = LogSpacing.x2),
+                                text = value ?: NULL_DISPLAY,
+                                modifier =
+                                    Modifier
+                                        .width(LogSpacing.x12 * 2)
+                                        .padding(horizontal = LogSpacing.x2),
                                 style = LogTheme.typography.labelSmall,
                                 fontFamily = FontFamily.Monospace,
                                 fontStyle = if (value == null) FontStyle.Italic else FontStyle.Normal,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
-                                color = if (value == null)
-                                    LogTheme.colors.error.copy(alpha = 0.7f)
-                                else
-                                    LogTheme.colors.onSurface,
+                                color =
+                                    if (value == null) {
+                                        LogTheme.colors.error.copy(alpha = 0.7f)
+                                    } else {
+                                        LogTheme.colors.onSurface
+                                    },
                             )
                         }
                     }
@@ -242,13 +262,17 @@ private fun CompactTableLayout(result: QueryResult, page: Int) {
 // ─── Card-per-row layout (> 4 columns) ────────────────────────────────────────
 
 @Composable
-private fun CardRowLayout(result: QueryResult, page: Int) {
+private fun CardRowLayout(
+    result: QueryResult,
+    page: Int,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(
-            horizontal = LogSpacing.x5,
-            vertical = LogSpacing.x2,
-        ),
+        contentPadding =
+            PaddingValues(
+                horizontal = LogSpacing.x5,
+                vertical = LogSpacing.x2,
+            ),
         verticalArrangement = Arrangement.spacedBy(LogSpacing.x2),
     ) {
         itemsIndexed(result.rows) { rowIndex, row ->
@@ -279,14 +303,15 @@ private fun RowCard(
         Column {
             // Row header — click to collapse (same pattern as LogEntryItem)
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClickLabel = if (isExpanded) "Collapse row" else "Expand row",
-                    ) { isExpanded = !isExpanded }
-                    .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClickLabel = if (isExpanded) "Collapse row" else "Expand row",
+                        ) { isExpanded = !isExpanded }
+                        .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
@@ -297,8 +322,12 @@ private fun RowCard(
                     color = LogTheme.colors.primary,
                 )
                 Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp
-                    else Icons.Default.KeyboardArrowDown,
+                    imageVector =
+                        if (isExpanded) {
+                            Icons.Default.KeyboardArrowUp
+                        } else {
+                            Icons.Default.KeyboardArrowDown
+                        },
                     contentDescription = null,
                     modifier = Modifier.size(LogSpacing.x6),
                     tint = LogTheme.colors.onSurfaceVariant,
@@ -312,18 +341,20 @@ private fun RowCard(
                 exit = shrinkVertically(),
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(LogTheme.colors.surfaceVariant)
-                        .padding(LogSpacing.x3),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .background(LogTheme.colors.surfaceVariant)
+                            .padding(LogSpacing.x3),
                 ) {
                     columns.forEachIndexed { i, colName ->
                         val value = values.getOrNull(i)
 
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = LogSpacing.x2),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = LogSpacing.x2),
                             verticalAlignment = Alignment.Top,
                         ) {
                             // Column label — same weight/style as LogEntryItem tag
@@ -341,14 +372,16 @@ private fun RowCard(
 
                             // Value
                             Text(
-                                text = value ?: "null",
+                                text = value ?: NULL_DISPLAY,
                                 style = LogTheme.typography.bodySmall,
                                 fontFamily = FontFamily.Monospace,
                                 fontStyle = if (value == null) FontStyle.Italic else FontStyle.Normal,
-                                color = if (value == null)
-                                    LogTheme.colors.error.copy(alpha = 0.7f)
-                                else
-                                    LogTheme.colors.onSurface,
+                                color =
+                                    if (value == null) {
+                                        LogTheme.colors.error.copy(alpha = 0.7f)
+                                    } else {
+                                        LogTheme.colors.onSurface
+                                    },
                                 modifier = Modifier.weight(1f),
                             )
                         }

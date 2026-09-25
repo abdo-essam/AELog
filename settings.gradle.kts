@@ -39,6 +39,7 @@ include(":plugins:network:interceptors:okhttp")
 include(":plugins:analytics")
 include(":plugins:crashes")
 include(":plugins:database")
+include(":plugins:database:adapters:room")
 include(":sample:composeApp")
 include(":benchmarks")
 

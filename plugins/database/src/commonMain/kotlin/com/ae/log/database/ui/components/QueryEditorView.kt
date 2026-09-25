@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
@@ -54,6 +53,8 @@ import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
 
+private const val RUN_QUERY_LABEL = "Run Query"
+
 @Composable
 internal fun QueryEditorView(
     db: DbInfo,
@@ -70,15 +71,17 @@ internal fun QueryEditorView(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LogTheme.colors.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(LogTheme.colors.background),
     ) {
         if (showBackButton) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = LogSpacing.x3, vertical = LogSpacing.x2),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = LogSpacing.x3, vertical = LogSpacing.x2),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -102,13 +105,14 @@ internal fun QueryEditorView(
                 IconButton(
                     onClick = onRunQuery,
                     enabled = !isRunning && sqlQuery.isNotBlank(),
-                    modifier = Modifier
-                        .size(36.dp)
-                        .background(LogTheme.colors.primary, CircleShape),
+                    modifier =
+                        Modifier
+                            .size(36.dp)
+                            .background(LogTheme.colors.primary, CircleShape),
                 ) {
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
-                        contentDescription = "Run Query",
+                        contentDescription = RUN_QUERY_LABEL,
                         tint = Color.White,
                         modifier = Modifier.size(20.dp),
                     )
@@ -151,10 +155,11 @@ internal fun QueryEditorView(
                                         fontSize = 11.sp,
                                     )
                                 },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = LogTheme.colors.errorContainer,
-                                    selectedLabelColor = LogTheme.colors.onErrorContainer,
-                                ),
+                                colors =
+                                    FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = LogTheme.colors.errorContainer,
+                                        selectedLabelColor = LogTheme.colors.onErrorContainer,
+                                    ),
                             )
                         }
 
@@ -171,15 +176,17 @@ internal fun QueryEditorView(
                                 )
                             },
                             textStyle = LogTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(120.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = LogTheme.colors.primary,
-                                unfocusedBorderColor = LogTheme.colors.outlineVariant,
-                                focusedContainerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.3f),
-                                unfocusedContainerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.3f),
-                            ),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(120.dp),
+                            colors =
+                                OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = LogTheme.colors.primary,
+                                    unfocusedBorderColor = LogTheme.colors.outlineVariant,
+                                    focusedContainerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.3f),
+                                    unfocusedContainerColor = LogTheme.colors.surfaceVariant.copy(alpha = 0.3f),
+                                ),
                             shape = RoundedCornerShape(LogSpacing.x2),
                         )
                     }
@@ -190,9 +197,10 @@ internal fun QueryEditorView(
             item {
                 val targetTable = tableName ?: "table"
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(LogSpacing.x1_5),
                 ) {
                     listOf(
@@ -236,7 +244,7 @@ internal fun QueryEditorView(
                         )
                         Spacer(Modifier.width(LogSpacing.x2))
                         Text(
-                            text = "Run Query",
+                            text = RUN_QUERY_LABEL,
                             style = LogTheme.typography.labelMedium,
                             fontWeight = FontWeight.Bold,
                         )
@@ -247,13 +255,14 @@ internal fun QueryEditorView(
             // ── Query Results Section ─────────────────────────────────
             item {
                 if (queryResult != null) {
-                    val headerText = when {
-                        !queryResult.isSuccess -> "Query Error"
-                        queryResult.affectedRows != null ->
-                            "Result: ${queryResult.affectedRows} row(s) affected • ${queryResult.executionDurationMs} ms"
-                        else ->
-                            "Result (${queryResult.rows.size} rows • ${queryResult.executionDurationMs} ms)"
-                    }
+                    val headerText =
+                        when {
+                            !queryResult.isSuccess -> "Query Error"
+                            queryResult.affectedRows != null ->
+                                "Result: ${queryResult.affectedRows} row(s) affected • ${queryResult.executionDurationMs} ms"
+                            else ->
+                                "Result (${queryResult.rows.size} rows • ${queryResult.executionDurationMs} ms)"
+                        }
 
                     Text(
                         text = headerText,
@@ -267,9 +276,10 @@ internal fun QueryEditorView(
 
             item {
                 Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(280.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(280.dp),
                     shape = RoundedCornerShape(LogSpacing.x3),
                     colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
                 ) {
@@ -291,9 +301,14 @@ internal fun QueryEditorView(
                         }
 
                         queryResult.affectedRows != null -> {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
                                 Text(
-                                    text = "Statement executed successfully.\n${queryResult.affectedRows} row(s) updated.",
+                                    text =
+                                        "Statement executed successfully.\n" +
+                                            "${queryResult.affectedRows} row(s) updated.",
                                     style = LogTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.SemiBold,
                                     color = LogTheme.colors.primary,
@@ -321,9 +336,10 @@ private fun QueryResultGrid(queryResult: QueryResult) {
     val hScroll = rememberScrollState()
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .horizontalScroll(hScroll),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .horizontalScroll(hScroll),
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -331,9 +347,10 @@ private fun QueryResultGrid(queryResult: QueryResult) {
         ) {
             item {
                 Row(
-                    modifier = Modifier
-                        .background(LogTheme.colors.surfaceVariant)
-                        .padding(vertical = LogSpacing.x2),
+                    modifier =
+                        Modifier
+                            .background(LogTheme.colors.surfaceVariant)
+                            .padding(vertical = LogSpacing.x2),
                 ) {
                     Text(
                         text = "#",
@@ -379,12 +396,23 @@ private fun QueryResultGrid(queryResult: QueryResult) {
                             fontStyle = if (value == null) FontStyle.Italic else FontStyle.Normal,
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
-                            color = if (value == null) LogTheme.colors.error.copy(alpha = 0.7f) else LogTheme.colors.onSurface,
+                            color =
+                                if (value ==
+                                    null
+                                ) {
+                                    LogTheme.colors.error.copy(alpha = 0.7f)
+                                } else {
+                                    LogTheme.colors.onSurface
+                                },
                         )
                     }
                 }
                 if (index < queryResult.rows.lastIndex) {
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = LogSpacing.x3), color = LogTheme.colors.outlineVariant.copy(alpha = 0.5f), thickness = LogDimens.listDividerThickness)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = LogSpacing.x3),
+                        color = LogTheme.colors.outlineVariant.copy(alpha = 0.5f),
+                        thickness = LogDimens.listDividerThickness,
+                    )
                 }
             }
         }
