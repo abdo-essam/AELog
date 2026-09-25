@@ -242,4 +242,69 @@ class DatabaseEnhancementsTest {
         assertFalse(vm.popBack())
         assertEquals(DatabaseDestination.DatabaseList, vm.currentDestination.value)
     }
+
+    @Test
+    fun databaseViewModel_logsFiltering_allQueriesWritesErrors() {
+        val testDispatcher = UnconfinedTestDispatcher()
+        val testScope = TestScope(testDispatcher)
+        val inspector = TestDatabaseInspector()
+        val vm = DatabaseViewModel(inspector, DatabasePluginConfig(), testScope)
+
+        DatabaseLogRecorder.clear()
+
+        DatabaseLogRecorder.record(
+            databaseName = "app.db",
+            sql = "SELECT * FROM users",
+            durationMs = 2L,
+        )
+        DatabaseLogRecorder.record(
+            databaseName = "app.db",
+            sql = "INSERT INTO users (name) VALUES ('Test')",
+            durationMs = 5L,
+        )
+        DatabaseLogRecorder.record(
+            databaseName = "app.db",
+            sql = "CREATE TABLE logs (id INT)",
+            durationMs = 1L,
+        )
+        DatabaseLogRecorder.record(
+            databaseName = "app.db",
+            sql = "DROP TABLE old_logs",
+            durationMs = 3L,
+        )
+        DatabaseLogRecorder.record(
+            databaseName = "app.db",
+            sql = "SELECT * FROM missing",
+            durationMs = 4L,
+            isSuccess = false,
+            errorMessage = "no such table: missing",
+        )
+
+        // ALL
+        vm.setLogFilter(DatabaseLogFilter.ALL)
+        assertEquals(5, vm.filteredLogs.value.size)
+
+        // QUERIES
+        vm.setLogFilter(DatabaseLogFilter.QUERIES)
+        assertEquals(1, vm.filteredLogs.value.size)
+        assertEquals("SELECT", vm.filteredLogs.value.first().operation)
+
+        // WRITES (includes INSERT, CREATE, DROP)
+        vm.setLogFilter(DatabaseLogFilter.WRITES)
+        assertEquals(3, vm.filteredLogs.value.size)
+
+        // ERRORS
+        vm.setLogFilter(DatabaseLogFilter.ERRORS)
+        assertEquals(1, vm.filteredLogs.value.size)
+        assertFalse(vm.filteredLogs.value.first().isSuccess)
+
+        // Search query
+        vm.setLogFilter(DatabaseLogFilter.ALL)
+        vm.setLogSearchQuery("logs")
+        assertEquals(2, vm.filteredLogs.value.size)
+
+        // Clear logs via VM
+        vm.clearLogs()
+        assertEquals(0, vm.filteredLogs.value.size)
+    }
 }

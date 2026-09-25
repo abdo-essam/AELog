@@ -145,6 +145,8 @@ internal class DatabaseViewModel(
     private val _logSearchQuery = MutableStateFlow("")
     val logSearchQuery: StateFlow<String> = _logSearchQuery.asStateFlow()
 
+    val logs: StateFlow<List<DatabaseLogEntry>> = DatabaseLogRecorder.logs
+
     val filteredLogs: StateFlow<List<DatabaseLogEntry>> =
         combine(
             DatabaseLogRecorder.logs,
@@ -156,7 +158,9 @@ internal class DatabaseViewModel(
                 val matchesFilter = when (filter) {
                     DatabaseLogFilter.ALL -> true
                     DatabaseLogFilter.QUERIES -> entry.operation == "SELECT"
-                    DatabaseLogFilter.WRITES -> entry.operation in listOf("INSERT", "UPDATE", "DELETE", "REPLACE")
+                    DatabaseLogFilter.WRITES -> entry.operation in listOf(
+                        "INSERT", "UPDATE", "DELETE", "REPLACE", "CREATE", "DROP", "ALTER",
+                    )
                     DatabaseLogFilter.ERRORS -> !entry.isSuccess || entry.operation == "ERROR"
                 }
                 val matchesSearch = search.isBlank() ||
@@ -375,16 +379,6 @@ internal class DatabaseViewModel(
             )
             _queryEditorResult.value = result
             _isQueryEditorRunning.value = false
-
-            // Record in logs
-            DatabaseLogRecorder.record(
-                databaseName = db.name,
-                sql = sql,
-                durationMs = result.executionDurationMs,
-                isSuccess = result.isSuccess,
-                errorMessage = result.errorMessage,
-                affectedRows = result.affectedRows,
-            )
 
             // If write succeeded, reload tables and current table data
             if (isWrite && result.isSuccess) {

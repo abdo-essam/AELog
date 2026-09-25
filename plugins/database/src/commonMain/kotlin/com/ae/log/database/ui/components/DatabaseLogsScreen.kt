@@ -21,16 +21,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -56,6 +54,7 @@ import com.ae.log.database.model.DbInfo
 import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.ui.components.EmptyPlaceholder
+import com.ae.log.ui.components.LogFilterChips
 import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
 import com.ae.log.ui.theme.LogSpacing
@@ -96,42 +95,71 @@ internal fun DatabaseLogsScreen(
                 actions = {
                     IconButton(onClick = { viewModel.clearLogs() }) {
                         Icon(
-                            imageVector = Icons.Default.Delete,
+                            imageVector = Icons.Default.DeleteSweep,
                             contentDescription = "Clear logs",
                             tint = LogTheme.colors.onSurfaceVariant,
+                            modifier = Modifier.size(LogSpacing.x5),
                         )
                     }
                 },
             )
         }
 
-        // ── Filter Tabs: All | Queries | Writes | Errors ──────────────
-        PrimaryTabRow(
-            selectedTabIndex = activeFilter.ordinal,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            DatabaseLogFilter.entries.forEach { filter ->
-                Tab(
-                    selected = activeFilter == filter,
-                    onClick = { viewModel.setLogFilter(filter) },
-                    text = {
-                        Text(
-                            text = filter.label,
-                            style = LogTheme.typography.labelMedium,
-                            fontWeight = if (activeFilter == filter) FontWeight.SemiBold else FontWeight.Normal,
-                        )
-                    },
-                )
+        // ── Filter Chips: All | Queries | Writes | Errors ─────────────
+        val allLogsForCounts by com.ae.log.database.DatabaseLogRecorder.logs.collectAsState()
+        val relevantLogs = if (targetDb != null) {
+            allLogsForCounts.filter { it.databaseName == targetDb.name }
+        } else {
+            allLogsForCounts
+        }
+
+        val chipLabels = remember(relevantLogs.size, activeFilter) {
+            DatabaseLogFilter.entries.map { filter ->
+                val count = when (filter) {
+                    DatabaseLogFilter.ALL -> relevantLogs.size
+                    DatabaseLogFilter.QUERIES -> relevantLogs.count { it.operation == "SELECT" }
+                    DatabaseLogFilter.WRITES -> relevantLogs.count {
+                        it.operation in listOf("INSERT", "UPDATE", "DELETE", "REPLACE", "CREATE", "DROP", "ALTER")
+                    }
+                    DatabaseLogFilter.ERRORS -> relevantLogs.count { !it.isSuccess || it.operation == "ERROR" }
+                }
+                "${filter.label} ($count)"
             }
         }
 
-        // ── Search bar ────────────────────────────────────────────────
-        LogSearchBar(
-            query = searchQuery,
-            onQueryChange = { viewModel.setLogSearchQuery(it) },
-            placeholder = "Search SQL, tables, errors…",
+        LogFilterChips(
+            labels = chipLabels,
+            selectedIndex = activeFilter.ordinal,
+            onSelect = { viewModel.setLogFilter(DatabaseLogFilter.entries[it]) },
             modifier = Modifier.padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
         )
+
+        // ── Search bar + Clear action ─────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            LogSearchBar(
+                query = searchQuery,
+                onQueryChange = { viewModel.setLogSearchQuery(it) },
+                placeholder = "Search SQL, tables, errors…",
+                modifier = Modifier.weight(1f),
+            )
+
+            if (!showBackButton) {
+                Spacer(Modifier.width(LogSpacing.x2))
+                IconButton(onClick = { viewModel.clearLogs() }) {
+                    Icon(
+                        imageVector = Icons.Default.DeleteSweep,
+                        contentDescription = "Clear logs",
+                        tint = LogTheme.colors.onSurfaceVariant,
+                        modifier = Modifier.size(LogSpacing.x5),
+                    )
+                }
+            }
+        }
 
         if (copyToast != null) {
             Text(
@@ -146,8 +174,11 @@ internal fun DatabaseLogsScreen(
         // ── Logs List ─────────────────────────────────────────────────
         if (displayedLogs.isEmpty()) {
             EmptyPlaceholder(
-                if (searchQuery.isBlank()) "No database logs recorded yet."
-                else "No matching logs for \"$searchQuery\"",
+                message = if (searchQuery.isBlank()) {
+                    "No database operations recorded yet.\nQueries from tables, searches, query editor, or AELog.database.logQuery() will appear here in real-time."
+                } else {
+                    "No matching logs for \"$searchQuery\""
+                },
             )
         } else {
             LazyColumn(
@@ -195,10 +226,10 @@ private fun DatabaseLogItem(
                 // Status icon circle
                 val (statusBg, statusTint, statusIcon) = when {
                     !entry.isSuccess -> Triple(Color(0xFFFFEBEE), Color(0xFFD32F2F), Icons.Default.Error)
-                    entry.operation in listOf("INSERT", "UPDATE", "REPLACE") ->
+                    entry.operation in listOf("INSERT", "UPDATE", "REPLACE", "CREATE", "ALTER") ->
                         Triple(Color(0xFFFFF3E0), Color(0xFFE65100), Icons.Default.Edit)
-                    entry.operation == "DELETE" ->
-                        Triple(Color(0xFFFFEBEE), Color(0xFFC62828), Icons.Default.Close)
+                    entry.operation in listOf("DELETE", "DROP") ->
+                        Triple(Color(0xFFFFEBEE), Color(0xFFC62828), Icons.Default.RemoveCircleOutline)
                     else -> Triple(Color(0xFFE8F5E9), Color(0xFF2E7D32), Icons.Default.Check)
                 }
 

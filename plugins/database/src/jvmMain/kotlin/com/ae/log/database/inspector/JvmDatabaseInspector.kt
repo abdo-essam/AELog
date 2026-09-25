@@ -92,17 +92,47 @@ internal class JvmDatabaseInspector(
         try {
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
-            return QueryResult.error(e.message ?: "Write operation disallowed")
+            val err = QueryResult.error(e.message ?: "Write operation disallowed")
+            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+                com.ae.log.database.DatabaseLogRecorder.record(
+                    databaseName = dbInfo.name,
+                    sql = sql,
+                    durationMs = 0L,
+                    isSuccess = false,
+                    errorMessage = err.errorMessage,
+                )
+            }
+            return err
         }
 
         val file = File(dbInfo.path)
         if (!file.exists()) {
-            return QueryResult.error("Database file not found: ${dbInfo.path}")
+            val err = QueryResult.error("Database file not found: ${dbInfo.path}")
+            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+                com.ae.log.database.DatabaseLogRecorder.record(
+                    databaseName = dbInfo.name,
+                    sql = sql,
+                    durationMs = 0L,
+                    isSuccess = false,
+                    errorMessage = err.errorMessage,
+                )
+            }
+            return err
         }
 
-        return QueryResult.error(
+        val err = QueryResult.error(
             "JVM runtime database inspector requires JDBC or a custom DatabaseInspector implementation.",
         )
+        if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            com.ae.log.database.DatabaseLogRecorder.record(
+                databaseName = dbInfo.name,
+                sql = sql,
+                durationMs = 0L,
+                isSuccess = false,
+                errorMessage = err.errorMessage,
+            )
+        }
+        return err
     }
 
     private fun isSqliteFile(file: File): Boolean {

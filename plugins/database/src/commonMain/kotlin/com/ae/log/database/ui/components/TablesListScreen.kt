@@ -16,12 +16,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.TableChart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Tab
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -40,6 +40,7 @@ import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.database.ui.TablesTab
 import com.ae.log.ui.components.EmptyPlaceholder
+import com.ae.log.ui.components.LogFilterChips
 import com.ae.log.ui.components.LogItemCard
 import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
@@ -67,27 +68,27 @@ internal fun TablesListScreen(
             title = db.name,
             subtitle = "${db.engine} • ${DatabaseFormatUtils.formatBytes(db.sizeBytes)}",
             onBackClick = { viewModel.popBack() },
+            actions = {
+                if (activeTab == TablesTab.LOGS) {
+                    IconButton(onClick = { viewModel.clearLogs() }) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Default.DeleteSweep,
+                            contentDescription = "Clear logs",
+                            tint = LogTheme.colors.onSurfaceVariant,
+                            modifier = Modifier.size(LogSpacing.x5),
+                        )
+                    }
+                }
+            },
         )
 
-        // ── Tabs ──────────────────────────────────────────────────────
-        PrimaryTabRow(
-            selectedTabIndex = activeTab.ordinal,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            TablesTab.entries.forEach { tab ->
-                Tab(
-                    selected = activeTab == tab,
-                    onClick = { viewModel.setTablesTab(tab) },
-                    text = {
-                        Text(
-                            text = tab.label,
-                            style = LogTheme.typography.labelMedium,
-                            fontWeight = if (activeTab == tab) FontWeight.SemiBold else FontWeight.Normal,
-                        )
-                    },
-                )
-            }
-        }
+        // ── Filter Chips ──────────────────────────────────────────────
+        LogFilterChips(
+            labels = TablesTab.entries.map { it.label },
+            selectedIndex = activeTab.ordinal,
+            onSelect = { viewModel.setTablesTab(TablesTab.entries[it]) },
+            modifier = Modifier.padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
+        )
 
         // ── Tab Content ───────────────────────────────────────────────
         when (activeTab) {

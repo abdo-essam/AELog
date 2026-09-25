@@ -16,6 +16,9 @@ internal fun OperationBadge(
         "INSERT" -> Color(0xFFFFF3E0) to Color(0xFFE65100)
         "UPDATE" -> Color(0xFFFFF8E1) to Color(0xFFF57F17)
         "DELETE" -> Color(0xFFFFEBEE) to Color(0xFFC62828)
+        "DROP" -> Color(0xFFFFEBEE) to Color(0xFFC62828)
+        "CREATE" -> Color(0xFFE3F2FD) to Color(0xFF1565C0)
+        "ALTER" -> Color(0xFFEDE7F6) to Color(0xFF512DA8)
         "ERROR" -> Color(0xFFFFEBEE) to Color(0xFFD32F2F)
         else -> LogTheme.colors.surfaceVariant to LogTheme.colors.onSurfaceVariant
     }

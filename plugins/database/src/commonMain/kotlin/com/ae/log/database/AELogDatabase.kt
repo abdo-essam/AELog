@@ -62,21 +62,11 @@ public object DatabaseProxy {
         val dbInfo =
             plugin.inspector.listDatabases().firstOrNull { it.name == dbName }
                 ?: return QueryResult.error("Database '$dbName' not found")
-        val result = plugin.inspector.query(
+        return plugin.inspector.query(
             dbInfo = dbInfo,
             sql = sql,
             allowWrite = allowWrite,
         )
-        // Record into database log history
-        DatabaseLogRecorder.record(
-            databaseName = dbName,
-            sql = sql,
-            durationMs = result.executionDurationMs,
-            isSuccess = result.isSuccess,
-            errorMessage = result.errorMessage,
-            affectedRows = result.affectedRows,
-        )
-        return result
     }
 
     /**

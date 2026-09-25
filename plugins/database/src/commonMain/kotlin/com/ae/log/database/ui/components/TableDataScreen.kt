@@ -34,8 +34,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -59,6 +57,7 @@ import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.database.ui.TableDataTab
 import com.ae.log.ui.components.EmptyPlaceholder
+import com.ae.log.ui.components.LogFilterChips
 import com.ae.log.ui.components.LogPaginationBar
 import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
@@ -104,25 +103,13 @@ internal fun TableDataScreen(
             onBackClick = { viewModel.popBack() },
         )
 
-        // ── Tabs: Data | Schema | Query ───────────────────────────────
-        PrimaryTabRow(
-            selectedTabIndex = activeTab.ordinal,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            TableDataTab.entries.forEach { tab ->
-                Tab(
-                    selected = activeTab == tab,
-                    onClick = { viewModel.setTableDataTab(tab) },
-                    text = {
-                        Text(
-                            text = tab.label,
-                            style = LogTheme.typography.labelMedium,
-                            fontWeight = if (activeTab == tab) FontWeight.SemiBold else FontWeight.Normal,
-                        )
-                    },
-                )
-            }
-        }
+        // ── Filter Chips: Data | Schema | Query ──────────────────────
+        LogFilterChips(
+            labels = TableDataTab.entries.map { it.label },
+            selectedIndex = activeTab.ordinal,
+            onSelect = { viewModel.setTableDataTab(TableDataTab.entries[it]) },
+            modifier = Modifier.padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
+        )
 
         // ── Tab Content ───────────────────────────────────────────────
         when (activeTab) {

@@ -3,6 +3,7 @@ package com.ae.log.database.inspector
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import com.ae.log.database.DatabaseAppContextHolder
+import com.ae.log.database.DatabaseLogRecorder
 import com.ae.log.database.config.DatabasePluginConfig
 import com.ae.log.database.model.DbInfo
 import com.ae.log.database.model.DbTable
@@ -200,13 +201,36 @@ internal class AndroidDatabaseInspector(
         try {
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
-            return QueryResult.error(e.message ?: "Write operation disallowed")
+            val err = QueryResult.error(e.message ?: "Write operation disallowed")
+            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+                DatabaseLogRecorder.record(
+                    databaseName = dbInfo.name,
+                    sql = sql,
+                    durationMs = 0L,
+                    isSuccess = false,
+                    errorMessage = err.errorMessage,
+                )
+            }
+            return err
         }
 
-        val db = openDatabase(dbInfo) ?: return QueryResult.error("Failed to open database: ${dbInfo.name}")
+        val db = openDatabase(dbInfo)
+        if (db == null) {
+            val err = QueryResult.error("Failed to open database: ${dbInfo.name}")
+            if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+                DatabaseLogRecorder.record(
+                    databaseName = dbInfo.name,
+                    sql = sql,
+                    durationMs = 0L,
+                    isSuccess = false,
+                    errorMessage = err.errorMessage,
+                )
+            }
+            return err
+        }
         val isWrite = isWriteStatement(sql)
 
-        return try {
+        val queryResult = try {
             var executionTime = 0L
             if (isWrite) {
                 var affected = 0L
@@ -225,7 +249,7 @@ internal class AndroidDatabaseInspector(
                     }
                 QueryResult.writeSuccess(affectedRows = affected, durationMs = executionTime)
             } else {
-                var queryResult: QueryResult
+                var res: QueryResult
                 executionTime =
                     measureTimeMillis {
                         val rawArgs = if (args.isEmpty()) null else args.toTypedArray()
@@ -239,16 +263,29 @@ internal class AndroidDatabaseInspector(
                                     }
                                 rows.add(row)
                             }
-                            queryResult = QueryResult.success(columns = colNames, rows = rows, durationMs = 0L)
+                            res = QueryResult.success(columns = colNames, rows = rows, durationMs = 0L)
                         }
                     }
-                queryResult.copy(executionDurationMs = executionTime)
+                res.copy(executionDurationMs = executionTime)
             }
         } catch (e: Exception) {
             QueryResult.error(e.message ?: "SQL execution error")
         } finally {
             closeQuietly(db)
         }
+
+        if (!sql.trimStart().uppercase().startsWith("PRAGMA")) {
+            DatabaseLogRecorder.record(
+                databaseName = dbInfo.name,
+                sql = sql,
+                durationMs = queryResult.executionDurationMs,
+                isSuccess = queryResult.isSuccess,
+                errorMessage = queryResult.errorMessage,
+                affectedRows = queryResult.affectedRows,
+            )
+        }
+
+        return queryResult
     }
 
     private fun openDatabase(dbInfo: DbInfo): SQLiteDatabase? {
