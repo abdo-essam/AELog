@@ -6,6 +6,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -434,22 +436,26 @@ private fun SpreadsheetDataGrid(
 
                 // ── Horizontal Scroll Progress Track ─────────────────────
                 if (isScrollable) {
-                    val scrollRatio = (hScroll.value.toFloat() / hScroll.maxValue.toFloat()).coerceIn(0f, 1f)
-                    Box(
+                    val scrollRatio = if (hScroll.maxValue > 0) (hScroll.value.toFloat() / hScroll.maxValue.toFloat()).coerceIn(0f, 1f) else 0f
+                    BoxWithConstraints(
                         modifier =
                             Modifier
                                 .align(Alignment.BottomStart)
                                 .fillMaxWidth()
-                                .height(3.dp)
+                                .height(4.dp)
                                 .background(LogTheme.colors.outlineVariant.copy(alpha = 0.3f)),
                     ) {
+                        val totalTrackWidth = maxWidth
+                        val thumbWidth = totalTrackWidth * 0.25f
+                        val maxThumbOffset = totalTrackWidth - thumbWidth
+                        val currentThumbOffset = maxThumbOffset * scrollRatio
+
                         Box(
                             modifier =
                                 Modifier
                                     .fillMaxHeight()
-                                    .fillMaxWidth(0.3f)
-                                    .align(Alignment.CenterStart)
-                                    .padding(start = (scrollRatio * 0.7f * 100).dp)
+                                    .width(thumbWidth)
+                                    .offset(x = currentThumbOffset)
                                     .background(LogTheme.colors.primary, RoundedCornerShape(2.dp)),
                         )
                     }

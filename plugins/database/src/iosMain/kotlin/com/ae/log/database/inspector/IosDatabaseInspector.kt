@@ -140,11 +140,26 @@ internal class IosDatabaseInspector(
             return virtual
         }
 
-        if (dbInfo.name == SAMPLE_DB_NAME) {
+        if (dbInfo.name == SAMPLE_DB_NAME || dbInfo.name == "shop_sample.db") {
             return listOf(
-                DbTable(name = "users", rowCount = 4L, columns = emptyList(), isSystemTable = false),
-                DbTable(name = "products", rowCount = 4L, columns = emptyList(), isSystemTable = false),
-                DbTable(name = "orders", rowCount = 3L, columns = emptyList(), isSystemTable = false),
+                DbTable(
+                    name = "users",
+                    rowCount = 4L,
+                    columns = listOf("id", "name", "email", "role"),
+                    isSystemTable = false,
+                ),
+                DbTable(
+                    name = "products",
+                    rowCount = 4L,
+                    columns = listOf("id", "title", "price", "stock", "category"),
+                    isSystemTable = false,
+                ),
+                DbTable(
+                    name = "orders",
+                    rowCount = 3L,
+                    columns = listOf("id", "user_id", "total", "status"),
+                    isSystemTable = false,
+                ),
             )
         }
 
@@ -194,7 +209,7 @@ internal class IosDatabaseInspector(
             return err
         }
 
-        if (dbInfo.name == SAMPLE_DB_NAME) {
+        if (dbInfo.name == SAMPLE_DB_NAME || dbInfo.name == "shop_sample.db") {
             val clean = sql.trim().uppercase()
             val queryResult =
                 when {

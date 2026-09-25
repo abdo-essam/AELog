@@ -3,6 +3,7 @@ package com.ae.log.database.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,8 +24,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,13 +46,54 @@ import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.database.ui.TablesTab
 import com.ae.log.ui.components.EmptyPlaceholder
-import com.ae.log.ui.components.LogFilterChips
 import com.ae.log.ui.components.LogItemCard
 import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
 import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
+
+@Composable
+internal fun SegmentedTabRow(
+    tabs: List<String>,
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = LogTheme.colors.surfaceVariant.copy(alpha = 0.5f),
+        shape = RoundedCornerShape(10.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(3.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            tabs.forEachIndexed { index, title ->
+                val isSelected = index == selectedIndex
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(34.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(
+                                if (isSelected) LogTheme.colors.surface else Color.Transparent,
+                            )
+                            .clickable { onTabSelected(index) },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = title,
+                        style = LogTheme.typography.labelMedium,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isSelected) LogTheme.colors.onSurface else LogTheme.colors.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 internal fun TablesListScreen(
@@ -87,20 +128,16 @@ internal fun TablesListScreen(
                     val targetLogs = remember(logs, db.name) { logs.filter { it.databaseName == db.name } }
                     val clipboard = LocalClipboardManager.current
 
-                    TextButton(
-                        onClick = {
-                            val text = DatabaseFormatUtils.formatDatabaseLogsForCopy(targetLogs)
-                            clipboard.setText(AnnotatedString(text))
-                        },
-                        contentPadding = PaddingValues(horizontal = LogSpacing.x2, vertical = LogSpacing.x1),
-                    ) {
+                    IconButton(onClick = {
+                        val text = DatabaseFormatUtils.formatDatabaseLogsForCopy(targetLogs)
+                        clipboard.setText(AnnotatedString(text))
+                    }) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy all",
-                            modifier = Modifier.size(LogSpacing.x4),
+                            contentDescription = "Copy all logs",
+                            tint = LogTheme.colors.onSurfaceVariant,
+                            modifier = Modifier.size(LogSpacing.x5),
                         )
-                        Spacer(modifier = Modifier.width(LogSpacing.x1))
-                        Text("Copy All", style = LogTheme.typography.labelSmall)
                     }
 
                     IconButton(onClick = { viewModel.clearLogs() }) {
@@ -115,11 +152,11 @@ internal fun TablesListScreen(
             },
         )
 
-        // ── Filter Chips ──────────────────────────────────────────────
-        LogFilterChips(
-            labels = TablesTab.entries.map { it.label },
+        // ── Navigation Tabs: Logs | Tables | Schema ───────────────────
+        SegmentedTabRow(
+            tabs = TablesTab.entries.map { it.label },
             selectedIndex = activeTab.ordinal,
-            onSelect = { viewModel.setTablesTab(TablesTab.entries[it]) },
+            onTabSelected = { viewModel.setTablesTab(TablesTab.entries[it]) },
             modifier = Modifier.padding(horizontal = LogSpacing.x5, vertical = LogSpacing.x2),
         )
 
