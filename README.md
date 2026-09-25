@@ -108,6 +108,9 @@ kotlin {
             implementation(libs.aelog.network.ktor)
             implementation(libs.aelog.analytics)
             implementation(libs.aelog.crashes)
+
+            // For Room database users: 'aelog-database-room' transitively includes 'aelog-database'
+            implementation(libs.aelog.database.room)
         }
         androidMain.dependencies {
             // Add only if your Android target uses OkHttp
