@@ -62,7 +62,7 @@ AELog now features full **Dark Mode** support! The UI automatically adapts to yo
 
 ## ✨ Core Plugins
 
-AELog provides a suite of 4 core plugins, allowing you to select and install only what you need:
+AELog provides a suite of core plugins, allowing you to select and install only what you need:
 
 | Plugin | Purpose | Key Capabilities |
 |:---|:---|:---|
@@ -70,6 +70,7 @@ AELog provides a suite of 4 core plugins, allowing you to select and install onl
 | 🌐 **Network Viewer** | HTTP Traffic Inspector | Inspect HTTP requests and responses, full headers, status codes, and JSON payloads with automatic sensitive credential redaction. |
 | 📊 **Analytics Tracker** | Analytics Event Tracker | Verify custom properties, event dispatches, and screen views instantly as they trigger in your app. |
 | 💥 **Crash Reporter** | Local Exception Manager | Intercept fatal exceptions and record non-fatal errors on-device so they survive app restarts and are viewable in the UI. |
+| 🗄️ **Database Inspector** | SQLite & Room Inspector | Auto-discover databases, browse tables, search rows, sort columns, inspect schemas, and execute SQL queries directly on-device. |
 
 ## 📦 Installation
 
@@ -81,7 +82,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.1.9"
+aelog = "1.2.0"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -89,6 +90,8 @@ aelog-network-ktor     = { module = "io.github.abdo-essam:ae-log-network-ktor", 
 aelog-network-okhttp   = { module = "io.github.abdo-essam:ae-log-network-okhttp", version.ref = "aelog" }
 aelog-analytics        = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "aelog" }
 aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }
+aelog-database         = { module = "io.github.abdo-essam:ae-log-database",       version.ref = "aelog" }
+aelog-database-room    = { module = "io.github.abdo-essam:ae-log-database-room",  version.ref = "aelog" }
 ```
 
 ### 2. Gradle Setup

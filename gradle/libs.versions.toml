@@ -3,7 +3,7 @@ agp = "9.3.2"
 
 kotlin = "2.3.20"
 compose-multiplatform = "1.9.3"
-android-compileSdk = "35"
+android-compileSdk = "36"
 android-minSdk = "24"
 kotlinx-datetime = "0.8.0"
 atomicfu = "0.33.0"

@@ -6,8 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
- 
-## [1.1.9] - 2026-08-25
+
+## [1.2.0] - 2026-09-26
+
+### Added
+- **Database Inspector Plugin (`plugins:database`)**:
+  - Full SQLite database inspection for Compose Multiplatform (Android, iOS, JVM, WasmJs).
+  - Auto-discovery of SQLite databases across sandbox directories and custom search paths.
+  - Live table list with table sizes, row counts, and detailed column schemas (types, primary keys, nullability, foreign keys, indexes).
+  - Paginated table row browser with column sorting, live search filtering, and selectable row limits (`10`, `20`, `50`, `100`, `200` rows).
+  - Interactive SQL console with read-only safety guardrails, write mode toggle, and execution time logging.
+  - Detailed row inspection view (`RowDetailsScreen`) with 1-click clipboard copy.
+- **Room Database Adapter (`plugins:database:adapters:room`)**:
+  - `AELogRoomAdapter` to integrate seamlessly with `androidx.room` database instances.
+  - Inspects Room schema and table structures directly without locking issues.
+- **Movable / Draggable Floating Notch View (`AELogOverlay`)**:
+  - Position retention: move the notch button anywhere on screen, and it stays in its exact custom position across overlay panel open/close actions.
+  - Hardware-accelerated 120Hz/60Hz touch gesture detection with zero recomposition layout offset and screen boundary clamping.
+  - Sleek top and bottom drag grip handles for visual feedback.
+- **Modern Navigation & UI Components**:
+  - Underline tab bar (`SegmentedTabRow`) matching Material 3 tab design with active indicator line.
+  - Solid selected filter chips with zero-ripple click interactions.
+  - Vertical scrollbars on table data grids providing real-time scroll position feedback.
+
+---
 
 ### Added
 - **Kotlin/Wasm (`wasmJsMain`) Support**: Added full `wasmJs` browser target support across `core`, `logs`, `crashes`, `analytics`, `network`, and `network-ktor`.
