@@ -145,8 +145,23 @@ internal class JvmDatabaseInspector(
         return ext == "db" || ext == "sqlite" || ext == "sqlite3"
     }
 
-    private fun isAuxiliaryFile(name: String): Boolean =
-        name.endsWith("-wal") || name.endsWith("-shm") || name.endsWith("-journal")
+    private fun isAuxiliaryFile(name: String): Boolean {
+        val lower = name.lowercase()
+        return lower.endsWith("-wal") ||
+            lower.endsWith(".wal") ||
+            lower.endsWith("-shm") ||
+            lower.endsWith(".shm") ||
+            lower.endsWith("-journal") ||
+            lower.endsWith(".journal") ||
+            lower.endsWith("-lck") ||
+            lower.endsWith(".lck") ||
+            lower.endsWith("-lock") ||
+            lower.endsWith(".lock") ||
+            lower.endsWith("-tmp") ||
+            lower.endsWith(".tmp") ||
+            lower.endsWith("-bak") ||
+            lower.endsWith(".bak")
+    }
 
     private fun isEncryptedSqliteFile(file: File): Boolean {
         if (!file.exists() || file.length() < 16) return false

@@ -367,7 +367,20 @@ internal class IosDatabaseInspector(
 
     private fun isAuxiliaryFile(name: String): Boolean {
         val lower = name.lowercase()
-        return lower.endsWith("-wal") || lower.endsWith("-shm") || lower.endsWith("-journal")
+        return lower.endsWith("-wal") ||
+            lower.endsWith(".wal") ||
+            lower.endsWith("-shm") ||
+            lower.endsWith(".shm") ||
+            lower.endsWith("-journal") ||
+            lower.endsWith(".journal") ||
+            lower.endsWith("-lck") ||
+            lower.endsWith(".lck") ||
+            lower.endsWith("-lock") ||
+            lower.endsWith(".lock") ||
+            lower.endsWith("-tmp") ||
+            lower.endsWith(".tmp") ||
+            lower.endsWith("-bak") ||
+            lower.endsWith(".bak")
     }
 
     private fun isEncryptedFile(path: String): Boolean {
