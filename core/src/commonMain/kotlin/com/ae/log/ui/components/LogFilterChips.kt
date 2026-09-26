@@ -57,13 +57,11 @@ public fun LogFilterChips(
                             } else {
                                 LogTheme.colors.surfaceVariant.copy(alpha = 0.5f)
                             },
-                        )
-                        .clickable(
+                        ).clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                             onClick = { onSelect(index) },
-                        )
-                        .padding(horizontal = 12.dp),
+                        ).padding(horizontal = 12.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(

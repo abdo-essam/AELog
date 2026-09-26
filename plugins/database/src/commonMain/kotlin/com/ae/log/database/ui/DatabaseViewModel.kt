@@ -85,6 +85,7 @@ internal class DatabaseViewModel(
             loadTableData(db, table, page = 0)
         }
     }
+
     // ── Navigation Stack ──────────────────────────────────────────────
     private val _navigationStack = MutableStateFlow<List<DatabaseDestination>>(listOf(DatabaseDestination.DatabaseList))
     val navigationStack: StateFlow<List<DatabaseDestination>> = _navigationStack.asStateFlow()

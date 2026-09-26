@@ -41,19 +41,26 @@ public actual fun ensureSampleDatabaseExists(): String {
     )
     AELog.database.logQuery(
         databaseName = DB_NAME,
-        sql = "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, title TEXT, price REAL, stock INT, category_id INT, FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL);",
+        sql =
+            "CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, title TEXT, price REAL, stock INT, " +
+                "category_id INT, FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL);",
         durationMs = 2L,
         tableName = "products",
     )
     AELog.database.logQuery(
         databaseName = DB_NAME,
-        sql = "CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, user_id INT, total REAL, status TEXT, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);",
+        sql =
+            "CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, user_id INT, total REAL, status TEXT, " +
+                "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE);",
         durationMs = 2L,
         tableName = "orders",
     )
     AELog.database.logQuery(
         databaseName = DB_NAME,
-        sql = "CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY, order_id INT, product_id INT, quantity INT, unit_price REAL, FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE, FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT);",
+        sql =
+            "CREATE TABLE IF NOT EXISTS order_items (id INTEGER PRIMARY KEY, order_id INT, product_id INT, " +
+                "quantity INT, unit_price REAL, FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE, " +
+                "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT);",
         durationMs = 2L,
         tableName = "order_items",
     )

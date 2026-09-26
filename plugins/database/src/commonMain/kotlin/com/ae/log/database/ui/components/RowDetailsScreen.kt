@@ -82,7 +82,8 @@ internal fun RowDetailsScreen(
             it.equals(
                 ID_KEY,
                 ignoreCase = true,
-            ) || it.endsWith(ID_SUFFIX, ignoreCase = true)
+            ) ||
+                it.endsWith(ID_SUFFIX, ignoreCase = true)
         }
     val idVal = if (idKey != null) row[idKey] else "${rowIndex + 1}"
 

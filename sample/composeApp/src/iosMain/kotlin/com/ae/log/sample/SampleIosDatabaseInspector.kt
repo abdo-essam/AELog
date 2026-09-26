@@ -30,7 +30,6 @@ private val ORDERS_COLUMNS = listOf(COL_ID, COL_USER_ID, COL_TOTAL, COL_STATUS)
 internal class SampleIosDatabaseInspector(
     private val delegate: DatabaseInspector,
 ) : DatabaseInspector {
-
     override fun registerDatabase(dbInfo: DbInfo) {
         delegate.registerDatabase(dbInfo)
     }
@@ -45,7 +44,7 @@ internal class SampleIosDatabaseInspector(
                     engine = "SQLite",
                     tableCount = 5,
                     sizeBytes = 204800L,
-                )
+                ),
             )
         }
         return list
@@ -212,17 +211,42 @@ internal class SampleIosDatabaseInspector(
         val limit = parseSqlLimit(sql)
         val offset = parseSqlOffset(sql)
         val totalItems = 120
-        val firstNames = listOf("Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona", "George", "Hannah", "Ian", "Julia")
-        val lastNames = listOf("Smith", "Jones", "Brown", "Prince", "Miller", "Davis", "Wilson", "Taylor", "Anderson", "Thomas")
+        val firstNames =
+            listOf(
+                "Alice",
+                "Bob",
+                "Charlie",
+                "Diana",
+                "Ethan",
+                "Fiona",
+                "George",
+                "Hannah",
+                "Ian",
+                "Julia",
+            )
+        val lastNames =
+            listOf(
+                "Smith",
+                "Jones",
+                "Brown",
+                "Prince",
+                "Miller",
+                "Davis",
+                "Wilson",
+                "Taylor",
+                "Anderson",
+                "Thomas",
+            )
         val roles = listOf("Admin", "Developer", "Designer", "Manager", "User")
-        val allItems = (1..totalItems).map { id ->
-            val firstName = firstNames[(id - 1) % firstNames.size]
-            val lastName = lastNames[(id - 1) % lastNames.size]
-            val name = "$firstName $lastName"
-            val email = "${firstName.lowercase()}.$id@example.com"
-            val role = roles[(id - 1) % roles.size]
-            listOf(id.toString(), name, email, role)
-        }
+        val allItems =
+            (1..totalItems).map { id ->
+                val firstName = firstNames[(id - 1) % firstNames.size]
+                val lastName = lastNames[(id - 1) % lastNames.size]
+                val name = "$firstName $lastName"
+                val email = "${firstName.lowercase()}.$id@example.com"
+                val role = roles[(id - 1) % roles.size]
+                listOf(id.toString(), name, email, role)
+            }
         val pagedRows = allItems.drop(offset).take(limit)
         return QueryResult.success(
             columns = USERS_COLUMNS,
@@ -235,19 +259,21 @@ internal class SampleIosDatabaseInspector(
         val limit = parseSqlLimit(sql)
         val offset = parseSqlOffset(sql)
         val totalItems = 100
-        val allItems = (1..totalItems).map { id ->
-            val title = when (id % 5) {
-                1 -> "MacBook Pro 16\" #$id"
-                2 -> "Ergonomic Mouse #$id"
-                3 -> "Mechanical Keyboard #$id"
-                4 -> "4K UltraSharp Display #$id"
-                else -> "USB-C Hub #$id"
+        val allItems =
+            (1..totalItems).map { id ->
+                val title =
+                    when (id % 5) {
+                        1 -> "MacBook Pro 16\" #$id"
+                        2 -> "Ergonomic Mouse #$id"
+                        3 -> "Mechanical Keyboard #$id"
+                        4 -> "4K UltraSharp Display #$id"
+                        else -> "USB-C Hub #$id"
+                    }
+                val price = (19.99 + (id * 12.5)).toString()
+                val stock = ((id * 7) % 80 + 5).toString()
+                val categoryId = ((id % 4) + 1).toString()
+                listOf(id.toString(), title, price, stock, categoryId)
             }
-            val price = (19.99 + (id * 12.5)).toString()
-            val stock = ((id * 7) % 80 + 5).toString()
-            val categoryId = ((id % 4) + 1).toString()
-            listOf(id.toString(), title, price, stock, categoryId)
-        }
         val pagedRows = allItems.drop(offset).take(limit)
         return QueryResult.success(
             columns = PRODUCTS_COLUMNS,
@@ -261,12 +287,13 @@ internal class SampleIosDatabaseInspector(
         val offset = parseSqlOffset(sql)
         val totalItems = 150
         val statuses = listOf("Delivered", "Shipped", "Processing", "Cancelled", "Pending")
-        val allItems = (1..totalItems).map { id ->
-            val userId = ((id - 1) % 120) + 1
-            val total = (49.99 + (id * 18.25)).toString()
-            val status = statuses[(id - 1) % statuses.size]
-            listOf(id.toString(), userId.toString(), total, status)
-        }
+        val allItems =
+            (1..totalItems).map { id ->
+                val userId = ((id - 1) % 120) + 1
+                val total = (49.99 + (id * 18.25)).toString()
+                val status = statuses[(id - 1) % statuses.size]
+                listOf(id.toString(), userId.toString(), total, status)
+            }
         val pagedRows = allItems.drop(offset).take(limit)
         return QueryResult.success(
             columns = ORDERS_COLUMNS,

@@ -201,7 +201,10 @@ internal fun TableSchemaView(
                 )
             }
 
-            items(schema.foreignKeys, key = { "${it.fromColumn}_${it.targetTable}_${it.targetColumn}_${it.id}" }) { fk ->
+            items(
+                schema.foreignKeys,
+                key = { "${it.fromColumn}_${it.targetTable}_${it.targetColumn}_${it.id}" },
+            ) { fk ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(LogSpacing.x3),

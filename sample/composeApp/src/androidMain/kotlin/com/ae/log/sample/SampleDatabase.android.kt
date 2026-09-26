@@ -111,7 +111,8 @@ public actual fun ensureSampleDatabaseExists(): String {
                 // Seed 120 Users
                 val roles = listOf("Admin", "Developer", "Designer", "Manager", "Engineer", "User")
                 val names = listOf("Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack")
-                val surnames = listOf("Smith", "Jones", "Brown", "Prince", "Adams", "Miller", "Davis", "Wilson", "Taylor", "Evans")
+                val surnames =
+                    listOf("Smith", "Jones", "Brown", "Prince", "Adams", "Miller", "Davis", "Wilson", "Taylor", "Evans")
                 for (i in 1..120) {
                     val fn = names[(i - 1) % names.size]
                     val sn = surnames[(i / names.size) % surnames.size]
@@ -121,13 +122,27 @@ public actual fun ensureSampleDatabaseExists(): String {
                 }
 
                 // Seed 100 Products
-                val productTypes = listOf("Laptop", "Mouse", "Keyboard", "Display", "Headphones", "SSD Drive", "USB Hub", "Webcam", "Speaker", "Monitor Arm")
+                val productTypes =
+                    listOf(
+                        "Laptop",
+                        "Mouse",
+                        "Keyboard",
+                        "Display",
+                        "Headphones",
+                        "SSD Drive",
+                        "USB Hub",
+                        "Webcam",
+                        "Speaker",
+                        "Monitor Arm",
+                    )
                 for (i in 1..100) {
                     val pName = "${productTypes[i % productTypes.size]} Pro #$i"
                     val price = 29.99 + (i * 18.5)
                     val stock = (i * 7) % 80
                     val catId = (i % 5) + 1
-                    db.execSQL("INSERT INTO products (title, price, stock, category_id) VALUES ('$pName', $price, $stock, $catId);")
+                    db.execSQL(
+                        "INSERT INTO products (title, price, stock, category_id) VALUES ('$pName', $price, $stock, $catId);",
+                    )
                 }
 
                 // Seed 150 Orders
@@ -145,7 +160,9 @@ public actual fun ensureSampleDatabaseExists(): String {
                     val productId = (i % 100) + 1
                     val qty = (i % 4) + 1
                     val unitPrice = 29.99 + (productId * 12.0)
-                    db.execSQL("INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES ($orderId, $productId, $qty, $unitPrice);")
+                    db.execSQL(
+                        "INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES ($orderId, $productId, $qty, $unitPrice);",
+                    )
                 }
 
                 db.setTransactionSuccessful()
@@ -154,14 +171,59 @@ public actual fun ensureSampleDatabaseExists(): String {
             }
 
             // Log representative queries to showcase the Database Logs panel
-            AELog.database.logInsert("shop_sample.db", "INSERT INTO users (name, email, role) VALUES ('Alice Smith #121', 'alice121@example.com', 'Admin');", durationMs = 3L, tableName = "users")
-            AELog.database.logInsert("shop_sample.db", "INSERT INTO products (title, price, stock, category_id) VALUES ('UltraWide Monitor 34\"', 899.00, 12, 3);", durationMs = 2L, tableName = "products")
-            AELog.database.logSelect("shop_sample.db", "SELECT * FROM users WHERE role = 'Admin' ORDER BY id DESC LIMIT 50;", durationMs = 2L, tableName = "users", rowCount = 50L)
-            AELog.database.logSelect("shop_sample.db", "SELECT * FROM products WHERE stock > 10 ORDER BY price DESC LIMIT 50;", durationMs = 3L, tableName = "products", rowCount = 50L)
-            AELog.database.logSelect("shop_sample.db", "SELECT * FROM orders WHERE status = 'Delivered' LIMIT 50;", durationMs = 2L, tableName = "orders", rowCount = 50L)
-            AELog.database.logUpdate("shop_sample.db", "UPDATE products SET stock = stock - 1 WHERE id = 1;", durationMs = 4L, tableName = "products", affectedRows = 1L)
-            AELog.database.logDelete("shop_sample.db", "DELETE FROM order_items WHERE id = 999;", durationMs = 2L, tableName = "order_items", affectedRows = 0L)
-            AELog.database.logError("shop_sample.db", "SELECT * FROM non_existing_table;", IllegalStateException("no such table: non_existing_table"), durationMs = 1L)
+            AELog.database.logInsert(
+                "shop_sample.db",
+                "INSERT INTO users (name, email, role) VALUES ('Alice Smith #121', 'alice121@example.com', 'Admin');",
+                durationMs = 3L,
+                tableName = "users",
+            )
+            AELog.database.logInsert(
+                "shop_sample.db",
+                "INSERT INTO products (title, price, stock, category_id) VALUES ('UltraWide Monitor 34\"', 899.00, 12, 3);",
+                durationMs = 2L,
+                tableName = "products",
+            )
+            AELog.database.logSelect(
+                "shop_sample.db",
+                "SELECT * FROM users WHERE role = 'Admin' ORDER BY id DESC LIMIT 50;",
+                durationMs = 2L,
+                tableName = "users",
+                rowCount = 50L,
+            )
+            AELog.database.logSelect(
+                "shop_sample.db",
+                "SELECT * FROM products WHERE stock > 10 ORDER BY price DESC LIMIT 50;",
+                durationMs = 3L,
+                tableName = "products",
+                rowCount = 50L,
+            )
+            AELog.database.logSelect(
+                "shop_sample.db",
+                "SELECT * FROM orders WHERE status = 'Delivered' LIMIT 50;",
+                durationMs = 2L,
+                tableName = "orders",
+                rowCount = 50L,
+            )
+            AELog.database.logUpdate(
+                "shop_sample.db",
+                "UPDATE products SET stock = stock - 1 WHERE id = 1;",
+                durationMs = 4L,
+                tableName = "products",
+                affectedRows = 1L,
+            )
+            AELog.database.logDelete(
+                "shop_sample.db",
+                "DELETE FROM order_items WHERE id = 999;",
+                durationMs = 2L,
+                tableName = "order_items",
+                affectedRows = 0L,
+            )
+            AELog.database.logError(
+                "shop_sample.db",
+                "SELECT * FROM non_existing_table;",
+                IllegalStateException("no such table: non_existing_table"),
+                durationMs = 1L,
+            )
         }
 
         db.close()

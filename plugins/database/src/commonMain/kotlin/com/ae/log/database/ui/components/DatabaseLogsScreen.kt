@@ -41,9 +41,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.ui.draw.shadow
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,14 +55,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
-import com.ae.log.database.model.QueryResult
-import com.ae.log.ui.theme.LogDimens
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -72,6 +66,7 @@ import androidx.compose.ui.unit.sp
 import com.ae.log.database.model.DatabaseLogEntry
 import com.ae.log.database.model.DatabaseLogFilter
 import com.ae.log.database.model.DbInfo
+import com.ae.log.database.model.QueryResult
 import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.ui.components.EmptyPlaceholder
@@ -79,10 +74,13 @@ import com.ae.log.ui.components.ExpandedDetails
 import com.ae.log.ui.components.LogKeyValueItem
 import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
+import com.ae.log.ui.theme.LogDimens
 import com.ae.log.ui.theme.LogSpacing
 import com.ae.log.ui.theme.LogTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val OP_INSERT = "INSERT"
 private const val OP_UPDATE = "UPDATE"
@@ -123,8 +121,7 @@ internal fun ScrollableSegmentedTabRow(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null,
                                 onClick = { onTabSelected(index) },
-                            )
-                            .padding(horizontal = 8.dp, vertical = 10.dp),
+                            ).padding(horizontal = 8.dp, vertical = 10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(

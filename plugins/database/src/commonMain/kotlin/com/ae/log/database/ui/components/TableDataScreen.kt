@@ -25,11 +25,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -48,6 +43,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,7 +60,6 @@ import com.ae.log.database.ui.DatabaseFormatUtils
 import com.ae.log.database.ui.DatabaseViewModel
 import com.ae.log.database.ui.TableDataTab
 import com.ae.log.ui.components.EmptyPlaceholder
-import com.ae.log.ui.components.LogFilterChips
 import com.ae.log.ui.components.LogPaginationBar
 import com.ae.log.ui.components.LogScreenHeader
 import com.ae.log.ui.components.LogSearchBar
@@ -451,7 +450,14 @@ private fun SpreadsheetDataGrid(
 
                 // ── Horizontal Scroll Progress Track ─────────────────────
                 if (isScrollable) {
-                    val scrollRatio = if (hScroll.maxValue > 0) (hScroll.value.toFloat() / hScroll.maxValue.toFloat()).coerceIn(0f, 1f) else 0f
+                    val scrollRatio =
+                        if (hScroll.maxValue >
+                            0
+                        ) {
+                            (hScroll.value.toFloat() / hScroll.maxValue.toFloat()).coerceIn(0f, 1f)
+                        } else {
+                            0f
+                        }
                     BoxWithConstraints(
                         modifier =
                             Modifier
@@ -499,7 +505,11 @@ private fun Modifier.drawVerticalScrollbar(
                 (viewportHeight * (visibleItemsCount.toFloat() / totalItems.toFloat())).coerceAtLeast(28.dp.toPx())
             val maxScrollableItems = (totalItems.toFloat() - visibleItemsCount.toFloat()).coerceAtLeast(1f)
             val scrollFraction = (firstVisibleItem.index.toFloat() / maxScrollableItems).coerceIn(0f, 1f)
-            val thumbOffsetY = ((viewportHeight - thumbHeight) * scrollFraction).coerceIn(0f, viewportHeight - thumbHeight)
+            val thumbOffsetY =
+                ((viewportHeight - thumbHeight) * scrollFraction).coerceIn(
+                    0f,
+                    viewportHeight - thumbHeight,
+                )
 
             val trackX = size.width - 5.dp.toPx()
             val thumbWidth = 3.5.dp.toPx()

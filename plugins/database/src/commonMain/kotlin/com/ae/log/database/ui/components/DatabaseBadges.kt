@@ -74,4 +74,3 @@ internal fun ForeignKeyBadge(
         modifier = modifier,
     )
 }
-
