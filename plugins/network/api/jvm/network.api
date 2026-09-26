@@ -5,7 +5,7 @@ public final class com/ae/log/network/AELogNetworkKt {
 public final class com/ae/log/network/ComposableSingletons$NetworkPluginKt {
 	public static final field INSTANCE Lcom/ae/log/network/ComposableSingletons$NetworkPluginKt;
 	public fun <init> ()V
-	public final fun getLambda$-1069000656$network ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1069000656$io_github_abdo_essam_network ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/network/NetworkPlugin : com/ae/log/plugin/UIPlugin {

@@ -5,7 +5,7 @@ public final class com/ae/log/crashes/AELogCrashesKt {
 public final class com/ae/log/crashes/ComposableSingletons$CrashPluginKt {
 	public static final field INSTANCE Lcom/ae/log/crashes/ComposableSingletons$CrashPluginKt;
 	public fun <init> ()V
-	public final fun getLambda$-1345531803$crashes ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1345531803$io_github_abdo_essam_crashes ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/crashes/CrashPlugin : com/ae/log/plugin/UIPlugin {

@@ -5,7 +5,7 @@ public final class com/ae/log/logs/AELogLogsKt {
 public final class com/ae/log/logs/ComposableSingletons$LogPluginKt {
 	public static final field INSTANCE Lcom/ae/log/logs/ComposableSingletons$LogPluginKt;
 	public fun <init> ()V
-	public final fun getLambda$2032451677$logs ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2032451677$io_github_abdo_essam_logs ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/logs/LogPlugin : com/ae/log/logs/LogRecordSink, com/ae/log/plugin/UIPlugin {

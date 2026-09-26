@@ -44,7 +44,7 @@ public final class com/ae/log/analytics/AnalyticsTracker {
 public final class com/ae/log/analytics/ComposableSingletons$AnalyticsPluginKt {
 	public static final field INSTANCE Lcom/ae/log/analytics/ComposableSingletons$AnalyticsPluginKt;
 	public fun <init> ()V
-	public final fun getLambda$-891505320$analytics ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-891505320$io_github_abdo_essam_analytics ()Lkotlin/jvm/functions/Function2;
 }
 
 public abstract interface class com/ae/log/analytics/model/AdapterSource {

@@ -29,7 +29,7 @@ public final class com/ae/log/LogInspector {
 public final class com/ae/log/plugin/ComposableSingletons$UIPluginKt {
 	public static final field INSTANCE Lcom/ae/log/plugin/ComposableSingletons$UIPluginKt;
 	public fun <init> ()V
-	public final fun getLambda$-825088105$core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-825088105$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function2;
 }
 
 public abstract interface class com/ae/log/plugin/Plugin {
@@ -124,27 +124,27 @@ public final class com/ae/log/ui/AELogOverlayKt {
 public final class com/ae/log/ui/components/ComposableSingletons$LogHeaderKt {
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogHeaderKt;
 	public fun <init> ()V
-	public final fun getLambda$-229118979$core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-229118979$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$LogListKt {
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogListKt;
 	public fun <init> ()V
-	public final fun getLambda$-1227493028$core ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-1485173173$core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1227493028$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1485173173$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$LogScreenHeaderKt {
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogScreenHeaderKt;
 	public fun <init> ()V
-	public final fun getLambda$1275269579$core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1275269579$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/ui/components/ComposableSingletons$LogSearchBarKt {
 	public static final field INSTANCE Lcom/ae/log/ui/components/ComposableSingletons$LogSearchBarKt;
 	public fun <init> ()V
-	public final fun getLambda$-2063243949$core ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$671898765$core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-2063243949$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$671898765$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/ui/components/LogBadgeKt {
@@ -192,14 +192,14 @@ public final class com/ae/log/ui/components/LogSectionHeaderKt {
 public final class com/ae/log/ui/layout/ComposableSingletons$LogContentKt {
 	public static final field INSTANCE Lcom/ae/log/ui/layout/ComposableSingletons$LogContentKt;
 	public fun <init> ()V
-	public final fun getLambda$-16784565$core ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1742575306$core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-16784565$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1742575306$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/ui/layout/ComposableSingletons$SettingsContentKt {
 	public static final field INSTANCE Lcom/ae/log/ui/layout/ComposableSingletons$SettingsContentKt;
 	public fun <init> ()V
-	public final fun getLambda$-1467307761$core ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1467307761$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/ui/layout/overlay/BottomSheetOverlay : com/ae/log/ui/layout/overlay/OverlayStrategy {
@@ -211,7 +211,7 @@ public final class com/ae/log/ui/layout/overlay/BottomSheetOverlay : com/ae/log/
 public final class com/ae/log/ui/layout/overlay/ComposableSingletons$BottomSheetOverlayKt {
 	public static final field INSTANCE Lcom/ae/log/ui/layout/overlay/ComposableSingletons$BottomSheetOverlayKt;
 	public fun <init> ()V
-	public final fun getLambda$586721848$core ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$586721848$io_github_abdo_essam_core ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/ui/layout/overlay/DialogOverlay : com/ae/log/ui/layout/overlay/OverlayStrategy {

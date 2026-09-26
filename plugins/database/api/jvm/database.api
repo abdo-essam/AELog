@@ -6,7 +6,7 @@ public final class com/ae/log/database/AELogDatabaseKt {
 public final class com/ae/log/database/ComposableSingletons$DatabasePluginKt {
 	public static final field INSTANCE Lcom/ae/log/database/ComposableSingletons$DatabasePluginKt;
 	public fun <init> ()V
-	public final fun getLambda$-1031757371$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1031757371$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/database/DatabaseLogRecorder {
@@ -507,58 +507,58 @@ public final class com/ae/log/database/ui/DatabaseFormatUtils {
 public final class com/ae/log/database/ui/components/ComposableSingletons$DatabaseListScreenKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$DatabaseListScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$-1274040418$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-34537914$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-752847636$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$1104217488$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$1542918722$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$2134109725$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$601986905$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1274040418$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-34537914$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-752847636$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1104217488$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1542918722$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$2134109725$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$601986905$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/database/ui/components/ComposableSingletons$DatabaseLogsScreenKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$DatabaseLogsScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$-530688036$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$985536669$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-530688036$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$985536669$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/database/ui/components/ComposableSingletons$QueryEditorViewKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$QueryEditorViewKt;
 	public fun <init> ()V
-	public final fun getLambda$-1054612139$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-642944271$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1054612139$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-642944271$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/database/ui/components/ComposableSingletons$RowDetailsScreenKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$RowDetailsScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$-2063571827$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$1858353890$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$2137616953$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$426016804$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-2063571827$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1858353890$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$2137616953$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$426016804$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/database/ui/components/ComposableSingletons$TableSchemaViewKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$TableSchemaViewKt;
 	public fun <init> ()V
-	public final fun getLambda$-1328318697$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-708209184$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$269364924$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1328318697$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-708209184$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$269364924$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/ae/log/database/ui/components/ComposableSingletons$TablesListScreenKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$TablesListScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$-1982571673$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$165474494$database ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1898623329$database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1982571673$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$165474494$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1898623329$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/ae/log/database/ui/components/ComposableSingletons$WriteConfirmDialogKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$WriteConfirmDialogKt;
 	public fun <init> ()V
-	public final fun getLambda$-264644916$database ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-984856370$database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-264644916$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-984856370$io_github_abdo_essam_database ()Lkotlin/jvm/functions/Function3;
 }
 
