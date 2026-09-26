@@ -468,6 +468,17 @@ public final class com/ae/log/database/model/TableSchema$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class com/ae/log/database/ui/DatabaseFormatUtils {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/ae/log/database/ui/DatabaseFormatUtils;
+	public final fun formatBytes (J)Ljava/lang/String;
+	public final fun formatDatabaseLogForCopy (Lcom/ae/log/database/model/DatabaseLogEntry;)Ljava/lang/String;
+	public final fun formatDatabaseLogsForCopy (Ljava/util/List;)Ljava/lang/String;
+	public final fun formatTime (J)Ljava/lang/String;
+	public final fun rowToJson (Ljava/util/Map;)Ljava/lang/String;
+	public final fun rowToSqlInsert (Ljava/lang/String;Ljava/util/Map;)Ljava/lang/String;
+}
+
 public final class com/ae/log/database/ui/components/ComposableSingletons$DatabaseListScreenKt {
 	public static final field INSTANCE Lcom/ae/log/database/ui/components/ComposableSingletons$DatabaseListScreenKt;
 	public fun <init> ()V

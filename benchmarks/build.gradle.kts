@@ -25,6 +25,7 @@ kotlin {
                 implementation(project(":core"))
                 implementation(project(":plugins:logs"))
                 implementation(project(":plugins:network"))
+                implementation(project(":plugins:database"))
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(
                     "org.jetbrains.kotlinx:kotlinx-benchmark-runtime:${libs.versions.kotlinx.benchmark.get()}",

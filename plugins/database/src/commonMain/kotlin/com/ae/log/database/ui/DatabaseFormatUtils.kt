@@ -4,11 +4,11 @@ import com.ae.log.utils.TimeUtils
 
 private const val COMMA_SEPARATOR = ", "
 
-internal object DatabaseFormatUtils {
+public object DatabaseFormatUtils {
     /**
      * Formats bytes into human-readable size (e.g. "12.4 MB", "850 KB").
      */
-    fun formatBytes(bytes: Long): String {
+    public fun formatBytes(bytes: Long): String {
         if (bytes <= 0) return "0 B"
         val kb = bytes / 1024.0
         val mb = kb / 1024.0
@@ -24,7 +24,7 @@ internal object DatabaseFormatUtils {
     /**
      * Formats an epoch timestamp into time-of-day (HH:mm:ss AM/PM).
      */
-    fun formatTime(timestampMs: Long): String {
+    public fun formatTime(timestampMs: Long): String {
         if (timestampMs <= 0) return ""
         return TimeUtils.formatTimestamp(timestampMs)
     }
@@ -32,7 +32,7 @@ internal object DatabaseFormatUtils {
     /**
      * Formats a row map into pretty-printed JSON.
      */
-    fun rowToJson(row: Map<String, String?>): String =
+    public fun rowToJson(row: Map<String, String?>): String =
         buildString {
             appendLine("{")
             val entries = row.entries.toList()
@@ -57,7 +57,7 @@ internal object DatabaseFormatUtils {
     /**
      * Formats a row map into a standard SQL INSERT statement.
      */
-    fun rowToSqlInsert(
+    public fun rowToSqlInsert(
         tableName: String,
         row: Map<String, String?>,
     ): String {
@@ -78,7 +78,7 @@ internal object DatabaseFormatUtils {
     /**
      * Formats a single database log entry into a plain-text representation for clipboard copying.
      */
-    fun formatDatabaseLogForCopy(log: com.ae.log.database.model.DatabaseLogEntry): String =
+    public fun formatDatabaseLogForCopy(log: com.ae.log.database.model.DatabaseLogEntry): String =
         buildString {
             append("[${formatTime(log.timestamp)}] ")
             append("${log.operation} ")
@@ -93,6 +93,6 @@ internal object DatabaseFormatUtils {
     /**
      * Formats multiple database log entries into a plain-text representation for clipboard copying.
      */
-    fun formatDatabaseLogsForCopy(logs: List<com.ae.log.database.model.DatabaseLogEntry>): String =
+    public fun formatDatabaseLogsForCopy(logs: List<com.ae.log.database.model.DatabaseLogEntry>): String =
         logs.joinToString("\n\n") { formatDatabaseLogForCopy(it) }
 }
