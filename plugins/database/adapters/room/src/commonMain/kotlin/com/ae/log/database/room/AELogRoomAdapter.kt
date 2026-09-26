@@ -1,6 +1,5 @@
 package com.ae.log.database.room
 
-import androidx.room.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.SQLiteStatement
@@ -10,30 +9,16 @@ import com.ae.log.database.database
 private const val DEFAULT_DB_NAME = "app.db"
 
 /**
- * Extension on [RoomDatabase.Builder] to attach an AELog-monitored [SQLiteDriver].
+ * A delegating [SQLiteDriver] that intercepts and logs all executed SQL statements to AELog Database Logs.
  *
- * This works across all multiplatform targets supported by Room (Android, iOS, JVM).
+ * Works across all multiplatform targets supported by Room (Android, iOS, JVM, WasmJs).
  *
  * ### Usage:
  * ```kotlin
  * Room.databaseBuilder<AppDatabase>(name = dbFilePath)
- *     .setAELogDriver(BundledSQLiteDriver(), databaseName = "app.db")
+ *     .setDriver(AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db"))
  *     .build()
  * ```
- */
-public fun <T : RoomDatabase> RoomDatabase.Builder<T>.setAELogDriver(
-    driver: SQLiteDriver,
-    databaseName: String = DEFAULT_DB_NAME,
-): RoomDatabase.Builder<T> = setDriver(AELogSQLiteDriver(driver, databaseName))
-
-/**
- * Wraps this [SQLiteDriver] with AELog query logging.
- */
-public fun SQLiteDriver.withAELog(databaseName: String = DEFAULT_DB_NAME): SQLiteDriver =
-    AELogSQLiteDriver(this, databaseName)
-
-/**
- * A delegating [SQLiteDriver] that intercepts and logs all executed SQL statements to AELog Database Logs.
  */
 public class AELogSQLiteDriver(
     private val delegate: SQLiteDriver,

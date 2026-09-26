@@ -262,28 +262,35 @@ val supabase = createSupabaseClient(url, key) {
 
 AELog includes a powerful on-device Database Inspector with live query interception for **androidx.room**, **SQLDelight**, and **SQLite**.
 
-#### 1. Room & SQLite Driver Interceptor (`setAELogDriver`)
-To automatically intercept and log all SQL statements executed by your app in real-time, attach `setAELogDriver()` to your `RoomDatabase.Builder` or wrap your `SQLiteDriver` with `.withAELog()`:
+#### 1. Room & SQLite Driver Interceptor (`AELogSQLiteDriver`)
+To automatically intercept and log all SQL statements executed by your app in real-time across **Room**, **SQLDelight**, or raw **SQLite**, wrap your underlying `SQLiteDriver` with `AELogSQLiteDriver`:
 
 ```kotlin
 // 1. Room Database Integration (aelog-database-room):
 Room.databaseBuilder<AppDatabase>(name = dbFilePath)
-    .setAELogDriver(BundledSQLiteDriver(), databaseName = "app.db")
+    .setDriver(AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db"))
     .build()
 
-// 2. Raw SQLite / SQLDelight Integration (aelog-database):
-val driver = BundledSQLiteDriver().withAELog(databaseName = "app.db")
+// 2. SQLDelight Integration (aelog-database-room):
+val driver = AELogSQLiteDriver(
+    delegate = NativeSQLiteDriver(Database.Schema, "app.db"),
+    databaseName = "app.db"
+)
+val database = Database(driver)
+
+// 3. Raw SQLite Integration (aelog-database-room):
+val driver = AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db")
 ```
 
 #### 2. Auto-Discovery & Dependencies
 On Android and iOS, AELog also automatically scans application database directories to browse tables and schemas:
 
 ```kotlin
-// Room users (shared commonMain sourceSet)
-implementation("io.github.abdo-essam:ae-log-database-room:1.2.0")
+// Room & SQLite users (shared commonMain sourceSet)
+implementation("io.github.abdo-essam:ae-log-database-room:1.2.2")
 
-// SQLDelight / Raw SQLite users
-implementation("io.github.abdo-essam:ae-log-database:1.2.0")
+// General Database Inspector (without Room/SQLite driver interceptor)
+implementation("io.github.abdo-essam:ae-log-database:1.2.2")
 ```
 
 #### 3. Primary Database API (`AELog.database`)

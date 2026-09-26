@@ -95,7 +95,7 @@ class AELogRoomAdapterTest {
                 }
             }
 
-        val driver = fakeDriver.withAELog(TEST_DB_NAME)
+        val driver = AELogSQLiteDriver(fakeDriver, TEST_DB_NAME)
         val connection = driver.open(DB_FILE_PATH)
         assertTrue(openCalled)
 

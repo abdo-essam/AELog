@@ -70,7 +70,6 @@ internal enum class TablesTab(
 ) {
     LOGS("Logs"),
     TABLES("Tables"),
-    SCHEMA(SCHEMA_TAB_LABEL),
 }
 
 internal enum class TableDataTab(

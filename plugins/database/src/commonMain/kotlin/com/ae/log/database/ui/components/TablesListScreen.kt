@@ -183,15 +183,6 @@ internal fun TablesListScreen(
                 )
             }
 
-            TablesTab.SCHEMA -> {
-                DatabaseSchemaOverview(
-                    tables = tables,
-                    onSelectTable = { table ->
-                        viewModel.selectTable(db, table, navigate = true)
-                    },
-                )
-            }
-
             TablesTab.LOGS -> {
                 DatabaseLogsScreen(
                     viewModel = viewModel,
@@ -302,61 +293,6 @@ private fun TablesTabContent(
                     }
                 }
                 Spacer(Modifier.height(LogSpacing.x3))
-            }
-        }
-    }
-}
-
-@Composable
-private fun DatabaseSchemaOverview(
-    tables: List<DbTable>,
-    onSelectTable: (DbTable) -> Unit,
-) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = LogSpacing.x5, vertical = LogSpacing.x3),
-        verticalArrangement = Arrangement.spacedBy(LogSpacing.x3),
-    ) {
-        items(tables, key = { it.name }) { table ->
-            Card(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(LogDimens.cardCornerRadius))
-                        .clickable { onSelectTable(table) },
-                shape = RoundedCornerShape(LogDimens.cardCornerRadius),
-                colors = CardDefaults.cardColors(containerColor = LogTheme.colors.surface),
-            ) {
-                Column(modifier = Modifier.padding(LogSpacing.x4)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = table.name,
-                            style = LogTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = LogTheme.colors.onSurface,
-                        )
-                        Text(
-                            text = "${table.columns.size} columns",
-                            style = LogTheme.typography.labelSmall,
-                            color = LogTheme.colors.primary,
-                        )
-                    }
-
-                    if (table.columns.isNotEmpty()) {
-                        Spacer(Modifier.height(LogSpacing.x2))
-                        Text(
-                            text = table.columns.joinToString(", "),
-                            style = LogTheme.typography.bodySmall,
-                            fontFamily = FontFamily.Monospace,
-                            color = LogTheme.colors.onSurfaceVariant,
-                            lineHeight = 16.sp,
-                        )
-                    }
-                }
             }
         }
     }

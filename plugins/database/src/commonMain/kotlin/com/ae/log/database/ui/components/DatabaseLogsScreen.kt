@@ -508,7 +508,6 @@ private fun DatabaseLogItem(
                         if (entry.affectedRows != null) {
                             LogKeyValueItem(key = "Affected Rows", value = "${entry.affectedRows}")
                         }
-                        LogKeyValueItem(key = "SQL Query", value = entry.sql)
                         if (!entry.isSuccess && !entry.errorMessage.isNullOrBlank()) {
                             LogKeyValueItem(
                                 key = "Error Details",

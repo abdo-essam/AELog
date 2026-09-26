@@ -349,9 +349,9 @@ try {
         }
         if (state.features.database) {
             snippet += `// 5. Database Interceptor & Inspection
-// Attach driver adapter to RoomDatabase.Builder:
+// Pass AELogSQLiteDriver to RoomDatabase.Builder:
 Room.databaseBuilder<AppDatabase>(name = dbFilePath)
-    .setAELogDriver(BundledSQLiteDriver(), databaseName = "app.db")
+    .setDriver(AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db"))
     .build()
 
 // Or inspect programmatically:

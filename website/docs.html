@@ -429,23 +429,30 @@ val client = HttpClient {
 <h1>Database Inspector</h1>
 <p>AELog includes an on-device Database Inspector with live query interception for <strong>androidx.room</strong>, <strong>SQLDelight</strong>, and <strong>SQLite</strong> databases.</p>
 
-<h2>Room & SQLite Driver Interceptor (<code>setAELogDriver</code>)</h2>
-<p>To automatically intercept and log all SQL queries executed by your app in real-time, attach <code>setAELogDriver()</code> to your <code>RoomDatabase.Builder</code> or wrap your <code>SQLiteDriver</code> with <code>.withAELog()</code>:</p>
+<h2>Room & SQLite Driver Interceptor (<code>AELogSQLiteDriver</code>)</h2>
+<p>To automatically intercept and log all SQL queries executed by your app in real-time across <strong>Room</strong>, <strong>SQLDelight</strong>, or raw <strong>SQLite</strong>, wrap your underlying <code>SQLiteDriver</code> with <code>AELogSQLiteDriver</code>:</p>
 <pre><code class="language-kotlin">// 1. Room Database Integration (aelog-database-room):
 Room.databaseBuilder&lt;AppDatabase&gt;(name = dbFilePath)
-    .setAELogDriver(BundledSQLiteDriver(), databaseName = "app.db")
+    .setDriver(AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db"))
     .build()
 
-// 2. Raw SQLite / SQLDelight Integration (aelog-database):
-val driver = BundledSQLiteDriver().withAELog(databaseName = "app.db")</code></pre>
+// 2. SQLDelight Integration (aelog-database-room):
+val driver = AELogSQLiteDriver(
+    delegate = NativeSQLiteDriver(Database.Schema, "app.db"),
+    databaseName = "app.db"
+)
+val database = Database(driver)
+
+// 3. Raw SQLite Integration (aelog-database-room):
+val driver = AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db")</code></pre>
 
 <h2>Zero-Config Auto-Discovery</h2>
 <p>On Android and iOS, AELog automatically scans application database directories and registers existing databases without any manual setup code. Simply add the dependency:</p>
-<pre><code class="language-kotlin">// Room users (shared commonMain sourceSet)
-implementation("io.github.abdo-essam:ae-log-database-room:1.2.0")
+<pre><code class="language-kotlin">// Room & SQLite users (shared commonMain sourceSet)
+implementation("io.github.abdo-essam:ae-log-database-room:1.2.2")
 
-// SQLDelight / Raw SQLite / Custom users
-implementation("io.github.abdo-essam:ae-log-database:1.2.0")</code></pre>
+// General Database Inspector (without Room/SQLite driver interceptor)
+implementation("io.github.abdo-essam:ae-log-database:1.2.2")</code></pre>
 
 <h2>Primary API (<code>AELog.database</code>)</h2>
 <p>Interact with discovered databases, list tables, execute queries, and log app database transactions:</p>

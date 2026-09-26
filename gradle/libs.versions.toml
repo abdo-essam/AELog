@@ -3,11 +3,11 @@ agp = "9.3.3"
 
 kotlin = "2.4.20"
 compose-multiplatform = "1.9.3"
-android-compileSdk = "36"
+android-compileSdk = "37"
 android-minSdk = "24"
 kotlinx-datetime = "0.8.0"
 atomicfu = "0.33.0"
-ktor = "3.3.0"
+ktor = "3.6.0"
 coroutines = "1.11.0"
 dokka = "2.2.0"
 spotless = "8.10.0"
@@ -21,6 +21,7 @@ androidx-room = "2.8.5"
 runtime = "1.11.3"
 
 [libraries]
+androidx-sqlite = { module = "androidx.sqlite:sqlite", version = "2.7.1" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
