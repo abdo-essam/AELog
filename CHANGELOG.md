@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-09-26
+
+### Fixed
+- **Room Adapter KMP Metadata Fix**: Removed `@file:JvmName` and `@file:JvmMultifileClass` annotations from `commonMain` in `ae-log-database-room`, fixing Kotlin Multiplatform KLib metadata serialization (`0_room.knm`) so extension functions like `setAELogDriver` resolve cleanly in `commonMain` consumer code across all platforms.
+
 ## [1.2.1] - 2026-09-26
 
 ### Fixed
@@ -292,7 +297,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/abdo-essam/AELog/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/abdo-essam/AELog/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/abdo-essam/AELog/compare/v1.1.9...v1.2.0
 [1.1.9]: https://github.com/abdo-essam/AELog/compare/v1.1.8...v1.1.9

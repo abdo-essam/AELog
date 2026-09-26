@@ -1,6 +1,3 @@
-@file:JvmName("AELogRoomAdapter")
-@file:JvmMultifileClass
-
 package com.ae.log.database.room
 
 import androidx.room.RoomDatabase
@@ -9,8 +6,6 @@ import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.SQLiteStatement
 import com.ae.log.AELog
 import com.ae.log.database.database
-import kotlin.jvm.JvmMultifileClass
-import kotlin.jvm.JvmName
 
 private const val DEFAULT_DB_NAME = "app.db"
 
