@@ -108,8 +108,8 @@ public abstract interface class com/ae/log/database/inspector/DatabaseInspector 
 	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 	public abstract fun listDatabases ()Ljava/util/List;
 	public abstract fun listTables (Lcom/ae/log/database/model/DbInfo;)Ljava/util/List;
-	public abstract fun query (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;Z)Lcom/ae/log/database/model/QueryResult;
-	public static synthetic fun query$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;ZILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
+	public abstract fun query (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;ZZ)Lcom/ae/log/database/model/QueryResult;
+	public static synthetic fun query$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;ZZILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 	public fun registerDatabase (Lcom/ae/log/database/model/DbInfo;)V
 }
 
@@ -117,7 +117,7 @@ public final class com/ae/log/database/inspector/DatabaseInspector$DefaultImpls 
 	public static fun getSchema (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Lcom/ae/log/database/model/TableSchema;
 	public static fun getTableData (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;)Lcom/ae/log/database/model/QueryResult;
 	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
-	public static synthetic fun query$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;ZILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
+	public static synthetic fun query$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;Ljava/util/List;ZZILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
 	public static fun registerDatabase (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;)V
 }
 

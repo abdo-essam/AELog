@@ -38,6 +38,7 @@ class DatabasePluginTest {
             sql: String,
             args: List<String>,
             allowWrite: Boolean,
+            recordLog: Boolean,
         ): QueryResult {
             if (sql.startsWith("SELECT * FROM \"users\"")) {
                 return QueryResult.success(

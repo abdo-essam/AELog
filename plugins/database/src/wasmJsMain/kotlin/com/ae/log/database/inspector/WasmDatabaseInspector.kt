@@ -36,6 +36,7 @@ internal class WasmDatabaseInspector(
         sql: String,
         args: List<String>,
         allowWrite: Boolean,
+        recordLog: Boolean,
     ): QueryResult {
         try {
             validateSqlSafety(sql, allowWrite)

@@ -115,24 +115,25 @@ internal class IosDatabaseInspector(
         sql: String,
         args: List<String>,
         allowWrite: Boolean,
+        recordLog: Boolean,
     ): QueryResult {
         try {
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
             val err = QueryResult.error(e.message ?: "Write operation disallowed")
-            recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
+            if (recordLog) recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
             return err
         }
 
         if (!fileManager.fileExistsAtPath(dbInfo.path)) {
             val err = QueryResult.error("Database file not found: ${dbInfo.path}")
-            recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
+            if (recordLog) recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
             return err
         }
 
         if (dbInfo.isEncrypted && config.passphraseProvider?.getPassphrase(dbInfo.name) == null) {
             val err = QueryResult.error("Database is encrypted. Please configure a PassphraseProvider.")
-            recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
+            if (recordLog) recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
             return err
         }
 
@@ -141,7 +142,7 @@ internal class IosDatabaseInspector(
                 "SQLite runtime query engine is available on Android / JVM. " +
                     "On iOS, connect a custom DatabaseInspector or registered snapshot.",
             )
-        recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
+        if (recordLog) recordQueryLog(dbInfo.name, sql, 0L, false, err.errorMessage)
         return err
     }
 

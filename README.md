@@ -88,7 +88,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.2.0"
+aelog = "1.2.3"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -287,10 +287,10 @@ On Android and iOS, AELog also automatically scans application database director
 
 ```kotlin
 // Room & SQLite users (shared commonMain sourceSet)
-implementation("io.github.abdo-essam:ae-log-database-room:1.2.2")
+implementation("io.github.abdo-essam:ae-log-database-room:1.2.3")
 
 // General Database Inspector (without Room/SQLite driver interceptor)
-implementation("io.github.abdo-essam:ae-log-database:1.2.2")
+implementation("io.github.abdo-essam:ae-log-database:1.2.3")
 ```
 
 #### 3. Primary Database API (`AELog.database`)

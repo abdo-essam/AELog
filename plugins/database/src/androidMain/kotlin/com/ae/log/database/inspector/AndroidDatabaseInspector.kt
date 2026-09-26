@@ -225,12 +225,13 @@ internal class AndroidDatabaseInspector(
         sql: String,
         args: List<String>,
         allowWrite: Boolean,
+        recordLog: Boolean,
     ): QueryResult {
         try {
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
             val err = QueryResult.error(e.message ?: "Write operation disallowed")
-            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
+            if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -245,7 +246,7 @@ internal class AndroidDatabaseInspector(
         val db = openDatabase(dbInfo)
         if (db == null) {
             val err = QueryResult.error("Failed to open database: ${dbInfo.name}")
-            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
+            if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -303,7 +304,7 @@ internal class AndroidDatabaseInspector(
                 closeQuietly(db)
             }
 
-        if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
+        if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
             DatabaseLogRecorder.record(
                 databaseName = dbInfo.name,
                 sql = sql,

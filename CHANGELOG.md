@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-09-26
+
+### Fixed
+- **Database Inspector Log Duplication Fix**: Added `recordLog = false` parameter to internal Database Inspector queries (`getTableData()` and log card live data preview in `QueryDataPreview`), preventing expanded log entries and table browsing from generating duplicate records in Database Logs.
+
 ## [1.2.2] - 2026-09-26
 
 ### Fixed
@@ -297,7 +302,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.3...HEAD
+[1.2.3]: https://github.com/abdo-essam/AELog/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/abdo-essam/AELog/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/abdo-essam/AELog/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/abdo-essam/AELog/compare/v1.1.9...v1.2.0

@@ -49,6 +49,7 @@ class DatabaseEnhancementsTest {
             sql: String,
             args: List<String>,
             allowWrite: Boolean,
+            recordLog: Boolean,
         ): QueryResult {
             if (sql.contains("PRAGMA table_info(\"products\")")) {
                 return QueryResult.success(

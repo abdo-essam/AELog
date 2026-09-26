@@ -41,12 +41,14 @@ public interface DatabaseInspector {
      * @param sql The SQL statement.
      * @param args Bind arguments (optional).
      * @param allowWrite Whether write statements are permitted.
+     * @param recordLog Whether to record this query execution in DatabaseLogRecorder.
      */
     public fun query(
         dbInfo: DbInfo,
         sql: String,
         args: List<String> = emptyList(),
         allowWrite: Boolean = false,
+        recordLog: Boolean = true,
     ): QueryResult
 
     /**
@@ -190,6 +192,7 @@ public interface DatabaseInspector {
             dbInfo = dbInfo,
             sql = "SELECT * FROM $escapedTable$whereClause$orderClause LIMIT $limit OFFSET $offset",
             allowWrite = false,
+            recordLog = false,
         )
     }
 

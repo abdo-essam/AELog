@@ -93,6 +93,7 @@ internal class SampleIosDatabaseInspector(
         sql: String,
         args: List<String>,
         allowWrite: Boolean,
+        recordLog: Boolean,
     ): QueryResult {
         if (dbInfo.name == SAMPLE_DB_NAME || dbInfo.name == SHOP_SAMPLE_DB_NAME) {
             val clean = sql.trim().uppercase()
@@ -204,7 +205,7 @@ internal class SampleIosDatabaseInspector(
                     )
             }
         }
-        return delegate.query(dbInfo, sql, args, allowWrite)
+        return delegate.query(dbInfo, sql, args, allowWrite, recordLog)
     }
 
     private fun buildUsersQueryResult(sql: String): QueryResult {

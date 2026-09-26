@@ -91,12 +91,13 @@ internal class JvmDatabaseInspector(
         sql: String,
         args: List<String>,
         allowWrite: Boolean,
+        recordLog: Boolean,
     ): QueryResult {
         try {
             validateSqlSafety(sql, allowWrite)
         } catch (e: IllegalArgumentException) {
             val err = QueryResult.error(e.message ?: "Write operation disallowed")
-            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
+            if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -111,7 +112,7 @@ internal class JvmDatabaseInspector(
         val file = File(dbInfo.path)
         if (!file.exists()) {
             val err = QueryResult.error("Database file not found: ${dbInfo.path}")
-            if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
+            if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
                 com.ae.log.database.DatabaseLogRecorder.record(
                     databaseName = dbInfo.name,
                     sql = sql,
@@ -127,7 +128,7 @@ internal class JvmDatabaseInspector(
             QueryResult.error(
                 "JVM runtime database inspector requires JDBC or a custom DatabaseInspector implementation.",
             )
-        if (!sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
+        if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
             com.ae.log.database.DatabaseLogRecorder.record(
                 databaseName = dbInfo.name,
                 sql = sql,

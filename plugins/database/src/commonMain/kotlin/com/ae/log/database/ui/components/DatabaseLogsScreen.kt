@@ -548,7 +548,7 @@ private fun QueryDataPreview(
             val dbInfo = viewModel.databases.value.firstOrNull { it.name == databaseName }
             queryResult =
                 if (dbInfo != null) {
-                    viewModel.inspector.query(dbInfo, sql, allowWrite = false)
+                    viewModel.inspector.query(dbInfo, sql, allowWrite = false, recordLog = false)
                 } else {
                     null
                 }
