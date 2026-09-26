@@ -21,8 +21,11 @@ internal class AndroidDatabaseInspector(
     private val context: Context?,
     private val config: DatabasePluginConfig,
 ) : DatabaseInspector {
-    private val currentContext: Context?
-        get() = context ?: DatabaseAppContextHolder.context
+    private val currentContext: Context
+        get() =
+            requireNotNull(context ?: DatabaseAppContextHolder.context) {
+                "Android Context is not available. Ensure DatabasePluginInitializer is initialized."
+            }
 
     private val registeredDatabases = mutableListOf<DbInfo>()
 
@@ -36,69 +39,87 @@ internal class AndroidDatabaseInspector(
         val result = mutableListOf<DbInfo>()
         val ctx = currentContext
 
-        if (ctx != null) {
-            // 1. Scan context.databaseList()
-            ctx.databaseList()?.forEach { dbName ->
-                if (!isAuxiliaryFile(dbName)) {
-                    val dbFile = ctx.getDatabasePath(dbName)
-                    if (dbFile.exists() && dbFile.isFile && result.none { it.path == dbFile.absolutePath }) {
-                        result.add(buildDbInfo(dbFile))
-                    }
-                }
-            }
-
-            // 2. Scan databases directory directly
-            val databasesDir = ctx.getDatabasePath("probe").parentFile
-            if (databasesDir != null && databasesDir.exists() && databasesDir.isDirectory) {
-                databasesDir.listFiles()?.forEach { file ->
-                    if (file.isFile && !isAuxiliaryFile(file.name) && result.none { it.path == file.absolutePath }) {
-                        if (isSqliteFileOrHeader(file)) {
-                            result.add(buildDbInfo(file))
-                        }
-                    }
-                }
-            }
-
-            // 3. Scan filesDir and noBackupFilesDir (common for custom DB locations)
-            listOfNotNull(ctx.filesDir, ctx.noBackupFilesDir).forEach { dir ->
-                if (dir.exists() && dir.isDirectory) {
-                    dir.walkTopDown().maxDepth(2).forEach { file ->
-                        if (file.isFile &&
-                            !isAuxiliaryFile(file.name) &&
-                            result.none { it.path == file.absolutePath }
-                        ) {
-                            if (isSqliteFileOrHeader(file)) {
-                                result.add(buildDbInfo(file))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // 4. Scan additional search paths configured by user
-        config.additionalSearchPaths.forEach { searchPath ->
-            val dir = File(searchPath)
-            if (dir.exists() && dir.isDirectory) {
-                dir.walkTopDown().maxDepth(2).forEach { file ->
-                    if (file.isFile && !isAuxiliaryFile(file.name) && result.none { it.path == file.absolutePath }) {
-                        if (isSqliteFileOrHeader(file)) {
-                            result.add(buildDbInfo(file))
-                        }
-                    }
-                }
-            }
-        }
-
-        // 5. Include registered databases (only if they actually exist on disk)
-        registeredDatabases.forEach { reg ->
-            val file = File(reg.path)
-            if (file.exists() && file.isFile && result.none { it.path == reg.path }) {
-                result.add(buildDbInfo(file).copy(name = reg.name))
-            }
-        }
+        scanContextDatabaseList(ctx, result)
+        scanDatabasesDirectory(ctx, result)
+        scanAppStorageDirectories(ctx, result)
+        scanAdditionalSearchPaths(result)
+        includeRegisteredDatabases(result)
 
         return result
+    }
+
+    private fun tryAddDatabaseFile(
+        file: File,
+        result: MutableList<DbInfo>,
+        customName: String? = null,
+        checkHeader: Boolean = true,
+    ) {
+        if (!file.isFile || isAuxiliaryFile(file.name)) return
+        if (result.any { it.path == file.absolutePath }) return
+        if (checkHeader && !isSqliteFileOrHeader(file)) return
+
+        val info = buildDbInfo(file)
+        result.add(if (customName != null) info.copy(name = customName) else info)
+    }
+
+    private fun scanContextDatabaseList(
+        ctx: Context,
+        result: MutableList<DbInfo>,
+    ) {
+        ctx.databaseList()?.forEach { dbName ->
+            if (!isAuxiliaryFile(dbName)) {
+                val dbFile = ctx.getDatabasePath(dbName)
+                if (dbFile.exists()) {
+                    tryAddDatabaseFile(dbFile, result, checkHeader = false)
+                }
+            }
+        }
+    }
+
+    private fun scanDatabasesDirectory(
+        ctx: Context,
+        result: MutableList<DbInfo>,
+    ) {
+        val databasesDir = ctx.getDatabasePath("probe").parentFile ?: return
+        if (!databasesDir.exists() || !databasesDir.isDirectory) return
+
+        databasesDir.listFiles()?.forEach { file ->
+            tryAddDatabaseFile(file, result)
+        }
+    }
+
+    private fun scanAppStorageDirectories(
+        ctx: Context,
+        result: MutableList<DbInfo>,
+    ) {
+        listOfNotNull(ctx.filesDir, ctx.noBackupFilesDir).forEach { dir ->
+            scanDirectoryRecursively(dir, result)
+        }
+    }
+
+    private fun scanAdditionalSearchPaths(result: MutableList<DbInfo>) {
+        config.additionalSearchPaths.forEach { searchPath ->
+            scanDirectoryRecursively(File(searchPath), result)
+        }
+    }
+
+    private fun scanDirectoryRecursively(
+        dir: File,
+        result: MutableList<DbInfo>,
+    ) {
+        if (!dir.exists() || !dir.isDirectory) return
+        dir.walkTopDown().maxDepth(2).forEach { file ->
+            tryAddDatabaseFile(file, result)
+        }
+    }
+
+    private fun includeRegisteredDatabases(result: MutableList<DbInfo>) {
+        registeredDatabases.forEach { reg ->
+            val file = File(reg.path)
+            if (file.exists()) {
+                tryAddDatabaseFile(file, result, customName = reg.name, checkHeader = false)
+            }
+        }
     }
 
     private fun buildDbInfo(file: File): DbInfo {
