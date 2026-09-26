@@ -46,15 +46,16 @@
 ---
 
 <p align="center">
-  <img src="website/img/logs.png" width="165" alt="Logs Plugin" />
-  &nbsp;
-  <img src="website/img/network.png" width="165" alt="Network Plugin" />
-  &nbsp;
-  <img src="website/img/analytics.png" width="165" alt="Analytics Plugin" />
-  &nbsp;
-  <img src="website/img/crashes.png" width="165" alt="Crashes Plugin" />
-  &nbsp;
-  <img src="website/img/database.png" width="165" alt="Database Plugin" />
+  <img src="website/img/logs.png" width="200" alt="Logs Inspector" />
+  &nbsp;&nbsp;
+  <img src="website/img/network.png" width="200" alt="Network Viewer" />
+  &nbsp;&nbsp;
+  <img src="website/img/analytics.png" width="200" alt="Analytics Tracker" />
+</p>
+<p align="center">
+  <img src="website/img/crashes.png" width="200" alt="Crash Reporter" />
+  &nbsp;&nbsp;
+  <img src="website/img/database.png" width="200" alt="Database Inspector" />
 </p>
 
 ## ✨ Highlights
