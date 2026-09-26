@@ -19,7 +19,15 @@ const FADE_UP_SELECTOR = ".fade-up";
 const GLOW_ORB_SELECTOR = ".glow-orb";
 const NAVBAR_SELECTOR = ".navbar";
 
-document.addEventListener("DOMContentLoaded", () => {
+function onReady(fn) {
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", fn);
+    } else {
+        fn();
+    }
+}
+
+onReady(() => {
     // 0. Theme toggle — must run first to sync button icon state
     initTheme();
 
@@ -46,23 +54,32 @@ document.addEventListener("DOMContentLoaded", () => {
  * Scroll reveal animations for premium, modern look.
  */
 function initScrollAnimations() {
+    const fadeElements = document.querySelectorAll(FADE_UP_SELECTOR);
+    if (!fadeElements.length) return;
+
     const observerOptions = {
         root: null,
-        rootMargin: "0px",
-        threshold: 0.1
+        rootMargin: "50px",
+        threshold: 0.01
     };
 
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add("visible");
-                obs.unobserve(entry.target); // Run animation once, prevent redundant overhead
+                obs.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    const fadeElements = document.querySelectorAll(FADE_UP_SELECTOR);
-    fadeElements.forEach(el => observer.observe(el));
+    fadeElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+            el.classList.add("visible");
+        } else {
+            observer.observe(el);
+        }
+    });
 }
 
 /**
@@ -83,7 +100,6 @@ function initMouseGlowEffect() {
     });
 
     function animate() {
-        // Easing interpolation for butter-smooth movement
         targetX += (mouseX - targetX) * 0.05;
         targetY += (mouseY - targetY) * 0.05;
 
@@ -107,7 +123,6 @@ function initNavbarScroll() {
     const navbar = document.querySelector(NAVBAR_SELECTOR);
     if (!navbar) return;
 
-    // Separate concerns by toggling a CSS class instead of injecting inline styles directly
     window.addEventListener("scroll", () => {
         navbar.classList.toggle("scrolled", window.scrollY > NAVBAR_SCROLL_THRESHOLD);
     });
@@ -121,9 +136,8 @@ function initScrollSpy() {
     const navLinks = document.querySelectorAll(".nav-links .nav-link");
     if (!sections.length || !navLinks.length) return;
 
-    // Build a set of section IDs that have a corresponding nav link (or alias)
     const SECTION_NAV_MAP = {
-        "docs-showcase": "docs.html", // alias: home docs section → docs nav link
+        "docs-showcase": "docs.html",
     };
 
     const observerOptions = {
@@ -138,7 +152,6 @@ function initScrollSpy() {
 
             const activeId = entry.target.getAttribute("id");
 
-            // Check if this section maps to any nav link at all
             const hasNavMatch = Array.from(navLinks).some(link => {
                 const href = link.getAttribute("href") || "";
                 const alias = SECTION_NAV_MAP[activeId];
@@ -147,10 +160,8 @@ function initScrollSpy() {
                     || href.endsWith(`#${activeId}`);
             });
 
-            // If no nav link maps to this section (e.g. #developer), keep current state intact
             if (!hasNavMatch) return;
 
-            // Otherwise, update active state across all links
             navLinks.forEach(link => {
                 const href = link.getAttribute("href") || "";
                 const alias = SECTION_NAV_MAP[activeId];
@@ -165,11 +176,9 @@ function initScrollSpy() {
 
     sections.forEach(section => observer.observe(section));
 
-    // Clear all highlights when scrolled back to the very top (Hero)
     window.addEventListener("scroll", () => {
         if (window.scrollY < 120) {
             navLinks.forEach(link => link.classList.remove("nav-link-active"));
         }
     });
 }
-

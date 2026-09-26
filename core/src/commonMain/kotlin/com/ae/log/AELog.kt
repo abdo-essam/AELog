@@ -38,7 +38,7 @@ public object AELog {
             instanceAtomic.value
                 ?: run {
                     val new = LogInspector()
-                    if (instanceAtomic.compareAndSet(null, new)) new else instanceAtomic.value!!
+                    if (instanceAtomic.compareAndSet(null, new)) new else requireNotNull(instanceAtomic.value)
                 }
         inspector.plugins.install(plugin)
     }

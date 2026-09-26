@@ -39,11 +39,11 @@
     <nav class="navbar glass">
         <div class="container nav-container">
             <a href="index.html" class="logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="10.5" cy="10.5" r="7.5"></circle>
-                    <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
-                    <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-                    <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10.5" cy="10.5" r="6.5" stroke-width="2.2"></circle>
+                    <line x1="20" y1="20" x2="15.2" y2="15.2" stroke-width="2.2"></line>
+                    <path d="M 7.5 9 L 9.5 10.5 L 7.5 12" stroke-width="1.8" stroke="#38BDF8"></path>
+                    <line x1="11" y1="12" x2="13" y2="12" stroke-width="1.8" stroke="#10B981"></line>
                 </svg>
                 <span class="logo-text">AELog</span>
             </a>
@@ -97,6 +97,7 @@
                 <h4>Core Configuration</h4>
                 <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
                 <a class="docs-nav-link" data-section="network-interceptors" href="#network-interceptors">Network Interceptors</a>
+                <a class="docs-nav-link" data-section="database-inspector" href="#database-inspector">Database Inspector</a>
             </div>
 
             <!-- Logical Category Group Sidebar: Plugins & Architecture -->
@@ -116,11 +117,11 @@
         <main class="docs-content fade-up visible">
             <div id="introduction" class="docs-section active">
 <h1 style="display: flex; align-items: center; gap: 12px;">
-    <svg class="logo-icon" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;">
-        <circle cx="10.5" cy="10.5" r="7.5"></circle>
-        <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
-        <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-        <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+    <svg class="logo-icon" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;">
+        <circle cx="10.5" cy="10.5" r="6.5" stroke-width="2.2"></circle>
+        <line x1="20" y1="20" x2="15.2" y2="15.2" stroke-width="2.2"></line>
+        <path d="M 7.5 9 L 9.5 10.5 L 7.5 12" stroke-width="1.8" stroke="#38BDF8"></path>
+        <line x1="11" y1="12" x2="13" y2="12" stroke-width="1.8" stroke="#10B981"></line>
     </svg>
     AELog
 </h1>
@@ -167,17 +168,21 @@
 <td><code>CrashPlugin</code></td>
 <td>Intercepts, records and persists fatal and non-fatal exceptions on device</td>
 </tr>
+<tr>
+<td><code>DatabasePlugin</code></td>
+<td>Inspects SQLite databases, Room tables, schemas, and interactive SQL queries</td>
+</tr>
 </tbody></table>
-<p>You can write your own plugins for anything else (database inspector, feature flag toggler, etc.).</p>
 <h2>Features</h2>
 <ul class="clean-bullet-list" style="margin: 20px 0 20px 24px; padding-left: 0; line-height: 1.8; color: var(--color-text-secondary); display: flex; flex-direction: column; gap: 8px;">
   <li><strong>Log Viewer</strong> — Real-time log inspection with severity filtering</li>
   <li><strong>Network Inspector</strong> — Detailed view of HTTP traffic and JSON payloads</li>
   <li><strong>Analytics Tracker</strong> — Monitor properties across app flow</li>
   <li><strong>Crash Reporter</strong> — Capture and persist fatal and non-fatal exceptions on device</li>
+  <li><strong>Database Inspector</strong> — Auto-discover databases, browse tables, search rows, and execute SQL queries on-device</li>
   <li><strong>Plugin System</strong> — Easily extend with custom decoupled <code>UIPlugin</code> or headless <code>Plugin</code></li>
   <li><strong>Compose UI</strong> — Material 3 themed overlay with dark/light mode support</li>
-  <li><strong>Multiplatform</strong> — Works seamlessly across Android, iOS, and Desktop</li>
+  <li><strong>Multiplatform</strong> — Works seamlessly across Android, iOS, Desktop (JVM), and WebAssembly (WasmJs)</li>
 </ul>
 <h2>Quick Links</h2>
 <ul>
@@ -207,12 +212,20 @@
 <td>15.0</td>
 </tr>
 <tr>
+<td>Desktop (JVM)</td>
+<td>Java 11+</td>
+</tr>
+<tr>
+<td>Web (WasmJs)</td>
+<td>Browser with WebAssembly support</td>
+</tr>
+<tr>
 <td>Kotlin</td>
-<td>2.2.0</td>
+<td>2.3.20</td>
 </tr>
 <tr>
 <td>Compose Multiplatform</td>
-<td>1.7.3</td>
+<td>1.9.3</td>
 </tr>
 </tbody></table>
 <h2>Installation</h2>
@@ -225,22 +238,24 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.1.9"
+aelog = "1.2.0"
 
 [libraries]
-aelog-logs      = { module = "io.github.abdo-essam:ae-log-logs", version.ref = "aelog" }
-aelog-network   = { module = "io.github.abdo-essam:ae-log-network", version.ref = "aelog" }
-aelog-analytics = { module = "io.github.abdo-essam:ae-log-analytics", version.ref = "aelog" }
-aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref = "aelog" }</code></pre>
+aelog-logs          = { module = "io.github.abdo-essam:ae-log-logs",          version.ref = "aelog" }
+aelog-network-ktor  = { module = "io.github.abdo-essam:ae-log-network-ktor",  version.ref = "aelog" }
+aelog-analytics     = { module = "io.github.abdo-essam:ae-log-analytics",     version.ref = "aelog" }
+aelog-crashes       = { module = "io.github.abdo-essam:ae-log-crashes",       version.ref = "aelog" }
+aelog-database-room = { module = "io.github.abdo-essam:ae-log-database-room", version.ref = "aelog" }</code></pre>
 
     <div class="code-file-label">shared/build.gradle.kts</div>
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.aelog.logs)
-            implementation(libs.aelog.network)
+            implementation(libs.aelog.network.ktor)
             implementation(libs.aelog.analytics)
             implementation(libs.aelog.crashes)
+            implementation(libs.aelog.database.room)
         }
     }
 }</code></pre>
@@ -251,10 +266,11 @@ aelog-crashes   = { module = "io.github.abdo-essam:ae-log-crashes", version.ref 
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-implementation("io.github.abdo-essam:ae-log-logs:1.1.9")
-            implementation("io.github.abdo-essam:ae-log-network:1.1.9")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.1.9")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.1.9")
+            implementation("io.github.abdo-essam:ae-log-logs:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-network-ktor:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.2.0")
+            implementation("io.github.abdo-essam:ae-log-database-room:1.2.0")
         }
     }
 }</code></pre>
@@ -408,6 +424,61 @@ val client = HttpClient {
     .addInterceptor(AELogOkHttpInterceptor())
     .build()</code></pre>
 </div>
+
+<div id="database-inspector" class="docs-section">
+<h1>Database Inspector</h1>
+<p>AELog includes an on-device Database Inspector with live query interception for <strong>androidx.room</strong>, <strong>SQLDelight</strong>, and <strong>SQLite</strong> databases.</p>
+
+<h2>Room & SQLite Driver Interceptor (<code>setAELogDriver</code>)</h2>
+<p>To automatically intercept and log all SQL queries executed by your app in real-time, attach <code>setAELogDriver()</code> to your <code>RoomDatabase.Builder</code> or wrap your <code>SQLiteDriver</code> with <code>.withAELog()</code>:</p>
+<pre><code class="language-kotlin">// 1. Room Database Integration (aelog-database-room):
+Room.databaseBuilder&lt;AppDatabase&gt;(name = dbFilePath)
+    .setAELogDriver(BundledSQLiteDriver(), databaseName = "app.db")
+    .build()
+
+// 2. Raw SQLite / SQLDelight Integration (aelog-database):
+val driver = BundledSQLiteDriver().withAELog(databaseName = "app.db")</code></pre>
+
+<h2>Zero-Config Auto-Discovery</h2>
+<p>On Android and iOS, AELog automatically scans application database directories and registers existing databases without any manual setup code. Simply add the dependency:</p>
+<pre><code class="language-kotlin">// Room users (shared commonMain sourceSet)
+implementation("io.github.abdo-essam:ae-log-database-room:1.2.0")
+
+// SQLDelight / Raw SQLite / Custom users
+implementation("io.github.abdo-essam:ae-log-database:1.2.0")</code></pre>
+
+<h2>Primary API (<code>AELog.database</code>)</h2>
+<p>Interact with discovered databases, list tables, execute queries, and log app database transactions:</p>
+<pre><code class="language-kotlin">// List discovered databases
+val databases = AELog.database.listDatabases()
+
+// Browse database tables
+val tables = AELog.database.listTables(dbName = "app.db")
+
+// Execute interactive SQL queries
+val result = AELog.database.query(
+    dbName = "app.db",
+    sql = "SELECT * FROM users WHERE active = 1"
+)
+
+// Log app database queries to inspector
+AELog.database.logQuery(
+    databaseName = "app.db",
+    sql = "SELECT * FROM orders WHERE total > 100",
+    durationMs = 3L
+)</code></pre>
+
+<h2>Custom Configuration (<code>DatabasePluginConfig</code>)</h2>
+<p>Customize security policies, write permissions, page sizes, and busy timeouts:</p>
+<pre><code class="language-kotlin">val dbConfig = DatabasePluginConfig(
+    allowWrite = true,         // Enable INSERT, UPDATE, DELETE execution (default: false read-only)
+    defaultPageSize = 100,     // Rows per page when browsing table data
+    busyTimeoutMs = 5000L      // SQLite busy timeout in WAL mode
+)
+
+// Re-install DatabasePlugin with custom config
+AELog.install(DatabasePlugin(config = dbConfig))</code></pre>
+</div>
 <div id="plugins-overview" class="docs-section ">
 <h1>Plugins Overview</h1>
 <p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host — plugins are what make it useful.</p>
@@ -456,23 +527,28 @@ val client = HttpClient {
 <div class="plugin-screenshot-grid">
     <div class="screenshot-card">
         <h4>Logs Inspector</h4>
-        <img src="img/aelog_logs.png" alt="AELog Logs Plugin UI" />
+        <img src="img/logs.png" alt="AELog Logs Plugin UI" />
         <p>Browse console output with search capabilities and filter logs by severity level.</p>
     </div>
     <div class="screenshot-card">
         <h4>Network Inspector</h4>
-        <img src="img/aelog_network.png" alt="AELog Network Plugin UI" />
+        <img src="img/network.png" alt="AELog Network Plugin UI" />
         <p>Inspect Ktor and OkHttp HTTP request/response payloads, status codes, and headers.</p>
     </div>
     <div class="screenshot-card">
         <h4>Analytics Tracker</h4>
-        <img src="img/aelog_analytics.png" alt="AELog Analytics Plugin UI" />
+        <img src="img/analytics.png" alt="AELog Analytics Plugin UI" />
         <p>View analytics events, screen views, and user property parameters as they trigger in real-time.</p>
     </div>
     <div class="screenshot-card">
         <h4>Crash Reporter</h4>
-        <img src="img/aelog_crashes.png" alt="AELog Crash Plugin UI" />
+        <img src="img/crashes.png" alt="AELog Crash Plugin UI" />
         <p>Review local fatal stack traces and persisted exception reports directly on the test device.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Database Inspector</h4>
+        <img src="img/database.png" alt="AELog Database Inspector UI" />
+        <p>Auto-discover SQLite/Room databases, browse tables, view schemas, and run live SQL queries.</p>
     </div>
 </div>
 <h2>Plugin Types</h2>
@@ -853,6 +929,25 @@ AELog.log.e("Auth", "Login failed", error)
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone -9: v1.2.0 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.2.0 <span class="timeline-date">— September 26, 2026</span></h3>
+
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Database Inspector Plugin (<code>plugins:database</code>):</strong> On-device SQLite database inspection for Compose Multiplatform (Android, iOS, JVM, WasmJs) with auto-discovery, table list, schema browser, paginated data grid, and interactive SQL console.</li>
+                            <li><strong>Room Database Adapter (<code>plugins:database:adapters:room</code>):</strong> <code>AELogRoomAdapter</code> for direct integration with <code>androidx.room</code> databases.</li>
+                            <li><strong>Movable Floating Notch View:</strong> Freeform 2D dragging for the notch button anywhere on screen with position retention across overlay open/close actions.</li>
+                            <li><strong>Modern Navigation & UI Components:</strong> Material 3 underline tabs, solid filter chips without ripples, and vertical scrollbars.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
                 </div>
 
                 <!-- Milestone -8: v1.1.9 -->

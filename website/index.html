@@ -51,11 +51,11 @@
     <nav class="navbar glass">
         <div class="container nav-container">
             <a href="#" class="logo">
-                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="10.5" cy="10.5" r="7.5"></circle>
-                    <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
-                    <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-                    <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+                <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10.5" cy="10.5" r="6.5" stroke-width="2.2"></circle>
+                    <line x1="20" y1="20" x2="15.2" y2="15.2" stroke-width="2.2"></line>
+                    <path d="M 7.5 9 L 9.5 10.5 L 7.5 12" stroke-width="1.8" stroke="#38BDF8"></path>
+                    <line x1="11" y1="12" x2="13" y2="12" stroke-width="1.8" stroke="#10B981"></line>
                 </svg>
                 <span class="logo-text">AELog</span>
             </a>
@@ -94,7 +94,7 @@
             <div class="hero-content fade-up">
                 <div class="badge glass-subtle pill">
                     <span class="badge-dot"></span>
-                    v1.1.9 is now live for KMP & Android
+                    v1.2.0 is now live for KMP & Android
                 </div>
                 <h1 class="display-xxl hero-title">
                     See more.<br>
@@ -145,10 +145,11 @@
             </div>
             <div class="hero-visual fade-up delay-1">
                 <div class="mobile-frame">
-                    <img src="img/aelog_analytics.png" alt="AELog Analytics" class="mobile-screenshot">
-                    <img src="img/aelog_crashes.png" alt="AELog Crashes" class="mobile-screenshot">
-                    <img src="img/aelog_network.png" alt="AELog Network" class="mobile-screenshot">
-                    <img src="img/aelog_logs.png" alt="AELog Logs" class="mobile-screenshot active">
+                    <img src="img/database.png" alt="AELog Database Inspector" class="mobile-screenshot">
+                    <img src="img/analytics.png" alt="AELog Analytics" class="mobile-screenshot">
+                    <img src="img/crashes.png" alt="AELog Crashes" class="mobile-screenshot">
+                    <img src="img/network.png" alt="AELog Network" class="mobile-screenshot">
+                    <img src="img/logs.png" alt="AELog Logs" class="mobile-screenshot active">
                     <div class="glow-border"></div>
                 </div>
             </div>
@@ -388,6 +389,20 @@
                             <span class="card-desc">Persisted uncaught exception logs</span>
                         </div>
                     </div>
+
+                    <!-- Database Choice -->
+                    <div class="selection-card" data-feature="database">
+                        <div class="card-checkbox">
+                            <input type="checkbox" id="feature-database" />
+                        </div>
+                        <div class="card-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-title">Database Inspector</span>
+                            <span class="card-desc">SQLite & Room table browser & query runner</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -550,26 +565,24 @@ AELog.launchViewer(activity)</code></pre>
                         <path d="M 150 315 C 210 315, 220 364, 315 364" stroke="url(#lineGrad)" filter="url(#glow)" marker-start="url(#arrow)" marker-end="url(#arrow)" />
 
                         <!-- Core to Plugins -->
-                        <path d="M 450 260 L 550 90" marker-end="url(#arrow)" />
-                        <path d="M 450 290 L 550 180" marker-end="url(#arrow)" />
-                        <path d="M 450 310 L 550 270" marker-end="url(#arrow)" />
-                        <path d="M 450 340 L 550 360" marker-end="url(#arrow)" />
+                        <path d="M 450 240 L 550 75" marker-end="url(#arrow)" />
+                        <path d="M 450 265 L 550 145" marker-end="url(#arrow)" />
+                        <path d="M 450 290 L 550 215" marker-end="url(#arrow)" />
+                        <path d="M 450 315 L 550 285" marker-end="url(#arrow)" />
+                        <path d="M 450 340 L 550 355" marker-end="url(#arrow)" />
 
                         <!-- Plugins to Storage (Dashed mappings based on Storage type) -->
-                        <!-- In-Memory Storage mapping -->
-                        <path d="M 700 90 C 740 90, 760 140, 800 140" stroke-dasharray="4,4"
-                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
-                        <path d="M 700 270 C 740 270, 760 180, 800 180" stroke-dasharray="4,4"
-                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
-                        <path d="M 700 360 C 740 360, 760 210, 800 210" stroke-dasharray="4,4"
-                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+                        <!-- In-Memory RAM Storage mappings -->
+                        <path d="M 700 75 C 740 75, 760 120, 800 120" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+                        <path d="M 700 215 C 740 215, 760 140, 800 140" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+                        <path d="M 700 355 C 740 355, 760 160, 800 160" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
 
-                        <!-- Persistent Storage mapping -->
-                        <path d="M 700 180 C 740 180, 760 380, 800 380" stroke-dasharray="4,4"
-                            stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+                        <!-- Persistent Disk Storage mappings -->
+                        <path d="M 700 145 C 740 145, 760 360, 800 360" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
+                        <path d="M 700 285 C 740 285, 760 380, 800 380" stroke-dasharray="4,4" stroke="rgba(255,255,255,0.4)" marker-end="url(#arrow)" />
 
                         <!-- Interceptors to NetworkPlugin -->
-                        <path d="M 625 460 L 625 396" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow)" />
+                        <path d="M 625 460 L 625 385" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#arrow)" />
                     </g>
 
                     <!-- Network Subsystem Bounding Box -->
@@ -598,30 +611,36 @@ AELog.launchViewer(activity)</code></pre>
                         <rect width="150" height="200" rx="16" class="node-border" />
                     </g>
 
-                    <!-- Plugins (Height adjusted to 60px for compact layout without UIPlugin text) -->
-                    <g class="node interactive-node" transform="translate(550, 60)" data-arch="logs">
-                        <rect width="150" height="60" rx="12" class="node-bg" />
-                        <text x="75" y="26" text-anchor="middle" class="node-title">LogPlugin</text>
-                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-logs</text>
-                        <rect width="150" height="60" rx="12" class="node-border" />
+                    <!-- Plugins -->
+                    <g class="node interactive-node" transform="translate(550, 50)" data-arch="logs">
+                        <rect width="150" height="50" rx="12" class="node-bg" />
+                        <text x="75" y="22" text-anchor="middle" class="node-title">LogPlugin</text>
+                        <text x="75" y="38" text-anchor="middle" class="node-subtitle">ae-log-logs</text>
+                        <rect width="150" height="50" rx="12" class="node-border" />
                     </g>
-                    <g class="node interactive-node" transform="translate(550, 150)" data-arch="crashes">
-                        <rect width="150" height="60" rx="12" class="node-bg" />
-                        <text x="75" y="26" text-anchor="middle" class="node-title">CrashPlugin</text>
-                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-crashes</text>
-                        <rect width="150" height="60" rx="12" class="node-border" />
+                    <g class="node interactive-node" transform="translate(550, 120)" data-arch="crashes">
+                        <rect width="150" height="50" rx="12" class="node-bg" />
+                        <text x="75" y="22" text-anchor="middle" class="node-title">CrashPlugin</text>
+                        <text x="75" y="38" text-anchor="middle" class="node-subtitle">ae-log-crashes</text>
+                        <rect width="150" height="50" rx="12" class="node-border" />
                     </g>
-                    <g class="node interactive-node" transform="translate(550, 240)" data-arch="analytics">
-                        <rect width="150" height="60" rx="12" class="node-bg" />
-                        <text x="75" y="26" text-anchor="middle" class="node-title">AnalyticsPlugin</text>
-                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-analytics</text>
-                        <rect width="150" height="60" rx="12" class="node-border" />
+                    <g class="node interactive-node" transform="translate(550, 190)" data-arch="analytics">
+                        <rect width="150" height="50" rx="12" class="node-bg" />
+                        <text x="75" y="22" text-anchor="middle" class="node-title">AnalyticsPlugin</text>
+                        <text x="75" y="38" text-anchor="middle" class="node-subtitle">ae-log-analytics</text>
+                        <rect width="150" height="50" rx="12" class="node-border" />
+                    </g>
+                    <g class="node interactive-node" transform="translate(550, 260)" data-arch="database">
+                        <rect width="150" height="50" rx="12" class="node-bg" />
+                        <text x="75" y="22" text-anchor="middle" class="node-title">DatabasePlugin</text>
+                        <text x="75" y="38" text-anchor="middle" class="node-subtitle">ae-log-database</text>
+                        <rect width="150" height="50" rx="12" class="node-border" />
                     </g>
                     <g class="node interactive-node network-highlight" transform="translate(550, 330)" data-arch="network">
-                        <rect width="150" height="60" rx="12" class="node-bg" />
-                        <text x="75" y="26" text-anchor="middle" class="node-title">NetworkPlugin</text>
-                        <text x="75" y="44" text-anchor="middle" class="node-subtitle">ae-log-network</text>
-                        <rect width="150" height="60" rx="12" class="node-border" />
+                        <rect width="150" height="50" rx="12" class="node-bg" />
+                        <text x="75" y="22" text-anchor="middle" class="node-title">NetworkPlugin</text>
+                        <text x="75" y="38" text-anchor="middle" class="node-subtitle">ae-log-network</text>
+                        <rect width="150" height="50" rx="12" class="node-border" />
                     </g>
 
                     <!-- Two Types of Storage (Clearly Segmented) -->
@@ -854,11 +873,11 @@ AELog.showNotch = false</code></pre>
             <div class="footer-grid">
                 <div class="footer-brand">
                     <a href="#" class="logo">
-                        <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="10.5" cy="10.5" r="7.5"></circle>
-                            <circle cx="10.5" cy="10.5" r="1.5" fill="currentColor"></circle>
-                            <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-                            <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+                        <svg class="logo-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="10.5" cy="10.5" r="6.5" stroke-width="2.2"></circle>
+                            <line x1="20" y1="20" x2="15.2" y2="15.2" stroke-width="2.2"></line>
+                            <path d="M 7.5 9 L 9.5 10.5 L 7.5 12" stroke-width="1.8" stroke="#38BDF8"></path>
+                            <line x1="11" y1="12" x2="13" y2="12" stroke-width="1.8" stroke="#10B981"></line>
                         </svg>
                         <span class="logo-text">AELog</span>
                     </a>

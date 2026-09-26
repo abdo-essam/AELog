@@ -42,5 +42,5 @@ internal fun normaliseClassName(rawClassName: String): String {
         } else {
             firstPart
         }.removeSuffix("Kt")
-    return tag.ifBlank { null } ?: "AELog"
+    return tag.ifBlank { "AELog" }
 }

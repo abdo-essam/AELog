@@ -6,7 +6,7 @@
  */
 
 // ── Version ────────────────────────────────────────────────────────────────
-export const AELOG_VERSION = "1.1.9";
+export const AELOG_VERSION = "1.2.0";
 
 // ── Dependency Snippets (Step 1 of setup guide) ────────────────────────────
 export const DEP_SNIPPETS = {
@@ -37,7 +37,19 @@ commonMain.dependencies {
     implementation("io.github.abdo-essam:ae-log-crashes:${AELOG_VERSION}")
 }`,
 
-    full: `// Full stack: Logs + Network (Ktor) + Analytics + Crashes
+    database: `// Database Inspector (Raw SQLite / SQLDelight / Custom)
+// Includes ae-log-database and ae-log-core transitively
+commonMain.dependencies {
+    implementation("io.github.abdo-essam:ae-log-database:${AELOG_VERSION}")
+}`,
+
+    "database-room": `// Database Inspector with Room support
+// Includes ae-log-database and ae-log-core transitively
+commonMain.dependencies {
+    implementation("io.github.abdo-essam:ae-log-database-room:${AELOG_VERSION}")
+}`,
+
+    full: `// Full stack: Logs + Network (Ktor) + Analytics + Crashes + Database (Room)
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -45,6 +57,7 @@ kotlin {
             implementation("io.github.abdo-essam:ae-log-network-ktor:${AELOG_VERSION}")
             implementation("io.github.abdo-essam:ae-log-analytics:${AELOG_VERSION}")
             implementation("io.github.abdo-essam:ae-log-crashes:${AELOG_VERSION}")
+            implementation("io.github.abdo-essam:ae-log-database-room:${AELOG_VERSION}")
         }
         androidMain.dependencies {
             // Optional: add only if your Android target also uses OkHttp
@@ -125,14 +138,24 @@ AELog.analytics.logEvent(
 // Log a screen view
 AELog.analytics.logScreen("HomeScreen")`,
     },
+    database: {
+        badge: "ae-log-database",
+        title: "DatabasePlugin",
+        desc: "Auto-discovers SQLite databases across platforms (Android, iOS sandbox, JVM, Wasm). Browse tables, inspect schemas, sort columns, execute interactive SQL queries, and integrate with Room via AELogRoomAdapter.",
+        code: `// Auto-discovery or Room database inspection
+AELog.database.listDatabases()
+
+// Query tables or inspect schemas:
+val tables = AELog.database.listTables("app.db")
+val result = AELog.database.query("app.db", "SELECT * FROM users LIMIT 10")`,
+    },
     ui: {
         badge: "Presentation Layer",
         title: "UI Overlay",
-        desc: "The rendering overlay displaying the floating notch trigger and full inspector panel. Written entirely in Jetpack Compose Multiplatform for seamless cross-platform performance.",
+        desc: "The rendering overlay displaying the movable floating notch trigger and full inspector panel. Written entirely in Jetpack Compose Multiplatform for seamless cross-platform performance.",
         code: `// Overlay sits at the root of your UI tree
 AELogOverlay(
-    showNotch = true,
-    initialTheme = Theme.Dark
+    showNotch = true
 )`,
     },
     ram: {
@@ -162,4 +185,3 @@ val client = HttpClient {
 }`,
     },
 };
-

@@ -1,10 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Outer glass lens loop -->
-    <circle cx="10.5" cy="10.5" r="7.5"></circle>
-    <!-- Center aperture node -->
-    <circle cx="10.5" cy="10.5" r="1.5" fill="#3b82f6"></circle>
-    <!-- Magnifying glass handle -->
-    <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-    <!-- Shine reflection highlight -->
-    <path d="M10.5 3a7.5 7.5 0 0 1 5.3 2.2" stroke-width="1.5" opacity="0.7"></path>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+
+    <!-- Main Accent Gradient (Kotlin Blue to Purple) -->
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="50%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+
+    <!-- Cyan Glow Accent -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+
+    <!-- Success Emerald -->
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+
+  <!-- Container Rounded Glass Badge -->
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#bgGrad)" stroke="url(#primaryGrad)" stroke-width="3" />
+
+  <!-- Outer Glass Lens Ring -->
+  <circle cx="58" cy="58" r="30" fill="none" stroke="url(#primaryGrad)" stroke-width="6.5" stroke-linecap="round" />
+
+  <!-- Glass Lens Highlight Arc -->
+  <path d="M 38 38 A 26 26 0 0 1 78 38" fill="none" stroke="#93C5FD" stroke-width="3" stroke-linecap="round" opacity="0.65" />
+
+  <!-- Magnifying Lens Handle / Beam -->
+  <path d="M 80 80 L 100 100" stroke="url(#primaryGrad)" stroke-width="7.5" stroke-linecap="round" />
+
+  <!-- Terminal Prompt Chevron '>' -->
+  <path d="M 44 48 L 53 55 L 44 62" fill="none" stroke="#38BDF8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Terminal Cursor / Log Line -->
+  <line x1="58" y1="62" x2="70" y2="62" stroke="url(#emeraldGrad)" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- Pulse Stream / Diagnostics -->
+  <path d="M 44 71 H 72" stroke="url(#cyanGrad)" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="4 3" opacity="0.9" />
 </svg>

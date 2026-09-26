@@ -59,7 +59,7 @@ internal fun NetworkBodySection(
                 Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(LogSpacing.x2))
-                    .background(LogTheme.colors.surfaceVariant)
+                    .background(LogTheme.colors.surface)
                     .padding(LogSpacing.x2)
                     .horizontalScroll(rememberScrollState()),
         ) {

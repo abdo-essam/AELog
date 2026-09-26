@@ -19,6 +19,8 @@ jobs:
   quality:
     name: 🧹 Code Quality
     runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=\"-XX:-UseContainerSupport\""
     permissions:
       contents: write
     steps:
@@ -28,7 +30,7 @@ jobs:
 
       - uses: actions/setup-java@v5
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '21'
 
       - uses: gradle/actions/setup-gradle@v6.2.0
@@ -50,6 +52,8 @@ jobs:
   build-android:
     name: 🤖 Android Build & Test
     runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=\"-XX:-UseContainerSupport\""
     needs: quality
     if: always() && (needs.quality.result == 'success' || needs.quality.result == 'skipped')
     steps:
@@ -57,7 +61,7 @@ jobs:
 
       - uses: actions/setup-java@v5
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '21'
 
       - uses: gradle/actions/setup-gradle@v6.2.0
@@ -182,7 +186,7 @@ jobs:
 
       - uses: actions/setup-java@v5
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '21'
 
       - uses: gradle/actions/setup-gradle@v6.2.0
@@ -257,6 +261,8 @@ jobs:
   sample:
     name: 📱 Sample App
     runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.jvmargs=\"-XX:-UseContainerSupport\""
     needs: [build-android]
     if: always() && needs.build-android.result == 'success'
     steps:
@@ -264,7 +270,7 @@ jobs:
 
       - uses: actions/setup-java@v5
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '21'
 
       - uses: gradle/actions/setup-gradle@v6.2.0

@@ -37,7 +37,7 @@ internal fun LogEntryItem(
                     indication = null,
                     onClickLabel = if (isExpanded) "Collapse log entry" else "Expand log entry",
                 ) { onToggleExpand(log.id) }
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3_5),
     ) {
         LogEntryHeader(log = log, isExpanded = isExpanded)
 

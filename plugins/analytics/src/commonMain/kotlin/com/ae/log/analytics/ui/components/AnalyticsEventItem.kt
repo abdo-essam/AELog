@@ -45,7 +45,7 @@ internal fun AnalyticsEventItem(
                     indication = null,
                     onClickLabel = if (isExpanded) "Collapse analytics event" else "Expand analytics event",
                 ) { onToggleExpand(event.id) }
-                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3),
+                .padding(horizontal = LogSpacing.x4, vertical = LogSpacing.x3_5),
     ) {
         // ── Summary row ───────────────────────────────────────────────────
         Row(

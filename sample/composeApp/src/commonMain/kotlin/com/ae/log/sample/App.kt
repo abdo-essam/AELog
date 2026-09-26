@@ -9,10 +9,12 @@ import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.Speed
+import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ae.log.sample.ui.features.analytics.AnalyticsScreen
 import com.ae.log.sample.ui.features.crashes.CrashScreen
+import com.ae.log.sample.ui.features.database.DatabaseScreen
 import com.ae.log.sample.ui.features.log.LogScreen
 import com.ae.log.sample.ui.features.network.NetworkScreen
 import com.ae.log.sample.ui.features.perf.PerfScreen
@@ -57,6 +60,7 @@ fun App() {
                     2 -> AnalyticsScreen()
                     3 -> CrashScreen()
                     4 -> PerfScreen()
+                    5 -> DatabaseScreen()
                 }
             }
         }
@@ -81,6 +85,7 @@ private fun SampleNavBar(
             NavItem("Analytics", Icons.Filled.Analytics, Icons.Outlined.Analytics),
             NavItem("Crashes", Icons.Filled.BugReport, Icons.Outlined.BugReport),
             NavItem("Perf", Icons.Filled.Speed, Icons.Outlined.Speed),
+            NavItem("Database", Icons.Filled.Storage, Icons.Outlined.Storage),
         )
 
     NavigationBar {

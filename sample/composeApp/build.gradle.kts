@@ -45,6 +45,7 @@ kotlin {
             implementation(project(":plugins:network:interceptors:ktor")) // Ktor auto-interceptor
             implementation(project(":plugins:analytics")) // AnalyticsPlugin
             implementation(project(":plugins:crashes")) // CrashPlugin
+            implementation(project(":plugins:database")) // DatabasePlugin
             implementation(libs.ktor.client.core) // HttpClient DSL in commonMain
             implementation(compose.runtime)
             implementation(compose.foundation)

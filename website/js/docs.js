@@ -42,8 +42,16 @@ const MERMAID_THEME = {
 // Map to cache initial innerHTML of sections to restore original state when search is cleared
 const originalSectionHTMLs = new Map();
 
+function onReady(fn) {
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", fn);
+    } else {
+        fn();
+    }
+}
+
 // ── Entry point ─────────────────────────────────────────────────────────────
-document.addEventListener("DOMContentLoaded", () => {
+onReady(() => {
     // 0. Theme toggle — must run first to sync button icon state
     initTheme();
 
@@ -62,14 +70,14 @@ document.addEventListener("DOMContentLoaded", () => {
     initScrollProgress();
     initMagicCards();
     initNavbarScroll();
-    
+
     // 3. Initialize new premium UX systems
     initSearchEngine();
     updateTableOfContents();
     updatePagination();
     initMobileDrawer();
     initSyntaxHighlighting();
-    
+
     // Handle loading from hash if present in URL
     handleInitialHashNavigation();
 });
@@ -117,7 +125,7 @@ function initInstallSwitcher() {
  */
 function initNavigation() {
     const navLinks = document.querySelectorAll(DOCS_NAV_LINK_CLASS);
-    
+
     navLinks.forEach(link => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
@@ -144,24 +152,24 @@ function switchActiveSection(targetId) {
             l.classList.remove("active");
         }
     });
-    
+
     // Hide all doc sections, then show the target one
     document.querySelectorAll(DOCS_SECTION_CLASS).forEach(section => {
         section.classList.remove("active");
     });
-    
+
     const targetSection = document.getElementById(targetId);
     if (targetSection) {
         targetSection.classList.add("active");
     }
-    
+
     window.scrollTo({ top: 0, behavior: "smooth" });
-    
+
     // Rebuild page dependencies
     updateTableOfContents();
     updatePagination();
     initSyntaxHighlighting();
-    
+
     // Recalculate timeline layout instantly when the section is revealed
     setTimeout(() => {
         window.dispatchEvent(new Event("scroll"));
@@ -174,9 +182,9 @@ function switchActiveSection(targetId) {
 function handleInitialHashNavigation() {
     const hash = window.location.hash;
     if (!hash) return;
-    
+
     const targetId = hash.replace("#", "");
-    
+
     // Check if hash matches a main section ID
     const section = document.getElementById(targetId);
     if (section && section.classList.contains("docs-section")) {
@@ -300,37 +308,37 @@ function updateTableOfContents() {
     const outlineList = document.getElementById("docs-outline-list");
     const outlineSidebar = document.querySelector(".docs-outline-sidebar");
     if (!activeSection || !outlineList || !outlineSidebar) return;
-    
+
     // Disconnect old observer to avoid overhead leaks
     if (outlineObserver) {
         outlineObserver.disconnect();
     }
-    
+
     outlineList.innerHTML = "";
-    
+
     const headings = activeSection.querySelectorAll("h2, h3");
     if (!headings.length) {
         outlineSidebar.style.opacity = "0";
         outlineSidebar.style.pointerEvents = "none";
         return;
     }
-    
+
     outlineSidebar.style.opacity = "1";
     outlineSidebar.style.pointerEvents = "all";
-    
+
     headings.forEach((heading, idx) => {
         if (!heading.id) {
             heading.id = `heading-${activeSection.id}-${idx}`;
         }
-        
+
         const li = document.createElement("li");
         li.className = heading.tagName.toLowerCase() === "h3" ? "outline-item outline-item-h3" : "outline-item";
-        
+
         const a = document.createElement("a");
         a.href = `#${heading.id}`;
         a.className = "outline-link";
         a.textContent = heading.textContent;
-        
+
         a.addEventListener("click", (e) => {
             e.preventDefault();
             const targetHeader = document.getElementById(heading.id);
@@ -340,24 +348,24 @@ function updateTableOfContents() {
                 a.classList.add("active");
             }
         });
-        
+
         li.appendChild(a);
         outlineList.appendChild(li);
     });
-    
+
     initOutlineScrollSpy(headings);
 }
 
 function initOutlineScrollSpy(headings) {
     const outlineLinks = document.querySelectorAll(".outline-link");
     if (!headings.length || !outlineLinks.length) return;
-    
+
     const observerOptions = {
         root: null,
         rootMargin: "-120px 0px -75% 0px",
         threshold: 0
     };
-    
+
     outlineObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -372,7 +380,7 @@ function initOutlineScrollSpy(headings) {
             }
         });
     }, observerOptions);
-    
+
     headings.forEach(h => outlineObserver.observe(h));
 }
 
@@ -384,12 +392,12 @@ function updatePagination() {
     const activeSection = document.querySelector(".docs-section.active");
     const prevBtn = document.getElementById("prev-page-btn");
     const nextBtn = document.getElementById("next-page-btn");
-    
+
     if (!navLinks.length || !activeSection || !prevBtn || !nextBtn) return;
-    
+
     const activeId = activeSection.getAttribute("id");
     const activeIdx = navLinks.findIndex(link => link.getAttribute("data-section") === activeId);
-    
+
     // Update Previous button
     if (activeIdx > 0) {
         prevBtn.style.display = "flex";
@@ -402,7 +410,7 @@ function updatePagination() {
     } else {
         prevBtn.style.display = "none";
     }
-    
+
     // Update Next button
     if (activeIdx < navLinks.length - 1) {
         nextBtn.style.display = "flex";
@@ -425,18 +433,18 @@ function initSearchEngine() {
     const clearBtn = document.getElementById("docs-search-clear");
     const navLinks = document.querySelectorAll(DOCS_NAV_LINK_CLASS);
     const groups = document.querySelectorAll(".sidebar-category-group");
-    
+
     if (!searchInput) return;
-    
+
     searchInput.addEventListener("input", (e) => {
         const query = e.target.value.trim().toLowerCase();
-        
+
         if (query) {
             clearBtn.style.display = "block";
         } else {
             clearBtn.style.display = "none";
         }
-        
+
         // Restore all sections to original inner HTML to clear past markers
         document.querySelectorAll(".docs-section").forEach(sec => {
             const originalHTML = originalSectionHTMLs.get(sec.id);
@@ -444,11 +452,11 @@ function initSearchEngine() {
                 sec.innerHTML = originalHTML;
             }
         });
-        
+
         if (!query) {
             navLinks.forEach(link => link.style.display = "block");
             groups.forEach(group => group.style.display = "flex");
-            
+
             updateTableOfContents();
             initCopyButtons();
             initMermaidDiagrams();
@@ -456,15 +464,15 @@ function initSearchEngine() {
             initSyntaxHighlighting();
             return;
         }
-        
+
         navLinks.forEach(link => {
             const sectionId = link.getAttribute("data-section");
             const section = document.getElementById(sectionId);
             if (!section) return;
-            
+
             const sectionText = section.textContent.toLowerCase();
             const isMatch = sectionText.includes(query);
-            
+
             if (isMatch) {
                 link.style.display = "block";
                 if (section.classList.contains("active")) {
@@ -474,26 +482,26 @@ function initSearchEngine() {
                 link.style.display = "none";
             }
         });
-        
+
         // Hide sidebar category headers if all children match nothing
         groups.forEach(group => {
             const visibleLinks = group.querySelectorAll(`${DOCS_NAV_LINK_CLASS}[style="display: block;"]`);
             const totalLinks = group.querySelectorAll(DOCS_NAV_LINK_CLASS);
-            
+
             if (visibleLinks.length === 0 && totalLinks.length > 0) {
                 group.style.display = "none";
             } else {
                 group.style.display = "flex";
             }
         });
-        
+
         // Rebind events for components affected by innerHTML overwrites
         initCopyButtons();
         initMermaidDiagrams();
         updateTableOfContents();
         initSyntaxHighlighting();
     });
-    
+
     clearBtn.addEventListener("click", () => {
         searchInput.value = "";
         searchInput.dispatchEvent(new Event("input"));
@@ -514,18 +522,18 @@ function highlightKeywords(section, query) {
     if (!query) return;
     const escapedQuery = escapeRegExp(query);
     const regex = new RegExp(`(${escapedQuery})`, "gi");
-    
+
     const walk = document.createTreeWalker(section, NodeFilter.SHOW_TEXT, null, false);
     const textNodes = [];
     let node;
-    
+
     while (node = walk.nextNode()) {
         const parentTag = node.parentNode.tagName;
         if (parentTag !== "CODE" && parentTag !== "PRE" && parentTag !== "SCRIPT" && parentTag !== "STYLE" && parentTag !== "A" && !node.parentNode.classList.contains("copy-btn")) {
             textNodes.push(node);
         }
     }
-    
+
     textNodes.forEach(node => {
         const val = node.nodeValue;
         if (regex.test(val)) {
@@ -543,7 +551,7 @@ function initMobileDrawer() {
     const toggleBtn = document.getElementById("mobile-sidebar-toggle");
     const sidebar = document.getElementById("docs-sidebar");
     if (!toggleBtn || !sidebar) return;
-    
+
     // Check if backdrop exists, otherwise create it
     let backdrop = document.querySelector(".docs-drawer-backdrop");
     if (!backdrop) {
@@ -551,19 +559,19 @@ function initMobileDrawer() {
         backdrop.className = "docs-drawer-backdrop";
         document.body.appendChild(backdrop);
     }
-    
+
     function openMenu() {
         sidebar.classList.add("active");
         backdrop.classList.add("active");
         document.body.style.overflow = "hidden";
     }
-    
+
     function closeMenu() {
         sidebar.classList.remove("active");
         backdrop.classList.remove("active");
         document.body.style.overflow = "";
     }
-    
+
     toggleBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         if (sidebar.classList.contains("active")) {
@@ -572,9 +580,9 @@ function initMobileDrawer() {
             openMenu();
         }
     });
-    
+
     backdrop.addEventListener("click", closeMenu);
-    
+
     // Auto close drawer when sidebar navigation elements are selected
     document.querySelectorAll(DOCS_NAV_LINK_CLASS).forEach(link => {
         link.addEventListener("click", closeMenu);
