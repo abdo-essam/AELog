@@ -216,7 +216,11 @@ public fun isWriteStatement(sql: String): Boolean {
 public fun detectOperation(sql: String): DatabaseOperation {
     val clean = sql.trimStart().uppercase()
     return when {
-        clean.startsWith(OP_SELECT) || clean.startsWith("WITH") || clean.startsWith("EXPLAIN") -> DatabaseOperation.SELECT
+        clean.startsWith(
+            OP_SELECT,
+        ) ||
+            clean.startsWith("WITH") ||
+            clean.startsWith("EXPLAIN") -> DatabaseOperation.SELECT
         clean.startsWith(OP_INSERT) -> DatabaseOperation.INSERT
         clean.startsWith(OP_REPLACE) -> DatabaseOperation.REPLACE
         clean.startsWith(OP_UPDATE) -> DatabaseOperation.UPDATE

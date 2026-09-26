@@ -20,7 +20,9 @@ internal fun OperationBadge(
             DatabaseOperation.DELETE, DatabaseOperation.DROP -> Color(0xFFFFEBEE) to Color(0xFFC62828)
             DatabaseOperation.CREATE -> Color(0xFFE3F2FD) to Color(0xFF1565C0)
             DatabaseOperation.ALTER, DatabaseOperation.REPLACE -> Color(0xFFEDE7F6) to Color(0xFF512DA8)
-            DatabaseOperation.PRAGMA, DatabaseOperation.TRANSACTION -> LogTheme.colors.surfaceVariant to LogTheme.colors.onSurfaceVariant
+            DatabaseOperation.PRAGMA, DatabaseOperation.TRANSACTION ->
+                LogTheme.colors.surfaceVariant to
+                    LogTheme.colors.onSurfaceVariant
             DatabaseOperation.ERROR -> Color(0xFFFFEBEE) to Color(0xFFD32F2F)
             DatabaseOperation.OTHER -> LogTheme.colors.surfaceVariant to LogTheme.colors.onSurfaceVariant
         }
