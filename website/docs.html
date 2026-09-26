@@ -97,6 +97,7 @@
                 <h4>Core Configuration</h4>
                 <a class="docs-nav-link" data-section="configuration" href="#configuration">Configuration</a>
                 <a class="docs-nav-link" data-section="network-interceptors" href="#network-interceptors">Network Interceptors</a>
+                <a class="docs-nav-link" data-section="database-inspector" href="#database-inspector">Database Inspector</a>
             </div>
 
             <!-- Logical Category Group Sidebar: Plugins & Architecture -->
@@ -423,6 +424,61 @@ val client = HttpClient {
     .addInterceptor(AELogOkHttpInterceptor())
     .build()</code></pre>
 </div>
+
+<div id="database-inspector" class="docs-section">
+<h1>Database Inspector</h1>
+<p>AELog includes an on-device Database Inspector with live query interception for <strong>androidx.room</strong>, <strong>SQLDelight</strong>, and <strong>SQLite</strong> databases.</p>
+
+<h2>Room & SQLite Driver Interceptor (<code>setAELogDriver</code>)</h2>
+<p>To automatically intercept and log all SQL queries executed by your app in real-time, attach <code>setAELogDriver()</code> to your <code>RoomDatabase.Builder</code> or wrap your <code>SQLiteDriver</code> with <code>.withAELog()</code>:</p>
+<pre><code class="language-kotlin">// 1. Room Database Integration (aelog-database-room):
+Room.databaseBuilder&lt;AppDatabase&gt;(name = dbFilePath)
+    .setAELogDriver(BundledSQLiteDriver(), databaseName = "app.db")
+    .build()
+
+// 2. Raw SQLite / SQLDelight Integration (aelog-database):
+val driver = BundledSQLiteDriver().withAELog(databaseName = "app.db")</code></pre>
+
+<h2>Zero-Config Auto-Discovery</h2>
+<p>On Android and iOS, AELog automatically scans application database directories and registers existing databases without any manual setup code. Simply add the dependency:</p>
+<pre><code class="language-kotlin">// Room users (shared commonMain sourceSet)
+implementation("io.github.abdo-essam:ae-log-database-room:1.2.0")
+
+// SQLDelight / Raw SQLite / Custom users
+implementation("io.github.abdo-essam:ae-log-database:1.2.0")</code></pre>
+
+<h2>Primary API (<code>AELog.database</code>)</h2>
+<p>Interact with discovered databases, list tables, execute queries, and log app database transactions:</p>
+<pre><code class="language-kotlin">// List discovered databases
+val databases = AELog.database.listDatabases()
+
+// Browse database tables
+val tables = AELog.database.listTables(dbName = "app.db")
+
+// Execute interactive SQL queries
+val result = AELog.database.query(
+    dbName = "app.db",
+    sql = "SELECT * FROM users WHERE active = 1"
+)
+
+// Log app database queries to inspector
+AELog.database.logQuery(
+    databaseName = "app.db",
+    sql = "SELECT * FROM orders WHERE total > 100",
+    durationMs = 3L
+)</code></pre>
+
+<h2>Custom Configuration (<code>DatabasePluginConfig</code>)</h2>
+<p>Customize security policies, write permissions, page sizes, and busy timeouts:</p>
+<pre><code class="language-kotlin">val dbConfig = DatabasePluginConfig(
+    allowWrite = true,         // Enable INSERT, UPDATE, DELETE execution (default: false read-only)
+    defaultPageSize = 100,     // Rows per page when browsing table data
+    busyTimeoutMs = 5000L      // SQLite busy timeout in WAL mode
+)
+
+// Re-install DatabasePlugin with custom config
+AELog.install(DatabasePlugin(config = dbConfig))</code></pre>
+</div>
 <div id="plugins-overview" class="docs-section ">
 <h1>Plugins Overview</h1>
 <p>AELog uses a <strong>plugin architecture</strong>. Each plugin adds a dedicated tab to the AELog overlay panel. The library itself is just a host — plugins are what make it useful.</p>
@@ -471,23 +527,28 @@ val client = HttpClient {
 <div class="plugin-screenshot-grid">
     <div class="screenshot-card">
         <h4>Logs Inspector</h4>
-        <img src="img/aelog_logs.png" alt="AELog Logs Plugin UI" />
+        <img src="img/logs.png" alt="AELog Logs Plugin UI" />
         <p>Browse console output with search capabilities and filter logs by severity level.</p>
     </div>
     <div class="screenshot-card">
         <h4>Network Inspector</h4>
-        <img src="img/aelog_network.png" alt="AELog Network Plugin UI" />
+        <img src="img/network.png" alt="AELog Network Plugin UI" />
         <p>Inspect Ktor and OkHttp HTTP request/response payloads, status codes, and headers.</p>
     </div>
     <div class="screenshot-card">
         <h4>Analytics Tracker</h4>
-        <img src="img/aelog_analytics.png" alt="AELog Analytics Plugin UI" />
+        <img src="img/analytics.png" alt="AELog Analytics Plugin UI" />
         <p>View analytics events, screen views, and user property parameters as they trigger in real-time.</p>
     </div>
     <div class="screenshot-card">
         <h4>Crash Reporter</h4>
-        <img src="img/aelog_crashes.png" alt="AELog Crash Plugin UI" />
+        <img src="img/crashes.png" alt="AELog Crash Plugin UI" />
         <p>Review local fatal stack traces and persisted exception reports directly on the test device.</p>
+    </div>
+    <div class="screenshot-card">
+        <h4>Database Inspector</h4>
+        <img src="img/database.png" alt="AELog Database Inspector UI" />
+        <p>Auto-discover SQLite/Room databases, browse tables, view schemas, and run live SQL queries.</p>
     </div>
 </div>
 <h2>Plugin Types</h2>

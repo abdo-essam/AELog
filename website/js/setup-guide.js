@@ -348,7 +348,13 @@ try {
 }\n\n`;
         }
         if (state.features.database) {
-            snippet += `// 5. Database Inspection
+            snippet += `// 5. Database Interceptor & Inspection
+// Attach driver adapter to RoomDatabase.Builder:
+Room.databaseBuilder<AppDatabase>(name = dbFilePath)
+    .setAELogDriver(BundledSQLiteDriver(), databaseName = "app.db")
+    .build()
+
+// Or inspect programmatically:
 val databases = AELog.database.listDatabases()
 val tables = AELog.database.listTables("app.db")
 val result = AELog.database.query("app.db", "SELECT * FROM users LIMIT 10")`;
