@@ -3,6 +3,8 @@ package com.ae.log.database
 import com.ae.log.database.inspector.detectOperation
 import com.ae.log.database.model.DatabaseLogEntry
 import com.ae.log.database.model.DatabaseOperation
+import kotlinx.atomicfu.locks.SynchronizedObject
+import kotlinx.atomicfu.locks.synchronized
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +17,8 @@ import kotlin.time.Clock
 public object DatabaseLogRecorder {
     private const val MAX_LOGS = 500
 
+    private val lock = SynchronizedObject()
+    private val buffer = ArrayDeque<DatabaseLogEntry>(MAX_LOGS)
     private val _logs = MutableStateFlow<List<DatabaseLogEntry>>(emptyList())
     public val logs: StateFlow<List<DatabaseLogEntry>> = _logs.asStateFlow()
 
@@ -51,12 +55,12 @@ public object DatabaseLogRecorder {
                 engine = engine,
             )
 
-        val current = _logs.value.toMutableList()
-        current.add(0, entry)
-        if (current.size > MAX_LOGS) {
-            _logs.value = current.take(MAX_LOGS)
-        } else {
-            _logs.value = current
+        synchronized(lock) {
+            if (buffer.size >= MAX_LOGS) {
+                buffer.removeLast()
+            }
+            buffer.addFirst(entry)
+            _logs.value = buffer.toList()
         }
     }
 
@@ -64,47 +68,74 @@ public object DatabaseLogRecorder {
      * Clears all recorded database logs.
      */
     public fun clear() {
-        _logs.value = emptyList()
+        synchronized(lock) {
+            buffer.clear()
+            _logs.value = emptyList()
+        }
     }
 
     private fun generateLogId(timestamp: Long): String = "db_${timestamp}_${Random.nextInt(1000, 9999)}"
 
     private fun extractTableName(sql: String): String? {
-        val words = sql.trim().split(Regex("\\s+"))
-        val fromIdx = words.indexOfFirst { it.equals("FROM", ignoreCase = true) }
-        if (fromIdx >= 0 && fromIdx + 1 < words.size) {
-            return words[fromIdx + 1].trim('\"', '`', '\'', ';', '(')
-        }
-        val intoIdx = words.indexOfFirst { it.equals("INTO", ignoreCase = true) }
-        if (intoIdx >= 0 && intoIdx + 1 < words.size) {
-            return words[intoIdx + 1].trim('\"', '`', '\'', ';', '(')
-        }
-        val updateIdx = words.indexOfFirst { it.equals("UPDATE", ignoreCase = true) }
-        if (updateIdx >= 0 && updateIdx + 1 < words.size) {
-            return words[updateIdx + 1].trim('\"', '`', '\'', ';', '(')
-        }
-        val tableIdx = words.indexOfFirst { it.equals("TABLE", ignoreCase = true) }
-        if (tableIdx >= 0 && tableIdx + 1 < words.size) {
-            return words[tableIdx + 1].trim('\"', '`', '\'', ';', '(')
+        val len = sql.length
+        var i = 0
+        while (i < len) {
+            while (i < len && sql[i].isWhitespace()) i++
+            if (i >= len) break
+
+            val start = i
+            while (i < len && !sql[i].isWhitespace()) i++
+            val wordLen = i - start
+
+            if (wordLen == 4) {
+                val isFrom = sql.regionMatches(start, "FROM", 0, 4, ignoreCase = true)
+                val isInto = sql.regionMatches(start, "INTO", 0, 4, ignoreCase = true)
+                if (isFrom || isInto) {
+                    return extractNextToken(sql, i)
+                }
+            } else if (wordLen == 6) {
+                if (sql.regionMatches(start, "UPDATE", 0, 6, ignoreCase = true)) {
+                    return extractNextToken(sql, i)
+                }
+            } else if (wordLen == 5) {
+                if (sql.regionMatches(start, "TABLE", 0, 5, ignoreCase = true)) {
+                    return extractNextToken(sql, i)
+                }
+            }
         }
         return null
     }
 
+    private fun extractNextToken(sql: String, startIdx: Int): String? {
+        var i = startIdx
+        val len = sql.length
+        while (i < len && sql[i].isWhitespace()) i++
+        if (i >= len) return null
+        val tokenStart = i
+        while (i < len && !sql[i].isWhitespace()) i++
+        val rawToken = sql.substring(tokenStart, i)
+        return rawToken.trim('\"', '`', '\'', ';', '(', ')')
+    }
+
     private fun isInternalSystemQuery(sql: String): Boolean {
-        val trimmed = sql.trim().uppercase()
-        if (trimmed.startsWith("PRAGMA") ||
-            trimmed.startsWith("BEGIN") ||
-            trimmed.startsWith("COMMIT") ||
-            trimmed.startsWith("END TRANSACTION") ||
-            trimmed.startsWith("END;")
+        var start = 0
+        val len = sql.length
+        while (start < len && sql[start].isWhitespace()) start++
+        if (start >= len) return false
+
+        if (sql.regionMatches(start, "PRAGMA", 0, 6, ignoreCase = true) ||
+            sql.regionMatches(start, "BEGIN", 0, 5, ignoreCase = true) ||
+            sql.regionMatches(start, "COMMIT", 0, 6, ignoreCase = true) ||
+            sql.regionMatches(start, "END TRANSACTION", 0, 15, ignoreCase = true) ||
+            sql.regionMatches(start, "END;", 0, 4, ignoreCase = true)
         ) {
             return true
         }
-        val lower = sql.lowercase()
-        return lower.contains("room_table_modification_log") ||
-            lower.contains("room_master_table") ||
-            lower.contains("sqlite_master") ||
-            lower.contains("sqlite_schema") ||
-            lower.contains("sqlite_sequence")
+
+        return sql.contains("room_table_modification_log", ignoreCase = true) ||
+            sql.contains("room_master_table", ignoreCase = true) ||
+            sql.contains("sqlite_master", ignoreCase = true) ||
+            sql.contains("sqlite_schema", ignoreCase = true) ||
+            sql.contains("sqlite_sequence", ignoreCase = true)
     }
 }

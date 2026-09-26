@@ -22,37 +22,38 @@ public class InMemoryPluginStorage<T>(
     }
 
     private val lock = SynchronizedObject()
+    private val buffer = ArrayDeque<T>(capacity)
     private val _dataFlow = MutableStateFlow<List<T>>(emptyList())
     override val dataFlow: StateFlow<List<T>> = _dataFlow.asStateFlow()
 
     override fun add(item: T) {
         synchronized(lock) {
-            val current = _dataFlow.value
-            _dataFlow.value =
-                if (current.size >= capacity) {
-                    current.drop(1) + item
-                } else {
-                    current + item
-                }
+            if (buffer.size >= capacity) {
+                buffer.removeFirst()
+            }
+            buffer.addLast(item)
+            _dataFlow.value = buffer.toList()
         }
     }
 
     override fun clear() {
         synchronized(lock) {
+            buffer.clear()
             _dataFlow.value = emptyList()
         }
     }
 
     /** Imports a list of items into this storage, keeping only up to [capacity] newest items. */
     public fun import(items: List<T>) {
+        if (items.isEmpty()) return
         synchronized(lock) {
-            val combined = _dataFlow.value + items
-            _dataFlow.value =
-                if (combined.size > capacity) {
-                    combined.takeLast(capacity)
-                } else {
-                    combined
+            items.forEach { item ->
+                if (buffer.size >= capacity) {
+                    buffer.removeFirst()
                 }
+                buffer.addLast(item)
+            }
+            _dataFlow.value = buffer.toList()
         }
     }
 
@@ -62,13 +63,10 @@ public class InMemoryPluginStorage<T>(
         transform: (T) -> T,
     ) {
         synchronized(lock) {
-            val current = _dataFlow.value
-            val index = current.indexOfFirst(predicate)
+            val index = buffer.indexOfFirst(predicate)
             if (index == -1) return
-            _dataFlow.value =
-                current.toMutableList().apply {
-                    this[index] = transform(this[index])
-                }
+            buffer[index] = transform(buffer[index])
+            _dataFlow.value = buffer.toList()
         }
     }
 
@@ -78,18 +76,16 @@ public class InMemoryPluginStorage<T>(
         item: T,
     ) {
         synchronized(lock) {
-            val current = _dataFlow.value
-            val index = current.indexOfFirst(predicate)
-            _dataFlow.value =
-                if (index == -1) {
-                    if (current.size >= capacity) {
-                        current.drop(1) + item
-                    } else {
-                        current + item
-                    }
-                } else {
-                    current.toMutableList().apply { this[index] = item }
+            val index = buffer.indexOfFirst(predicate)
+            if (index == -1) {
+                if (buffer.size >= capacity) {
+                    buffer.removeFirst()
                 }
+                buffer.addLast(item)
+            } else {
+                buffer[index] = item
+            }
+            _dataFlow.value = buffer.toList()
         }
     }
 }
