@@ -243,10 +243,8 @@ public fun validateSqlSafety(
     sql: String,
     allowWrite: Boolean,
 ) {
-    if (!allowWrite && isWriteStatement(sql)) {
-        throw IllegalArgumentException(
-            "Write operations (INSERT, UPDATE, DELETE, etc.) are disabled. " +
-                "To enable them, configure DatabasePluginConfig(allowWrite = true) or enable Edit Mode.",
-        )
+    require(allowWrite || !isWriteStatement(sql)) {
+        "Write operations (INSERT, UPDATE, DELETE, etc.) are disabled. " +
+            "To enable them, configure DatabasePluginConfig(allowWrite = true) or enable Edit Mode."
     }
 }
