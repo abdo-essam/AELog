@@ -48,6 +48,21 @@ public typealias AELogRoomCallback = AELogRoomQueryCallback
 private const val DEFAULT_DB_NAME = "app.db"
 
 /**
+ * Extension on [RoomDatabase.Builder] to attach AELog query logging via SQLiteDriver on Android.
+ */
+public fun <T : RoomDatabase> RoomDatabase.Builder<T>.setAELogDriver(
+    driver: androidx.sqlite.SQLiteDriver,
+    databaseName: String = DEFAULT_DB_NAME,
+): RoomDatabase.Builder<T> = setDriver(AELogSQLiteDriver(driver, databaseName))
+
+/**
+ * Wraps this [SQLiteDriver] with AELog query logging on Android.
+ */
+public fun androidx.sqlite.SQLiteDriver.withAELog(
+    databaseName: String = DEFAULT_DB_NAME,
+): androidx.sqlite.SQLiteDriver = AELogSQLiteDriver(this, databaseName)
+
+/**
  * Extension on [RoomDatabase.Builder] to attach AELog query logging in a single line on Android.
  *
  * ### Usage:

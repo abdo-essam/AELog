@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-09-26
+
+### Fixed
+- **Room Adapter Extension Resolution**: Exposed `setAELogDriver` and `withAELog` extension functions across both `commonMain` and `androidMain` source sets in `ae-log-database-room` to guarantee symbol resolution across all Android and Multiplatform consumer configurations.
+
 ## [1.2.0] - 2026-09-26
 
 ### Added
@@ -287,7 +292,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/abdo-essam/AELog/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/abdo-essam/AELog/compare/v1.1.9...v1.2.0
 [1.1.9]: https://github.com/abdo-essam/AELog/compare/v1.1.8...v1.1.9
 [1.1.8]: https://github.com/abdo-essam/AELog/compare/v1.1.7...v1.1.8
