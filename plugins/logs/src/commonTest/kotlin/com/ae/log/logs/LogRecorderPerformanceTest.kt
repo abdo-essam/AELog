@@ -116,10 +116,10 @@ class LogRecorderPerformanceTest {
 
     @Test
     fun `export - 500 entries export under 100ms`() {
-        // Write via the plugin's own recorder so AELog.export() can find the entries
-        val pluginRecorder = AELog.getPlugin<LogPlugin>()!!.recorder
+        val plugin = AELog.getPlugin<LogPlugin>()!!
+        val quietRecorder = LogRecorder(storage = plugin.logStorage, platformLogSink = PlatformLogSink.None)
         repeat(500) { i ->
-            pluginRecorder.log(LogSeverity.INFO, "ExportTag", "Export test entry $i")
+            quietRecorder.log(LogSeverity.INFO, "ExportTag", "Export test entry $i")
         }
 
         val elapsed =
