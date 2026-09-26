@@ -104,8 +104,8 @@ public final class com/ae/log/storage/InMemoryPluginStorage : com/ae/log/storage
 
 public final class com/ae/log/storage/PersistentPluginStorage : com/ae/log/storage/PluginStorage {
 	public static final field $stable I
-	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;Lcom/ae/log/utils/FileOperations;Lkotlinx/coroutines/CoroutineScope;)V
-	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;Lcom/ae/log/utils/FileOperations;Lkotlinx/coroutines/CoroutineScope;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;Lcom/ae/log/utils/FileOperations;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlinx/serialization/KSerializer;Lcom/ae/log/utils/FileOperations;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun add (Ljava/lang/Object;)V
 	public fun clear ()V
 	public fun getDataFlow ()Lkotlinx/coroutines/flow/StateFlow;
