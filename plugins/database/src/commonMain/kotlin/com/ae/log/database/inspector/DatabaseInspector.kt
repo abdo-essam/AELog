@@ -55,14 +55,13 @@ public interface DatabaseInspector {
     public fun getSchema(
         dbInfo: DbInfo,
         tableName: String,
-    ): TableSchema {
-        return TableSchema(
+    ): TableSchema =
+        TableSchema(
             tableName = tableName,
             columns = fetchColumns(dbInfo, tableName),
             indexes = fetchIndexes(dbInfo, tableName),
             foreignKeys = fetchForeignKeys(dbInfo, tableName),
         )
-    }
 
     private fun fetchColumns(
         dbInfo: DbInfo,
