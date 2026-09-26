@@ -106,7 +106,10 @@ public object DatabaseLogRecorder {
         return null
     }
 
-    private fun extractNextToken(sql: String, startIdx: Int): String? {
+    private fun extractNextToken(
+        sql: String,
+        startIdx: Int,
+    ): String? {
         var i = startIdx
         val len = sql.length
         while (i < len && sql[i].isWhitespace()) i++
