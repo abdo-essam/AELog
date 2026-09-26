@@ -3,29 +3,30 @@ package com.ae.log.database.ui.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.ae.log.database.model.DatabaseOperation
 import com.ae.log.ui.components.LogBadge
 import com.ae.log.ui.theme.LogTheme
 
 @Composable
 internal fun OperationBadge(
-    operation: String,
+    operation: DatabaseOperation,
     modifier: Modifier = Modifier,
 ) {
     val (bgColor, textColor) =
-        when (operation.uppercase()) {
-            "SELECT" -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
-            "INSERT" -> Color(0xFFFFF3E0) to Color(0xFFE65100)
-            "UPDATE" -> Color(0xFFFFF8E1) to Color(0xFFF57F17)
-            "DELETE" -> Color(0xFFFFEBEE) to Color(0xFFC62828)
-            "DROP" -> Color(0xFFFFEBEE) to Color(0xFFC62828)
-            "CREATE" -> Color(0xFFE3F2FD) to Color(0xFF1565C0)
-            "ALTER" -> Color(0xFFEDE7F6) to Color(0xFF512DA8)
-            "ERROR" -> Color(0xFFFFEBEE) to Color(0xFFD32F2F)
-            else -> LogTheme.colors.surfaceVariant to LogTheme.colors.onSurfaceVariant
+        when (operation) {
+            DatabaseOperation.SELECT -> Color(0xFFE8F5E9) to Color(0xFF2E7D32)
+            DatabaseOperation.INSERT -> Color(0xFFFFF3E0) to Color(0xFFE65100)
+            DatabaseOperation.UPDATE -> Color(0xFFFFF8E1) to Color(0xFFF57F17)
+            DatabaseOperation.DELETE, DatabaseOperation.DROP -> Color(0xFFFFEBEE) to Color(0xFFC62828)
+            DatabaseOperation.CREATE -> Color(0xFFE3F2FD) to Color(0xFF1565C0)
+            DatabaseOperation.ALTER, DatabaseOperation.REPLACE -> Color(0xFFEDE7F6) to Color(0xFF512DA8)
+            DatabaseOperation.PRAGMA, DatabaseOperation.TRANSACTION -> LogTheme.colors.surfaceVariant to LogTheme.colors.onSurfaceVariant
+            DatabaseOperation.ERROR -> Color(0xFFFFEBEE) to Color(0xFFD32F2F)
+            DatabaseOperation.OTHER -> LogTheme.colors.surfaceVariant to LogTheme.colors.onSurfaceVariant
         }
 
     LogBadge(
-        text = operation.uppercase(),
+        text = operation.name,
         containerColor = bgColor,
         contentColor = textColor,
         modifier = modifier,

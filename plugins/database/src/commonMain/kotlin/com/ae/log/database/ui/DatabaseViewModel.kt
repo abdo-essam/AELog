@@ -6,6 +6,7 @@ import com.ae.log.database.inspector.DatabaseInspector
 import com.ae.log.database.inspector.isWriteStatement
 import com.ae.log.database.model.DatabaseLogEntry
 import com.ae.log.database.model.DatabaseLogFilter
+import com.ae.log.database.model.DatabaseOperation
 import com.ae.log.database.model.DbInfo
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.QueryResult
@@ -19,6 +20,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+
+private val SCHEMA_OPERATIONS = setOf(
+    DatabaseOperation.CREATE,
+    DatabaseOperation.DROP,
+    DatabaseOperation.ALTER,
+    DatabaseOperation.REPLACE,
+)
 
 internal sealed interface DatabaseDestination {
     data object DatabaseList : DatabaseDestination
@@ -192,14 +200,13 @@ internal class DatabaseViewModel(
                 val matchesFilter =
                     when (filter) {
                         DatabaseLogFilter.ALL -> true
-                        DatabaseLogFilter.SELECTS -> entry.operation == "SELECT" && entry.isSuccess
-                        DatabaseLogFilter.INSERTS -> entry.operation == "INSERT" && entry.isSuccess
-                        DatabaseLogFilter.UPDATES -> entry.operation == "UPDATE" && entry.isSuccess
-                        DatabaseLogFilter.DELETES -> entry.operation == "DELETE" && entry.isSuccess
+                        DatabaseLogFilter.SELECTS -> entry.operation == DatabaseOperation.SELECT && entry.isSuccess
+                        DatabaseLogFilter.INSERTS -> entry.operation == DatabaseOperation.INSERT && entry.isSuccess
+                        DatabaseLogFilter.UPDATES -> entry.operation == DatabaseOperation.UPDATE && entry.isSuccess
+                        DatabaseLogFilter.DELETES -> entry.operation == DatabaseOperation.DELETE && entry.isSuccess
                         DatabaseLogFilter.SCHEMA ->
-                            entry.operation in listOf("CREATE", "DROP", "ALTER", "REPLACE") &&
-                                entry.isSuccess
-                        DatabaseLogFilter.ERRORS -> !entry.isSuccess || entry.operation == "ERROR"
+                            entry.operation in SCHEMA_OPERATIONS && entry.isSuccess
+                        DatabaseLogFilter.ERRORS -> !entry.isSuccess || entry.operation == DatabaseOperation.ERROR
                     }
                 val matchesSearch =
                     search.isBlank() ||

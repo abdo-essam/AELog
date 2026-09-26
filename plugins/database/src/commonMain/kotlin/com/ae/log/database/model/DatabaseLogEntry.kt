@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @property databaseName The target database name.
  * @property tableName The table operated on, if identifiable.
  * @property sql The SQL statement executed.
- * @property operation Operation classification: `"SELECT"`, `"INSERT"`, `"UPDATE"`, `"DELETE"`, `"ERROR"`, or `"OTHER"`.
+ * @property operation Classification of the SQL operation (e.g. [DatabaseOperation.SELECT], [DatabaseOperation.INSERT]).
  * @property durationMs Execution time in milliseconds.
  * @property timestamp Epoch timestamp in milliseconds.
  * @property isSuccess Whether the query succeeded without error.
@@ -23,7 +23,7 @@ public data class DatabaseLogEntry(
     public val databaseName: String,
     public val tableName: String? = null,
     public val sql: String,
-    public val operation: String = "SELECT",
+    public val operation: DatabaseOperation = DatabaseOperation.SELECT,
     public val durationMs: Long = 0L,
     public val timestamp: Long = 0L,
     public val isSuccess: Boolean = true,

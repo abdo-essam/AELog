@@ -1,5 +1,6 @@
 package com.ae.log.database.inspector
 
+import com.ae.log.database.model.DatabaseOperation
 import com.ae.log.database.model.DbInfo
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.QueryResult
@@ -206,23 +207,24 @@ public fun isWriteStatement(sql: String): Boolean {
 /**
  * Detects the general operation keyword of the given SQL query.
  */
-public fun detectOperation(sql: String): String {
+public fun detectOperation(sql: String): DatabaseOperation {
     val clean = sql.trimStart().uppercase()
     return when {
-        clean.startsWith(OP_SELECT) || clean.startsWith("WITH") || clean.startsWith("EXPLAIN") -> OP_SELECT
-        clean.startsWith(OP_INSERT) || clean.startsWith(OP_REPLACE) -> OP_INSERT
-        clean.startsWith(OP_UPDATE) -> OP_UPDATE
-        clean.startsWith(OP_DELETE) -> OP_DELETE
-        clean.startsWith(OP_CREATE) -> OP_CREATE
-        clean.startsWith(OP_DROP) -> OP_DROP
-        clean.startsWith(OP_ALTER) -> OP_ALTER
-        clean.startsWith(OP_PRAGMA) -> OP_PRAGMA
+        clean.startsWith(OP_SELECT) || clean.startsWith("WITH") || clean.startsWith("EXPLAIN") -> DatabaseOperation.SELECT
+        clean.startsWith(OP_INSERT) -> DatabaseOperation.INSERT
+        clean.startsWith(OP_REPLACE) -> DatabaseOperation.REPLACE
+        clean.startsWith(OP_UPDATE) -> DatabaseOperation.UPDATE
+        clean.startsWith(OP_DELETE) -> DatabaseOperation.DELETE
+        clean.startsWith(OP_CREATE) -> DatabaseOperation.CREATE
+        clean.startsWith(OP_DROP) -> DatabaseOperation.DROP
+        clean.startsWith(OP_ALTER) -> DatabaseOperation.ALTER
+        clean.startsWith(OP_PRAGMA) -> DatabaseOperation.PRAGMA
         clean.startsWith("BEGIN") ||
             clean.startsWith("COMMIT") ||
             clean.startsWith("ROLLBACK") ||
             clean.startsWith("SAVEPOINT") ||
-            clean.startsWith("RELEASE") -> "TRANSACTION"
-        else -> "OTHER"
+            clean.startsWith("RELEASE") -> DatabaseOperation.TRANSACTION
+        else -> DatabaseOperation.OTHER
     }
 }
 

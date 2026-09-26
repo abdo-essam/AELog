@@ -2,6 +2,7 @@ package com.ae.log.database
 
 import com.ae.log.database.inspector.detectOperation
 import com.ae.log.database.model.DatabaseLogEntry
+import com.ae.log.database.model.DatabaseOperation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,7 +42,7 @@ public object DatabaseLogRecorder {
                 databaseName = databaseName,
                 tableName = tableName ?: extractTableName(sql),
                 sql = sql,
-                operation = if (!isSuccess) "ERROR" else detectOperation(sql),
+                operation = if (!isSuccess) DatabaseOperation.ERROR else detectOperation(sql),
                 durationMs = durationMs,
                 timestamp = now,
                 isSuccess = isSuccess,

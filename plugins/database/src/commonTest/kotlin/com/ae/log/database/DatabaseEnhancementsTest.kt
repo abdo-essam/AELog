@@ -3,6 +3,7 @@ package com.ae.log.database
 import com.ae.log.database.config.DatabasePluginConfig
 import com.ae.log.database.inspector.DatabaseInspector
 import com.ae.log.database.model.DatabaseLogFilter
+import com.ae.log.database.model.DatabaseOperation
 import com.ae.log.database.model.DbInfo
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.QueryResult
@@ -177,10 +178,10 @@ class DatabaseEnhancementsTest {
         assertEquals(4, logs.size)
 
         // Check operations
-        assertEquals("ERROR", logs[0].operation)
-        assertEquals("DELETE", logs[1].operation)
-        assertEquals("INSERT", logs[2].operation)
-        assertEquals("SELECT", logs[3].operation)
+        assertEquals(DatabaseOperation.ERROR, logs[0].operation)
+        assertEquals(DatabaseOperation.DELETE, logs[1].operation)
+        assertEquals(DatabaseOperation.INSERT, logs[2].operation)
+        assertEquals(DatabaseOperation.SELECT, logs[3].operation)
 
         // Test clear
         DatabaseLogRecorder.clear()
@@ -310,7 +311,7 @@ class DatabaseEnhancementsTest {
         vm.setLogFilter(DatabaseLogFilter.SELECTS)
         assertEquals(1, vm.filteredLogs.value.size)
         assertEquals(
-            "SELECT",
+            DatabaseOperation.SELECT,
             vm.filteredLogs.value
                 .first()
                 .operation,
@@ -384,27 +385,27 @@ class DatabaseEnhancementsTest {
         assertEquals(5, logs.size)
 
         // Error is the latest (index 0)
-        assertEquals("ERROR", logs[0].operation)
+        assertEquals(DatabaseOperation.ERROR, logs[0].operation)
         assertFalse(logs[0].isSuccess)
         assertEquals("Table not found", logs[0].errorMessage)
 
         // Delete
-        assertEquals("DELETE", logs[1].operation)
+        assertEquals(DatabaseOperation.DELETE, logs[1].operation)
         assertEquals(1L, logs[1].affectedRows)
         assertTrue(logs[1].sql.contains("args: [10]"))
 
         // Update
-        assertEquals("UPDATE", logs[2].operation)
+        assertEquals(DatabaseOperation.UPDATE, logs[2].operation)
         assertEquals(2L, logs[2].affectedRows)
         assertTrue(logs[2].sql.contains("args: [User, 10]"))
 
         // Insert
-        assertEquals("INSERT", logs[3].operation)
+        assertEquals(DatabaseOperation.INSERT, logs[3].operation)
         assertEquals(1L, logs[3].affectedRows)
         assertTrue(logs[3].sql.contains("args: [Alice, Admin]"))
 
         // Select
-        assertEquals("SELECT", logs[4].operation)
+        assertEquals(DatabaseOperation.SELECT, logs[4].operation)
         assertEquals(15L, logs[4].affectedRows)
         assertTrue(logs[4].sql.contains("args: [1]"))
     }
@@ -423,7 +424,7 @@ class DatabaseEnhancementsTest {
 
         val logs = DatabaseLogRecorder.logs.value
         assertEquals(1, logs.size)
-        assertEquals("SELECT", logs.first().operation)
+        assertEquals(DatabaseOperation.SELECT, logs.first().operation)
         assertTrue(logs.first().isSuccess)
         assertEquals(3L, logs.first().affectedRows)
 
@@ -444,7 +445,7 @@ class DatabaseEnhancementsTest {
         val updatedLogs = DatabaseLogRecorder.logs.value
         assertEquals(2, updatedLogs.size)
         val errorLog = updatedLogs.first()
-        assertEquals("ERROR", errorLog.operation)
+        assertEquals(DatabaseOperation.ERROR, errorLog.operation)
         assertFalse(errorLog.isSuccess)
         assertEquals("Price cannot be negative", errorLog.errorMessage)
     }
@@ -468,7 +469,7 @@ class DatabaseEnhancementsTest {
         val logs = DatabaseLogRecorder.logs.value
         assertEquals(1, logs.size)
         assertEquals("sqldelight.db", logs.first().databaseName)
-        assertEquals("SELECT", logs.first().operation)
+        assertEquals(DatabaseOperation.SELECT, logs.first().operation)
         assertEquals("items", logs.first().tableName)
     }
 }
