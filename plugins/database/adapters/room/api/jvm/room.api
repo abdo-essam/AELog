@@ -1,4 +1,4 @@
-public final class com/ae/log/database/room/AELogRoomAdapterKt {
+public final class com/ae/log/database/room/AELogRoomAdapter {
 	public static final fun setAELogDriver (Landroidx/room/RoomDatabase$Builder;Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;)Landroidx/room/RoomDatabase$Builder;
 	public static synthetic fun setAELogDriver$default (Landroidx/room/RoomDatabase$Builder;Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;ILjava/lang/Object;)Landroidx/room/RoomDatabase$Builder;
 	public static final fun withAELog (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;)Landroidx/sqlite/SQLiteDriver;

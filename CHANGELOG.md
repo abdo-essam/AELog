@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.1] - 2026-09-26
 
 ### Fixed
-- **Room Adapter Extension Resolution**: Exposed `setAELogDriver` and `withAELog` extension functions across both `commonMain` and `androidMain` source sets in `ae-log-database-room` to guarantee symbol resolution across all Android and Multiplatform consumer configurations.
+- **Room Adapter KMP Simplification**: Unified Room Database adapter extension functions into `commonMain` with `@file:JvmName("AELogRoomAdapter")`, removing legacy Android-only callback overloads and guaranteeing seamless symbol resolution across all Multiplatform targets (Android, iOS, JVM, WasmJs).
 
 ## [1.2.0] - 2026-09-26
 
