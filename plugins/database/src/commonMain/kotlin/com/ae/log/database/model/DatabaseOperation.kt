@@ -20,7 +20,8 @@ public enum class DatabaseOperation(
     PRAGMA("PRAGMA"),
     TRANSACTION("TRANSACTION"),
     ERROR("ERROR"),
-    OTHER("OTHER");
+    OTHER("OTHER"),
+    ;
 
     public companion object {
         /**

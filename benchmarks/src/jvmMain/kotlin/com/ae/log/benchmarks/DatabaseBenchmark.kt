@@ -125,13 +125,21 @@ open class DatabaseBenchmark {
      * Cost of filtering logs by SELECT operations across prefilled history.
      */
     @Benchmark
-    fun filterSelectLogs(): List<DatabaseLogEntry> = prefilledLogs.filter { it.operation == DatabaseOperation.SELECT && it.isSuccess }
+    fun filterSelectLogs(): List<DatabaseLogEntry> =
+        prefilledLogs.filter {
+            it.operation == DatabaseOperation.SELECT &&
+                it.isSuccess
+        }
 
     /**
      * Cost of filtering logs by ERROR status across prefilled history.
      */
     @Benchmark
-    fun filterErrorLogs(): List<DatabaseLogEntry> = prefilledLogs.filter { !it.isSuccess || it.operation == DatabaseOperation.ERROR }
+    fun filterErrorLogs(): List<DatabaseLogEntry> =
+        prefilledLogs.filter {
+            !it.isSuccess ||
+                it.operation == DatabaseOperation.ERROR
+        }
 
     /**
      * Cost of full-text searching logs across SQL strings and table names.

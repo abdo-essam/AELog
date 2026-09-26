@@ -83,23 +83,26 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private val EDIT_OPERATIONS = setOf(
-    DatabaseOperation.INSERT,
-    DatabaseOperation.UPDATE,
-    DatabaseOperation.REPLACE,
-    DatabaseOperation.CREATE,
-    DatabaseOperation.ALTER,
-)
-private val REMOVE_OPERATIONS = setOf(
-    DatabaseOperation.DELETE,
-    DatabaseOperation.DROP,
-)
-private val SCHEMA_OPERATIONS = setOf(
-    DatabaseOperation.CREATE,
-    DatabaseOperation.DROP,
-    DatabaseOperation.ALTER,
-    DatabaseOperation.REPLACE,
-)
+private val EDIT_OPERATIONS =
+    setOf(
+        DatabaseOperation.INSERT,
+        DatabaseOperation.UPDATE,
+        DatabaseOperation.REPLACE,
+        DatabaseOperation.CREATE,
+        DatabaseOperation.ALTER,
+    )
+private val REMOVE_OPERATIONS =
+    setOf(
+        DatabaseOperation.DELETE,
+        DatabaseOperation.DROP,
+    )
+private val SCHEMA_OPERATIONS =
+    setOf(
+        DatabaseOperation.CREATE,
+        DatabaseOperation.DROP,
+        DatabaseOperation.ALTER,
+        DatabaseOperation.REPLACE,
+    )
 
 @Composable
 internal fun ScrollableSegmentedTabRow(
@@ -239,15 +242,35 @@ internal fun DatabaseLogsScreen(
                     val count =
                         when (filter) {
                             DatabaseLogFilter.ALL -> relevantLogs.size
-                            DatabaseLogFilter.SELECTS -> relevantLogs.count { it.operation == DatabaseOperation.SELECT && it.isSuccess }
-                            DatabaseLogFilter.INSERTS -> relevantLogs.count { it.operation == DatabaseOperation.INSERT && it.isSuccess }
-                            DatabaseLogFilter.UPDATES -> relevantLogs.count { it.operation == DatabaseOperation.UPDATE && it.isSuccess }
-                            DatabaseLogFilter.DELETES -> relevantLogs.count { it.operation == DatabaseOperation.DELETE && it.isSuccess }
+                            DatabaseLogFilter.SELECTS ->
+                                relevantLogs.count {
+                                    it.operation == DatabaseOperation.SELECT &&
+                                        it.isSuccess
+                                }
+                            DatabaseLogFilter.INSERTS ->
+                                relevantLogs.count {
+                                    it.operation == DatabaseOperation.INSERT &&
+                                        it.isSuccess
+                                }
+                            DatabaseLogFilter.UPDATES ->
+                                relevantLogs.count {
+                                    it.operation == DatabaseOperation.UPDATE &&
+                                        it.isSuccess
+                                }
+                            DatabaseLogFilter.DELETES ->
+                                relevantLogs.count {
+                                    it.operation == DatabaseOperation.DELETE &&
+                                        it.isSuccess
+                                }
                             DatabaseLogFilter.SCHEMA ->
                                 relevantLogs.count {
                                     it.operation in SCHEMA_OPERATIONS && it.isSuccess
                                 }
-                            DatabaseLogFilter.ERRORS -> relevantLogs.count { !it.isSuccess || it.operation == DatabaseOperation.ERROR }
+                            DatabaseLogFilter.ERRORS ->
+                                relevantLogs.count {
+                                    !it.isSuccess ||
+                                        it.operation == DatabaseOperation.ERROR
+                                }
                         }
                     "${filter.label} ($count)"
                 }
@@ -495,7 +518,9 @@ private fun DatabaseLogItem(
                         }
 
                         // Query Data Result Preview (for SELECT statements)
-                        if (entry.isSuccess && (entry.operation == DatabaseOperation.SELECT || entry.operation == DatabaseOperation.PRAGMA)) {
+                        if (entry.isSuccess &&
+                            (entry.operation == DatabaseOperation.SELECT || entry.operation == DatabaseOperation.PRAGMA)
+                        ) {
                             QueryDataPreview(
                                 databaseName = entry.databaseName,
                                 sql = entry.sql,

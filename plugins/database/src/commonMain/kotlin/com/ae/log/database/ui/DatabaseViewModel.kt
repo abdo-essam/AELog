@@ -21,12 +21,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-private val SCHEMA_OPERATIONS = setOf(
-    DatabaseOperation.CREATE,
-    DatabaseOperation.DROP,
-    DatabaseOperation.ALTER,
-    DatabaseOperation.REPLACE,
-)
+private val SCHEMA_OPERATIONS =
+    setOf(
+        DatabaseOperation.CREATE,
+        DatabaseOperation.DROP,
+        DatabaseOperation.ALTER,
+        DatabaseOperation.REPLACE,
+    )
 
 internal sealed interface DatabaseDestination {
     data object DatabaseList : DatabaseDestination
