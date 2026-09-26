@@ -56,90 +56,96 @@ public interface DatabaseInspector {
         dbInfo: DbInfo,
         tableName: String,
     ): TableSchema {
-        val colResult = query(dbInfo, "PRAGMA table_info(\"$tableName\")", allowWrite = false)
-        val columns =
-            if (colResult.isSuccess) {
-                val nameIdx = colResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 1
-                val typeIdx = colResult.columns.indexOf("type").takeIf { it >= 0 } ?: 2
-                val notNullIdx = colResult.columns.indexOf("notnull").takeIf { it >= 0 } ?: 3
-                val dfltIdx = colResult.columns.indexOf("dflt_value").takeIf { it >= 0 } ?: 4
-                val pkIdx = colResult.columns.indexOf("pk").takeIf { it >= 0 } ?: 5
-
-                colResult.rows.map { row ->
-                    TableColumn(
-                        name = row.getOrNull(nameIdx) ?: "",
-                        type = row.getOrNull(typeIdx) ?: "TEXT",
-                        isPrimaryKey = (row.getOrNull(pkIdx)?.toIntOrNull() ?: 0) > 0,
-                        isNotNull = row.getOrNull(notNullIdx) == "1",
-                        defaultValue = row.getOrNull(dfltIdx),
-                    )
-                }
-            } else {
-                emptyList()
-            }
-
-        val indexResult = query(dbInfo, "PRAGMA index_list(\"$tableName\")", allowWrite = false)
-        val indexes =
-            if (indexResult.isSuccess) {
-                val nameIdx = indexResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 1
-                val uniqueIdx = indexResult.columns.indexOf("unique").takeIf { it >= 0 } ?: 2
-
-                indexResult.rows.mapNotNull { row ->
-                    val idxName = row.getOrNull(nameIdx) ?: return@mapNotNull null
-                    val isUnique = row.getOrNull(uniqueIdx) == "1"
-
-                    val idxInfoResult = query(dbInfo, "PRAGMA index_info(\"$idxName\")", allowWrite = false)
-                    val colNameIdx = idxInfoResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 2
-                    val indexCols =
-                        if (idxInfoResult.isSuccess) {
-                            idxInfoResult.rows.mapNotNull { it.getOrNull(colNameIdx) }
-                        } else {
-                            emptyList()
-                        }
-
-                    TableIndex(
-                        name = idxName,
-                        isUnique = isUnique,
-                        columns = indexCols,
-                    )
-                }
-            } else {
-                emptyList()
-            }
-
-        val fkResult = query(dbInfo, "PRAGMA foreign_key_list(\"$tableName\")", allowWrite = false)
-        val foreignKeys =
-            if (fkResult.isSuccess) {
-                val idIdx = fkResult.columns.indexOf("id").takeIf { it >= 0 } ?: 0
-                val tableIdx = fkResult.columns.indexOf("table").takeIf { it >= 0 } ?: 2
-                val fromIdx = fkResult.columns.indexOf("from").takeIf { it >= 0 } ?: 3
-                val toIdx = fkResult.columns.indexOf("to").takeIf { it >= 0 } ?: 4
-                val onUpdateIdx = fkResult.columns.indexOf("on_update").takeIf { it >= 0 } ?: 5
-                val onDeleteIdx = fkResult.columns.indexOf("on_delete").takeIf { it >= 0 } ?: 6
-
-                fkResult.rows.mapNotNull { row ->
-                    val fromCol = row.getOrNull(fromIdx) ?: return@mapNotNull null
-                    val targetTab = row.getOrNull(tableIdx) ?: return@mapNotNull null
-                    val targetCol = row.getOrNull(toIdx) ?: ""
-                    TableForeignKey(
-                        id = row.getOrNull(idIdx)?.toIntOrNull() ?: 0,
-                        fromColumn = fromCol,
-                        targetTable = targetTab,
-                        targetColumn = targetCol,
-                        onUpdate = row.getOrNull(onUpdateIdx) ?: "NO ACTION",
-                        onDelete = row.getOrNull(onDeleteIdx) ?: "NO ACTION",
-                    )
-                }
-            } else {
-                emptyList()
-            }
-
         return TableSchema(
             tableName = tableName,
-            columns = columns,
-            indexes = indexes,
-            foreignKeys = foreignKeys,
+            columns = fetchColumns(dbInfo, tableName),
+            indexes = fetchIndexes(dbInfo, tableName),
+            foreignKeys = fetchForeignKeys(dbInfo, tableName),
         )
+    }
+
+    private fun fetchColumns(
+        dbInfo: DbInfo,
+        tableName: String,
+    ): List<TableColumn> {
+        val colResult = query(dbInfo, "PRAGMA table_info(\"$tableName\")", allowWrite = false)
+        if (!colResult.isSuccess) return emptyList()
+
+        val nameIdx = colResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 1
+        val typeIdx = colResult.columns.indexOf("type").takeIf { it >= 0 } ?: 2
+        val notNullIdx = colResult.columns.indexOf("notnull").takeIf { it >= 0 } ?: 3
+        val dfltIdx = colResult.columns.indexOf("dflt_value").takeIf { it >= 0 } ?: 4
+        val pkIdx = colResult.columns.indexOf("pk").takeIf { it >= 0 } ?: 5
+
+        return colResult.rows.map { row ->
+            TableColumn(
+                name = row.getOrNull(nameIdx) ?: "",
+                type = row.getOrNull(typeIdx) ?: "TEXT",
+                isPrimaryKey = (row.getOrNull(pkIdx)?.toIntOrNull() ?: 0) > 0,
+                isNotNull = row.getOrNull(notNullIdx) == "1",
+                defaultValue = row.getOrNull(dfltIdx),
+            )
+        }
+    }
+
+    private fun fetchIndexes(
+        dbInfo: DbInfo,
+        tableName: String,
+    ): List<TableIndex> {
+        val indexResult = query(dbInfo, "PRAGMA index_list(\"$tableName\")", allowWrite = false)
+        if (!indexResult.isSuccess) return emptyList()
+
+        val nameIdx = indexResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 1
+        val uniqueIdx = indexResult.columns.indexOf("unique").takeIf { it >= 0 } ?: 2
+
+        return indexResult.rows.mapNotNull { row ->
+            val idxName = row.getOrNull(nameIdx) ?: return@mapNotNull null
+            val isUnique = row.getOrNull(uniqueIdx) == "1"
+
+            val idxInfoResult = query(dbInfo, "PRAGMA index_info(\"$idxName\")", allowWrite = false)
+            val colNameIdx = idxInfoResult.columns.indexOf(COLUMN_NAME).takeIf { it >= 0 } ?: 2
+            val indexCols =
+                if (idxInfoResult.isSuccess) {
+                    idxInfoResult.rows.mapNotNull { it.getOrNull(colNameIdx) }
+                } else {
+                    emptyList()
+                }
+
+            TableIndex(
+                name = idxName,
+                isUnique = isUnique,
+                columns = indexCols,
+            )
+        }
+    }
+
+    private fun fetchForeignKeys(
+        dbInfo: DbInfo,
+        tableName: String,
+    ): List<TableForeignKey> {
+        val fkResult = query(dbInfo, "PRAGMA foreign_key_list(\"$tableName\")", allowWrite = false)
+        if (!fkResult.isSuccess) return emptyList()
+
+        val idIdx = fkResult.columns.indexOf("id").takeIf { it >= 0 } ?: 0
+        val tableIdx = fkResult.columns.indexOf("table").takeIf { it >= 0 } ?: 2
+        val fromIdx = fkResult.columns.indexOf("from").takeIf { it >= 0 } ?: 3
+        val toIdx = fkResult.columns.indexOf("to").takeIf { it >= 0 } ?: 4
+        val onUpdateIdx = fkResult.columns.indexOf("on_update").takeIf { it >= 0 } ?: 5
+        val onDeleteIdx = fkResult.columns.indexOf("on_delete").takeIf { it >= 0 } ?: 6
+
+        return fkResult.rows.mapNotNull { row ->
+            val fromCol = row.getOrNull(fromIdx) ?: return@mapNotNull null
+            val targetTab = row.getOrNull(tableIdx) ?: return@mapNotNull null
+            val targetCol = row.getOrNull(toIdx) ?: ""
+            TableForeignKey(
+                id = row.getOrNull(idIdx)?.toIntOrNull() ?: 0,
+                fromColumn = fromCol,
+                targetTable = targetTab,
+                targetColumn = targetCol,
+                onUpdate = row.getOrNull(onUpdateIdx) ?: "NO ACTION",
+                onDelete = row.getOrNull(onDeleteIdx) ?: "NO ACTION",
+            )
+        }
     }
 
     /**
