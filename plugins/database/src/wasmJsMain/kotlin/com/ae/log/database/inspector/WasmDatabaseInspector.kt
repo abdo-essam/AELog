@@ -7,15 +7,8 @@ import com.ae.log.database.model.QueryResult
 
 internal class WasmDatabaseInspector(
     private val config: DatabasePluginConfig,
-) : DatabaseInspector {
-    private val registeredDatabases = mutableListOf<DbInfo>()
+) : BaseDatabaseInspector() {
     private val virtualTables = mutableMapOf<String, List<DbTable>>()
-
-    override fun registerDatabase(dbInfo: DbInfo) {
-        if (registeredDatabases.none { it.path == dbInfo.path }) {
-            registeredDatabases.add(dbInfo)
-        }
-    }
 
     public fun registerVirtualTable(
         dbName: String,

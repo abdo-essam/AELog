@@ -17,12 +17,10 @@ kover = "0.9.9"
 androidx-test = "1.7.0"
 vanniktechPublish = "0.30.0"
 kotlinx-benchmark = "0.4.19"
-androidx-room = "2.8.5"
 runtime = "1.11.3"
 
 [libraries]
-androidx-sqlite = { module = "androidx.sqlite:sqlite", version = "2.7.1" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+androidx-sqlite = { module = "androidx.sqlite:sqlite", version = "2.6.2" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }

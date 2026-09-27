@@ -1,9 +1,14 @@
-package com.ae.log.database.room
+package com.ae.log.database.sqlite
 
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.SQLiteStatement
+import com.ae.log.AELog
+import com.ae.log.AELogTestApi
 import com.ae.log.database.DatabaseLogRecorder
+import com.ae.log.database.DatabasePlugin
+import com.ae.log.database.config.DatabasePluginConfig
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,10 +18,18 @@ private const val TEST_DB_NAME = "test.db"
 private const val TEST_QUERY = "SELECT * FROM users WHERE id = ?"
 private const val DB_FILE_PATH = "/path/to/test.db"
 
-class AELogRoomAdapterTest {
+@OptIn(AELogTestApi::class)
+class AELogSQLiteDriverTest {
     @BeforeTest
     fun setUp() {
-        DatabaseLogRecorder.clear()
+        AELog.resetForTesting()
+        val plugin = DatabasePlugin(DatabasePluginConfig())
+        AELog.install(plugin)
+    }
+
+    @AfterTest
+    fun tearDown() {
+        AELog.resetForTesting()
     }
 
     @Test
@@ -106,11 +119,18 @@ class AELogRoomAdapterTest {
         statement.step()
         assertTrue(stepCalled)
 
-        val logs = DatabaseLogRecorder.logs.value
+        val logs =
+            AELog
+                .getPlugin<DatabasePlugin>()
+                ?.logRecorder
+                ?.logs
+                ?.value
+                ?: DatabaseLogRecorder.defaultInstance.logs.value
         assertEquals(1, logs.size)
         val entry = logs.first()
         assertEquals(TEST_DB_NAME, entry.databaseName)
         assertTrue(entry.sql.startsWith(TEST_QUERY))
         assertTrue(entry.sql.contains("42"))
+        assertTrue(entry.durationMs >= 0L)
     }
 }

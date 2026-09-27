@@ -14,6 +14,7 @@ public data class DatabasePluginConfig(
     public val allowWrite: Boolean = false,
     public val busyTimeoutMs: Long = 3000L,
     public val defaultPageSize: Int = 50,
+    public val maxLogEntries: Int = 500,
     public val passphraseProvider: PassphraseProvider? = null,
     public val additionalSearchPaths: List<String> = emptyList(),
 )

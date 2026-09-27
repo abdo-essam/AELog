@@ -88,7 +88,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.2.3"
+aelog = "1.2.4"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -97,7 +97,6 @@ aelog-network-okhttp   = { module = "io.github.abdo-essam:ae-log-network-okhttp"
 aelog-analytics        = { module = "io.github.abdo-essam:ae-log-analytics",      version.ref = "aelog" }
 aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }
 aelog-database         = { module = "io.github.abdo-essam:ae-log-database",       version.ref = "aelog" }
-aelog-database-room    = { module = "io.github.abdo-essam:ae-log-database-room",  version.ref = "aelog" }
 ```
 
 ### 2. Gradle Setup
@@ -114,10 +113,7 @@ kotlin {
             implementation(libs.aelog.network.ktor)
             implementation(libs.aelog.analytics)
             implementation(libs.aelog.crashes)
-
-            // Database Inspector:
-            implementation(libs.aelog.database.room) // Room users
-            // implementation(libs.aelog.database)    // SQLDelight / Raw SQLite users
+            implementation(libs.aelog.database) // Database Inspector & SQLite Driver
         }
         androidMain.dependencies {
             // Optional OkHttp interceptor for Android
@@ -126,13 +122,6 @@ kotlin {
     }
 }
 ```
-
-#### 🗄️ Database Plugin Selection
-
-| Your Stack | Dependency to Add | Transitive Inclusions |
-|:---|:---|:---|
-| **androidx.room** | `libs.aelog.database.room` | Includes `aelog-database` & `ae-log-core` automatically. |
-| **SQLDelight / Raw SQLite / Custom** | `libs.aelog.database` | Lightweight inspector without `androidx.room` dependencies. |
 
 ---
 
@@ -266,19 +255,19 @@ AELog includes a powerful on-device Database Inspector with live query intercept
 To automatically intercept and log all SQL statements executed by your app in real-time across **Room**, **SQLDelight**, or raw **SQLite**, wrap your underlying `SQLiteDriver` with `AELogSQLiteDriver`:
 
 ```kotlin
-// 1. Room Database Integration (aelog-database-room):
+// 1. Room Database Integration:
 Room.databaseBuilder<AppDatabase>(name = dbFilePath)
     .setDriver(AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db"))
     .build()
 
-// 2. SQLDelight Integration (aelog-database-room):
+// 2. SQLDelight Integration:
 val driver = AELogSQLiteDriver(
     delegate = NativeSQLiteDriver(Database.Schema, "app.db"),
     databaseName = "app.db"
 )
 val database = Database(driver)
 
-// 3. Raw SQLite Integration (aelog-database-room):
+// 3. Raw SQLite Integration:
 val driver = AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db")
 ```
 
@@ -286,11 +275,8 @@ val driver = AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db")
 On Android and iOS, AELog also automatically scans application database directories to browse tables and schemas:
 
 ```kotlin
-// Room & SQLite users (shared commonMain sourceSet)
-implementation("io.github.abdo-essam:ae-log-database-room:1.2.3")
-
-// General Database Inspector (without Room/SQLite driver interceptor)
-implementation("io.github.abdo-essam:ae-log-database:1.2.3")
+// Shared commonMain sourceSet
+implementation("io.github.abdo-essam:ae-log-database:1.2.4")
 ```
 
 #### 3. Primary Database API (`AELog.database`)

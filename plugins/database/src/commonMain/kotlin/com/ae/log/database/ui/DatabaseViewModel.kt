@@ -1,6 +1,8 @@
 package com.ae.log.database.ui
 
+import com.ae.log.AELog
 import com.ae.log.database.DatabaseLogRecorder
+import com.ae.log.database.DatabasePlugin
 import com.ae.log.database.config.DatabasePluginConfig
 import com.ae.log.database.inspector.DatabaseInspector
 import com.ae.log.database.inspector.isWriteStatement
@@ -84,6 +86,8 @@ internal class DatabaseViewModel(
     var inspector: DatabaseInspector,
     val config: DatabasePluginConfig,
     private val scope: CoroutineScope,
+    val logRecorder: DatabaseLogRecorder =
+        AELog.getPlugin<DatabasePlugin>()?.logRecorder ?: DatabaseLogRecorder.defaultInstance,
 ) {
     fun updateInspector(newInspector: DatabaseInspector) {
         this.inspector = newInspector
@@ -148,7 +152,7 @@ internal class DatabaseViewModel(
     private val _tablePage = MutableStateFlow(0)
     val tablePage: StateFlow<Int> = _tablePage.asStateFlow()
 
-    private val _tablePageSize = MutableStateFlow(10)
+    private val _tablePageSize = MutableStateFlow(config.defaultPageSize)
     val tablePageSize: StateFlow<Int> = _tablePageSize.asStateFlow()
 
     private val _tableSortColumn = MutableStateFlow<String?>(null)
@@ -187,11 +191,11 @@ internal class DatabaseViewModel(
     private val _logSearchQuery = MutableStateFlow("")
     val logSearchQuery: StateFlow<String> = _logSearchQuery.asStateFlow()
 
-    val logs: StateFlow<List<DatabaseLogEntry>> = DatabaseLogRecorder.logs
+    val logs: StateFlow<List<DatabaseLogEntry>> = logRecorder.logs
 
     val filteredLogs: StateFlow<List<DatabaseLogEntry>> =
         combine(
-            DatabaseLogRecorder.logs,
+            logRecorder.logs,
             _logFilter,
             _logSearchQuery,
             _selectedDatabase,
@@ -467,7 +471,7 @@ internal class DatabaseViewModel(
     }
 
     fun clearLogs() {
-        DatabaseLogRecorder.clear()
+        logRecorder.clear()
     }
 
     fun clear() {

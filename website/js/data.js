@@ -6,7 +6,7 @@
  */
 
 // ── Version ────────────────────────────────────────────────────────────────
-export const AELOG_VERSION = "1.2.3";
+export const AELOG_VERSION = "1.2.4";
 
 // ── Dependency Snippets (Step 1 of setup guide) ────────────────────────────
 export const DEP_SNIPPETS = {
@@ -43,13 +43,13 @@ commonMain.dependencies {
     implementation("io.github.abdo-essam:ae-log-database:${AELOG_VERSION}")
 }`,
 
-    "database-room": `// Database Inspector with Room support
+    "database-room": `// Database Inspector & SQLite Driver (Room / SQLDelight / Raw SQLite)
 // Includes ae-log-database and ae-log-core transitively
 commonMain.dependencies {
-    implementation("io.github.abdo-essam:ae-log-database-room:${AELOG_VERSION}")
+    implementation("io.github.abdo-essam:ae-log-database:${AELOG_VERSION}")
 }`,
 
-    full: `// Full stack: Logs + Network (Ktor) + Analytics + Crashes + Database (Room)
+    full: `// Full stack: Logs + Network (Ktor) + Analytics + Crashes + Database
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -57,7 +57,7 @@ kotlin {
             implementation("io.github.abdo-essam:ae-log-network-ktor:${AELOG_VERSION}")
             implementation("io.github.abdo-essam:ae-log-analytics:${AELOG_VERSION}")
             implementation("io.github.abdo-essam:ae-log-crashes:${AELOG_VERSION}")
-            implementation("io.github.abdo-essam:ae-log-database-room:${AELOG_VERSION}")
+            implementation("io.github.abdo-essam:ae-log-database:${AELOG_VERSION}")
         }
         androidMain.dependencies {
             // Optional: add only if your Android target also uses OkHttp

@@ -1,7 +1,7 @@
 package com.ae.log.database
 
 import com.ae.log.database.config.DatabasePluginConfig
-import com.ae.log.database.inspector.DatabaseInspector
+import com.ae.log.database.inspector.BaseDatabaseInspector
 import com.ae.log.database.model.DatabaseLogFilter
 import com.ae.log.database.model.DatabaseOperation
 import com.ae.log.database.model.DbInfo
@@ -22,7 +22,7 @@ import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DatabaseEnhancementsTest {
-    private class TestDatabaseInspector : DatabaseInspector {
+    private class TestDatabaseInspector : BaseDatabaseInspector() {
         val databases =
             listOf(
                 DbInfo(

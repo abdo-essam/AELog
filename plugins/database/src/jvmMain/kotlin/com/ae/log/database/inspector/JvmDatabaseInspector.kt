@@ -12,15 +12,7 @@ private const val PROP_USER_DIR = "user.dir"
 
 internal class JvmDatabaseInspector(
     private val config: DatabasePluginConfig,
-) : DatabaseInspector {
-    private val registeredDatabases = mutableListOf<DbInfo>()
-
-    override fun registerDatabase(dbInfo: DbInfo) {
-        if (registeredDatabases.none { it.path == dbInfo.path }) {
-            registeredDatabases.add(dbInfo)
-        }
-    }
-
+) : BaseDatabaseInspector() {
     override fun listDatabases(): List<DbInfo> {
         val result = mutableListOf<DbInfo>()
 
@@ -140,29 +132,7 @@ internal class JvmDatabaseInspector(
         return err
     }
 
-    private fun isSqliteFile(file: File): Boolean {
-        if (!file.isFile) return false
-        val ext = file.extension.lowercase()
-        return ext == "db" || ext == "sqlite" || ext == "sqlite3"
-    }
-
-    private fun isAuxiliaryFile(name: String): Boolean {
-        val lower = name.lowercase()
-        return lower.endsWith("-wal") ||
-            lower.endsWith(".wal") ||
-            lower.endsWith("-shm") ||
-            lower.endsWith(".shm") ||
-            lower.endsWith("-journal") ||
-            lower.endsWith(".journal") ||
-            lower.endsWith("-lck") ||
-            lower.endsWith(".lck") ||
-            lower.endsWith("-lock") ||
-            lower.endsWith(".lock") ||
-            lower.endsWith("-tmp") ||
-            lower.endsWith(".tmp") ||
-            lower.endsWith("-bak") ||
-            lower.endsWith(".bak")
-    }
+    private fun isSqliteFile(file: File): Boolean = file.isFile && isSqliteFileName(file.name)
 
     private fun isEncryptedSqliteFile(file: File): Boolean {
         if (!file.exists() || file.length() < 16) return false
@@ -170,7 +140,7 @@ internal class JvmDatabaseInspector(
             FileInputStream(file).use { fis ->
                 val header = ByteArray(16)
                 val read = fis.read(header)
-                read >= 16 && !header.toString(Charsets.UTF_8).startsWith("SQLite format 3")
+                read >= 16 && isEncryptedSqliteHeader(header)
             }
         } catch (_: Exception) {
             false

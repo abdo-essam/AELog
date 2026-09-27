@@ -15,23 +15,40 @@ import kotlin.system.measureTimeMillis
 private const val PRAGMA_KEYWORD = "PRAGMA"
 private const val SQLITE_SYSTEM_PREFIX = "sqlite_"
 private const val ANDROID_METADATA_TABLE = "android_metadata"
-private const val SQLITE_HEADER_PREFIX = "SQLite format 3"
 
 internal class AndroidDatabaseInspector(
     private val context: Context?,
     private val config: DatabasePluginConfig,
-) : DatabaseInspector {
+) : BaseDatabaseInspector() {
     private val currentContext: Context
         get() =
             requireNotNull(context ?: DatabaseAppContextHolder.context) {
                 "Android Context is not available. Ensure DatabasePluginInitializer is initialized."
             }
 
-    private val registeredDatabases = mutableListOf<DbInfo>()
+    private val connectionCacheLock = kotlinx.atomicfu.locks.SynchronizedObject()
+    private val connectionCache = mutableMapOf<String, SQLiteDatabase>()
 
-    override fun registerDatabase(dbInfo: DbInfo) {
-        if (registeredDatabases.none { it.path == dbInfo.path }) {
-            registeredDatabases.add(dbInfo)
+    private fun getCachedOrOpenDatabase(dbInfo: DbInfo): SQLiteDatabase? {
+        kotlinx.atomicfu.locks.synchronized(connectionCacheLock) {
+            val cached = connectionCache[dbInfo.path]
+            if (cached != null && cached.isOpen) {
+                return cached
+            }
+        }
+        val opened = openDatabase(dbInfo) ?: return null
+        kotlinx.atomicfu.locks.synchronized(connectionCacheLock) {
+            connectionCache[dbInfo.path] = opened
+        }
+        return opened
+    }
+
+    private fun evictFromCache(path: String) {
+        kotlinx.atomicfu.locks.synchronized(connectionCacheLock) {
+            val removed = connectionCache.remove(path)
+            if (removed != null) {
+                closeQuietly(removed)
+            }
         }
     }
 
@@ -243,7 +260,7 @@ internal class AndroidDatabaseInspector(
             return err
         }
 
-        val db = openDatabase(dbInfo)
+        val db = getCachedOrOpenDatabase(dbInfo)
         if (db == null) {
             val err = QueryResult.error("Failed to open database: ${dbInfo.name}")
             if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
@@ -299,9 +316,8 @@ internal class AndroidDatabaseInspector(
                     res.copy(executionDurationMs = executionTime)
                 }
             } catch (e: Exception) {
+                evictFromCache(dbInfo.path)
                 QueryResult.error(e.message ?: "SQL execution error")
-            } finally {
-                closeQuietly(db)
             }
 
         if (recordLog && !sql.trimStart().uppercase().startsWith(PRAGMA_KEYWORD)) {
@@ -324,15 +340,6 @@ internal class AndroidDatabaseInspector(
 
         val flags = SQLiteDatabase.OPEN_READWRITE
 
-        // Handle encrypted database if passphrase provider is present
-        if (dbInfo.isEncrypted) {
-            val passphrase = config.passphraseProvider?.getPassphrase(dbInfo.name)
-            if (passphrase != null) {
-                val openedSqlCipher = openWithSqlCipherReflection(dbInfo.path, String(passphrase))
-                if (openedSqlCipher != null) return openedSqlCipher
-            }
-        }
-
         return try {
             val db = SQLiteDatabase.openDatabase(dbInfo.path, null, flags)
             // Configure WAL busy timeout to avoid immediate locks
@@ -351,27 +358,6 @@ internal class AndroidDatabaseInspector(
         }
     }
 
-    private fun openWithSqlCipherReflection(
-        path: String,
-        passphrase: String,
-    ): SQLiteDatabase? =
-        try {
-            val sqlCipherClass = Class.forName("net.sqlcipher.database.SQLiteDatabase")
-            val openMethod =
-                sqlCipherClass.getMethod(
-                    "openDatabase",
-                    String::class.java,
-                    String::class.java,
-                    Class.forName("net.sqlcipher.database.SQLiteDatabase\$CursorFactory"),
-                    Int::class.javaPrimitiveType,
-                )
-            // SQLCipher SQLiteDatabase is not standard android.database.sqlite.SQLiteDatabase,
-            // so we return null if standard interface cannot wrap it directly.
-            null
-        } catch (_: Exception) {
-            null
-        }
-
     private fun closeQuietly(db: SQLiteDatabase) {
         try {
             db.close()
@@ -379,33 +365,14 @@ internal class AndroidDatabaseInspector(
         }
     }
 
-    private fun isAuxiliaryFile(name: String): Boolean {
-        val lower = name.lowercase()
-        return lower.endsWith("-wal") ||
-            lower.endsWith(".wal") ||
-            lower.endsWith("-shm") ||
-            lower.endsWith(".shm") ||
-            lower.endsWith("-journal") ||
-            lower.endsWith(".journal") ||
-            lower.endsWith("-lck") ||
-            lower.endsWith(".lck") ||
-            lower.endsWith("-lock") ||
-            lower.endsWith(".lock") ||
-            lower.endsWith("-tmp") ||
-            lower.endsWith(".tmp") ||
-            lower.endsWith("-bak") ||
-            lower.endsWith(".bak")
-    }
-
     private fun isSqliteFileOrHeader(file: File): Boolean {
-        val ext = file.extension.lowercase()
-        if (ext == "db" || ext == "sqlite" || ext == "sqlite3") return true
+        if (isSqliteFileName(file.name)) return true
         if (!file.exists() || file.length() < 16) return false
         return try {
             FileInputStream(file).use { fis ->
                 val header = ByteArray(16)
                 val read = fis.read(header)
-                read >= 16 && header.toString(Charsets.UTF_8).startsWith(SQLITE_HEADER_PREFIX)
+                read >= 16 && !isEncryptedSqliteHeader(header)
             }
         } catch (_: Exception) {
             false
@@ -418,7 +385,7 @@ internal class AndroidDatabaseInspector(
             FileInputStream(file).use { fis ->
                 val header = ByteArray(16)
                 val read = fis.read(header)
-                read >= 16 && !header.toString(Charsets.UTF_8).startsWith(SQLITE_HEADER_PREFIX)
+                read >= 16 && isEncryptedSqliteHeader(header)
             }
         } catch (_: Exception) {
             false

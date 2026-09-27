@@ -1,9 +1,13 @@
 package com.ae.log.database
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.ae.log.database.config.DatabasePluginConfig
 import com.ae.log.database.inspector.DatabaseInspector
@@ -38,6 +42,8 @@ public class DatabasePlugin(
     public val config: DatabasePluginConfig = DatabasePluginConfig(),
     inspector: DatabaseInspector = createPlatformDatabaseInspector(config),
 ) : UIPlugin {
+    public val logRecorder: DatabaseLogRecorder = DatabaseLogRecorder(config.maxLogEntries)
+
     public var inspector: DatabaseInspector = inspector
         set(value) {
             field = value
@@ -54,20 +60,28 @@ public class DatabasePlugin(
     private var viewModel: DatabaseViewModel? = null
 
     override fun onAttach(context: PluginContext) {
-        val vm = DatabaseViewModel(inspector, config, context.scope)
+        val vm = DatabaseViewModel(inspector, config, context.scope, logRecorder)
         viewModel = vm
 
         context.scope.launch {
-            vm.databases.collect { list ->
-                _badgeCount.value = list.size
+            logRecorder.logs.collect { logs ->
+                // Badge surfaces unhandled database errors for quick developer action
+                val errorCount = logs.count { !it.isSuccess }
+                _badgeCount.value = errorCount
             }
         }
     }
 
     override fun onClear() {
         viewModel?.clear()
+        logRecorder.clear()
     }
 
+    /**
+     * Exports a textual dump of discovered databases and tables.
+     * Note: If called on Android with file-based inspectors, invoke from a background thread
+     * to avoid performing file I/O on the main thread.
+     */
     override fun export(): String {
         val databases = inspector.listDatabases()
         if (databases.isEmpty()) return "No databases found."
@@ -90,7 +104,16 @@ public class DatabasePlugin(
 
     @Composable
     override fun Content(modifier: Modifier) {
-        val vm = viewModel ?: return
+        val vm = viewModel
+        if (vm == null) {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+            return
+        }
         DatabaseContent(viewModel = vm, modifier = modifier)
     }
 

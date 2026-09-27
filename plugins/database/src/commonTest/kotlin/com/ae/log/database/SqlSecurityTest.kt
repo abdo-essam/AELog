@@ -52,4 +52,79 @@ class SqlSecurityTest {
         validateSqlSafety("SELECT * FROM users", allowWrite = false)
         validateSqlSafety("PRAGMA table_info(users)", allowWrite = false)
     }
+
+    @Test
+    fun getTableData_protectsAgainstSqlInjectionInSearchAndSort() {
+        var executedSql = ""
+        val inspector =
+            object : com.ae.log.database.inspector.BaseDatabaseInspector() {
+                override fun listDatabases(): List<com.ae.log.database.model.DbInfo> =
+                    listOf(
+                        com.ae.log.database.model
+                            .DbInfo("test.db", "/test.db"),
+                    )
+
+                override fun listTables(
+                    dbInfo: com.ae.log.database.model.DbInfo,
+                ): List<com.ae.log.database.model.DbTable> =
+                    listOf(
+                        com.ae.log.database.model
+                            .DbTable("users"),
+                    )
+
+                override fun query(
+                    dbInfo: com.ae.log.database.model.DbInfo,
+                    sql: String,
+                    args: List<String>,
+                    allowWrite: Boolean,
+                    recordLog: Boolean,
+                ): com.ae.log.database.model.QueryResult {
+                    executedSql = sql
+                    if (sql.contains("PRAGMA table_info")) {
+                        return com.ae.log.database.model.QueryResult.success(
+                            columns = listOf("cid", "name", "type", "notnull", "dflt_value", "pk"),
+                            rows =
+                                listOf(
+                                    listOf("0", "id", "INTEGER", "1", null, "1"),
+                                    listOf("1", "username", "TEXT", "1", null, "0"),
+                                ),
+                        )
+                    }
+                    return com.ae.log.database.model.QueryResult
+                        .success(listOf("id", "username"), emptyList())
+                }
+            }
+
+        val db =
+            com.ae.log.database.model
+                .DbInfo("test.db", "/test.db")
+
+        // 1. Injected sort column not in schema must be omitted
+        inspector.getTableData(
+            dbInfo = db,
+            tableName = "users",
+            sortColumn = "id; DROP TABLE users; --",
+        )
+        assertFalse(executedSql.contains("DROP TABLE"))
+        assertFalse(executedSql.contains("ORDER BY"))
+
+        // 2. Legitimate sort column should be included with quotes
+        inspector.getTableData(
+            dbInfo = db,
+            tableName = "users",
+            sortColumn = "username",
+            sortAscending = false,
+        )
+        assertTrue(executedSql.contains("ORDER BY \"username\" DESC"))
+
+        // 3. Injected search query must be escaped
+        inspector.getTableData(
+            dbInfo = db,
+            tableName = "users",
+            searchQuery = "admin' OR '1'='1",
+        )
+        assertTrue(executedSql.contains("admin'' OR ''1''=''1"))
+        assertTrue(executedSql.contains("ESCAPE '\\'"))
+        assertFalse(executedSql.contains("admin' OR '1'='1"))
+    }
 }

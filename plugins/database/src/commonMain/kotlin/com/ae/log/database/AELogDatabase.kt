@@ -1,35 +1,12 @@
 package com.ae.log.database
 
 import com.ae.log.AELog
+import com.ae.log.database.inspector.DEFAULT_DB_NAME
 import com.ae.log.database.model.DatabaseLogEntry
 import com.ae.log.database.model.DbInfo
 import com.ae.log.database.model.DbTable
 import com.ae.log.database.model.QueryResult
 import kotlinx.coroutines.flow.StateFlow
-
-/**
- * Public convenience API accessible via `AELog.database`.
- *
- * ### Example usage:
- * ```kotlin
- * // List all discovered databases
- * val databases = AELog.database.listDatabases()
- *
- * // Run a quick query
- * val result = AELog.database.query(
- *     dbName = "app_database.db",
- *     sql = "SELECT * FROM users LIMIT 10",
- * )
- *
- * // Log a query executed by your app
- * AELog.database.logQuery(
- *     databaseName = "app_database.db",
- *     sql = "SELECT * FROM users WHERE active = 1",
- *     durationMs = 4L,
- * )
- * ```
- */
-private const val DEFAULT_DB_NAME = "app.db"
 
 @PublishedApi
 internal const val DEFAULT_ERROR_MESSAGE: String = "Database error"
@@ -45,11 +22,16 @@ public object DatabaseProxy {
         AELog.getPlugin<DatabasePlugin>()?.inspector?.listDatabases() ?: emptyList()
 
     /**
+     * Retrieves a database by name using fast-path lookup.
+     */
+    public fun getDatabase(dbName: String): DbInfo? = AELog.getPlugin<DatabasePlugin>()?.inspector?.getDatabase(dbName)
+
+    /**
      * Lists tables for the given database name.
      */
     public fun listTables(dbName: String): List<DbTable> {
         val plugin = AELog.getPlugin<DatabasePlugin>() ?: return emptyList()
-        val dbInfo = plugin.inspector.listDatabases().firstOrNull { it.name == dbName } ?: return emptyList()
+        val dbInfo = plugin.inspector.getDatabase(dbName) ?: return emptyList()
         return plugin.inspector.listTables(dbInfo)
     }
 
@@ -65,7 +47,7 @@ public object DatabaseProxy {
             AELog.getPlugin<DatabasePlugin>()
                 ?: return QueryResult.error("DatabasePlugin is not installed in AELog")
         val dbInfo =
-            plugin.inspector.listDatabases().firstOrNull { it.name == dbName }
+            plugin.inspector.getDatabase(dbName)
                 ?: return QueryResult.error("Database '$dbName' not found")
         return plugin.inspector.query(
             dbInfo = dbInfo,
@@ -94,7 +76,8 @@ public object DatabaseProxy {
             } else {
                 sql
             }
-        DatabaseLogRecorder.record(
+        val recorder = AELog.getPlugin<DatabasePlugin>()?.logRecorder ?: DatabaseLogRecorder.defaultInstance
+        recorder.record(
             databaseName = databaseName,
             sql = formattedSql,
             durationMs = durationMs,
@@ -310,7 +293,7 @@ public object DatabaseProxy {
      * Live stream of recent database operation logs.
      */
     public val logs: StateFlow<List<DatabaseLogEntry>>
-        get() = DatabaseLogRecorder.logs
+        get() = AELog.getPlugin<DatabasePlugin>()?.logRecorder?.logs ?: DatabaseLogRecorder.defaultInstance.logs
 
     /**
      * Manually registers a database with the inspector (useful on desktop, iOS, or WASM).

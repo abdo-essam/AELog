@@ -238,14 +238,14 @@
 <div id="install-catalog" class="setup-code-block">
     <div class="code-file-label">gradle/libs.versions.toml</div>
     <pre><code class="language-toml">[versions]
-aelog = "1.2.3"
+aelog = "1.2.4"
 
 [libraries]
 aelog-logs          = { module = "io.github.abdo-essam:ae-log-logs",          version.ref = "aelog" }
 aelog-network-ktor  = { module = "io.github.abdo-essam:ae-log-network-ktor",  version.ref = "aelog" }
 aelog-analytics     = { module = "io.github.abdo-essam:ae-log-analytics",     version.ref = "aelog" }
 aelog-crashes       = { module = "io.github.abdo-essam:ae-log-crashes",       version.ref = "aelog" }
-aelog-database-room = { module = "io.github.abdo-essam:ae-log-database-room", version.ref = "aelog" }</code></pre>
+aelog-database      = { module = "io.github.abdo-essam:ae-log-database",      version.ref = "aelog" }</code></pre>
 
     <div class="code-file-label">shared/build.gradle.kts</div>
     <pre><code class="language-kotlin">kotlin {
@@ -255,7 +255,7 @@ aelog-database-room = { module = "io.github.abdo-essam:ae-log-database-room", ve
             implementation(libs.aelog.network.ktor)
             implementation(libs.aelog.analytics)
             implementation(libs.aelog.crashes)
-            implementation(libs.aelog.database.room)
+            implementation(libs.aelog.database)
         }
     }
 }</code></pre>
@@ -266,11 +266,11 @@ aelog-database-room = { module = "io.github.abdo-essam:ae-log-database-room", ve
     <pre><code class="language-kotlin">kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.abdo-essam:ae-log-logs:1.2.3")
-            implementation("io.github.abdo-essam:ae-log-network-ktor:1.2.3")
-            implementation("io.github.abdo-essam:ae-log-analytics:1.2.3")
-            implementation("io.github.abdo-essam:ae-log-crashes:1.2.3")
-            implementation("io.github.abdo-essam:ae-log-database-room:1.2.3")
+            implementation("io.github.abdo-essam:ae-log-logs:1.2.4")
+            implementation("io.github.abdo-essam:ae-log-network-ktor:1.2.4")
+            implementation("io.github.abdo-essam:ae-log-analytics:1.2.4")
+            implementation("io.github.abdo-essam:ae-log-crashes:1.2.4")
+            implementation("io.github.abdo-essam:ae-log-database:1.2.4")
         }
     }
 }</code></pre>
@@ -431,28 +431,25 @@ val client = HttpClient {
 
 <h2>Room & SQLite Driver Interceptor (<code>AELogSQLiteDriver</code>)</h2>
 <p>To automatically intercept and log all SQL queries executed by your app in real-time across <strong>Room</strong>, <strong>SQLDelight</strong>, or raw <strong>SQLite</strong>, wrap your underlying <code>SQLiteDriver</code> with <code>AELogSQLiteDriver</code>:</p>
-<pre><code class="language-kotlin">// 1. Room Database Integration (aelog-database-room):
+<pre><code class="language-kotlin">// 1. Room Database Integration:
 Room.databaseBuilder&lt;AppDatabase&gt;(name = dbFilePath)
     .setDriver(AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db"))
     .build()
 
-// 2. SQLDelight Integration (aelog-database-room):
+// 2. SQLDelight Integration:
 val driver = AELogSQLiteDriver(
     delegate = NativeSQLiteDriver(Database.Schema, "app.db"),
     databaseName = "app.db"
 )
 val database = Database(driver)
 
-// 3. Raw SQLite Integration (aelog-database-room):
+// 3. Raw SQLite Integration:
 val driver = AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db")</code></pre>
 
 <h2>Zero-Config Auto-Discovery</h2>
 <p>On Android and iOS, AELog automatically scans application database directories and registers existing databases without any manual setup code. Simply add the dependency:</p>
-<pre><code class="language-kotlin">// Room & SQLite users (shared commonMain sourceSet)
-implementation("io.github.abdo-essam:ae-log-database-room:1.2.3")
-
-// General Database Inspector (without Room/SQLite driver interceptor)
-implementation("io.github.abdo-essam:ae-log-database:1.2.3")</code></pre>
+<pre><code class="language-kotlin">// Shared commonMain sourceSet
+implementation("io.github.abdo-essam:ae-log-database:1.2.4")</code></pre>
 
 <h2>Primary API (<code>AELog.database</code>)</h2>
 <p>Interact with discovered databases, list tables, execute queries, and log app database transactions:</p>
@@ -936,6 +933,31 @@ AELog.log.e("Auth", "Login failed", error)
                 <!-- Timeline progress bar line -->
                 <div class="timeline-progress-line">
                     <div class="timeline-progress-fill" id="timeline-progress-fill"></div>
+                </div>
+
+                <!-- Milestone -11: v1.2.4 -->
+                <div class="timeline-item">
+                    <div class="timeline-bullet-wrapper">
+                        <div class="timeline-bullet"></div>
+                    </div>
+                    <div class="timeline-content glass-panel card-xl">
+                        <h3 class="timeline-title">v1.2.4 <span class="timeline-date">— September 27, 2026</span></h3>
+
+                        <h4 class="changelog-section-title">Added</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>Universal SQLite Driver (<code>AELogSQLiteDriver</code>):</strong> Unified SQLite driver query interception directly in <code>plugins:database</code> supporting Room, SQLDelight, and raw SQLite.</li>
+                            <li><strong>BaseDatabaseInspector & Platform Utilities:</strong> Shared file resolution, schema reflection, and query parsing across platforms.</li>
+                        </ul>
+
+                        <h4 class="changelog-section-title">Fixed & Improved</h4>
+                        <ul class="body-sm mute-text bullet-list">
+                            <li><strong>SQL Security Hardening:</strong> Strict validation of sort column identifiers and escaped search queries to prevent SQL injection.</li>
+                            <li><strong>Connection Pooling & Caching:</strong> Fast-path lookups and connection reuse to eliminate filesystem scanning churn.</li>
+                            <li><strong>Thread-Safe Database Registry:</strong> Protected against race conditions under concurrent access.</li>
+                            <li><strong>Log Isolation:</strong> Instantiable <code>DatabaseLogRecorder</code> owned per <code>DatabasePlugin</code>.</li>
+                        </ul>
+                        <div class="glow-border"></div>
+                    </div>
                 </div>
 
                 <!-- Milestone -10: v1.2.3 -->

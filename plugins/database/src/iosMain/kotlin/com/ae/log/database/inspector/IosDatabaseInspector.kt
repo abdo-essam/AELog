@@ -19,21 +19,12 @@ import platform.posix.fclose
 import platform.posix.fopen
 import platform.posix.fread
 
-private const val SQLITE_HEADER_PREFIX = "SQLite format 3"
-
 @OptIn(BetaInteropApi::class)
 internal class IosDatabaseInspector(
     private val config: DatabasePluginConfig,
-) : DatabaseInspector {
+) : BaseDatabaseInspector() {
     private val fileManager = NSFileManager.defaultManager
-    private val registeredDatabases = mutableListOf<DbInfo>()
     private val virtualTables = mutableMapOf<String, List<DbTable>>()
-
-    override fun registerDatabase(dbInfo: DbInfo) {
-        if (registeredDatabases.none { it.path == dbInfo.path }) {
-            registeredDatabases.add(dbInfo)
-        }
-    }
 
     fun registerVirtualTable(
         dbName: String,
@@ -193,28 +184,7 @@ internal class IosDatabaseInspector(
         }
     }
 
-    private fun isSqliteFilename(name: String): Boolean {
-        val lower = name.lowercase()
-        return lower.endsWith(".sqlite") || lower.endsWith(".db") || lower.endsWith(".sqlite3")
-    }
-
-    private fun isAuxiliaryFile(name: String): Boolean {
-        val lower = name.lowercase()
-        return lower.endsWith("-wal") ||
-            lower.endsWith(".wal") ||
-            lower.endsWith("-shm") ||
-            lower.endsWith(".shm") ||
-            lower.endsWith("-journal") ||
-            lower.endsWith(".journal") ||
-            lower.endsWith("-lck") ||
-            lower.endsWith(".lck") ||
-            lower.endsWith("-lock") ||
-            lower.endsWith(".lock") ||
-            lower.endsWith("-tmp") ||
-            lower.endsWith(".tmp") ||
-            lower.endsWith("-bak") ||
-            lower.endsWith(".bak")
-    }
+    private fun isSqliteFilename(name: String): Boolean = isSqliteFileName(name)
 
     private fun isEncryptedFile(path: String): Boolean {
         val file = fopen(path, "rb") ?: return false
@@ -222,8 +192,7 @@ internal class IosDatabaseInspector(
         val read = fread(header.refTo(0), 1u, 16u, file)
         fclose(file)
         if (read < 16u) return false
-        val prefix = header.take(15).map { it.toInt().toChar() }.joinToString("")
-        return !prefix.startsWith(SQLITE_HEADER_PREFIX)
+        return isEncryptedSqliteHeader(header)
     }
 }
 

@@ -1,5 +1,6 @@
 package com.ae.log.database
 
+import com.ae.log.AELog
 import com.ae.log.database.inspector.detectOperation
 import com.ae.log.database.model.DatabaseLogEntry
 import com.ae.log.database.model.DatabaseOperation
@@ -13,12 +14,15 @@ import kotlin.time.Clock
 
 /**
  * Thread-safe in-memory ring-buffer for capturing database query operations and errors.
+ *
+ * Each [DatabasePlugin] owns an isolated instance of [DatabaseLogRecorder],
+ * allowing multiple plugin instances or isolated test environments.
  */
-public object DatabaseLogRecorder {
-    private const val MAX_LOGS = 500
-
+public class DatabaseLogRecorder(
+    public val maxLogs: Int = MAX_DEFAULT_LOGS,
+) {
     private val lock = SynchronizedObject()
-    private val buffer = ArrayDeque<DatabaseLogEntry>(MAX_LOGS)
+    private val buffer = ArrayDeque<DatabaseLogEntry>(maxLogs)
     private val _logs = MutableStateFlow<List<DatabaseLogEntry>>(emptyList())
     public val logs: StateFlow<List<DatabaseLogEntry>> = _logs.asStateFlow()
 
@@ -56,7 +60,7 @@ public object DatabaseLogRecorder {
             )
 
         synchronized(lock) {
-            if (buffer.size >= MAX_LOGS) {
+            if (buffer.size >= maxLogs) {
                 buffer.removeLast()
             }
             buffer.addFirst(entry)
@@ -74,71 +78,111 @@ public object DatabaseLogRecorder {
         }
     }
 
-    private fun generateLogId(timestamp: Long): String = "db_${timestamp}_${Random.nextInt(1000, 9999)}"
+    public companion object {
+        public const val MAX_DEFAULT_LOGS: Int = 500
 
-    private fun extractTableName(sql: String): String? {
-        val len = sql.length
-        var i = 0
-        while (i < len) {
-            while (i < len && sql[i].isWhitespace()) i++
-            if (i >= len) break
+        /**
+         * Global fallback instance used when DatabasePlugin is not explicitly retrieved.
+         */
+        public val defaultInstance: DatabaseLogRecorder = DatabaseLogRecorder(MAX_DEFAULT_LOGS)
 
-            val start = i
-            while (i < len && !sql[i].isWhitespace()) i++
-            val wordLen = i - start
+        public fun record(
+            databaseName: String,
+            sql: String,
+            durationMs: Long,
+            tableName: String? = null,
+            isSuccess: Boolean = true,
+            errorMessage: String? = null,
+            affectedRows: Long? = null,
+            engine: String = "SQLite",
+        ) {
+            val recorder = AELog.getPlugin<DatabasePlugin>()?.logRecorder ?: defaultInstance
+            recorder.record(
+                databaseName = databaseName,
+                sql = sql,
+                durationMs = durationMs,
+                tableName = tableName,
+                isSuccess = isSuccess,
+                errorMessage = errorMessage,
+                affectedRows = affectedRows,
+                engine = engine,
+            )
+        }
 
-            if (wordLen == 4) {
-                val isFrom = sql.regionMatches(start, "FROM", 0, 4, ignoreCase = true)
-                val isInto = sql.regionMatches(start, "INTO", 0, 4, ignoreCase = true)
-                if (isFrom || isInto) {
-                    return extractNextToken(sql, i)
-                }
-            } else if (wordLen == 6) {
-                if (sql.regionMatches(start, "UPDATE", 0, 6, ignoreCase = true)) {
-                    return extractNextToken(sql, i)
-                }
-            } else if (wordLen == 5) {
-                if (sql.regionMatches(start, "TABLE", 0, 5, ignoreCase = true)) {
-                    return extractNextToken(sql, i)
+        public val logs: StateFlow<List<DatabaseLogEntry>>
+            get() = AELog.getPlugin<DatabasePlugin>()?.logRecorder?.logs ?: defaultInstance.logs
+
+        public fun clear() {
+            defaultInstance.clear()
+            AELog.getPlugin<DatabasePlugin>()?.logRecorder?.clear()
+        }
+
+        public fun isInternalSystemQuery(sql: String): Boolean {
+            var start = 0
+            val len = sql.length
+            while (start < len && sql[start].isWhitespace()) start++
+            if (start >= len) return false
+
+            if (sql.regionMatches(start, "PRAGMA", 0, 6, ignoreCase = true) ||
+                sql.regionMatches(start, "BEGIN", 0, 5, ignoreCase = true) ||
+                sql.regionMatches(start, "COMMIT", 0, 6, ignoreCase = true) ||
+                sql.regionMatches(start, "END TRANSACTION", 0, 15, ignoreCase = true) ||
+                sql.regionMatches(start, "END;", 0, 4, ignoreCase = true)
+            ) {
+                return true
+            }
+
+            return sql.contains("room_table_modification_log", ignoreCase = true) ||
+                sql.contains("room_master_table", ignoreCase = true) ||
+                sql.contains("sqlite_master", ignoreCase = true) ||
+                sql.contains("sqlite_schema", ignoreCase = true) ||
+                sql.contains("sqlite_sequence", ignoreCase = true)
+        }
+
+        private fun generateLogId(timestamp: Long): String = "db_${timestamp}_${Random.nextInt(1000, 9999)}"
+
+        private fun extractTableName(sql: String): String? {
+            val len = sql.length
+            var i = 0
+            while (i < len) {
+                while (i < len && sql[i].isWhitespace()) i++
+                if (i >= len) break
+
+                val start = i
+                while (i < len && !sql[i].isWhitespace()) i++
+                val wordLen = i - start
+
+                if (wordLen == 4) {
+                    val isFrom = sql.regionMatches(start, "FROM", 0, 4, ignoreCase = true)
+                    val isInto = sql.regionMatches(start, "INTO", 0, 4, ignoreCase = true)
+                    if (isFrom || isInto) {
+                        return extractNextToken(sql, i)
+                    }
+                } else if (wordLen == 6) {
+                    if (sql.regionMatches(start, "UPDATE", 0, 6, ignoreCase = true)) {
+                        return extractNextToken(sql, i)
+                    }
+                } else if (wordLen == 5) {
+                    if (sql.regionMatches(start, "TABLE", 0, 5, ignoreCase = true)) {
+                        return extractNextToken(sql, i)
+                    }
                 }
             }
-        }
-        return null
-    }
-
-    private fun extractNextToken(
-        sql: String,
-        startIdx: Int,
-    ): String? {
-        var i = startIdx
-        val len = sql.length
-        while (i < len && sql[i].isWhitespace()) i++
-        if (i >= len) return null
-        val tokenStart = i
-        while (i < len && !sql[i].isWhitespace()) i++
-        val rawToken = sql.substring(tokenStart, i)
-        return rawToken.trim('\"', '`', '\'', ';', '(', ')')
-    }
-
-    private fun isInternalSystemQuery(sql: String): Boolean {
-        var start = 0
-        val len = sql.length
-        while (start < len && sql[start].isWhitespace()) start++
-        if (start >= len) return false
-
-        if (sql.regionMatches(start, "PRAGMA", 0, 6, ignoreCase = true) ||
-            sql.regionMatches(start, "BEGIN", 0, 5, ignoreCase = true) ||
-            sql.regionMatches(start, "COMMIT", 0, 6, ignoreCase = true) ||
-            sql.regionMatches(start, "END TRANSACTION", 0, 15, ignoreCase = true) ||
-            sql.regionMatches(start, "END;", 0, 4, ignoreCase = true)
-        ) {
-            return true
+            return null
         }
 
-        return sql.contains("room_table_modification_log", ignoreCase = true) ||
-            sql.contains("room_master_table", ignoreCase = true) ||
-            sql.contains("sqlite_master", ignoreCase = true) ||
-            sql.contains("sqlite_schema", ignoreCase = true) ||
-            sql.contains("sqlite_sequence", ignoreCase = true)
+        private fun extractNextToken(
+            sql: String,
+            startIdx: Int,
+        ): String? {
+            var i = startIdx
+            val len = sql.length
+            while (i < len && sql[i].isWhitespace()) i++
+            if (i >= len) return null
+            val tokenStart = i
+            while (i < len && !sql[i].isWhitespace()) i++
+            val rawToken = sql.substring(tokenStart, i)
+            return rawToken.trim('\"', '`', '\'', ';', '(', ')')
+        }
     }
 }

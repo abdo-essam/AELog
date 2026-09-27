@@ -11,11 +11,25 @@ public final class com/ae/log/database/ComposableSingletons$DatabasePluginKt {
 
 public final class com/ae/log/database/DatabaseLogRecorder {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/ae/log/database/DatabaseLogRecorder;
+	public static final field Companion Lcom/ae/log/database/DatabaseLogRecorder$Companion;
+	public static final field MAX_DEFAULT_LOGS I
+	public fun <init> ()V
+	public fun <init> (I)V
+	public synthetic fun <init> (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun clear ()V
 	public final fun getLogs ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun getMaxLogs ()I
 	public final fun record (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;)V
 	public static synthetic fun record$default (Lcom/ae/log/database/DatabaseLogRecorder;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class com/ae/log/database/DatabaseLogRecorder$Companion {
+	public final fun clear ()V
+	public final fun getDefaultInstance ()Lcom/ae/log/database/DatabaseLogRecorder;
+	public final fun getLogs ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun isInternalSystemQuery (Ljava/lang/String;)Z
+	public final fun record (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;)V
+	public static synthetic fun record$default (Lcom/ae/log/database/DatabaseLogRecorder$Companion;Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;ZLjava/lang/String;Ljava/lang/Long;Ljava/lang/String;ILjava/lang/Object;)V
 }
 
 public final class com/ae/log/database/DatabasePlugin : com/ae/log/plugin/UIPlugin {
@@ -32,6 +46,7 @@ public final class com/ae/log/database/DatabasePlugin : com/ae/log/plugin/UIPlug
 	public fun getIcon ()Lkotlin/jvm/functions/Function2;
 	public fun getId ()Ljava/lang/String;
 	public final fun getInspector ()Lcom/ae/log/database/inspector/DatabaseInspector;
+	public final fun getLogRecorder ()Lcom/ae/log/database/DatabaseLogRecorder;
 	public fun getName ()Ljava/lang/String;
 	public fun onAttach (Lcom/ae/log/plugin/PluginContext;)V
 	public fun onClear ()V
@@ -46,6 +61,7 @@ public final class com/ae/log/database/DatabaseProxy {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/ae/log/database/DatabaseProxy;
 	public final fun createQueryInterceptor (Ljava/lang/String;)Lcom/ae/log/database/DatabaseQueryInterceptor;
+	public final fun getDatabase (Ljava/lang/String;)Lcom/ae/log/database/model/DbInfo;
 	public final fun getLogs ()Lkotlinx/coroutines/flow/StateFlow;
 	public final fun listDatabases ()Ljava/util/List;
 	public final fun listTables (Ljava/lang/String;)Ljava/util/List;
@@ -79,20 +95,22 @@ public abstract interface class com/ae/log/database/DatabaseQueryInterceptor {
 public final class com/ae/log/database/config/DatabasePluginConfig {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (ZJILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;)V
-	public synthetic fun <init> (ZJILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZJIILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;)V
+	public synthetic fun <init> (ZJIILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()J
 	public final fun component3 ()I
-	public final fun component4 ()Lcom/ae/log/database/config/PassphraseProvider;
-	public final fun component5 ()Ljava/util/List;
-	public final fun copy (ZJILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;)Lcom/ae/log/database/config/DatabasePluginConfig;
-	public static synthetic fun copy$default (Lcom/ae/log/database/config/DatabasePluginConfig;ZJILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;ILjava/lang/Object;)Lcom/ae/log/database/config/DatabasePluginConfig;
+	public final fun component4 ()I
+	public final fun component5 ()Lcom/ae/log/database/config/PassphraseProvider;
+	public final fun component6 ()Ljava/util/List;
+	public final fun copy (ZJIILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;)Lcom/ae/log/database/config/DatabasePluginConfig;
+	public static synthetic fun copy$default (Lcom/ae/log/database/config/DatabasePluginConfig;ZJIILcom/ae/log/database/config/PassphraseProvider;Ljava/util/List;ILjava/lang/Object;)Lcom/ae/log/database/config/DatabasePluginConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAdditionalSearchPaths ()Ljava/util/List;
 	public final fun getAllowWrite ()Z
 	public final fun getBusyTimeoutMs ()J
 	public final fun getDefaultPageSize ()I
+	public final fun getMaxLogEntries ()I
 	public final fun getPassphraseProvider ()Lcom/ae/log/database/config/PassphraseProvider;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -102,7 +120,21 @@ public abstract interface class com/ae/log/database/config/PassphraseProvider {
 	public abstract fun getPassphrase (Ljava/lang/String;)[C
 }
 
+public abstract class com/ae/log/database/inspector/BaseDatabaseInspector : com/ae/log/database/inspector/DatabaseInspector {
+	public static final field $stable I
+	public fun <init> ()V
+	protected fun fetchColumns (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Ljava/util/List;
+	protected fun fetchForeignKeys (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Ljava/util/List;
+	protected fun fetchIndexes (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Ljava/util/List;
+	public fun getDatabase (Ljava/lang/String;)Lcom/ae/log/database/model/DbInfo;
+	protected final fun getRegisteredDatabases ()Ljava/util/List;
+	public fun getSchema (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Lcom/ae/log/database/model/TableSchema;
+	public fun getTableData (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;)Lcom/ae/log/database/model/QueryResult;
+	public fun registerDatabase (Lcom/ae/log/database/model/DbInfo;)V
+}
+
 public abstract interface class com/ae/log/database/inspector/DatabaseInspector {
+	public fun getDatabase (Ljava/lang/String;)Lcom/ae/log/database/model/DbInfo;
 	public fun getSchema (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Lcom/ae/log/database/model/TableSchema;
 	public fun getTableData (Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;)Lcom/ae/log/database/model/QueryResult;
 	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
@@ -114,6 +146,7 @@ public abstract interface class com/ae/log/database/inspector/DatabaseInspector 
 }
 
 public final class com/ae/log/database/inspector/DatabaseInspector$DefaultImpls {
+	public static fun getDatabase (Lcom/ae/log/database/inspector/DatabaseInspector;Ljava/lang/String;)Lcom/ae/log/database/model/DbInfo;
 	public static fun getSchema (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;)Lcom/ae/log/database/model/TableSchema;
 	public static fun getTableData (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;)Lcom/ae/log/database/model/QueryResult;
 	public static synthetic fun getTableData$default (Lcom/ae/log/database/inspector/DatabaseInspector;Lcom/ae/log/database/model/DbInfo;Ljava/lang/String;IILjava/lang/String;ZLjava/lang/String;ILjava/lang/Object;)Lcom/ae/log/database/model/QueryResult;
@@ -125,6 +158,14 @@ public final class com/ae/log/database/inspector/DatabaseInspectorKt {
 	public static final fun detectOperation (Ljava/lang/String;)Lcom/ae/log/database/model/DatabaseOperation;
 	public static final fun isWriteStatement (Ljava/lang/String;)Z
 	public static final fun validateSqlSafety (Ljava/lang/String;Z)V
+}
+
+public final class com/ae/log/database/inspector/SqliteFileUtilsKt {
+	public static final field DEFAULT_DB_NAME Ljava/lang/String;
+	public static final field SQLITE_HEADER_PREFIX Ljava/lang/String;
+	public static final fun isAuxiliaryFile (Ljava/lang/String;)Z
+	public static final fun isEncryptedSqliteHeader ([B)Z
+	public static final fun isSqliteFileName (Ljava/lang/String;)Z
 }
 
 public final class com/ae/log/database/model/DatabaseLogEntry {
@@ -491,6 +532,51 @@ public final synthetic class com/ae/log/database/model/TableSchema$$serializer :
 
 public final class com/ae/log/database/model/TableSchema$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/ae/log/database/sqlite/AELogSQLiteConnection : androidx/sqlite/SQLiteConnection {
+	public static final field $stable I
+	public fun <init> (Landroidx/sqlite/SQLiteConnection;Ljava/lang/String;)V
+	public fun close ()V
+	public fun inTransaction ()Z
+	public fun prepare (Ljava/lang/String;)Landroidx/sqlite/SQLiteStatement;
+}
+
+public final class com/ae/log/database/sqlite/AELogSQLiteDriver : androidx/sqlite/SQLiteDriver {
+	public static final field $stable I
+	public fun <init> (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;)V
+	public synthetic fun <init> (Landroidx/sqlite/SQLiteDriver;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun hasConnectionPool ()Z
+	public fun open (Ljava/lang/String;)Landroidx/sqlite/SQLiteConnection;
+}
+
+public final class com/ae/log/database/sqlite/AELogSQLiteStatement : androidx/sqlite/SQLiteStatement {
+	public static final field $stable I
+	public fun <init> (Landroidx/sqlite/SQLiteStatement;Ljava/lang/String;Ljava/lang/String;)V
+	public fun bindBlob (I[B)V
+	public fun bindBoolean (IZ)V
+	public fun bindDouble (ID)V
+	public fun bindFloat (IF)V
+	public fun bindInt (II)V
+	public fun bindLong (IJ)V
+	public fun bindNull (I)V
+	public fun bindText (ILjava/lang/String;)V
+	public fun clearBindings ()V
+	public fun close ()V
+	public fun getBlob (I)[B
+	public fun getBoolean (I)Z
+	public fun getColumnCount ()I
+	public fun getColumnName (I)Ljava/lang/String;
+	public fun getColumnNames ()Ljava/util/List;
+	public fun getColumnType (I)I
+	public fun getDouble (I)D
+	public fun getFloat (I)F
+	public fun getInt (I)I
+	public fun getLong (I)J
+	public fun getText (I)Ljava/lang/String;
+	public fun isNull (I)Z
+	public fun reset ()V
+	public fun step ()Z
 }
 
 public final class com/ae/log/database/ui/DatabaseFormatUtils {

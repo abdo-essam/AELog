@@ -50,6 +50,17 @@ kotlin {
         browser()
     }
 
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        common {
+            group("nonWasm") {
+                withAndroidTarget()
+                withJvm()
+                withIos()
+            }
+        }
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(projects.core)
@@ -66,6 +77,12 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
+        }
+
+        val nonWasmMain by getting {
+            dependencies {
+                api(libs.androidx.sqlite)
+            }
         }
     }
 }

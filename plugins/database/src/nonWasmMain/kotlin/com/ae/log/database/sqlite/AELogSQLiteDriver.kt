@@ -1,19 +1,21 @@
-package com.ae.log.database.room
+package com.ae.log.database.sqlite
 
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.SQLiteStatement
 import com.ae.log.AELog
+import com.ae.log.database.DatabaseLogRecorder
 import com.ae.log.database.database
-
-private const val DEFAULT_DB_NAME = "app.db"
+import com.ae.log.database.inspector.DEFAULT_DB_NAME
+import kotlin.time.TimeSource
 
 /**
  * A delegating [SQLiteDriver] that intercepts and logs all executed SQL statements to AELog Database Logs.
  *
- * Works across all multiplatform targets supported by Room (Android, iOS, JVM, WasmJs).
+ * Works across all multiplatform targets supported by SQLite (Android, iOS, JVM, WasmJs)
+ * and libraries using `androidx.sqlite` (e.g. Room 2.7+, custom SQLite drivers).
  *
- * ### Usage:
+ * ### Usage with Room:
  * ```kotlin
  * Room.databaseBuilder<AppDatabase>(name = dbFilePath)
  *     .setDriver(AELogSQLiteDriver(BundledSQLiteDriver(), databaseName = "app.db"))
@@ -121,21 +123,30 @@ public class AELogSQLiteStatement(
     }
 
     override fun step(): Boolean {
-        if (!hasExecuted) {
-            hasExecuted = true
-            logQuery()
+        val timeMark = TimeSource.Monotonic.markNow()
+        return try {
+            val result = delegate.step()
+            val durationMs = timeMark.elapsedNow().inWholeMilliseconds
+            if (!hasExecuted) {
+                hasExecuted = true
+                logQuery(durationMs = durationMs, error = null)
+            }
+            result
+        } catch (t: Throwable) {
+            val durationMs = timeMark.elapsedNow().inWholeMilliseconds
+            if (!hasExecuted) {
+                hasExecuted = true
+                logQuery(durationMs = durationMs, error = t.message ?: t.toString())
+            }
+            throw t
         }
-        return delegate.step()
     }
 
-    private fun logQuery() {
-        val lowerSql = sql.lowercase()
-        if (lowerSql.contains("room_table_modification_log") ||
-            lowerSql.contains("room_master_table") ||
-            lowerSql.contains("sqlite_master") ||
-            lowerSql.contains("sqlite_schema") ||
-            lowerSql.contains("sqlite_sequence")
-        ) {
+    private fun logQuery(
+        durationMs: Long,
+        error: String?,
+    ) {
+        if (DatabaseLogRecorder.isInternalSystemQuery(sql)) {
             return
         }
 
@@ -146,10 +157,13 @@ public class AELogSQLiteStatement(
                 val maxIndex = boundArgs.keys.maxOrNull() ?: 0
                 (1..maxIndex).map { boundArgs[it] }
             }
+
         AELog.database.logQuery(
             databaseName = databaseName,
             sql = sql,
-            durationMs = 0L,
+            durationMs = durationMs,
+            isSuccess = error == null,
+            errorMessage = error,
             bindArgs = argsList,
         )
     }

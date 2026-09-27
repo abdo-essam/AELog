@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-09-27
+
+### Added
+- **Universal SQLite Driver (`AELogSQLiteDriver`)**: Consolidated SQLite driver interception directly into `plugins:database` with support for `androidx.sqlite.SQLiteDriver`, eliminating the need for separate adapter modules and providing native query interception for Room, SQLDelight, and raw SQLite alike across Android, JVM, and iOS.
+- **BaseDatabaseInspector & Shared File Utilities**: Extracted shared platform logic into `BaseDatabaseInspector` and `SqliteFileUtils` for consistent query handling, schema extraction, and database file resolution.
+
+### Changed
+- **Database Log Isolation**: Refactored `DatabaseLogRecorder` to be instantiable and owned by each `DatabasePlugin` instance, preventing cross-instance log contamination and ensuring query logs are routed to the active plugin while maintaining safe static access via `DatabaseLogRecorder.defaultInstance`.
+- **Database Architecture Refactoring**: Retired `plugins:database:adapters:room` in favor of universal driver delegation within `plugins:database`.
+
+### Fixed
+- **SQL Injection Defense**: Hardened schema inspection and table browsing queries against SQL injection by strictly validating column sort keys against table schema columns and escaping search query patterns with SQLite `ESCAPE '\\'`.
+- **Performance & Connection Pooling**: Eliminated file system scanning churn by implementing fast-path database lookups (`getDatabase(name)`) and connection caching (`getCachedOrOpenDatabase`) in `AndroidDatabaseInspector`.
+- **Thread Safety**: Secured database registries using `SynchronizedObject` locks to eliminate race conditions during high-frequency concurrent database registrations.
+- **Accurate Metric Timings**: Switched `AELogSQLiteDriver` execution timing from wall-clock to monotonic clock time (`TimeSource.Monotonic`) for microsecond-precise query duration measurements.
+
 ## [1.2.3] - 2026-09-26
 
 ### Fixed
@@ -302,7 +318,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.3...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.4...HEAD
+[1.2.4]: https://github.com/abdo-essam/AELog/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/abdo-essam/AELog/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/abdo-essam/AELog/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/abdo-essam/AELog/compare/v1.2.0...v1.2.1

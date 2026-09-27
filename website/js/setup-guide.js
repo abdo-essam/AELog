@@ -244,7 +244,7 @@ aelog = "${AELOG_VERSION}"
                 snippet += `aelog-crashes          = { module = "io.github.abdo-essam:ae-log-crashes",        version.ref = "aelog" }\n`;
             }
             if (state.features.database) {
-                snippet += `aelog-database-room    = { module = "io.github.abdo-essam:ae-log-database-room",  version.ref = "aelog" }\n`;
+                snippet += `aelog-database         = { module = "io.github.abdo-essam:ae-log-database",       version.ref = "aelog" }\n`;
             }
             depCodeBlock.textContent = snippet;
             depCodeBlock.className = "language-toml";
@@ -268,7 +268,7 @@ kotlin {
                 snippet += `            implementation("io.github.abdo-essam:ae-log-crashes:${AELOG_VERSION}")\n`;
             }
             if (state.features.database) {
-                snippet += `            implementation("io.github.abdo-essam:ae-log-database-room:${AELOG_VERSION}")\n`;
+                snippet += `            implementation("io.github.abdo-essam:ae-log-database:${AELOG_VERSION}")\n`;
             }
 
             snippet += `        }\n`;
