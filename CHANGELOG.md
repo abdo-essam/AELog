@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.5] - 2026-09-28
+
+### Fixed
+- **Android SQLite Driver Packaging**: Explicitly connected `androidMain` to `nonWasmMain` in `plugins:database` build configuration, fixing an issue where `withAndroidTarget()` in `applyDefaultHierarchyTemplate` did not match AGP's `androidKotlinMultiplatformLibrary` target, which caused `AELogSQLiteDriver` to be omitted from `ae-log-database-android`'s AAR / `classes.jar`.
+
 ## [1.2.4] - 2026-09-27
 
 ### Added
@@ -318,7 +323,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe `LogStorage` with configurable max entries
 - Plugin lifecycle: `onAttach → onOpen ⇄ onClose → onDetach`
 
-[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.4...HEAD
+[Unreleased]: https://github.com/abdo-essam/AELog/compare/v1.2.5...HEAD
+[1.2.5]: https://github.com/abdo-essam/AELog/compare/v1.2.4...v1.2.5
 [1.2.4]: https://github.com/abdo-essam/AELog/compare/v1.2.3...v1.2.4
 [1.2.3]: https://github.com/abdo-essam/AELog/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/abdo-essam/AELog/compare/v1.2.1...v1.2.2

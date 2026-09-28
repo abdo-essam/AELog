@@ -88,7 +88,7 @@ Add the following to your `gradle/libs.versions.toml`:
 
 ```toml
 [versions]
-aelog = "1.2.4"
+aelog = "1.2.5"
 
 [libraries]
 aelog-logs             = { module = "io.github.abdo-essam:ae-log-logs",           version.ref = "aelog" }
@@ -276,7 +276,7 @@ On Android and iOS, AELog also automatically scans application database director
 
 ```kotlin
 // Shared commonMain sourceSet
-implementation("io.github.abdo-essam:ae-log-database:1.2.4")
+implementation("io.github.abdo-essam:ae-log-database:1.2.5")
 ```
 
 #### 3. Primary Database API (`AELog.database`)

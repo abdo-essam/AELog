@@ -54,7 +54,6 @@ kotlin {
     applyDefaultHierarchyTemplate {
         common {
             group("nonWasm") {
-                withAndroidTarget()
                 withJvm()
                 withIos()
             }
@@ -84,6 +83,8 @@ kotlin {
                 api(libs.androidx.sqlite)
             }
         }
+
+        getByName("androidMain").dependsOn(nonWasmMain)
     }
 }
 
