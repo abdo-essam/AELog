@@ -17,7 +17,7 @@ kover = "0.9.9"
 androidx-test = "1.7.0"
 vanniktechPublish = "0.30.0"
 kotlinx-benchmark = "0.4.19"
-runtime = "1.11.3"
+runtime = "1.12.1"
 
 [libraries]
 androidx-sqlite = { module = "androidx.sqlite:sqlite", version = "2.6.2" }
