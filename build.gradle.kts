@@ -1,10 +1,10 @@
 buildscript {
     dependencies {
-        classpath("org.ow2.asm:asm:9.10.1")
-        classpath("org.ow2.asm:asm-tree:9.10.1")
-        classpath("org.ow2.asm:asm-analysis:9.10.1")
-        classpath("org.ow2.asm:asm-commons:9.10.1")
-        classpath("org.ow2.asm:asm-util:9.10.1")
+        classpath("org.ow2.asm:asm:9.11")
+        classpath("org.ow2.asm:asm-tree:9.11")
+        classpath("org.ow2.asm:asm-analysis:9.11")
+        classpath("org.ow2.asm:asm-commons:9.11")
+        classpath("org.ow2.asm:asm-util:9.11")
     }
 }
 
